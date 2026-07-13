@@ -1,6 +1,6 @@
 # Indice de copia manual (VS Code do banco)
 
-18 arquivos. Crie as pastas e cole o conteudo de cada raw.
+22 arquivos. Crie as pastas e cole o conteudo de cada raw.
 Ordem de prioridade: se der pra copiar so alguns hoje, siga a ordem.
 
 Base dos links raw:
@@ -32,16 +32,28 @@ os mesmos erros que ja cometemos e corrigimos.
 | 11 | docs/estrutura-lib.md |
 | 12 | COMECE-AQUI.md |
 
+## ESSENCIAL — manuais dos convenios (o PORQUE das regras)
+
+| # | Criar em |
+| --- | --- |
+| 13 | docs/clusters/_template.md |
+| 14 | docs/clusters/c1-mg.md |
+| 15 | docs/clusters/c4-federais.md |
+
+Estes sao RASCUNHOS com [CONFIRMAR]. Corrigir com o time de produto e
+o juridico e o primeiro trabalho de conteudo do projeto: sem eles, os
+agentes nao sabem POR QUE cada convenio diverge.
+
 ## APOIO (util, nao bloqueia) — 6 arquivos
 
 | # | Criar em |
 | --- | --- |
-| 13 | docs/runbook-banco.md |
-| 14 | docs/mapa-fluxo-piloto.md |
-| 15 | docs/receitas/_comuns.md |
-| 16 | docs/receitas/simular-e-contratar-simulacao.md |
-| 17 | docs/fila-de-testes.md |
-| 18 | docs/glossario-apresentacao.md |
+| 16 | docs/runbook-banco.md |
+| 17 | docs/mapa-fluxo-piloto.md |
+| 18 | docs/receitas/_comuns.md |
+| 19 | docs/receitas/simular-e-contratar-simulacao.md |
+| 20 | docs/fila-de-testes.md |
+| 21 | docs/glossario-apresentacao.md |
 
 ## Depois de copiar
 

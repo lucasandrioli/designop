@@ -27,6 +27,10 @@ Divisão de trabalho (Camada 1 vigente):
   telas passarem sem observação.
 
 Regras sempre ativas:
+- Antes de construir ou validar um cluster, LEIA docs/clusters/<cluster>.md
+  (o manual do convênio): é lá que estão as REGRAS e o PORQUÊ de cada
+  divergência. Regra que não está escrita, o agente não conhece: nunca
+  infira a razão de uma divergência, pergunte ou marque [CONFIRMAR].
 - Taxonomia da lib por etapas macro da jornada (docs/estrutura-lib.md):
   templates publicados como etapa/tpl-nome; seções internas _prefixadas
   (não publicadas); referências cruas sem barra no nome.

@@ -150,6 +150,13 @@ booleans de variavel para presenca de etapa.
 - Camadas de TEXT renomeiam sozinhas para o conteudo: nunca localizar
   texto por nome de camada; localizar por conteudo atual ou node ID.
 
+## Divergencias sem regra conhecida
+Toda divergencia encontrada entre clusters deve ter contrapartida em
+docs/clusters/<cluster>.md. Se nao tiver, NAO invente a razao: liste em
+"Divergencias sem regra documentada" e proponha o texto da regra para o
+designer confirmar. Regra confirmada vira entrada no manual do
+convenio. E assim que o conhecimento sai das cabecas e entra no repo.
+
 ## Saída
 `inventario/<escopo>.md` com as 6 seções, tudo referenciado por node ID,
 tabelas markdown, sem prosa desnecessária.

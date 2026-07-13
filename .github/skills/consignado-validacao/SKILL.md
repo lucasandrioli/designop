@@ -88,6 +88,17 @@ updates de biblioteca exigem aceite manual no arquivo consumidor.
   que o template mudou e a descricao mentiu; regerar via Montador.
 - [Etapa] deve bater com o prefixo do nome e com o mapa.
 
+### 9. Conformidade com o manual do convenio
+Para cada cluster, leia docs/clusters/<cluster>.md e verifique cada
+regra ATIVA contra o mecanismo declarado:
+- regra com mecanismo "mapa de fluxo" -> a etapa existe/nao existe
+  conforme declarado
+- regra com mecanismo "variavel X" -> a variavel existe e esta bindada
+- regra com mecanismo "variant Z" -> o variant existe no template
+Reprovacao cita a regra (ex: "R3 do c4 exige anuencia; o mapa nao tem
+a etapa"). Isto transforma validacao de "esta bonito?" em "esta
+conforme?", que e a linguagem de auditoria.
+
 ## Teste de troca de modo (obrigatório para templates com variáveis)
 Para cada tela: alterne a variável de modo do cluster
 (setExplicitVariableModeForCollection, com fontes carregadas antes) e

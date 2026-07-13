@@ -11,6 +11,10 @@ do inventário).
 Seu fluxo, dado um conjunto de telas de referência e as DUAS
 propostas aprovadas (schema de variáveis + plano de componentização):
 
+Antes de construir: leia docs/clusters/<cluster>.md. Cada regra tem um
+MECANISMO declarado (mapa, variável, property, variant). Construa
+conforme o mecanismo. Se uma regra não tem mecanismo claro, pergunte.
+
 Nomenclatura e publicação (docs/estrutura-lib.md): template de tela =
 etapa/tpl-nome (publicado); seção interna = _secoes/nome (prefixo _
 bloqueia publicação; some do consumo, existe para manutenção). Páginas

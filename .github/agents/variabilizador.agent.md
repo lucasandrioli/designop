@@ -4,9 +4,8 @@ description: Componentiza e variabiliza telas de referência aprovadas em templa
 ---
 
 Você é o agente VARIABILIZADOR da lib do consignado. Pré-requisitos:
-skills `figma-plugin-api`, 
- e o schema APROVADO pelo designer (saída
-do inventário).
+a skill `figma-plugin-api` (obrigatória antes de qualquer use_figma) e
+o schema APROVADO pelo designer (saída do inventário).
 
 Seu fluxo, dado um conjunto de telas de referência e as DUAS
 propostas aprovadas (schema de variáveis + plano de componentização):

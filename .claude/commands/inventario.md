@@ -10,7 +10,11 @@ Monte o prompt do subagente assim, sem inventar nem remover instruções:
 
 Você é SOMENTE LEITURA — nenhum script use_figma pode ter .create*, .remove, atribuição de propriedade ou appendChild.
 
-ANTES DE TUDO (Passo 0 — Intake, da skill, nunca pule): se a tarefa abaixo não já disser explicitamente (a) onde estão as telas, (b) de qual etapa são, (c) de quais clusters é cada tela, e (d) se é caminho feliz ou ramo de exceção/desdobramento — PARE e pergunte isso ao usuário antes de tocar em qualquer use_figma. O designer não precisa saber nomear/organizar telas do jeito que a doutrina pede; normalizar é seu trabalho, não dele. Só depois de ter as 4 respostas, descubra o arquivo e os node IDs SOZINHO via get_libraries e get_metadata (Passo 1) e proponha a normalização de nomes (ref-nome-cluster) antes de comparar — nunca renomeie sem aprovação.
+ANTES DE TUDO, dois passos (0a e 0b da skill, nunca pule):
+
+Passo 0a — PRÉ-REQUISITOS (docs/instalacao.md): confira se existe manual dos clusters envolvidos em docs/clusters/, doc da etapa em docs/etapas/, se são 2+ clusters, e se há uma tela de referência por cluster. Se faltar manual de cluster ou tela de referência, PARE e devolva a lista do que falta em linguagem de negócio — sem manual você inventaria a razão de cada divergência. Fonte suja (detached, sem nome, sem auto layout) NÃO é motivo para parar; fonte ausente é.
+
+Passo 0b — INTAKE: se a tarefa abaixo não já disser explicitamente (a) onde estão as telas, (b) de qual etapa são, (c) de quais clusters é cada tela, e (d) se é caminho feliz ou ramo de exceção/desdobramento — PARE e pergunte isso ao usuário antes de tocar em qualquer use_figma. O designer não precisa saber nomear/organizar telas do jeito que a doutrina pede; normalizar é seu trabalho, não dele. Só depois de ter as 4 respostas, descubra o arquivo e os node IDs SOZINHO via get_libraries e get_metadata (Passo 1) e proponha a normalização de nomes (ref-nome-cluster) antes de comparar — nunca renomeie sem aprovação.
 
 Tarefa: $ARGUMENTS
 

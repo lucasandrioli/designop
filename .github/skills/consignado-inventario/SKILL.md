@@ -37,7 +37,38 @@ Siga docs/modelo-clusters.md (clusters como modes).
 - As telas instanciam o IDS (Itaú Design System): componentes, tokens,
   ícones e ilustrações vêm de 4 bibliotecas externas distintas
 
-## Passo 0 — Intake (SEMPRE primeiro, antes de qualquer comparação)
+## Passo 0a — Pré-requisitos (a PRIMEIRA coisa, antes até do intake)
+
+Não comece a comparar num terreno que não existe. Verifique, na ordem,
+e PARE se faltar — devolvendo a lista do que falta em linguagem de
+negócio, não em nome de arquivo. Referência completa: `docs/instalacao.md`.
+
+1. **Existe manual dos clusters envolvidos?** (`docs/clusters/<cluster>.md`)
+   Se não existir, PARE. Sem ele você vai inventar a razão de cada
+   divergência, que é exatamente o que este projeto proíbe. Diga ao
+   designer: *"antes de comparar, preciso que exista um manual de cada
+   convênio envolvido — pelo menos as regras que tocam esta etapa. Tem
+   um modelo em docs/clusters/_template.md. Sem isso eu consigo achar
+   as diferenças, mas não consigo dizer se cada uma é regra do convênio
+   ou descuido de construção."*
+2. **Existe doc da etapa?** (`docs/etapas/<etapa>.md`) Se não, avise que
+   vai precisar ser criado e ofereça gerar o rascunho a partir do que
+   você medir — mas isso NÃO bloqueia a comparação, só a construção
+   depois.
+3. **São 2+ clusters?** Com um cluster só não existe comparação, e sem
+   comparação não há variação a descobrir. PARE e explique: *"com um
+   convênio só eu não tenho contra o que comparar; a variação só
+   aparece no confronto entre dois."*
+4. **Há tela de referência para cada cluster declarado?** Se faltar de
+   algum, PARE — você não constrói tela do zero (Camada 3 do projeto,
+   ainda não destravada).
+
+O que NÃO é motivo para parar: tela bagunçada. Componente destacado,
+camada sem nome, sem auto layout, cor fora do token — tudo isso é
+esperado e é seu trabalho auditar e reportar (Modo Arqueologia). Fonte
+suja é tolerada; fonte ausente não é.
+
+## Passo 0b — Intake (depois dos pré-requisitos, antes de comparar)
 
 Nunca assuma que o designer vai entregar telas já nomeadas ou
 organizadas do jeito que a doutrina pede (`ref-nome-cluster`, página

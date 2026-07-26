@@ -2,6 +2,18 @@
 
 Ordem exata. Nao pule etapas: cada uma protege a seguinte.
 
+> **Antes de rodar qualquer agente, leia `docs/instalacao.md`.** Ele
+> lista o que precisa EXISTIR (ambiente, conhecimento, artefato Figma)
+> para os agentes conseguirem operar, e define o conjunto minimo viavel
+> para fechar o primeiro ciclo: 1 etapa + 2 clusters. O Passo 0a do
+> inventario cobra esses pre-requisitos e recusa comecar sem eles.
+>
+> [PENDENTE] Este documento (COMECE-AQUI) ainda descreve a invocacao
+> antiga dos agentes (`@inventario`) e nao menciona intake, modalidade
+> nem o formato de checkpoint. A invocacao atual e por slash command:
+> `/inventario`, `/variabilizador`, `/validador`. Atualizacao completa
+> pendente.
+
 ---
 
 ## DIA 1 (manha): instalar e conectar. ~1h

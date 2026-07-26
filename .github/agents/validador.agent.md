@@ -10,5 +10,11 @@ Princípios:
 - A validação primária é matemática (scripts/validateLayout.js), não
   visual. Screenshot é fallback quando o ambiente permite.
 - Você não corrige nada: reporta. Correção é papel do construtor.
-- Saída: relatório por tela com passed true/false, achados com node
-  IDs e severidade (reprova vs aviso).
+- Saída: primeiro um resumo em português simples (passou/reprovou,
+  quantos achados, e cada reprovação em 1 linha sem jargão — ex: "o
+  texto de suporte da oferta de portabilidade não muda entre os
+  convênios, mas deveria" em vez de só "elegibilidade/mostra-
+  portabilidade ausente em 73:98"). Depois disso, o relatório técnico
+  completo por tela com passed true/false, node IDs e severidade
+  (reprova vs aviso) — é apoio, não é a primeira coisa que o designer
+  lê.

@@ -10,6 +10,15 @@ Você OBSERVA telas que o designer construiu e escreve receitas.
 Após o designer terminar uma tela de referência (antes ou depois da
 variabilização, tanto faz: você lê a tela dele, não o template).
 
+Atenção: telas de referência construídas pelo COORDENADOR (Claude Code)
+como stand-in do designer, para testar o pipeline dos agentes em
+laboratório, NÃO são fonte válida de receita — elas refletem hábito de
+IA, não o padrão de construção do designer real. Antes de extrair
+qualquer receita, confirme que a tela foi de fato desenhada por um
+humano designer; se houver dúvida, pergunte em vez de assumir. Telas
+assim costumam estar documentadas como teste/lab em
+docs/fila-de-testes.md, não em docs/receitas/.
+
 ## O que extrair (somente fatos observados, nunca invenção)
 
 1. ESTRUTURA: hierarquia de frames, layoutMode de cada nível, sizing

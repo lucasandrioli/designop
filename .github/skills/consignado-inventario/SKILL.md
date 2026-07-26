@@ -37,14 +37,40 @@ Siga docs/modelo-clusters.md (clusters como modes).
 - As telas instanciam o IDS (Itaú Design System): componentes, tokens,
   ícones e ilustrações vêm de 4 bibliotecas externas distintas
 
-## Contexto de etapa
-O designer declara a etapa macro das telas em analise (consentimento,
-simular-e-contratar, revisar, formalizar; ver docs/estrutura-lib.md).
-Se não declarar, PERGUNTE antes de começar. A etapa marca todas as
-linhas da matriz e do mapa e define o prefixo dos componentes na
-proposta de componentização. Ofereça normalização assistida: conferir
-nomes de camada das telas cruas contra o padrão e propor renomeações
-(nunca renomear sem aprovação).
+## Passo 0 — Intake (SEMPRE primeiro, antes de qualquer comparação)
+
+Nunca assuma que o designer vai entregar telas já nomeadas ou
+organizadas do jeito que a doutrina pede (`ref-nome-cluster`, página
+por cluster, etc). Isso é NORMALIZAÇÃO — trabalho do agente, nunca
+conhecimento que o designer precisa decorar antes de começar. O
+designer só precisa fazer uma coisa: juntar as telas numa seção/página
+e responder 4 perguntas simples. Se ele não respondeu ainda, PERGUNTE
+antes de tocar em qualquer script:
+
+1. **Onde estão as telas?** — peça a seção/página/frame onde ele
+   juntou tudo (não precisa estar organizado, só junto).
+2. **De qual etapa são?** — consentimento | simular-e-contratar |
+   revisar | formalizar | outra (ver docs/estrutura-lib.md). Se a
+   etapa não existir ainda em docs/etapas/, sinalize que vai precisar
+   ser criada.
+3. **De quais clusters, e qual tela é de qual?** — para cada tela ou
+   grupo de telas, qual convênio ela representa. Não adivinhe pelo
+   conteúdo sozinho; peça a declaração.
+4. **É caminho feliz, ramo de exceção, ou desdobramento?** — isso muda
+   a classificação no Passo 4 (ETAPA que segue adiante vs
+   DESDOBRAMENTO ida-e-volta vs RAMO DE EXCEÇÃO). Pergunte
+   explicitamente; nunca infira do rótulo do botão.
+
+Só depois dessas respostas, examine as telas de verdade (`get_metadata`)
+e proponha uma normalização concreta: nomes de frame sugeridos
+(`ref-nome-cluster`, sem barra — nunca `etapa/tpl-nome`, essa
+convenção é só para template já publicado), organização de página.
+Apresente a proposta e espere aprovação antes de renomear qualquer
+coisa — nunca renomeie sem aprovação, e nunca prossiga para o Passo 1
+sem a etapa, os clusters e o tipo de caminho confirmados.
+
+A etapa marca todas as linhas da matriz e do mapa e define o prefixo
+dos componentes na proposta de componentização.
 
 ## Modo fluxos (grafo de navegação)
 
@@ -104,9 +130,60 @@ as chamadas em paralelo numa única mensagem.
 - hardcoded: fills/strokes com hex direto sem variável/style,
   espaçamentos e cornerRadius numéricos sem token
 
+Extraia `componentProperties` de TODA instância de accordion/item
+colapsável (ex: `item-colapsavel`), independente do variant `Estado`
+estar aberto ou fechado. O valor de uma property (ex: `Conteudo#7:3`)
+continua acessível na instância mesmo quando o variant ativo
+(`Estado=fechado`) não tem o nó de texto correspondente renderizado —
+a property vive na instância, não no variant visível. NUNCA reduza a
+comparação ao que aparece expandido na tela/screenshot: leia todas as
+instâncias por `componentProperties`, aberto ou fechado, sempre.
+(Confirmado com dado real: docs/fila-de-testes.md, Teste 12.)
+
+### Passo 2b — Composição local e componente local do designer
+
+O designer frequentemente compõe coisas no arquivo dele: pega um card,
+junta um texto, define espaçamento na mão, e às vezes transforma isso
+num COMPONENTE LOCAL do próprio arquivo (não vem do IDS). Isso não é
+erro automático — é o que acontece quando falta peça no IDS. Trate
+assim, sempre com evidência:
+
+1. **Detecte** todo `COMPONENT`/`COMPONENT_SET` cujo `remote === false`
+   (criado localmente) e toda composição de frames crus que carrega
+   conteúdo de negócio.
+2. **Audite aderência a token** em cada um (ver regras 19a e 19b de
+   figma-plugin-api): para cada `itemSpacing`, padding, `cornerRadius` e
+   fill, diga (a) o valor literal que está na tela, (b) se está bindado
+   a token, (c) se existe token com aquele valor NO SCOPE CERTO, e (d) se
+   não existir, qual é a escala válida e o token mais próximo. O valor
+   manual é sempre legível pela API, mesmo sem token.
+3. **Classifique o destino**, e note que você NÃO decide qual é — você
+   apresenta a evidência e pergunta:
+   - **DUPLICA algo que já existe no IDS** → substituir por instância.
+     Evidência: componente do IDS com estrutura/geometria equivalente.
+     É a hipótese mais comum e a mais barata de resolver.
+   - **É NOVO e reutilizável** → candidato a virar componente no IDS
+     (pedido ao dono do design system). Evidência: aparece em 2+ telas
+     ou 2+ clusters, e nenhum componente do IDS cobre.
+   - **É composição de uso único** → pode ficar local, mas tem que usar
+     token. Evidência: aparece uma vez só, específico daquela tela.
+4. **Nunca** recrie a composição como frame solto dentro de um template
+   publicado da lib: isso propaga o problema em vez de resolver.
+
+Componente local NÃO é o mesmo que `[LOCAL]` do Passo 3 (aquele é
+component key que não resolve contra as libs do IDS). Um componente
+local legítimo do designer resolve normalmente — ele só não é do IDS.
+
 ### Passo 3 — Resolução contra o IDS
 `search_design_system` com includeLibraryKeys restrito às keys do
 Passo 0. Component key que não resolve = [LOCAL], candidato a problema.
+Resolva sempre por `mainComponent.key` (ou `getMainComponentAsync()`),
+nunca pelo `instance.name` — uma instância pode estar renomeada por
+PAPEL (ex: uma instância de `banner-desconto` chamada
+`aviso-consentimento` na tela, convenção de docs/receitas/_comuns.md).
+Nome de instância divergente do nome do componente NÃO é sinal de
+`[LOCAL]` nem de duplicação; só a key decide (regra 34 de
+figma-plugin-api/SKILL.md).
 
 ### Passo 4 — Pareamento entre clusters
 Pareie telas equivalentes por posição no fluxo + composição + nome.
@@ -158,5 +235,60 @@ designer confirmar. Regra confirmada vira entrada no manual do
 convenio. E assim que o conhecimento sai das cabecas e entra no repo.
 
 ## Saída
-`inventario/<escopo>.md` com as 6 seções, tudo referenciado por node ID,
-tabelas markdown, sem prosa desnecessária.
+
+Duas partes, nesta ordem. A primeira é o que o designer realmente lê;
+a segunda é referência técnica (para o variabilizador e para quem
+quiser auditar).
+
+### 1. Checklist para aprovação (sempre primeiro, sempre em linguagem de negócio)
+
+**Formato: TABELA comparativa**, uma linha por candidato a
+variável/divergência. Coluna por cluster (uma coluna por cluster
+comparado, não uma só), lado a lado — é o que faz o formato ser
+comparativo de verdade, não uma lista de perguntas soltas. Colunas
+obrigatórias: `#`, `Achado` (nome curto), `Onde` (nome da tela +
+link/node ID de cada versão — SEMPRE presente, é o que permite alguém
+abrir a tela real e conferir; nunca só o texto sem apontar de onde ele
+veio), uma coluna por cluster com o CONTEÚDO REAL daquela tela (citação
+fiel ou resumo preciso — nunca invente o texto), `Pergunta` (a decisão
+que precisa ser tomada, 1 frase, com "⚠ ..." embutido quando o achado
+pode ser mais profundo que copy), `Proposto` (resposta curta).
+
+**NUNCA faça uma linha sem o conteúdo real de cada cluster nas
+colunas, e NUNCA sem a coluna `Onde` apontando a tela/link/node de
+cada versão** — pergunta sem o texto/valor concreto ao lado é abstrata
+demais pra decidir, e achado sem apontar de onde veio não dá pra
+conferir. Já foi reportado como "mecânico, sem contexto, nada que
+ajude a decidir", depois "não dá pra ser em formato de tabela/
+comparativo?", depois "não tem referência de qual é a tela" — as três
+coisas são regra agora, não sugestão.
+
+Se as versões tiverem tamanhos diferentes (ex: uma lista com mais
+itens que a outra), a célula de cada cluster lista TODOS os itens
+daquela versão, não só a diferença — o designer precisa ver o conjunto
+pra julgar se faz sentido, não só o delta.
+
+Não pergunte sobre algo já decidido/declarado antes da comparação (ex:
+conteúdo marcado [EXEMPLO] pelo próprio construtor não precisa de
+pergunta "isso é exemplo?" — já se sabe que é; pule direto pro que é de
+fato incerto).
+
+Feche sempre com: "Responda com o número + sim/não. Se não, me diga o
+motivo — isso vira regra registrada no manual do convênio."
+
+Exemplo real, formato corrigido (etapa Revisar, c1-mg × c4-federais):
+
+    | # | Achado | Onde | MG | Federal | Pergunta | Proposto |
+    |---|---|---|---|---|---|---|
+    | 1 | Linha extra de encargo | tela "Encargos e taxas" — [MG](figma.com/...?node-id=89-248) / [Federal](figma.com/...?node-id=90-268) | IOF R$ 210,40, Tarifa abertura R$ 0,00, CET 1,89% a.m. (3 linhas) | IOF R$ 280,00, Tarifa abertura R$ 0,00, Tarifa de averbação no órgão R$ 35,00, CET 1,75% a.m. (4 linhas) | Essa linha a mais é cobrança real só do federal, ou exemplo a mais por engano? | Se real: lista com liga/desliga por linha, por convênio |
+    | 2 | Mecanismo do desconto em folha | tela "Garantia e consignação" — [MG](figma.com/...?node-id=89-284) / [Federal](figma.com/...?node-id=90-307) | "descontada direto na folha, autorização no próprio contrato" | "descontada em folha e repassada pelo órgão pagador federal, autorização formal no processo de contratação" | ⚠ É etapa a mais de verdade (repasse, autorização formal separada) ou só forma mais formal de escrever? Pode ser regra jurídica, não só copy | [VERIFICAR COM DESIGNER] |
+
+    Responda com o número + sim/não. Se não, me diga o motivo — isso
+    vira regra registrada no manual do convênio.
+
+### 2. Detalhe técnico (`inventario/<escopo>.md`)
+
+Depois do checklist, ou em arquivo separado linkado: as 6 seções
+completas, tudo referenciado por node ID, tabelas markdown, sem prosa
+desnecessária. Esta parte existe para o variabilizador consumir e para
+auditoria — não é o que se espera que o designer leia linha a linha.

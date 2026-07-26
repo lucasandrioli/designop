@@ -30,7 +30,10 @@ precisam de validacao do designer e do time de produto. Marcado como
 ### R3. Cliente elegivel a seguro consignado e portabilidade
 - Regra: ambas as ofertas adicionais aparecem na simulacao quando o
   cliente e elegivel.
-- Origem: [CONFIRMAR] regra de produto ou do convenio?
+- Origem: confirmado pelo designer (2026-07-25): a oferta de seguro
+  existe nos clusters 1 e 4, mas NAO existe no cluster 5 (cluster sem
+  manual proprio ainda neste repo; anotado aqui como referencia
+  cruzada para quando ele for documentado).
 - Mecanismo: variaveis elegibilidade/mostra-seguro e
   elegibilidade/mostra-portabilidade
 - Status: ATIVA
@@ -43,9 +46,25 @@ precisam de validacao do designer e do time de produto. Marcado como
 - Status: [CONFIRMAR] esta regra vale para todos os clusters ou so
   para este?
 
+### R5. Texto de suporte da oferta de seguro difere em tom entre clusters
+- Regra: mesmo quando a oferta de seguro aparece nos dois clusters (c1
+  e c4), o texto de suporte muda de tom: aqui, "Protege seu contrato"
+  (beneficio opcional); no c4, "Protecao exigida pelo convenio"
+  (soa obrigatorio).
+- Origem: [CONFIRMAR] se o seguro e de fato obrigatorio no c4 (o que
+  teria implicacao alem do texto — ex: a acao de remover a oferta
+  deveria sumir la) ou se e so uma escolha de copy sem diferenca de
+  comportamento. Achado pelo agente inventario ao comparar as
+  referencias cruas, 2026-07-25.
+- Mecanismo: variavel oferta-seguro/texto-suporte (mode por cluster)
+- Status: [CONFIRMAR]
+
 ## Regras que NAO se aplicam aqui
 - Consentimento de dados (existe no c4)
 - Anuencia externa (existe no c4 e, [CONFIRMAR], no c2.1)
 
 ## Historico
 - 2026-07-12: rascunho inicial a partir do desenho do piloto.
+- 2026-07-25: R3 confirmada (seguro existe em c1/c4, nao em c5); R5
+  adicionada (divergencia de tom no texto do seguro, achado pelo
+  inventario, mecanismo ainda [CONFIRMAR]).

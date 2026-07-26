@@ -30,7 +30,10 @@ clipsContent (render bounds e pos-clipping e nao detecta corte).
 Texto bindado com textAutoResize NONE/TRUNCATION e reprovado por
 principio: o corte fica geometricamente indetectavel.
 Avisos que exigem justificativa: noAutoLayout (frame com 2+ filhos sem
-auto layout), absoluteChildren (layoutPositioning ABSOLUTE).
+auto layout), absoluteChildren (layoutPositioning ABSOLUTE),
+emptyBoundText (TEXT com variável bindada mas characters vazio — cruzar
+com a seção 5: só é esperado se o mapa de fluxo confirma que a etapa
+não existe naquele cluster; caso contrário, é achado a reportar).
 Isencoes automaticas do validateLayout (nao sao erro): nos dentro de
 INSTANCE (validam-se no master) e nos de arte vetorial (icones e
 ilustras, cujos filhos sao apenas shapes; sobreposicao ali e
@@ -80,13 +83,25 @@ conferir que todas as instancias mapeadas refletem a mudanca e rodar
 validateLayout em cada tela afetada, em todos os modes. Lembrete:
 updates de biblioteca exigem aceite manual no arquivo consumidor.
 
-### 8. Descricao dos templates (carimbo)
+### 8. Descricao dos templates (carimbo) e legitimidade do prefixo tpl-
+- PREFIXO CONQUISTADO: varra o arquivo por qualquer no com `tpl-` no
+  nome e reprove todo que NAO for COMPONENT/COMPONENT_SET. Frame com
+  `tpl-` promete template publicavel e entrega rascunho; o nome certo
+  nesse caso e `ref-nome-cluster`. Este check existe porque o caso
+  aconteceu de verdade: 9 frames com prefixo `tpl-` passaram
+  despercebidos ate uma auditoria manual (docs/estrutura-lib.md, "O
+  prefixo tpl- e CONQUISTADO").
 - Todo componente publicado tem descricao no formato do carimbo
   (docs/estrutura-lib.md); ausencia reprova a publicacao.
 - DERIVA: a lista [Variaveis] da descricao deve bater com os
   boundVariables reais extraidos por varredura. Divergencia significa
   que o template mudou e a descricao mentiu; regerar via Montador.
 - [Etapa] deve bater com o prefixo do nome e com o mapa.
+- [Modalidade] deve bater com o segmento do nome quando houver
+  (`etapa/modalidade/tpl-nome`); ausencia do campo em template criado
+  a partir de 2026-07-25 e deriva de formato, reporte como aviso.
+- [Nivel] 2 exige [Gatilho] preenchido; nivel 2 sem gatilho declarado e
+  reprovacao (quem consome nao sabe como chegar naquela tela).
 
 ### 9. Conformidade com o manual do convenio
 Para cada cluster, leia docs/clusters/<cluster>.md e verifique cada

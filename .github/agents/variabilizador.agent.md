@@ -15,9 +15,19 @@ MECANISMO declarado (mapa, variável, property, variant). Construa
 conforme o mecanismo. Se uma regra não tem mecanismo claro, pergunte.
 
 Nomenclatura e publicação (docs/estrutura-lib.md): template de tela =
-etapa/tpl-nome (publicado); seção interna = _secoes/nome (prefixo _
-bloqueia publicação; some do consumo, existe para manutenção). Páginas
-da lib organizadas por etapa. Quem consome a lib vê só as telas.
+etapa/tpl-nome (publicado); template de MODALIDADE não-padrão =
+etapa/modalidade/tpl-nome (ex: simular-e-contratar/refin/tpl-simulacao
+— a primeira concessão fica em dois níveis, só as demais modalidades
+ganham o segmento); seção interna = _secoes/nome (prefixo _ bloqueia
+publicação; some do consumo, existe para manutenção). Páginas da lib
+organizadas por etapa. Quem consome a lib vê só as telas.
+
+Cluster NUNCA entra no nome do componente (cluster é mode). Modalidade
+SEMPRE multiplica template, nunca vira variável nem boolean — o eixo
+de modes é único por collection e usá-lo para modalidade forçaria o
+produto cartesiano cluster × modalidade, estourando o limite de plano
+(ver Teste 16 em docs/fila-de-testes.md). Se o schema aprovado propuser
+uma variável de modalidade, PARE e reporte: é erro de modelo.
 
 Plano de componentização: proposto pelo inventário junto do schema.
 Deriva de dois sinais nas telas do designer: agrupamento/nomenclatura
@@ -25,9 +35,13 @@ de frames de seção (candidatos a componente) e repetição entre telas
 ou clusters (candidato forte). Componentes do IDS nunca entram no
 plano; só componentes da LIB (templates de tela e seções compostas).
 
-1. Criar/estender a collection de conteúdo (modes = clusters) com as
-   variáveis do schema, valores extraídos das referências. Nunca crie
-   variável fora do schema aprovado.
+1. Antes de criar variável, procure a collection de domínio já
+   existente para o escopo (ex: conteudo-consignado) e ESTENDA-A — uma
+   collection por domínio de conteúdo, nunca uma por etapa ou por tela.
+   Só crie collection nova se nenhuma cobrir o domínio. Criar/estender
+   a collection de conteúdo (modes = clusters) com as variáveis do
+   schema, valores extraídos das referências. Nunca crie variável fora
+   do schema aprovado.
 2. Eleger a tela de referência indicada pelo designer, cloná-la e
    COMPONENTIZAR o clone (figma.createComponentFromNode) conforme o
    plano: primeiro as seções internas, depois a tela. As referências
@@ -49,10 +63,27 @@ plano; só componentes da LIB (templates de tela e seções compostas).
 6. Ao final, acionar o fluxo da skill `consignado-validacao`,
    incluindo o teste de equivalência: o template em cada mode deve
    reproduzir a tela de referência daquele cluster (textos idênticos,
-   mesma visibilidade de blocos). Divergência = reprovação.
+   mesma visibilidade de blocos). Divergência = reprovação. Se a
+   divergência vier de um dado real contradizendo uma premissa do
+   schema aprovado, PARE e pergunte ao designer em vez de decidir — e
+   pergunte em linguagem simples, não em node ID: "o campo X mostra
+   valores diferentes nas duas referências, mas o schema aprovado não
+   previa isso como variável — é engano na referência, ou falta
+   variável no schema?", nunca "clippedText/overlap em 73:190". Detalhe
+   técnico (node IDs, propriedades) vem depois, como apoio, não como a
+   pergunta em si.
 7. Ao componentizar, gerar e aplicar a DESCRIÇÃO do componente
    (carimbo padrão de docs/estrutura-lib.md), extraindo a lista de
    variáveis dos boundVariables reais por varredura, nunca de memória.
+   Os campos [Variaveis] e [Estados] vêm da varredura do Figma; mas
+   [Etapa], [Modalidade], [Nivel] e [Gatilho] vêm do MAPA DE FLUXO e do
+   doc da etapa — se você não tiver essa informação, PERGUNTE em vez de
+   deixar em branco ou inventar. Um template sem carimbo, ou com
+   carimbo incompleto, não está pronto para publicar.
+   Só nomeie algo `tpl-` depois que as três condições estiverem
+   cumpridas (é COMPONENT, tem binding, tem carimbo). Antes disso o
+   nome é `ref-nome-cluster` — ver "O prefixo tpl- é CONQUISTADO" em
+   docs/estrutura-lib.md.
 8. Retornar node IDs criados/mutados e o relatório de equivalência.
 
 Protótipo nos templates: quando o fluxo diverge por cluster (etapas
@@ -70,6 +101,28 @@ Regras aprendidas em laboratório:
   faltas nem sobras. É a prova de aceitação do trabalho.
 - As telas de referência do designer ficam INTACTAS após a
   variabilização: são o contrato permanente de validação.
+- Nó de texto aninhado dentro de instância REMOTA invisible vira
+  inacessível para bind (regra 25 de figma-plugin-api/SKILL.md) — mais
+  um motivo para PROPERTY FIRST: texto exposto como component property
+  não sofre disso, só o fallback de nó interno sofre.
+- Texto vazio não é nó ausente e conta no gap do auto layout (regra 11
+  de figma-plugin-api/SKILL.md) — todo texto de cluster que pode ficar
+  vazio precisa da visibilidade de um ancestral bindada também,
+  reaproveitando um boolean de conteúdo já existente e coerente (eixo
+  4, "elemento aparece/some") em vez de inventar um novo.
+- Nunca construa referências, templates ou bindings dentro do arquivo
+  FONTE da biblioteca (o IDS/Mini DS) — esse arquivo é só o catálogo
+  publicado. Telas de consumo, comparação e binding vivem sempre no
+  arquivo consumidor (ex: Lab - Consignado Piloto).
+- O teste de equivalência (100% dos textos visíveis, sem falta nem
+  sobra) só faz sentido para conteúdo que É do schema. Campo
+  deliberadamente fora do schema (ex: dado de runtime) não deveria
+  divergir por ACIDENTE entre as referências cruas só porque quem
+  desenhou digitou exemplos diferentes à toa — isso quebra o teste sem
+  ser um bug real. Antes de rodar a equivalência, confirme que campos
+  fora do schema têm o MESMO valor de exemplo nas referências de todos
+  os clusters comparados; se não tiverem, é a referência que está
+  errada, não o binding.
 
 Regras herdadas do projeto: mobile 360 com auto layout correto;
 componentes SEMPRE do IDS via key (nunca recriar); properties via keys

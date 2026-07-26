@@ -43,6 +43,19 @@ Modes por collection dependem do plano Figma. Professional: 4.
 Enterprise: 40. Cinco clusters exigem plano com 5+ modes; confirmar o
 plano da org antes de apresentar a proposta.
 
+Teste feito em 2026-07-25 no lab (conta pessoal, time em tier Pro):
+`addMode` criou 8 modes numa collection SEM lancar erro. Ou seja, a
+Plugin API nao aplica o limite documentado — o que significa que
+"funcionou via API" NAO e evidencia de que o plano suporta. A restricao
+pode estar na UI, no publish da biblioteca ou no consumo pelo arquivo
+cliente, nao no `addMode`. CONCLUSAO PRATICA: nao confie neste teste
+para dimensionar o plano do banco; a verificacao real e (a) qual tier a
+org tem e (b) criar 5+ modes numa collection, PUBLICAR e consumir num
+segundo arquivo — o teste completo so acontece no ambiente do banco
+(item novo para docs/runbook-banco.md). Se o plano travar em 4 modes com
+5+ clusters, o eixo 1 (cluster = mode) precisa de plano B: dividir em
+mais de uma collection por grupo de clusters, ou negociar o tier.
+
 ## Os quatro eixos de variacao (normativos)
 
 1. CLUSTER: conteudo por orgao. Mecanismo: variaveis com modes.

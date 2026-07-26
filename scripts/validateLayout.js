@@ -20,6 +20,13 @@
  *     de auto layout (legítimo para badges/FABs, mas deve ser
  *     intencional, então é reportado como aviso).
  *  5. FONTE FALTANDO: hasMissingFont em qualquer TEXT descendente.
+ *  6. TEXTO BINDADO VAZIO (aviso, não reprova sozinho): TEXT com
+ *     boundVariables.characters preenchido mas characters === ''.
+ *     Estrutural, não sabe SE é esperado (etapa que não existe nesse
+ *     cluster tem valor vazio por design — ver skill
+ *     consignado-validacao, seção 5, que cruza contra o mapa de
+ *     fluxo). Aqui é só o sinal bruto: presença de texto bindado vazio,
+ *     para o validador ou o revisor humano decidir se é esperado.
  *
  * Uso via use_figma (a skill figma-use DEVE estar carregada):
  *   cole a função e chame `return await validateLayout('123:456')`.
@@ -35,6 +42,7 @@
  *   noAutoLayout: Array<{id: string, name: string, visibleChildren: number}>,
  *   absoluteChildren: Array<{id: string, name: string, parentId: string}>,
  *   missingFonts: Array<{id: string, name: string}>,
+ *   emptyBoundText: Array<{id: string, name: string}>,
  *   passed: boolean
  * }>}
  */
@@ -51,6 +59,7 @@ async function validateLayout(rootNodeId, opts = {}) {
     noAutoLayout: [],
     absoluteChildren: [],
     missingFonts: [],
+    emptyBoundText: [],
     passed: true,
   }
 
@@ -85,6 +94,16 @@ async function validateLayout(rootNodeId, opts = {}) {
     // 5. fontes faltando
     if (node.type === 'TEXT' && node.hasMissingFont) {
       report.missingFonts.push({ id: node.id, name: node.name })
+    }
+
+    // 6. texto bindado vazio (aviso; ver doc da funcao)
+    if (
+      node.type === 'TEXT' &&
+      node.boundVariables &&
+      node.boundVariables.characters &&
+      node.characters === ''
+    ) {
+      report.emptyBoundText.push({ id: node.id, name: node.name })
     }
 
     // 1. texto cortado

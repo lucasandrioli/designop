@@ -24,8 +24,12 @@ faltar, devolvendo a lista em linguagem de negócio (ver
    fictícios com regras inventadas, e você estaria construindo em cima
    de regra falsa sem ter como saber. O mesmo vale para etapa, mapa de
    fluxo e receitas.
-3. **Referência crua existe para cada cluster**, na etapa indicada. Sem
-   ela não há o que clonar, e você não constrói tela do zero.
+3. **Você sabe QUAL arquivo do Figma, e a referência crua existe nele
+   para cada cluster**, na etapa indicada. Se a tarefa não trouxe link
+   ou fileKey, peça — não procure em aba aberta, histórico ou estado
+   local: o arquivo certo é o que o designer indicar, e acertar por
+   acaso hoje vira erro silencioso quando houver mais de um. Sem
+   referência não há o que clonar, e você não constrói tela do zero.
 4. **Mapa de fluxo cobre a etapa**, se ela for de composição variável.
    Sem isso você não preenche `[Nivel]` e `[Gatilho]` do carimbo — e o
    item 7 manda perguntar, nunca inventar.

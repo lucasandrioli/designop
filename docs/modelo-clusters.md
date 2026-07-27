@@ -29,7 +29,7 @@ skill e agente do projeto segue este modelo.
 | Elemento aparece/some | boolean | visible do no |
 | Valor, limite, prazo | number | characters via formatacao, ou props numericas |
 | Componente aberto/fechado (variant) | string | variant property (TESTAR via API; fallback: boolean em secao expandida) |
-| Property de componente divergente | qualquer | BINDING NA PROPERTY: setProperties com VariableAlias (TEXT e BOOLEAN aceitam variavel direto; validado no teste 9) |
+| Property de componente divergente | qualquer | BINDING NA PROPERTY: setProperties com VariableAlias (TEXT e BOOLEAN aceitam variavel direto) |
 
 ## Regras
 
@@ -83,22 +83,14 @@ dessas tres verdades e substituida por booleano ou por inspecao visual.
 
 ## Limite de plano (checar no banco)
 
-Modes por collection dependem do plano Figma. Professional: 4.
-Enterprise: 40. Cinco clusters exigem plano com 5+ modes; confirmar o
-plano da org antes de apresentar a proposta.
+O limite de modes por collection depende do plano Figma da organizacao.
+Antes de dimensionar a biblioteca, confirme o tier e teste criar,
+publicar e consumir a quantidade real de modes necessaria. Uma chamada
+da Plugin API que cria modes sem erro nao prova que a UI, a publicacao e
+o consumo da biblioteca aceitarao a mesma quantidade.
 
-Teste feito em 2026-07-25 no lab (conta pessoal, time em tier Pro):
-`addMode` criou 8 modes numa collection SEM lancar erro. Ou seja, a
-Plugin API nao aplica o limite documentado — o que significa que
-"funcionou via API" NAO e evidencia de que o plano suporta. A restricao
-pode estar na UI, no publish da biblioteca ou no consumo pelo arquivo
-cliente, nao no `addMode`. CONCLUSAO PRATICA: nao confie neste teste
-para dimensionar o plano do banco; a verificacao real e (a) qual tier a
-org tem e (b) criar 5+ modes numa collection, PUBLICAR e consumir num
-segundo arquivo — o teste completo so acontece no ambiente do banco
-(item novo para docs/runbook-banco.md). Se o plano travar em 4 modes com
-5+ clusters, o eixo 1 (cluster = mode) precisa de plano B: dividir em
-mais de uma collection por grupo de clusters, ou negociar o tier.
+Se o limite nao comportar todos os clusters, use uma das topologias
+previstas em `docs/topologia-biblioteca.md` ou negocie o tier adequado.
 
 ## Os cinco eixos de variacao (normativos)
 
@@ -153,9 +145,9 @@ e revisado pelo Comparador, nao escrito a mao:
   nomeados = casos de uso
 - caminho principal = cadeia a partir do starting point; tela com ida
   e volta ao no de origem = desdobramento (nivel 2)
-- validado em lab: setReactionsAsync e flowStartingPoints funcionam
-  por API para leitura e escrita; deteccao de nivel 2 e de divergencia
-  de conteudo em desdobramento comprovada sem falso positivo
+- `setReactionsAsync` e `flowStartingPoints` sao os mecanismos usados
+  para leitura e escrita desse grafo. Confirme-os na bateria de fumaca
+  do ambiente antes da primeira montagem.
 O mapa versionado no repo continua sendo a documentacao oficial; o
 prototipo e a fonte de onde ele e gerado e contra a qual e conferido.
 
@@ -183,17 +175,14 @@ prototipo e a fonte de onde ele e gerado e contra a qual e conferido.
   referencias nas paginas dessas etapas. Nada de duplicar etapa para
   dentro do cluster.
 
-## Prova de conceito anterior do fluxo designer-no-centro (lab)
+## Prova do fluxo designer no centro
 
-Ciclo validado de ponta a ponta em laboratorio antes da cadeia atual:
-referencias cruas por cluster construidas pelo designer -> comparador
-achou 5/5 divergencias plantadas sem falso positivo (17 textos) ->
-schema aprovado (6 variaveis) -> montador bindou template clonado da
-referencia -> teste de equivalencia matematico passou nos 2 modes
-(16/16 e 17/17 textos). As referencias permanecem como contrato de
-validacao.
+O ciclo obrigatorio e: referencias cruas por cluster, comparacao,
+schema aprovado, montagem do template e equivalencia por mode. As
+referencias permanecem como contrato de validacao. A primeira execucao
+no ambiente do banco registra essa evidencia no runbook da rodada.
 
-## Listas com quantidade ou forma variavel por cluster (decisao do teste 4)
+## Listas com quantidade ou forma variavel por cluster
 
 - QUANTIDADE: slots + booleans. O template nasce com os slots do maior
   caso atual; cada slot tem mostrar (boolean) e conteudo (strings) por
@@ -213,7 +202,7 @@ validacao.
   ESPECIALIZACAO ESTRUTURAL. Ela exige template funcional separado,
   registro no catalogo da etapa e selecao explicita no mapa.
 
-## Doutrina de binding (hierarquia, definida no teste 9)
+## Doutrina de binding
 
 1. PROPERTY PRIMEIRO: se o componente expoe property (TEXT/BOOLEAN),
    binde a variavel de cluster NA PROPERTY via setProperties +

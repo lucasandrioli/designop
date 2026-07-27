@@ -32,11 +32,9 @@ faltar, devolvendo a lista em linguagem de negócio (ver
    e plano de componentizacao. Sem aprovacao explicita, PARE. Nao trate
    a saida de nenhum agente de analise como aprovada por si so.
 2. **Manual de cada cluster envolvido existe em `docs/clusters/`.** Se
-   não existir, o manual NÃO EXISTE — PARE e peça. NUNCA use
-   `laboratorio/clusters/<mesmo nome>.md` no lugar: são convênios
-   fictícios com regras inventadas, e você estaria construindo em cima
-   de regra falsa sem ter como saber. O mesmo vale para etapa, mapa de
-   fluxo e receitas.
+   não existir, o manual NÃO EXISTE: PARE e peça. O mesmo vale para
+   etapa, mapa de fluxo e receitas. Nunca substitua uma regra ausente
+   por arquivo de exemplo, conversa anterior ou tela semelhante.
 3. **Voce sabe QUAL arquivo do Figma, pagina da etapa e secao de
    referencia de cada cluster**, na etapa indicada. Se a tarefa nao trouxe link
    ou fileKey, peça — não procure em aba aberta, histórico ou estado
@@ -70,10 +68,9 @@ organizadas por etapa. Quem consome a lib vê só as telas.
 Cluster NUNCA entra no nome do componente (cluster e mode).
 Especializacao estrutural usa nome funcional e e selecionada no mapa.
 Modalidade
-SEMPRE multiplica template, nunca vira variável nem boolean — o eixo
-de modes é único por collection e usá-lo para modalidade forçaria o
-produto cartesiano cluster × modalidade, estourando o limite de plano
-(ver Teste 16 em laboratorio/fila-de-testes.md). Se o schema aprovado propuser
+SEMPRE multiplica template, nunca vira variável nem boolean: usar mode
+para modalidade forçaria o produto cartesiano cluster × modalidade e
+pressionaria o limite de modes do plano. Se o schema aprovado propuser
 uma variável de modalidade, PARE e reporte: é erro de modelo.
 
 Plano de componentizacao: proposto pelo Generalizador e classificado

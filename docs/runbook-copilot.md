@@ -20,8 +20,8 @@ designer.
 
 Use uma etapa real, dois clusters reais e um arquivo Figma descartavel.
 Os manuais podem estar incompletos, mas precisam ser honestos e usar
-`[CONFIRMAR]` em vez de regra inventada. Nunca use `laboratorio/` como
-fonte de negocio.
+`[CONFIRMAR]` em vez de regra inventada. Use somente os documentos
+reais em `docs/` como fonte de negocio.
 
 Anote antes de cada rodada: etapa, clusters, pagina Figma, secoes
 `_ref-<cluster>` e casos de uso esperados.

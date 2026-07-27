@@ -20,14 +20,11 @@ Depois do designer terminar uma referencia em uma pagina de etapa
 o template). Registre tambem a etapa, o cluster e o caso de uso em que
 a referencia foi observada.
 
-Atenção: telas de referência construídas pelo COORDENADOR (Claude Code)
-como stand-in do designer, para testar o pipeline dos agentes em
-laboratório, NÃO são fonte válida de receita — elas refletem hábito de
-IA, não o padrão de construção do designer real. Antes de extrair
-qualquer receita, confirme que a tela foi de fato desenhada por um
-humano designer; se houver dúvida, pergunte em vez de assumir. Telas
-assim costumam estar documentadas como teste/lab em
-laboratorio/fila-de-testes.md, não em docs/receitas/.
+Atenção: telas criadas por agente, placeholders ou qualquer material de
+teste NÃO são fonte válida de receita: refletem uma simulação, não o
+padrão de construção do designer real. Antes de extrair qualquer
+receita, confirme que a tela foi de fato desenhada por um humano
+designer; se houver dúvida, pergunte em vez de assumir.
 
 ## O que extrair (somente fatos observados, nunca invenção)
 

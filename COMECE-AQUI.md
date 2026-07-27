@@ -9,9 +9,9 @@ os moldes (`_template.md`). Isso e proposital: os agentes tem proibicao
 explicita de inventar regra de negocio, e a checagem inicial do
 comparador PARA e pede o que falta em vez de comecar sem.
 
-O conteudo do laboratorio esta em `laboratorio/`, fora do caminho de
-leitura dos agentes. Serve de exemplo e de evidencia. Nao copie de la
-para `docs/`: sao convenios ficticios com regras inventadas.
+O repositorio chega vazio de regras de negocio de proposito. Os agentes
+trabalham somente com o que estiver documentado em `docs/` e marcado
+como verdadeiro pelo time responsavel.
 
 ## Os sete agentes
 
@@ -58,7 +58,7 @@ limite de 6 chamadas por MES, inviavel. Resolva isso antes de tudo.
 
 NAO construa nada ainda. Rode os 10 itens de `docs/runbook-banco.md`
 num arquivo Figma descartavel. E o que prova que o ambiente do banco se
-comporta como o laboratorio.
+comporta como o fluxo espera.
 
 O item 5 (binding em componente complexo do IDS) e o critico:
 - PASSOU: siga em frente.
@@ -161,8 +161,9 @@ Daqui em diante isso se repete por etapa e por convenio novo.
 
 ## O que NAO fazer
 
-- Nao copie nada de `laboratorio/` para `docs/`. Sao convenios
-  ficticios; o agente vai tratar como regra real.
+- Nao use arquivo de exemplo, conversa anterior ou tela semelhante como
+  regra de negocio. O agente so pode usar os documentos reais em
+  `docs/`.
 - Nao peca ao agente para criar telas do zero (ainda). Ele nao sabe
   como voce constroi. Isso e o Bloco 3, e depende de `docs/receitas/`
   acumular material via aprendiz.
@@ -190,4 +191,3 @@ Daqui em diante isso se repete por etapa e por convenio novo.
 | `docs/etapas/` | Definicao de cada etapa | **Voce preenche** |
 | `docs/mapa-fluxo-*.md` | Quais telas existem em cada convenio | **Voce preenche** |
 | `docs/receitas/` | Como voce constroi | O aprendiz preenche |
-| `laboratorio/` | Evidencia dos 16 testes + exemplos ficticios | So leitura |

@@ -33,9 +33,9 @@ sao objetos diferentes.
 
 ## Modalidade na nomenclatura (decidido em 2026-07-25)
 
-MODALIDADE multiplica TEMPLATE, nunca mode (ver docs/modelo-clusters.md
-e o Teste 16 em laboratorio/fila-de-testes.md). Por isso ela entra no NOME do
-componente, como nivel intermediario de hierarquia:
+MODALIDADE multiplica TEMPLATE, nunca mode (ver
+docs/modelo-clusters.md). Por isso ela entra no NOME do componente, como
+nivel intermediario de hierarquia:
 
     simular-e-contratar/tpl-simulacao          <- primeira concessao
     simular-e-contratar/refin/tpl-simulacao    <- refinanciamento

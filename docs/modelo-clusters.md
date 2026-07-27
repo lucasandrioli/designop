@@ -34,6 +34,9 @@ skill e agente do projeto segue este modelo.
 - Nomes de mode: cluster-N-apelido.
 - Todo texto bindado: fonte carregada antes do binding e textAutoResize
   HEIGHT ou WIDTH_AND_HEIGHT.
+- Template-mestre nao pina mode de cluster. O mode explicito fica no
+  wrapper de preview ou no frame de Fluxos. Ao clonar referencia para
+  montar template, limpe modes herdados do clone e seus descendentes.
 - Validacao obrigatoria EM CADA MODE (validateLayout por mode via
   setExplicitVariableModeForCollection): texto que cabe num cluster
   pode estourar em outro.

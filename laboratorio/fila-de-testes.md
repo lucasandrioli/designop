@@ -753,3 +753,34 @@ detecta.
 Resultado: PASSOU. A premissa arquitetural mais fundamental do projeto
 resistiu ao primeiro teste real, e ganhou um argumento melhor do que o
 que estava escrito.
+
+## Teste 17: clone com mode de cluster herdado
+
+Objetivo tecnico: provar que uma referencia clonada pode carregar um
+mode explicito de cluster para dentro do template-mestre e fazer o
+template ignorar o mode do preview.
+
+Cenario: a referencia do Cluster A foi clonada para formar um template
+com cinco textos variaveis. O clone tinha mode explicito da collection
+de conteudo. Um preview do Cluster A ficou correto; o preview do
+Cluster B recebeu o mode B no wrapper, mas continuou mostrando os cinco
+textos do Cluster A. Layout e estrutura passaram, portanto a falha so
+apareceu na equivalencia de conteudo contra a referencia crua.
+
+Veredito: um template-mestre e seus descendentes nao podem ter mode
+explicito da collection de conteudo. Depois de clonar uma referencia,
+o Montador deve limpar o mode no clone inteiro antes de componentizar.
+Modes ficam somente em wrappers de preview ou frames de Fluxos.
+
+Regressao exigida:
+
+1. `validateCreation` recebe `contentCollectionId`.
+2. O script reprova template sem alias da collection de conteudo, mesmo
+   que haja tokens de cor ou tipografia do IDS em instancias aninhadas.
+3. O script reprova `pinnedContentModes` no master ou em descendente.
+4. A equivalencia em dois modes confirma que o preview B nao herda
+   conteudo do preview A.
+
+Resultado: PASSOU no arquivo Figma descartavel `TESTE`. A correcao foi
+aplicada na doutrina, no Montador e no Validador. Este teste e evidencia
+tecnica; nao define regra de negocio de nenhum convenio.

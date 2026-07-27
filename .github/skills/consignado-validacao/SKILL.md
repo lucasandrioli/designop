@@ -110,6 +110,12 @@ Verifique também:
   WIDTH_AND_HEIGHT; nunca NONE/TRUNCATION)
 - todo conteúdo que DEVERIA variar por cluster está bindado em algum
   dos dois lugares — cruze com a matriz do comparador, se houver
+- rode `validateCreation` informando `contentCollectionId` da collection
+  de conteudo. `missingContentBindings` reprova: token visual do IDS nao
+  substitui binding de conteudo.
+- `pinnedContentModes` reprova: master de template e seus descendentes
+  nao podem ter mode explicito da collection de conteudo. O mode fica
+  somente no wrapper de preview ou no frame de Fluxos.
 
 ### 3b. Equivalência contra as referências cruas
 
@@ -231,7 +237,9 @@ a etapa"). Isto transforma validacao de "esta bonito?" em "esta
 conforme?", que e a linguagem de auditoria.
 
 ## Teste de troca de modo (obrigatório para templates com variáveis)
-Para cada tela: alterne a variável de modo do cluster
-(setExplicitVariableModeForCollection, com fontes carregadas antes) e
-rode validateLayout de novo EM CADA MODO. Texto que cabe em MG pode
-estourar em outro cluster.
+Para cada tela, primeiro confirme que master e descendentes nao tem
+mode explicito da collection de conteudo. Depois alterne o mode apenas
+no wrapper de preview ou no frame de Fluxos
+(`setExplicitVariableModeForCollection`, com fontes carregadas antes),
+compare o conteudo com a referencia e rode validateLayout de novo EM
+CADA MODO. Texto que cabe em MG pode estourar em outro cluster.

@@ -72,7 +72,7 @@ Clique em `Validar entrega`, envie e registre passou ou reprovou.
 
 | Verificacao | Resultado esperado | PASSOU/FALHOU |
 | --- | --- | --- |
-| Agentes detectados | 7 agentes e 6 skills sem diagnostico | |
+| Agentes detectados | 7 agentes e 7 skills sem diagnostico | |
 | MCP Figma | autenticado e ferramentas visiveis | |
 | Handoffs | mudam o agente, preenchem prompt, `send: false` | |
 | Leitor a Especializador | nenhuma escrita local ou no Figma | |

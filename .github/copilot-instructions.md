@@ -13,17 +13,17 @@ Escopo e fronteira do projeto:
   derive para essas frentes; se o usuário pedir, confirme que é uma
   mudança consciente de escopo antes.
 
-Divisão de trabalho (Camada 1 vigente):
+Divisão de trabalho (Bloco 1 vigente):
 - O DESIGNER constrói as telas de referência (uma por cluster, cruas).
-- O agente inventario COMPARA as referências e propõe o schema.
+- O agente comparador COMPARA as referências e propõe o schema.
 - O designer APROVA o schema.
-- O agente variabilizador cria variáveis, binda o template e valida
+- O agente montador cria variáveis, binda o template e valida
   equivalência contra as referências.
 - O agente validador roda em toda entrega.
 - O agente aprendiz roda APÓS cada tela do designer, extraindo receitas
   para docs/receitas/. É o que constrói, ao longo do tempo, a
   capacidade do agente de construir telas no padrão do designer
-  (Camada 3, custodiante). Não pule: o conhecimento se perde se as
+  (Bloco 3, custodiante). Não pule: o conhecimento se perde se as
   telas passarem sem observação.
 
 Regras sempre ativas:

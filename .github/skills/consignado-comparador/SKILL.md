@@ -1,15 +1,15 @@
 ---
-name: consignado-inventario
+name: consignado-comparador
 description: >-
   Auditoria somente leitura de arquivos Figma do crédito consignado para
   gerar matriz de variação entre clusters (órgãos públicos). Use quando o
   usuário pedir para inventariar, mapear, comparar ou auditar telas de
   clusters do consignado, ou preparar a criação da biblioteca central de
-  templates. Gatilhos: inventário, matriz de variação, comparar clusters,
+  templates. Gatilhos: comparador, matriz de variação, comparar clusters,
   auditar telas, mapear divergências.
 ---
 
-# Inventário de Telas — Consignado
+# Comparador de Telas — Consignado
 
 Três modos. MODO FLUXOS (primário quando as referências estão
 linkadas por protótipo): extrair o grafo de navegação de cada página
@@ -37,7 +37,7 @@ Siga docs/modelo-clusters.md (clusters como modes).
 - As telas instanciam o IDS (Itaú Design System): componentes, tokens,
   ícones e ilustrações vêm de 4 bibliotecas externas distintas
 
-## Passo 0a — Pré-requisitos (a PRIMEIRA coisa, antes até do intake)
+## Checagem inicial (a PRIMEIRA coisa, antes até do intake)
 
 Não comece a comparar num terreno que não existe. Verifique, na ordem,
 e PARE se faltar — devolvendo a lista do que falta em linguagem de
@@ -60,7 +60,7 @@ negócio, não em nome de arquivo. Referência completa: `docs/instalacao.md`.
    convênio só eu não tenho contra o que comparar; a variação só
    aparece no confronto entre dois."*
 4. **Há tela de referência para cada cluster declarado?** Se faltar de
-   algum, PARE — você não constrói tela do zero (Camada 3 do projeto,
+   algum, PARE — você não constrói tela do zero (Bloco 3 do projeto,
    ainda não destravada).
 
 O que NÃO é motivo para parar: tela bagunçada. Componente destacado,
@@ -68,7 +68,7 @@ camada sem nome, sem auto layout, cor fora do token — tudo isso é
 esperado e é seu trabalho auditar e reportar (Modo Arqueologia). Fonte
 suja é tolerada; fonte ausente não é.
 
-## Passo 0b — Intake (depois dos pré-requisitos, antes de comparar)
+## Perguntas antes de começar (depois dos pré-requisitos, antes de comparar)
 
 Nunca assuma que o designer vai entregar telas já nomeadas ou
 organizadas do jeito que a doutrina pede (`ref-nome-cluster`, página
@@ -268,7 +268,7 @@ convenio. E assim que o conhecimento sai das cabecas e entra no repo.
 ## Saída
 
 Duas partes, nesta ordem. A primeira é o que o designer realmente lê;
-a segunda é referência técnica (para o variabilizador e para quem
+a segunda é referência técnica (para o montador e para quem
 quiser auditar).
 
 ### 1. Checklist para aprovação (sempre primeiro, sempre em linguagem de negócio)
@@ -317,9 +317,9 @@ Exemplo real, formato corrigido (etapa Revisar, c1-mg × c4-federais):
     Responda com o número + sim/não. Se não, me diga o motivo — isso
     vira regra registrada no manual do convênio.
 
-### 2. Detalhe técnico (`inventario/<escopo>.md`)
+### 2. Detalhe técnico (`comparador/<escopo>.md`)
 
 Depois do checklist, ou em arquivo separado linkado: as 6 seções
 completas, tudo referenciado por node ID, tabelas markdown, sem prosa
-desnecessária. Esta parte existe para o variabilizador consumir e para
+desnecessária. Esta parte existe para o montador consumir e para
 auditoria — não é o que se espera que o designer leia linha a linha.

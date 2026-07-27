@@ -35,7 +35,7 @@ variants), não a estrutura da tela. Ver docs/estrutura-lib.md,
 
 | Template | Componente na lib | Observado em |
 | --- | --- | --- |
-| Simulação | `simular-e-contratar/tpl-simulacao` | Lab - Consignado Piloto, node `73:102`, construído e validado via os 3 agentes reais (inventario/variabilizador/validador) em 2026-07-25 — ver docs/fila-de-testes.md, Teste 10 |
+| Simulação | `simular-e-contratar/tpl-simulacao` | Lab - Consignado Piloto, node `73:102`, construído e validado via os 3 agentes reais (comparador/montador/validador) em 2026-07-25 — ver docs/fila-de-testes.md, Teste 10 |
 
 ### Nível 2 (opcional, alcançável a partir do nível 1)
 

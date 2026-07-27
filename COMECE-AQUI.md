@@ -5,13 +5,13 @@ Ordem exata. Nao pule etapas: cada uma protege a seguinte.
 > **Antes de rodar qualquer agente, leia `docs/instalacao.md`.** Ele
 > lista o que precisa EXISTIR (ambiente, conhecimento, artefato Figma)
 > para os agentes conseguirem operar, e define o conjunto minimo viavel
-> para fechar o primeiro ciclo: 1 etapa + 2 clusters. O Passo 0a do
-> inventario cobra esses pre-requisitos e recusa comecar sem eles.
+> para fechar o primeiro ciclo: 1 etapa + 2 clusters. A checagem inicial
+> do comparador cobra esses pre-requisitos e recusa comecar sem eles.
 >
 > [PENDENTE] Este documento (COMECE-AQUI) ainda descreve a invocacao
-> antiga dos agentes (`@inventario`) e nao menciona intake, modalidade
+> antiga dos agentes (`@comparador`) e nao menciona intake, modalidade
 > nem o formato de checkpoint. A invocacao atual e por slash command:
-> `/inventario`, `/variabilizador`, `/validador`. Atualizacao completa
+> `/comparador`, `/montador`, `/validador`. Atualizacao completa
 > pendente.
 
 ---
@@ -25,7 +25,7 @@ Ordem exata. Nao pule etapas: cada uma protege a seguinte.
 3. Autenticar com a conta Figma do Itau quando abrir o navegador.
 4. Conferir no chat do Copilot:
    - digite /skills : devem aparecer as skills deste repo
-   - o seletor de agente deve mostrar: inventario, variabilizador,
+   - o seletor de agente deve mostrar: comparador, montador,
      validador
 5. Teste de vida: peca ao Copilot "liste as bibliotecas conectadas
    neste arquivo Figma" passando o link de um arquivo do consignado.
@@ -77,12 +77,12 @@ Dica: nao se preocupe com nomenclatura. Voce declara ao agente "estas
 telas sao da etapa X" e ele normaliza.
 
 ### O AGENTE FAZ (o repetitivo):
-4. `@inventario` : "compare as referencias dos dois clusters na etapa
+4. `@comparador` : "compare as referencias dos dois clusters na etapa
    simular-e-contratar". Ele devolve: o que muda entre clusters, a
    proposta de variaveis e o mapa do fluxo.
 5. VOCE REVISA a proposta (nomes das variaveis, o que virou o que).
    Corrija o que estiver errado. Este e o momento de decisao humana.
-6. `@variabilizador` : "componentize e binde conforme o schema
+6. `@montador` : "componentize e binde conforme o schema
    aprovado". Ele cria as variaveis, componentiza a tela, conecta tudo
    e carimba a descricao.
 7. `@validador` : "valide". Ele confere layout quebrado, texto cortado,
@@ -91,7 +91,7 @@ telas sao da etapa X" e ele normaliza.
 ### DEPOIS (a manutencao, onde o investimento se paga):
 - Mudou um texto num cluster? Edite a celula na tabela de variaveis do
   Figma. So isso.
-- Entrou cluster novo? Adicione o mode, rode o inventario no material
+- Entrou cluster novo? Adicione o mode, rode o comparador no material
   novo, preencha os valores.
 - O IDS mudou? Rode `@validador` : ele varre o impacto em tudo.
 
@@ -100,6 +100,6 @@ telas sao da etapa X" e ele normaliza.
 ## O que NAO fazer
 
 - Nao peca ao agente para criar telas do zero (ainda). Ele nao sabe
-  como voce constroi. Isso e a Camada 2 (docs/receitas/).
+  como voce constroi. Isso e o Bloco 3 (docs/receitas/).
 - Nao construa a lib inteira de uma vez. Uma etapa por vez, validando.
 - Nao pule a bateria de fumaca. Serio.

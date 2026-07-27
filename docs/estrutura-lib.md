@@ -73,7 +73,7 @@ Frame com `tpl-` no nome e uma MENTIRA no arquivo: promete um template
 publicavel e entrega um rascunho. Enquanto nao cumprir as tres, o nome
 correto e `ref-nome-cluster` (referencia crua). Isso ja aconteceu de
 verdade neste projeto: 9 frames foram construidos a mao com prefixo
-`tpl-` sem serem componentes nem terem passado pelo variabilizador, e
+`tpl-` sem serem componentes nem terem passado pelo montador, e
 so foram pegos numa auditoria manual — o validador nao checava isso.
 Agora checa (secao 8 da skill consignado-validacao).
 

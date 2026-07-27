@@ -65,7 +65,7 @@ mais de uma collection por grupo de clusters, ou negociar o tier.
    (ex: consentimento so no cluster 4; anuencia externa so em 4 e 2.1).
    Mecanismo: todos os templates de etapa existem na lib; um MAPA DE
    FLUXO POR CLUSTER (tabela markdown versionada em docs/, gerada e
-   atualizada pelo inventario, com diagrama opcional) define a
+   atualizada pelo comparador, com diagrama opcional) define a
    sequencia. Mode controla conteudo; mapa controla sequencia.
 4. ESTADO DE UI: variacao por acao do usuario dentro da tela (oferta
    adicionada/removida, efetivacao aguardando anuencia/confirmada,
@@ -101,7 +101,7 @@ regras: elas vem da tabela.
 
 Quando as telas de referencia estao conectadas por prototipo (o que o
 designer ja faz naturalmente), o mapa de fluxo e DERIVADO do grafo de
-navegacao pelo inventario (modo fluxos), nao escrito a mao:
+navegacao pelo comparador (modo fluxos), nao escrito a mao:
 - telas = nos; reactions NAVIGATE = arestas; flowStartingPoints
   nomeados = casos de uso
 - caminho principal = cadeia a partir do starting point; tela com ida
@@ -120,7 +120,7 @@ prototipo e a fonte de onde ele e gerado e contra a qual e conferido.
   cluster). Muda pela tabela de variaveis no Figma.
 - NUNCA duplicar composicao como boolean de variavel (ex:
   fluxo/tem-consentimento). Verdade duplicada diverge.
-- Populacao: o inventario gera o rascunho do mapa (Passo 7) e semeia os
+- Populacao: o comparador gera o rascunho do mapa (Passo 7) e semeia os
   valores das variaveis (Passo 5); designers validam; manutencao segue
   por PR (mapa) e edicao de tabela (variaveis).
 - Onboarding de cluster novo: (1) coluna no mapa, (2) mode na
@@ -132,7 +132,7 @@ prototipo e a fonte de onde ele e gerado e contra a qual e conferido.
 Ciclo validado de ponta a ponta em laboratorio: referencias cruas por
 cluster construidas pelo designer -> comparador achou 5/5 divergencias
 plantadas sem falso positivo (17 textos) -> schema aprovado (6
-variaveis) -> variabilizador bindou template clonado da referencia ->
+variaveis) -> montador bindou template clonado da referencia ->
 teste de equivalencia matematico passou nos 2 modes (16/16 e 17/17
 textos). As referencias permanecem como contrato de validacao.
 

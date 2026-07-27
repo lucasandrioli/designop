@@ -143,7 +143,7 @@ Achados novos:
   VISIBLE DO FRAME a `consentimento/mostra-aviso` (mesmo boolean que ja
   controlava o aviso, eixo 4, sem inventar variavel nova); depois da
   correcao a versao c1-mg colapsa limpo (356px -> 230px de altura, sem
-  vao). Regra nova em variabilizador.agent.md: texto que pode ficar
+  vao). Regra nova em montador.agent.md: texto que pode ficar
   vazio por cluster precisa ter a visibilidade de um ancestral bindada
   tambem, nao so o characters.
 - Achado de dados: a variavel `fluxo/tem-consentimento` (e
@@ -159,7 +159,7 @@ Achados novos:
   componente duplicado do que criei no Mini DS — e uma instancia de
   `banner-desconto` renomeada por PAPEL (convencao ja documentada em
   docs/receitas/_comuns.md). Confirmado via getMainComponentAsync().name.
-- Auditoria pos-construcao (Passo 2 do inventario: characters +
+- Auditoria pos-construcao (Passo 2 do comparador: characters +
   boundVariables de todo TEXT) achou 2 gaps reais no
   `tpl-consentimento`, ambos de TECNICA de construcao, nao de
   mecanismo novo: (a) header-fluxo.Titulo ficou no default do
@@ -193,7 +193,7 @@ etapa, evita a questao de composicao de fluxo do consentimento).
    que ninguem mais ia desenhar nesta sessao): ref-simulacao-c1-mg e
    ref-simulacao-c4-federais, com componentes remotos do Mini DS,
    textos digitados a mao, sem variavel nenhuma.
-2. Agente `inventario` (real): comparou as 2 referencias, produziu
+2. Agente `comparador` (real): comparou as 2 referencias, produziu
    matriz de variacao completa e propos schema de 5 variaveis. Achou 2
    divergencias sem regra documentada (rotulo do campo-valor menciona
    nome do convenio; tom do texto do seguro muda entre clusters) e um
@@ -206,7 +206,7 @@ etapa, evita a questao de composicao de fluxo do consentimento).
    existe no cluster 5), o que virou regra nova documentada em
    docs/clusters/c1-mg.md (R3 confirmada, R5 nova) e
    docs/clusters/c4-federais.md (R7, R8 novas).
-4. Agente `variabilizador` (real): criou a collection
+4. Agente `montador` (real): criou a collection
    `conteudo-consignado` (2 modes) com as 4 variaveis aprovadas,
    clonou e componentizou `simular-e-contratar/tpl-simulacao`, bindou
    property-first (3 TEXT) + visible do no (1 BOOLEAN, sem property
@@ -233,15 +233,15 @@ etapa, evita a questao de composicao de fluxo do consentimento).
    reprova, mas vale alinhar o manual quando virar ATIVA.
 
 Resultado: PASSOU, ciclo fechado ponta a ponta pelos 3 agentes reais.
-Aprendizado principal: o agente variabilizador seguiu a regra "pare e
+Aprendizado principal: o agente montador seguiu a regra "pare e
 reporte em vez de decidir sozinho" exatamente como esperado quando o
 dado real das referencias contradisse uma premissa do schema aprovado
 — a doutrina de checkpoints funcionou no primeiro teste real dela.
 
-## Teste 11: Modo Fluxos do inventario + retroalimentacao real nos manuais
+## Teste 11: Modo Fluxos do comparador + retroalimentacao real nos manuais
 
 Dois objetivos nesta rodada: (1) testar o "Modo Fluxos" da skill
-consignado-inventario (comparar grafos de prototipo, nao telas
+consignado-comparador (comparar grafos de prototipo, nao telas
 isoladas) pela primeira vez de verdade; (2) testar se a resposta do
 designer ao checklist volta pros manuais automaticamente (o
 "retroalimentar" que o designer pediu), antes de formalizar isso como
@@ -265,7 +265,7 @@ sem manual previo. Conteudo construido pelo coordenador como
 placeholder para testar o mecanismo (nao e levantamento real do
 convenio ainda).
 
-Agente `inventario` (real, Modo Fluxos): extraiu o grafo das 2 paginas
+Agente `comparador` (real, Modo Fluxos): extraiu o grafo das 2 paginas
 via reactions, classificou por TOPOLOGIA (nao por rotulo de botao) —
 nenhum RAMO DE EXCECAO, 1 DESDOBRAMENTO no Gov SP (o no de escolha de
 canal, ida e volta). Achou 3 coisas:
@@ -292,12 +292,12 @@ c4-federais (so espera passiva). E o eixo 3 (composicao de fluxo) que
 o mapa ja modela em outras linhas (nivel 2 presente num cluster,
 ausente noutro) — nao precisava de uma etapa nova, so de uma linha
 nivel 2 a mais pendurada na etapa que ja existia. Isso e o achado mais
-importante da rodada: nao foi o inventario que errou (ele so reportou
+importante da rodada: nao foi o comparador que errou (ele so reportou
 a divergencia estrutural, fato observado); foi a INTERPRETACAO do
 coordenador sobre esse fato que errou, ao escrever a conclusao mais
 forte ("processos diferentes") direto no manual sem marcar como
 [VERIFICAR COM DESIGNER] antes de aplicar. Licao: quando o achado do
-inventario inclui uma interpretacao (nao so o fato bruto), a
+comparador inclui uma interpretacao (nao so o fato bruto), a
 interpretacao TAMBEM precisa ser confirmada antes de virar regra —
 nao so o fato.
 
@@ -314,7 +314,7 @@ feedback:
 
 Resultado: PASSOU nos dois objetivos, com uma correcao no meio do
 caminho. O Modo Fluxos capturou uma divergencia estrutural real que
-comparacao de conteudo isolado teria escondido — isso o inventario
+comparacao de conteudo isolado teria escondido — isso o comparador
 acertou. A retroalimentacao manual funcionou tecnicamente (escreveu
 nos arquivos certos, no formato certo), mas expos um risco real: o
 coordenador aplicou uma INTERPRETACAO do achado como se fosse o
@@ -348,7 +348,7 @@ achados do proprio designer olhando o arquivo:
 
 Depois, o designer pediu uma tela com MUITOS accordions, icones
 diferentes por tema, conteudo variando por cluster — pra testar se o
-variabilizador consegue ler o conteudo de accordions FECHADOS, nao só
+montador consegue ler o conteudo de accordions FECHADOS, nao só
 os abertos. Isso expos que `item-colapsavel` nao tinha slot de icone
 (adicionado agora: property `Icone` INSTANCE_SWAP, nos dois variants,
 publicada junto com 4 icones novos — calendario, escudo, cadeado,
@@ -361,10 +361,10 @@ instancias de accordion (abertas e fechadas) confirmou que o valor da
 property `Conteudo#7:3` esta sempre presente e legivel, mesmo quando o
 variant ativo e `Estado=fechado` e o no de texto correspondente NAO
 EXISTE naquele variant. A property vive na instancia, nao no variant
-visivel. Resultado: o inventario/variabilizador nunca dependem de
+visivel. Resultado: o comparador/montador nunca dependem de
 screenshot pra ler conteudo de accordion fechado — leem
 `componentProperties` direto, que sempre tem o valor real. Regra
-adicionada ao Passo 2 da skill consignado-inventario.
+adicionada ao Passo 2 da skill consignado-comparador.
 
 Achado registrado, nao corrigido ainda: a seta indicadora do
 `item-colapsavel` parece invertida (variant aberto mostra seta pra
@@ -402,12 +402,12 @@ so marcou 1 aviso de noAutoLayout. Nao pegou detached, nem hardcoded,
 nem nome de camada. Isso NAO e falha do script: validateLayout mede
 QUEBRA VISUAL/geometrica, e a tela suja nao esta visualmente quebrada
 — esta mal construida, que e outra categoria. Separacao de papeis
-confirmada: qualidade de construcao e trabalho do inventario (Passos
+confirmada: qualidade de construcao e trabalho do comparador (Passos
 2, 3 e 6), nao do validador geometrico. Registrar isso evita a
 armadilha de achar que "passou no validateLayout" significa "pronto
 pra variabilizar".
 
-**Achado 2 — o inventario pegou os 8 defeitos plantados, e mais 5 que
+**Achado 2 — o comparador pegou os 8 defeitos plantados, e mais 5 que
 nao foram plantados de proposito**, cada um com node ID e impacto real
 declarado: (a) a camada TEXT do header detached ficou com nome preso
 no conteudo antigo ("Credito consignado") enquanto o characters e
@@ -427,20 +427,20 @@ em vez de tratar tudo como perda total.
 duas secoes distintas: tabela comparativa so com as 4 divergencias de
 CONTEUDO (viram variavel) e uma secao separada de ALERTAS DE
 CONSTRUCAO (viram divida tecnica), com veredito explicito ao final:
-"NAO esta pronta para o variabilizador", com lista ordenada de 8
+"NAO esta pronta para o montador", com lista ordenada de 8
 correcoes e a distincao entre pre-requisito duro (itens 1-5, 8) e
 dependente de decisao do designer (6, 7).
 
 **Lacuna de doutrina exposta (nao resolvida ainda):** nenhum agente
-hoje TEM O PAPEL de sanear uma tela suja. O inventario so reporta
-(somente leitura, por design). O variabilizador so binda a partir de
+hoje TEM O PAPEL de sanear uma tela suja. O comparador so reporta
+(somente leitura, por design). O montador so binda a partir de
 referencia + schema aprovados, e a doutrina dele diz explicitamente
 que as referencias do designer ficam INTACTAS (sao o contrato de
 validacao). O proprio agente levantou isso na saida: "se preferir, o
-variabilizador pode fazer 1-5 e 8 como passo de saneamento antes de
+montador pode fazer 1-5 e 8 como passo de saneamento antes de
 bindar — mas alguem tem que fazer, e nao pode ser depois do bind".
 Decisao pendente do designer: quem sanea? Opcoes: (a) o designer
-corrige a mao antes de chamar o inventario; (b) o variabilizador ganha
+corrige a mao antes de chamar o comparador; (b) o montador ganha
 um modo saneamento explicito; (c) um agente novo so pra isso.
 
 Resultado: PASSOU, com folga. O Modo Arqueologia funciona em fonte
@@ -639,7 +639,7 @@ FONT_SIZE para fonte). Virou regra 19b. Com a correcao, a saida ficou
 acionavel: "itemSpacing 14 HARDCODED e FORA DA ESCALA (escala valida:
 4/8/12/16/24/32; mais proximo: 12)".
 
-**Doutrina nova (Passo 2b da skill consignado-inventario):** como tratar
+**Doutrina nova (Passo 2b da skill consignado-comparador):** como tratar
 composicao/componente local do designer. Tres destinos possiveis, e o
 agente NAO decide qual — apresenta evidencia e pergunta: (a) DUPLICA
 algo que ja existe no IDS -> substituir por instancia; (b) e NOVO e
@@ -654,7 +654,7 @@ agora: nao e a profundidade do componente nem o tamanho do IDS — e a
 qualidade da nomenclatura do IDS, que determina quantas perguntas o
 agente vai ter que fazer em vez de propor sozinho.
 
-Pendente desta rodada: rodar o agente inventario de verdade contra o
+Pendente desta rodada: rodar o agente comparador de verdade contra o
 `Comp/Notif v2` (nomenclatura ruim) numa tela real de 2 clusters, pra
 medir na pratica quantas perguntas ele faz e se erra alguma proposta.
 Os componentes novos deste teste (card-financeiro-completo,

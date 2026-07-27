@@ -69,7 +69,7 @@ o que foi inferido da conversa e nao confirmado.
   tom diferente do c1 ("Protege seu contrato", beneficio opcional).
 - Origem: [CONFIRMAR] se o seguro e de fato obrigatorio neste convenio
   (implicaria remover a acao de excluir a oferta) ou e so copy sem
-  diferenca de comportamento. Achado pelo agente inventario ao
+  diferenca de comportamento. Achado pelo agente comparador ao
   comparar as referencias cruas, 2026-07-25.
 - Mecanismo: variavel oferta-seguro/texto-suporte (mode por cluster)
 - Status: [CONFIRMAR]
@@ -81,4 +81,4 @@ o que foi inferido da conversa e nao confirmado.
 - 2026-07-12: rascunho inicial a partir do desenho do piloto.
 - 2026-07-25: R7 adicionada (seguro existe em c1/c4, nao em c5); R8
   adicionada (divergencia de tom no texto do seguro, achado pelo
-  inventario, mecanismo ainda [CONFIRMAR]).
+  comparador, mecanismo ainda [CONFIRMAR]).

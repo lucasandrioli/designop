@@ -12,11 +12,11 @@ https://raw.githubusercontent.com/lucasandrioli/agents-figma/main/
 | --- | --- | --- |
 | 1 | .github/skills/figma-plugin-api/SKILL.md | .github/skills/figma-plugin-api/SKILL.md |
 | 2 | .github/copilot-instructions.md | .github/copilot-instructions.md |
-| 3 | .github/agents/inventario.agent.md | .github/agents/inventario.agent.md |
-| 4 | .github/agents/variabilizador.agent.md | .github/agents/variabilizador.agent.md |
+| 3 | .github/agents/comparador.agent.md | .github/agents/comparador.agent.md |
+| 4 | .github/agents/montador.agent.md | .github/agents/montador.agent.md |
 | 5 | .github/agents/validador.agent.md | .github/agents/validador.agent.md |
 | 6 | .github/agents/aprendiz.agent.md | .github/agents/aprendiz.agent.md |
-| 7 | .github/skills/consignado-inventario/SKILL.md | .github/skills/consignado-inventario/SKILL.md |
+| 7 | .github/skills/consignado-comparador/SKILL.md | .github/skills/consignado-comparador/SKILL.md |
 | 8 | .github/skills/consignado-validacao/SKILL.md | .github/skills/consignado-validacao/SKILL.md |
 
 O arquivo 1 e o mais importante de todos: sao as 39 regras da Plugin

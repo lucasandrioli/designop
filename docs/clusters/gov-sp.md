@@ -2,7 +2,7 @@
 
 RASCUNHO. Cluster novo, ainda sem levantamento completo — so as regras
 abaixo foram confirmadas pelo designer ate agora (2026-07-25), a partir
-de um teste do Modo Fluxos do agente inventario (docs/fila-de-testes.md,
+de um teste do Modo Fluxos do agente comparador (docs/fila-de-testes.md,
 Teste 11). Tudo que nao esta aqui e desconhecido, nao "nao existe" —
 nao inferir ausencia por falta de informacao.
 
@@ -55,4 +55,4 @@ nenhuma dessas ate confirmar.
 ## Historico
 - 2026-07-25: manual criado a partir do teste do Modo Fluxos (Teste 11,
   docs/fila-de-testes.md). R1 e R2 confirmadas pelo designer em
-  resposta ao checklist do agente inventario.
+  resposta ao checklist do agente comparador.

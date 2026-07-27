@@ -1,7 +1,7 @@
 # Mapa de fluxo — consignado OP, primeira concessao (piloto: c1-mg, c4-federais, gov-sp)
 
 Coluna `gov-sp` adicionada em 2026-07-25 a partir do teste do Modo
-Fluxos do agente inventario (docs/fila-de-testes.md, Teste 11). Gov SP
+Fluxos do agente comparador (docs/fila-de-testes.md, Teste 11). Gov SP
 é convenio novo, ainda SEM manual proprio confirmado alem do que foi
 testado aqui — linhas fora do que foi testado ficam [CONFIRMAR], nao
 "nao" por suposicao.
@@ -23,7 +23,7 @@ testado aqui — linhas fora do que foi testado ficam [CONFIRMAR], nao
 | Efetivacao | 1 | sim | sim | [CONFIRMAR] | n/a | tpl-efetivacao (variant efetivado; tracking vertical, imprimir contrato, voltar, fechar) |
 
 ## Nota (2026-07-25, corrigida): Anuencia e UMA etapa, com mais passos em alguns clusters
-Correcao de uma leitura errada da mesma rodada: o agente inventario (e
+Correcao de uma leitura errada da mesma rodada: o agente comparador (e
 o coordenador) interpretaram a divergencia entre c4-federais e gov-sp
 como "dois processos de negocio diferentes com o mesmo nome por
 coincidencia". O designer corrigiu: e A MESMA etapa (Anuencia), so que
@@ -34,7 +34,7 @@ em outras linhas — nivel 2 presente num cluster e ausente em outro,
 mesma etapa nivel 1. Nao virou linha separada por engano; corrigido
 para uma linha nivel 1 (Anuencia) + uma linha nivel 2 (Canal de
 confirmacao) so no gov-sp, igual ao padrao ja usado em "Detalhe seguro
-consignado". Achado pelo agente inventario ao comparar os grafos de
+consignado". Achado pelo agente comparador ao comparar os grafos de
 prototipo (Modo Fluxos); a INTERPRETACAO do achado (mesma etapa vs.
 processos diferentes) precisou de confirmacao do designer — o agente
 nao devia ter proposto a conclusao mais forte ("processos diferentes")

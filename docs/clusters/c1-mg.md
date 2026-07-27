@@ -54,7 +54,7 @@ precisam de validacao do designer e do time de produto. Marcado como
 - Origem: [CONFIRMAR] se o seguro e de fato obrigatorio no c4 (o que
   teria implicacao alem do texto — ex: a acao de remover a oferta
   deveria sumir la) ou se e so uma escolha de copy sem diferenca de
-  comportamento. Achado pelo agente inventario ao comparar as
+  comportamento. Achado pelo agente comparador ao comparar as
   referencias cruas, 2026-07-25.
 - Mecanismo: variavel oferta-seguro/texto-suporte (mode por cluster)
 - Status: [CONFIRMAR]
@@ -67,4 +67,4 @@ precisam de validacao do designer e do time de produto. Marcado como
 - 2026-07-12: rascunho inicial a partir do desenho do piloto.
 - 2026-07-25: R3 confirmada (seguro existe em c1/c4, nao em c5); R5
   adicionada (divergencia de tom no texto do seguro, achado pelo
-  inventario, mecanismo ainda [CONFIRMAR]).
+  comparador, mecanismo ainda [CONFIRMAR]).

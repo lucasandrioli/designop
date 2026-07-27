@@ -7,8 +7,8 @@ com assistentes de IA cuidando da parte repetitiva."
 
 | Nome tecnico (interno) | Nome de apresentacao | O que faz, em uma frase |
 | --- | --- | --- |
-| Agente inventario/comparador | O Comparador | Le as telas dos convenios e aponta o que muda entre eles |
-| Agente variabilizador | O Montador | Transforma as telas de exemplo em templates que se adaptam por convenio |
+| Agente comparador/comparador | O Comparador | Le as telas dos convenios e aponta o que muda entre eles |
+| Agente montador | O Montador | Transforma as telas de exemplo em templates que se adaptam por convenio |
 | Agente validador | O Revisor | Confere cada entrega: layout quebrado, texto cortado, conteudo faltando |
 | Telas de referencia | Telas de exemplo | As telas que o designer desenha, uma versao por convenio, lado a lado |
 | Collection com modes | Tabela de conteudo | Uma planilha dentro do Figma: cada linha e um texto/regra, cada coluna e um convenio |
@@ -23,4 +23,4 @@ com assistentes de IA cuidando da parte repetitiva."
 | Etapas macro | Jornada | consentimento -> simular e contratar -> revisar -> formalizar |
 
 Regra de ouro ao apresentar: nunca dizer "MCP", "binding", "mode" ou
-"variabilizador" para publico geral; usar sempre a coluna do meio.
+"montador" para publico geral; usar sempre a coluna do meio.

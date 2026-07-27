@@ -62,5 +62,5 @@ não duplicados em cada receita.
 Periodicamente o designer pede: "construa a tela X usando só as
 receitas". O resultado é comparado com o que o designer faria. As
 diferenças viram correção nas receitas. Quando o resultado for
-aceitável sem correção, a Camada 3 (custodiante) está pronta para
+aceitável sem correção, a Bloco 3 (custodiante) está pronta para
 aquele tipo de tela.

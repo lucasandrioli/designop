@@ -18,4 +18,4 @@ Tarefa: $ARGUMENTS
 
 Relate EM DUAS PARTES: primeiro um resumo em português simples sem jargão (passou/reprovou, cada achado em 1 linha de negócio — ex: 'o texto de portabilidade não muda entre convênios mas deveria', não 'elegibilidade/mostra-portabilidade ausente em 73:98'); depois o relatório técnico completo por tela/objeto, passed true/false, node IDs e severidade, como apoio."
 
-Depois que o subagente responder: repasse o resumo simples primeiro. Se houver reprovação, não corrija sozinho — pergunte quem deve corrigir (você mesmo, ou chamar o variabilizador de novo).
+Depois que o subagente responder: repasse o resumo simples primeiro. Se houver reprovação, não corrija sozinho — pergunte quem deve corrigir (você mesmo, ou chamar o montador de novo).

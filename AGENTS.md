@@ -76,21 +76,11 @@ skills em `.github/skills/`.
   agente nao conhece: nunca infira a razao de uma divergencia, pergunte
   ou marque `[CONFIRMAR]`.
 
-- **`laboratorio/` NUNCA e fonte de conhecimento.** E evidencia de
-  teste: convenios ficticios, com regras inventadas para forcar o
-  sistema a quebrar. Se `docs/clusters/<cluster>.md` nao existir, o
-  manual NAO EXISTE — pare e peca. Nao substitua por
-  `laboratorio/clusters/<mesmo nome>.md`, mesmo que o nome bata, mesmo
-  que o conteudo pareca plausivel, mesmo que seja o unico arquivo com
-  aquele nome no repo. Vale para clusters, etapas, mapa de fluxo e
-  receitas.
-  Voce PODE citar `laboratorio/` para duas coisas: mostrar ao designer
-  o FORMATO esperado de um documento, e citar a evidencia de por que uma
-  regra de doutrina existe (ex: "Teste 16"). Nunca para afirmar que uma
-  regra de negocio e verdadeira.
-  Esta regra existe porque o caso aconteceu: o montador citou
-  `laboratorio/clusters/c1-mg.md` como autoridade e teria construido em
-  cima de regra falsa.
+- A unica fonte de conhecimento de negocio e `docs/`: catalogo da
+  etapa, manual do cluster e mapa de fluxo. Se
+  `docs/clusters/<cluster>.md` nao existir, o manual NAO EXISTE: pare e
+  peca. Nunca use arquivos de exemplo, conversas anteriores ou telas
+  semelhantes como substitutos de uma regra documentada.
 
 ### Modelo
 
@@ -145,7 +135,6 @@ skills em `.github/skills/`.
 | `.claude/commands/` | Slash commands (so Claude Code) |
 | `docs/` | Doutrina + moldes `_template.md` a preencher |
 | `scripts/` | Validacao de layout e de estrutura |
-| `laboratorio/` | Evidencia de teste. NAO e fonte de regra |
 
 ## Sincronizacao
 

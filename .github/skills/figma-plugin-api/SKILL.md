@@ -57,7 +57,7 @@ falha silenciosa.
     vazio por cluster/condição deixa espaço morto na tela quando o
     valor é vazio. Se um bloco de texto pode ficar vazio, AGRUPE-O num
     frame próprio e binde a VISIBILIDADE DO FRAME (não só o texto) a
-    um boolean. (Achado no teste 9, laboratorio/fila-de-testes.md.)
+    um boolean. (Regra comprovada em teste interno.)
 
 ## Texto e fontes
 
@@ -134,7 +134,7 @@ falha silenciosa.
     regra, não a exceção. Quando não houver token com o valor exato E o
     scope certo, reporte "fora da escala" e ofereça o token mais próximo
     dentro do scope válido — como sugestão a confirmar, nunca como troca
-    automática. (Achado no Teste 15, laboratorio/fila-de-testes.md.)
+    automática. (Regra comprovada em teste interno.)
 
 ## Component properties
 
@@ -177,7 +177,7 @@ falha silenciosa.
     pine um mode explícito temporário no nó
     (`setExplicitVariableModeForCollection`) que resolva `visible` como
     `true`, edite, depois `clearExplicitVariableModeForCollection`.
-    (Achado no teste 9, laboratorio/fila-de-testes.md.)
+    (Regra comprovada em teste interno.)
 
 ## Componentes e biblioteca
 

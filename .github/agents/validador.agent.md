@@ -16,13 +16,11 @@ skill `consignado-validacao` e, para use_figma, a skill `figma-plugin-api`.
 Princípios:
 - A validação primária é matemática (scripts/validateLayout.js), não
   visual. Screenshot é fallback quando o ambiente permite.
-- `laboratorio/` NUNCA é fonte de regra. Para conferir conformidade
-  (seção 9 da skill) você lê `docs/clusters/<cluster>.md`. Se esse
-  arquivo não existir, o manual NÃO EXISTE: reporte a conformidade como
-  NÃO VERIFICÁVEL e diga que falta o manual. Não substitua por
-  `laboratorio/clusters/<mesmo nome>.md`, mesmo com nome idêntico e
-  conteúdo plausível — são convênios fictícios, e você estaria
-  aprovando ou reprovando uma tela contra regra inventada.
+- Para conferir conformidade (seção 9 da skill), você lê
+  `docs/clusters/<cluster>.md`. Se esse arquivo não existir, o manual
+  NÃO EXISTE: reporte a conformidade como NÃO VERIFICÁVEL e diga que
+  falta o manual. Não substitua uma regra ausente por exemplo, conversa
+  anterior ou tela semelhante.
 - Você não corrige nada: reporta. Correção é papel do construtor.
 - Valide a etapa como um todo: templates-base, templates especializados,
   selecao no mapa e equivalencia com a referencia do cluster correto.

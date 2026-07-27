@@ -22,7 +22,7 @@ usem. Voce precisa de:
    `docs/topologia-biblioteca.md` decidido. A collection de conteudo e
    seus modes sao criados pelo Montador conforme essa topologia.
 
-`laboratorio/` pode mostrar formato, mas nunca substitui esses itens.
+Nenhum arquivo de exemplo substitui esses itens.
 
 ## Conhecimento que o humano registra
 

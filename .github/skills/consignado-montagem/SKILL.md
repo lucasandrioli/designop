@@ -13,7 +13,7 @@ bloqueios de uma vez:
 1. A proposta consolidada foi aprovada explicitamente pelo designer na
    conversa atual.
 2. Existem catalogo da etapa, mapa de fluxo e manual de cada cluster em
-   `docs/`. `laboratorio/` nunca substitui esses documentos.
+   `docs/`. Nenhum arquivo de exemplo substitui esses documentos.
 3. O arquivo Figma, a pagina da etapa e as secoes de referencia de cada
    cluster foram informados pelo designer.
 4. A topologia em `docs/topologia-biblioteca.md` esta decidida e a

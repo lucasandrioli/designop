@@ -27,8 +27,8 @@ Confira todos antes de iniciar e reporte todos os bloqueios de uma vez:
 6. Prototipo com flow starting point em cada caso que tenha duas ou
    mais telas.
 
-`laboratorio/` nunca substitui qualquer pre-requisito. Referencia suja
-e tolerada; referencia ausente nao e.
+Arquivo de exemplo nunca substitui qualquer pre-requisito. Referencia
+suja e tolerada; referencia ausente nao e.
 
 ## Metodo
 

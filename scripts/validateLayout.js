@@ -111,7 +111,7 @@ async function validateLayout(rootNodeId, opts = {}) {
     // o conteudo e NAO e clipada). absoluteRenderBounds mede pixels
     // renderizados POS-clipping e por definicao nunca excede um
     // ancestral que clipa; usa-lo aqui torna o corte indetectavel.
-    // (Descoberta de laboratorio: teste 3 da fila.)
+    // Regra comprovada em teste interno.
     if (node.type === 'TEXT' && node.absoluteBoundingBox) {
       const rb = node.absoluteBoundingBox
       // 1a. contra ancestrais que clipam

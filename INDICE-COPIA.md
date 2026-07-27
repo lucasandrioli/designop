@@ -1,86 +1,88 @@
-# Indice de copia manual (plano B)
+# Indice de copia manual para o banco
 
-Use isto **so se o VS Code do banco nao conseguir clonar do GitHub**.
-Se o clone funcionar, ignore este arquivo: `git clone` traz tudo certo.
+Use este indice somente se o VS Code do banco nao conseguir clonar o
+repositorio. Se o clone funcionar, ele continua sendo a forma mais
+segura de trazer os arquivos.
 
 Base dos links raw:
+
+```text
 https://raw.githubusercontent.com/lucasandrioli/designop/master/
+```
 
-Ordem de prioridade: se der pra copiar so alguns hoje, siga a ordem.
-Nao copie nada de `laboratorio/`: e conteudo ficticio de teste, e se
-cair em `docs/` o agente trata como regra real de convenio.
+Copie os arquivos abaixo preservando exatamente os caminhos. Nao leve
+`laboratorio/`, `.claude/` nem arquivos `.DS_Store`: eles nao sao
+necessarios para usar os agentes no Copilot.
 
-## CRITICO (sem isso nada funciona) — 16 arquivos
+## Necessarios para os agentes
 
-| # | Criar em |
-| --- | --- |
-| 1 | `.github/skills/figma-plugin-api/SKILL.md` |
-| 2 | `AGENTS.md` (raiz) + `.github/copilot-instructions.md` |
-| 3 | `.github/agents/leitor.agent.md` |
-| 4 | `.github/agents/comparador.agent.md` |
-| 5 | `.github/agents/generalizador.agent.md` |
-| 6 | `.github/agents/especializador.agent.md` |
-| 7 | `.github/agents/montador.agent.md` |
-| 8 | `.github/agents/validador.agent.md` |
-| 9 | `.github/agents/aprendiz.agent.md` |
-| 10 | `.github/skills/consignado-leitura/SKILL.md` |
-| 11 | `.github/skills/consignado-comparador/SKILL.md` |
-| 12 | `.github/skills/consignado-generalizacao/SKILL.md` |
-| 13 | `.github/skills/consignado-especializacao/SKILL.md` |
-| 14 | `.github/skills/consignado-validacao/SKILL.md` |
-| 15 | `scripts/validateLayout.js` |
-| 16 | `scripts/validateCreation.js` |
+```text
+AGENTS.md
+.github/copilot-instructions.md
+.vscode/mcp.json
 
-O arquivo 1 e o mais importante de todos: sao as 46 regras da Plugin
-API que fizeram tudo funcionar no laboratorio. Sem ele, o agente comete
-os mesmos erros que ja cometemos e corrigimos.
+.github/agents/leitor.agent.md
+.github/agents/comparador.agent.md
+.github/agents/generalizador.agent.md
+.github/agents/especializador.agent.md
+.github/agents/montador.agent.md
+.github/agents/validador.agent.md
+.github/agents/aprendiz.agent.md
 
-## ESSENCIAL (a doutrina e o ambiente compartilhado) — 6 arquivos
+.github/skills/figma-plugin-api/SKILL.md
+.github/skills/consignado-leitura/SKILL.md
+.github/skills/consignado-comparador/SKILL.md
+.github/skills/consignado-generalizacao/SKILL.md
+.github/skills/consignado-especializacao/SKILL.md
+.github/skills/consignado-montagem/SKILL.md
+.github/skills/consignado-validacao/SKILL.md
+```
 
-| # | Criar em |
-| --- | --- |
-| 17 | `docs/modelo-clusters.md` |
-| 18 | `docs/estrutura-lib.md` |
-| 19 | `docs/instalacao.md` |
-| 20 | `docs/runbook-banco.md` |
-| 21 | `COMECE-AQUI.md` |
-| 22 | `.vscode/mcp.json` |
+## Necessarios para validacao
 
-## MOLDES (os formularios que voce vai preencher) — 4 arquivos
+```text
+scripts/validateLayout.js
+scripts/validateCreation.js
+scripts/validateContentContract.js
+scripts/validateModeBehavior.js
+```
 
-| # | Criar em |
-| --- | --- |
-| 23 | `docs/clusters/_template.md` |
-| 24 | `docs/etapas/_template.md` |
-| 25 | `docs/mapa-fluxo-_template.md` |
-| 26 | `docs/receitas/_template.md` |
+## Doutrina e operacao
 
-Estes chegam VAZIOS de proposito. Preencher os manuais de convenio e o
-primeiro trabalho de conteudo do projeto, com produto e juridico.
+```text
+COMECE-AQUI.md
+docs/modelo-clusters.md
+docs/estrutura-lib.md
+docs/topologia-biblioteca.md
+docs/instalacao.md
+docs/runbook-banco.md
+docs/runbook-copilot.md
+```
 
-## APOIO (util, nao bloqueia) — 7 arquivos
+## Moldes para o primeiro ciclo real
 
-| # | Criar em |
-| --- | --- |
-| 27 | `docs/runbook-copilot.md` |
-| 28 | `.claude/commands/leitor.md` |
-| 29 | `.claude/commands/comparador.md` |
-| 30 | `.claude/commands/generalizador.md` |
-| 31 | `.claude/commands/especializador.md` |
-| 32 | `.claude/commands/montador.md` |
-| 33 | `.claude/commands/validador.md` |
+```text
+docs/clusters/_template.md
+docs/etapas/_template.md
+docs/mapa-fluxo-_template.md
+docs/receitas/_template.md
+```
 
-Os slash commands so valem no Claude Code. No Copilot os agentes sao
-selecionados no seletor de agente, entao estes comandos sao dispensaveis la.
+Esses moldes chegam vazios de proposito. Preencha somente o que for
+verdadeiro para a etapa e os clusters escolhidos. O que ainda nao souber
+fica como `[CONFIRMAR]`.
 
-`docs/glossario-apresentacao.md` (nomes simples para apresentar a
-lideranca) e `laboratorio/fila-de-testes.md` (a evidencia dos 16 testes,
-util quando perguntarem "por que essa regra existe?") sao opcionais e
-nao entram no caminho de leitura dos agentes.
+## Arquivos opcionais
+
+```text
+docs/glossario-apresentacao.md
+```
 
 ## Depois de copiar
 
-1. Abrir o workspace, autenticar o MCP Figma e conferir os agentes
-   (ver `COMECE-AQUI.md`)
-2. Rodar `docs/runbook-copilot.md` e registrar a primeira cadeia manual
-3. Rodar a bateria de fumaca (`docs/runbook-banco.md`) ANTES de construir
+1. Abra o workspace no VS Code e autentique o MCP Figma.
+2. Confirme os sete agentes em `Chat: Open Customizations`.
+3. Rode `docs/runbook-copilot.md` com uma etapa real e dois clusters
+   reais.
+4. Rode `docs/runbook-banco.md` em um arquivo Figma descartavel antes
+   de montar qualquer template.

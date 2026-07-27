@@ -6,7 +6,8 @@ definicao padrao aqui reflete em todo cluster que usa o template padrao.
 
 Os manuais de cluster so dizem se usam a etapa e quais regras locais
 justificam especializacoes. Valores por cluster vivem na collection do
-Figma; ordem, presenca e template selecionado vivem no mapa de fluxo.
+Figma resolvida pela topologia; ordem, presenca e template selecionado
+vivem no mapa de fluxo.
 
 ## Identificacao
 - Nome da etapa: `<slug, ex: anuencia>`
@@ -59,7 +60,7 @@ cluster. O mapa de fluxo escolhe onde cada especializacao e usada.
 O Generalizador propoe; o designer aprova antes da montagem. Este e o
 contrato que diz **quais papeis realmente variam**. Nao e uma lista de
 todos os textos da tela, nem um palpite do Validador. Valores por
-cluster continuam apenas na collection do Figma.
+cluster continuam apenas na collection do Figma resolvida para a etapa.
 
 Registre um papel para cada conteudo que precisa responder ao mode. O
 campo `type` usa os mesmos valores da interface: `text` exige variavel
@@ -73,10 +74,10 @@ e `visible` usa `campo: visible`. Para `component-property`, a property
 exposta precisa ser `TEXT` ou `BOOLEAN`, respectivamente.
 
 ```yaml
-collection: <nome da collection de conteudo>
+collection: <nome da collection resolvida para esta etapa>
 papeis:
   - id: <titulo>
-    variavel: <grupo/nome-kebab>
+    variavel: <etapa/grupo/nome-kebab>
     type: <text | visible>
     binding:
       tipo: <component-property | node>

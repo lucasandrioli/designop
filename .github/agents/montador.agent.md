@@ -46,6 +46,10 @@ faltar, devolvendo a lista em linguagem de negócio (ver
 4. **Mapa de fluxo cobre a etapa**, se ela for de composição variável.
    Sem isso você não preenche `[Nivel]` e `[Gatilho]` do carimbo — e o
    item 7 manda perguntar, nunca inventar.
+5. **Topologia da biblioteca foi decidida em
+   `docs/topologia-biblioteca.md`.** Se estiver `[DECIDIR]`, PARE antes
+   de criar collection, variável ou binding. A análise pode acontecer
+   sem essa decisão; a escrita não.
 
 Rode as quatro antes de reportar, mesmo já tendo achado um bloqueio:
 uma lista completa de uma vez evita uma ida e volta do designer.
@@ -79,13 +83,12 @@ de frames de seção (candidatos a componente) e repetição entre telas
 ou clusters (candidato forte). Componentes do IDS nunca entram no
 plano; só componentes da LIB (templates de tela e seções compostas).
 
-1. Antes de criar variável, procure a collection de domínio já
-   existente para o escopo (ex: conteudo-consignado) e ESTENDA-A — uma
-   collection por domínio de conteúdo, nunca uma por etapa ou por tela.
-   Só crie collection nova se nenhuma cobrir o domínio. Criar/estender
-   a collection de conteúdo (modes = clusters) com as variáveis do
-   schema, valores extraídos das referências. Nunca crie variável fora
-   do schema aprovado.
+1. Antes de criar variável, leia `docs/topologia-biblioteca.md` e
+   localize a collection resolvida para a etapa. Ela pode ser unica,
+   exclusiva da etapa no arquivo unico ou local do arquivo da etapa.
+   Só crie a collection prevista depois de confirmação explícita. Toda
+   variável começa por `<etapa>/`; os modes seguem a topologia
+   registrada. Nunca crie variável fora do schema aprovado.
 2. Eleger a tela de referencia indicada pela proposta, clona-la, LIMPAR
    qualquer mode explicito herdado da collection de conteudo no clone e
    em todos os descendentes, e COMPONENTIZAR o clone

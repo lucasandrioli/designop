@@ -6,7 +6,7 @@ uma etapa existe uma unica vez em `docs/etapas/<etapa>.md`.
 
 ## Identificacao
 - Cluster: <id, ex: c4>
-- Mode na collection: <ex: c4-federais>
+- Mode no contexto da etapa: <ex: c4-federais>
 - Orgao/convenio: <nome>
 - Modalidades ativas: <primeira concessao | refinanciamento | ambas>
 - Mapa de fluxo: `docs/mapa-fluxo-<escopo>.md`

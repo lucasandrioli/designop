@@ -42,11 +42,20 @@ do Figma e a internet fica desligada apos a configuracao.
 
 ## Divisao de trabalho
 
-- O DESIGNER constroi as telas de referencia (uma por cluster, cruas) e
-  liga por prototipo.
-- O agente COMPARADOR compara as referencias e propoe o schema de
-  variaveis. Somente leitura.
-- O designer APROVA o schema. Checkpoint obrigatorio, nunca pulado.
+- O DESIGNER trabalha uma ETAPA por vez. Na pagina da etapa, constroi
+  referencias cruas em uma secao por cluster e liga todas as telas de
+  cada caso de uso por prototipo.
+- O LEITOR inventaria fatos da pagina completa da etapa: telas, casos
+  de uso e conexoes. Somente leitura.
+- O COMPARADOR pareia as referencias entre clusters e registra as
+  divergencias, sem inferir a razao. Somente leitura.
+- O GENERALIZADOR identifica o nucleo reutilizavel da etapa, o
+  template-base e os candidatos a variavel. Somente leitura.
+- O ESPECIALIZADOR classifica o que nao cabe no nucleo: variavel,
+  property, variant, mapa de fluxo ou template especializado. Somente
+  leitura.
+- O designer APROVA a proposta consolidada. Checkpoint obrigatorio,
+  nunca pulado.
 - O agente MONTADOR cria variaveis, binda o template, carimba e valida
   equivalencia contra as referencias.
 - O agente VALIDADOR roda em toda entrega.
@@ -88,6 +97,15 @@ skills em `.github/skills/`.
 - Clusters variam por VARIAVEIS (modes); modalidades variam por
   ESTRUTURA (templates separados). Nao misturar. O modelo completo esta
   em `docs/modelo-clusters.md` e e NORMATIVO.
+- Uma ETAPA representa uma capacidade reutilizavel do produto. Ela e
+  definida uma unica vez em `docs/etapas/<etapa>.md`. O cluster so
+  declara que a usa na jornada e documenta regras que justificam
+  especializacoes locais. Nunca duplicar a definicao da etapa em um
+  manual de cluster.
+- Especializacao e uma decisao documentada, nao uma camada solta no
+  Figma. Toda diferenca precisa ter mecanismo verificavel: variavel,
+  property, variant, mapa de fluxo ou template estrutural especializado.
+  Template especializado recebe nome funcional, nunca nome de cluster.
 - Composicao de fluxo (etapa existe ou nao num convenio) vive no mapa
   de fluxo, nunca em variavel booleana.
 - IDS e fonte unica de componentes: nunca recriar o que existe la.
@@ -122,7 +140,7 @@ skills em `.github/skills/`.
 | --- | --- |
 | `COMECE-AQUI.md` | Ponto de entrada. Ordem de instalacao e ciclo de trabalho |
 | `AGENTS.md` | Este arquivo. Regras sempre ativas |
-| `.github/agents/` | Definicao dos 4 agentes |
+| `.github/agents/` | Definicao dos 7 agentes |
 | `.github/skills/` | Metodo detalhado que os agentes seguem |
 | `.claude/commands/` | Slash commands (so Claude Code) |
 | `docs/` | Doutrina + moldes `_template.md` a preencher |

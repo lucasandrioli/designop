@@ -1,87 +1,74 @@
 # Mapa de fluxo: <escopo, ex: piloto>
 
-Este documento responde: **quais telas existem em cada convenio, em que
-ordem?** E o unico lugar onde mora a composicao do fluxo. Uma etapa que
-existe num convenio e nao noutro se resolve AQUI, nunca com variavel
-booleana no Figma.
+Este documento e a fonte unica da composicao: quais etapas e casos de
+uso existem em cada convenio, em que ordem e qual template cada um usa.
+Uma etapa ausente nunca vira booleano. A definicao da etapa esta em
+`docs/etapas/`; a regra que justifica uma diferenca esta no manual do
+cluster.
 
 Renomeie o arquivo para `mapa-fluxo-<escopo>.md`.
 
 ## Escopo
 - Modalidade: <primeira concessao | refinanciamento>
-- Caso: <caminho feliz | ramo de excecao: qual>
 - Convenios cobertos: <lista>
 
-## Tabela
+## Tabela de composicao
 
-Uma linha por etapa/tela, uma coluna por convenio. Preencha com:
-`sim` (existe), `nao` (nao existe), `opcional` (nivel 2, abre de dentro
-de outra), ou `[CONFIRMAR]`.
+Uma linha por etapa ou tela, uma coluna por convenio. Em cada celula,
+preencha `nao`, `padrao`, `especializacao:<id>` ou `[CONFIRMAR]`.
+`<id>` precisa existir em `docs/etapas/<etapa>.md`.
 
-| # | Etapa / tela | Nivel | <convenio A> | <convenio B> |
-| --- | --- | --- | --- | --- |
-| 1 | <ex: consentimento> | 1 | sim | nao |
-| 2 | <ex: simulacao> | 1 | sim | sim |
-| 3 | <ex: detalhe do seguro> | 2 | opcional | nao |
+| # | Etapa / tela | Caso de uso | Nivel | Gatilho | <convenio A> | <convenio B> |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | <ex: anuencia/confirmacao> | <caminho feliz> | 1 | n/a | padrao | especializacao:confirmacao-com-matricula |
+| 2 | <ex: detalhe da anuencia> | <caminho feliz> | 2 | <texto real> | padrao | nao |
 
-Nivel 1 = etapa obrigatoria do fluxo. Nivel 2 = tela de apoio, abre de
-dentro de uma etapa de nivel 1 (detalhe, saiba mais, edicao).
+Nivel 1 = obrigatorio no fluxo. Nivel 2 = tela de apoio, aberta de uma
+etapa de nivel 1. `padrao` seleciona o template-base da etapa. Uma
+especializacao seleciona o template funcional aprovado no catalogo.
 
-## Grafo por convenio (um diagrama por convenio, por caso de uso)
+## Grafo por convenio e caso de uso
 
-A tabela acima diz o QUE existe. O grafo diz em que ORDEM, o que
-BIFURCA, e o que VOLTA. Sao coisas diferentes e nao se substituem: a
-tabela compara N convenios de relance (uma coluna cada), o grafo mostra
-a topologia de UM convenio de cada vez.
+A tabela compara presenca e selecao. O grafo registra ordem,
+bifurcacao e retorno. Ele e gerado pelo Leitor a partir do prototipo e
+revisado pelo Comparador, nunca desenhado de memoria.
 
-Se voce se pegar escrevendo prosa numa celula da tabela — "apos a
-senha; o retorno atualiza a efetivacao", "abre pelo trail do item" —
-essa informacao e de grafo e o lugar dela e aqui.
-
-Este bloco e GERADO pelo comparador a partir do prototipo (Modo
-Fluxos), nao desenhado a mao. O prototipo e a fonte; isto e a
-documentacao derivada, e o validador confere se as duas ainda batem.
-
-### Notacao (fixa, nao invente outra)
+### Notacao fixa
 
 | Simbolo | Significado |
 | --- | --- |
-| `[texto]` | ETAPA de nivel 1 |
-| `([texto])` | DESDOBRAMENTO de nivel 2 (tela de apoio, ida e volta) |
-| `{texto}` | RAMO DE EXCECAO (bifurcacao real, 2+ avancos possiveis) |
+| `[texto]` | etapa de nivel 1 |
+| `([texto])` | desdobramento de nivel 2 |
+| `{texto}` | ramo de excecao |
 | `-->` | avanco no fluxo principal |
 | `-.->` | ida e volta de desdobramento |
-| `\|gatilho\|` | rotulo REAL do elemento que dispara (texto do botao) |
+| `|gatilho|` | texto real do elemento que dispara |
 | no apontando para si mesmo | estado de espera passiva |
 
-A classificacao vem da TOPOLOGIA, nunca do rotulo do botao (ver Modo
-Fluxos na skill consignado-comparador).
-
-### <convenio A> — <caso de uso, ex: caminho feliz>
+### <convenio A> - <caso de uso>
 
 ```mermaid
 flowchart TD
     a[Etapa 1] --> b[Etapa 2]
-    b --> c[Etapa 3]
-    b -.->|Ver detalhes| d([Detalhe de apoio])
-    d -.-> b
+    b -.->|Ver detalhes| c([Detalhe])
+    c -.-> b
 ```
 
-### <convenio B> — <caso de uso>
+### <convenio B> - <caso de uso>
 
 ```mermaid
 flowchart TD
-    a[Etapa 1] --> c[Etapa 3]
+    a[Etapa 1] --> b[Etapa 2]
 ```
 
-## Divergencias e o porque
-Para cada `nao` ou diferenca de ordem, aponte a regra do manual do
-convenio que explica. Divergencia sem regra correspondente e
-`[CONFIRMAR]`, nunca uma razao inventada.
+## Justificativas das diferencas
 
-| Divergencia | Regra que explica |
-| --- | --- |
-| <ex: consentimento nao existe em A> | <ex: manual do convenio A, regra R1> |
+Toda diferenca de `nao`, ordem ou especializacao precisa apontar uma
+regra ativa no manual do cluster. Sem regra, use `[CONFIRMAR]`.
+
+| Divergencia | Cluster | Regra que explica |
+| --- | --- | --- |
+| <descricao> | <cluster> | <manual, regra R1 ou [CONFIRMAR]> |
 
 ## Historico
 - <data>: <o que mudou e por que>

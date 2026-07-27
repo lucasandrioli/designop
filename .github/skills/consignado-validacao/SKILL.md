@@ -118,11 +118,11 @@ que o designer desenhou: eles medem geometria e estrutura, não
 intenção. Esta checagem é o que pega isso, e é obrigatória sempre que
 existirem referências cruas da etapa.
 
-Para cada cluster: extraia os textos visíveis em ordem de documento do
-template no mode daquele cluster, e da referência crua daquele cluster.
-Devem bater, sem faltas nem sobras. Divergência é REPROVA, e o achado
-se descreve pelos dois lados ("o template esconde X no convênio Y, mas
-a referência que você desenhou mostra X").
+Para cada cluster e caso de uso selecionado no mapa: extraia os textos
+visiveis em ordem de documento do template indicado (`padrao` ou
+especializacao) no mode daquele cluster, e da referencia crua daquela
+secao `_ref-<cluster>`. Devem bater, sem faltas nem sobras. Divergencia
+e REPROVA, e o achado se descreve pelos dois lados.
 
 Compare também a VISIBILIDADE de blocos, não só texto: bloco escondido
 num mode cujo conteúdo aparece na referência é o caso mais comum, e é
@@ -144,8 +144,11 @@ bloqueada no ambiente, registre [VALIDAÇÃO VISUAL PENDENTE] e siga
 com as validações 1-3 como critério de aceite.
 
 ### 5. Consistência mapa de fluxo <-> arquivo
-- Todo template listado em docs/mapa-fluxo-*.md existe no arquivo da lib
+- Todo template-base ou especializado selecionado em docs/mapa-fluxo-*.md existe no arquivo da lib
 - Nenhum template no arquivo esta fora do mapa (orfao)
+- Todo template especializado esta registrado em
+  `docs/etapas/<etapa>.md`, tem nome funcional e nao contem o nome de
+  um cluster. Especializacao ausente no catalogo e REPROVACAO.
 - O GRAFO do mapa ainda bate com o prototipo. Extraia o grafo do
   prototipo do cluster do mesmo jeito que o comparador faz (Modo
   Fluxos: reactions ON_CLICK/NAVIGATE, resolvendo destinationId para a
@@ -213,12 +216,16 @@ Se a pergunta foi so "o template X esta certo?", isto e aviso, nao
 reprova — mas reporte mesmo assim.
 
 ### 9. Conformidade com o manual do convenio
-Para cada cluster, leia docs/clusters/<cluster>.md e verifique cada
-regra ATIVA contra o mecanismo declarado:
+Para cada cluster, leia docs/clusters/<cluster>.md, a secao
+`Implementacao aprovada`, o catalogo da etapa e o mapa. Verifique cada
+regra ATIVA contra o mecanismo registrado depois da aprovacao:
 - regra com mecanismo "mapa de fluxo" -> a etapa existe/nao existe
   conforme declarado
 - regra com mecanismo "variavel X" -> a variavel existe e esta bindada
 - regra com mecanismo "variant Z" -> o variant existe no template
+  selecionado no mapa
+- regra com mecanismo "especializacao S" -> S existe no catalogo da
+  etapa e o mapa seleciona o template correspondente para esse cluster
 Reprovacao cita a regra (ex: "R3 do c4 exige anuencia; o mapa nao tem
 a etapa"). Isto transforma validacao de "esta bonito?" em "esta
 conforme?", que e a linguagem de auditoria.

@@ -7,7 +7,10 @@ com assistentes de IA cuidando da parte repetitiva."
 
 | Nome tecnico (interno) | Nome de apresentacao | O que faz, em uma frase |
 | --- | --- | --- |
-| Agente comparador | O Comparador | Le as telas dos convenios e aponta o que muda entre eles |
+| Agente leitor | O Leitor | Inventaria as telas, casos de uso e conexoes de uma etapa |
+| Agente comparador | O Comparador | Pareia referencias dos convenios e aponta fatos que divergem |
+| Agente generalizador | O Generalizador | Propoe o nucleo reutilizavel e o template-base da etapa |
+| Agente especializador | O Especializador | Classifica diferencas locais em mecanismos verificaveis |
 | Agente montador | O Montador | Transforma as telas de exemplo em templates que se adaptam por convenio |
 | Agente validador | O Revisor | Confere cada entrega: layout quebrado, texto cortado, conteudo faltando |
 | Telas de referencia | Telas de exemplo | As telas que o designer desenha, uma versao por convenio, lado a lado |

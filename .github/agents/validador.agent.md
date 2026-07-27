@@ -17,6 +17,10 @@ Princípios:
   conteúdo plausível — são convênios fictícios, e você estaria
   aprovando ou reprovando uma tela contra regra inventada.
 - Você não corrige nada: reporta. Correção é papel do construtor.
+- Valide a etapa como um todo: templates-base, templates especializados,
+  selecao no mapa e equivalencia com a referencia do cluster correto.
+  Uma especializacao so e valida se estiver registrada no catalogo da
+  etapa, tiver nome funcional e for selecionada pelo mapa.
 - Saída: primeiro um resumo em português simples (passou/reprovou,
   quantos achados, e cada reprovação em 1 linha sem jargão — ex: "o
   texto de suporte da oferta de portabilidade não muda entre os

@@ -10,8 +10,9 @@ skill e agente do projeto segue este modelo.
   cluster-1-mg, cluster-2, cluster-2-1, cluster-4-federais, cluster-5
 - Cada variavel e uma linha da tabela; cada celula e o valor daquela
   variavel naquele cluster.
-- A tela template e construida UMA vez, com bindings. Trocar o mode da
-  instancia troca o cluster inteiro.
+- A etapa e definida UMA vez, com templates-base e bindings. Trocar o
+  mode da instancia troca o conteudo do cluster. Um template
+  especializado so existe quando a estrutura nao cabe no template-base.
 
 ## Mapeamento dos tipos de variacao
 
@@ -56,7 +57,7 @@ segundo arquivo — o teste completo so acontece no ambiente do banco
 5+ clusters, o eixo 1 (cluster = mode) precisa de plano B: dividir em
 mais de uma collection por grupo de clusters, ou negociar o tier.
 
-## Os quatro eixos de variacao (normativos)
+## Os cinco eixos de variacao (normativos)
 
 1. CLUSTER: conteudo por orgao. Mecanismo: variaveis com modes.
 2. MODALIDADE: primeira concessao vs refinanciamento. Mecanismo:
@@ -64,21 +65,24 @@ mais de uma collection por grupo de clusters, ou negociar o tier.
 3. COMPOSICAO DE FLUXO: etapas que existem num cluster e nao noutro
    (ex: consentimento so no cluster 4; anuencia externa so em 4 e 2.1).
    Mecanismo: todos os templates de etapa existem na lib; um MAPA DE
-   FLUXO POR CLUSTER (tabela markdown versionada em docs/, gerada e
-   atualizada pelo comparador, com diagrama opcional) define a
+   FLUXO POR CLUSTER (tabela markdown versionada em docs/, gerada pelo
+   Leitor e revisada pelo Comparador) define a
    sequencia. Mode controla conteudo; mapa controla sequencia.
 4. ESTADO DE UI: variacao por acao do usuario dentro da tela (oferta
    adicionada/removida, efetivacao aguardando anuencia/confirmada,
    item de resumo aberto/fechado). Mecanismo: variants ou properties
    do componente/template. NUNCA modes. Estado de UI em mode de
    cluster e defeito de arquitetura.
+5. ESPECIALIZACAO ESTRUTURAL: diferenca de uma etapa que nao cabe em
+   conteudo, property, variant ou composicao. Mecanismo: template
+   especializado com nome funcional, registrado no catalogo da etapa e
+   selecionado no mapa de fluxo. Nunca nomear o template com o cluster.
 
 ## Mapa de fluxo: colunas obrigatorias
 
-etapa | nivel de navegacao (1 = obrigatoria no fluxo; 2 = opcional,
-alcancavel do nivel 1) | presenca por cluster | gatilho (para nivel 2
-condicional, ex: detalhe do seguro obrigatorio se cliente remove a
-oferta) | template correspondente na lib
+etapa/tela | caso de uso | nivel de navegacao (1 = obrigatoria no
+fluxo; 2 = opcional, alcancavel do nivel 1) | gatilho | selecao por
+cluster (`nao`, `padrao` ou `especializacao:<id>`)
 
 ## Logica condicional explicita
 
@@ -99,9 +103,9 @@ regras: elas vem da tabela.
 
 ## Prototipo como fonte do mapa
 
-Quando as telas de referencia estao conectadas por prototipo (o que o
-designer ja faz naturalmente), o mapa de fluxo e DERIVADO do grafo de
-navegacao pelo comparador (modo fluxos), nao escrito a mao:
+Quando as telas de referencia estao conectadas por prototipo na pagina
+da etapa, o mapa de fluxo e DERIVADO do grafo de navegacao pelo Leitor
+e revisado pelo Comparador, nao escrito a mao:
 - telas = nos; reactions NAVIGATE = arestas; flowStartingPoints
   nomeados = casos de uso
 - caminho principal = cadeia a partir do starting point; tela com ida
@@ -114,27 +118,31 @@ prototipo e a fonte de onde ele e gerado e contra a qual e conferido.
 
 ## Governanca do mapa e da collection
 
-- O mapa de fluxo e a fonte unica de COMPOSICAO (quais etapas, em que
-  ordem, em quais clusters). Muda por PR no repo.
+- O catalogo da etapa e a fonte unica da CAPACIDADE: casos de uso,
+  templates-base, secoes compartilhadas e especializacoes aprovadas.
+- O mapa de fluxo e a fonte unica de COMPOSICAO e SELECAO: quais
+  etapas existem, em que ordem, em quais clusters e se usam padrao ou
+  especializacao. Muda por PR no repo.
 - A collection e a fonte unica de CONTEUDO (o que cada tela mostra por
   cluster). Muda pela tabela de variaveis no Figma.
 - NUNCA duplicar composicao como boolean de variavel (ex:
   fluxo/tem-consentimento). Verdade duplicada diverge.
-- Populacao: o comparador gera o rascunho do mapa (Passo 7) e semeia os
-  valores das variaveis (Passo 5); designers validam; manutencao segue
-  por PR (mapa) e edicao de tabela (variaveis).
-- Onboarding de cluster novo: (1) coluna no mapa, (2) mode na
-  collection, (3) preencher celulas das variaveis. Nada de duplicar
-  arquivo.
+- Populacao: Leitor gera o rascunho do grafo, Comparador registra o
+  pareamento, Generalizador propoe o catalogo e Especializador propoe
+  a classificacao. O designer aprova antes de qualquer escrita.
+- Onboarding de cluster novo: (1) jornada no manual, (2) coluna no
+  mapa, (3) mode na collection, (4) referencias nas paginas das etapas
+  usadas. Nada de duplicar etapa ou arquivo.
 
-## Prova de conceito do fluxo designer-no-centro (lab)
+## Prova de conceito anterior do fluxo designer-no-centro (lab)
 
-Ciclo validado de ponta a ponta em laboratorio: referencias cruas por
-cluster construidas pelo designer -> comparador achou 5/5 divergencias
-plantadas sem falso positivo (17 textos) -> schema aprovado (6
-variaveis) -> montador bindou template clonado da referencia ->
-teste de equivalencia matematico passou nos 2 modes (16/16 e 17/17
-textos). As referencias permanecem como contrato de validacao.
+Ciclo validado de ponta a ponta em laboratorio antes da cadeia atual:
+referencias cruas por cluster construidas pelo designer -> comparador
+achou 5/5 divergencias plantadas sem falso positivo (17 textos) ->
+schema aprovado (6 variaveis) -> montador bindou template clonado da
+referencia -> teste de equivalencia matematico passou nos 2 modes
+(16/16 e 17/17 textos). As referencias permanecem como contrato de
+validacao.
 
 ## Listas com quantidade ou forma variavel por cluster (decisao do teste 4)
 
@@ -153,7 +161,8 @@ textos). As referencias permanecem como contrato de validacao.
   divergente seria VARIA_ESTRUTURA e exigiria justificativa no manual
   do convenio.
 - Alem disso: divergencia mais profunda que quantidade+forma =
-  VARIA_ESTRUTURA, tratada como estrutura separada e documentada.
+  ESPECIALIZACAO ESTRUTURAL. Ela exige template funcional separado,
+  registro no catalogo da etapa e selecao explicita no mapa.
 
 ## Doutrina de binding (hierarquia, definida no teste 9)
 

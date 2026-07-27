@@ -1,7 +1,7 @@
 # Comece aqui
 
-Este repo instala tres agentes que cuidam da parte repetitiva de manter
-uma biblioteca de telas do consignado que se adapta por convenio.
+Este repo instala sete agentes que cuidam da parte repetitiva de manter
+uma biblioteca de etapas do consignado que se adapta por convenio.
 
 Ele chega **vazio de conteudo e cheio de metodo**. Os manuais de
 convenio, os docs de etapa e o mapa de fluxo comecam em branco, so com
@@ -13,15 +13,18 @@ O conteudo do laboratorio esta em `laboratorio/`, fora do caminho de
 leitura dos agentes. Serve de exemplo e de evidencia. Nao copie de la
 para `docs/`: sao convenios ficticios com regras inventadas.
 
-## Os tres agentes
+## Os sete agentes
 
 | Comando | Nome | O que faz |
 | --- | --- | --- |
-| `/comparador` | O Comparador | Le as telas de exemplo de cada convenio e aponta o que muda entre eles. Somente leitura |
+| `/leitor` | O Leitor | Inventaria todas as telas, casos de uso e conexoes de uma etapa. Somente leitura |
+| `/comparador` | O Comparador | Pareia as referencias dos clusters e aponta os fatos que divergem. Somente leitura |
+| `/generalizador` | O Generalizador | Propoe o nucleo reutilizavel e o template-base da etapa. Somente leitura |
+| `/especializador` | O Especializador | Classifica as diferencas locais e propoe o mecanismo de cada uma. Somente leitura |
 | `/montador` | O Montador | Transforma a tela aprovada em template que se adapta por convenio |
 | `/validador` | O Revisor | Confere cada entrega: layout quebrado, texto cortado, conteudo faltando |
 
-Um quarto agente, o `aprendiz`, roda depois de cada tela que voce
+O setimo agente, o `aprendiz`, roda depois de cada referencia que voce
 desenha e vai anotando como voce constroi, em `docs/receitas/`. Ele nao
 entrega nada hoje; ele acumula para o Bloco 3.
 
@@ -39,7 +42,8 @@ Cada passo protege o seguinte. Nao pule.
    URL: https://mcp.figma.com/mcp > id: figma
 3. Autenticar com a conta Figma do Itau quando abrir o navegador.
 4. Conferir no chat: `/skills` deve listar as skills deste repo, e os
-   agentes comparador, montador e validador devem aparecer.
+   agentes leitor, comparador, generalizador, especializador, montador
+   e validador devem aparecer.
 5. Teste de vida: "liste as bibliotecas conectadas neste arquivo Figma",
    passando o link de um arquivo do consignado. Se responder, conectou.
 
@@ -89,13 +93,16 @@ conhece — e ele vai perguntar, nao adivinhar.
 
 1. Criar o arquivo novo e limpo: "Consignado OP — Lib" (vazio).
 2. Adicionar nele as 4 bibliotecas do IDS (Assets > Libraries).
-3. Criar as paginas: Referencias, Fluxos, e uma por etapa.
-4. Construir as telas cruas da etapa escolhida para o convenio A, na
-   pagina Referencias. Instanciando componentes do IDS. Sem variaveis,
-   sem componentizar. So a tela, como ela e hoje.
-5. Construir as MESMAS telas do convenio B, ao lado.
+3. Criar as paginas: Fluxos e uma por etapa. Exemplo: `Anuencia`.
+4. Na pagina da etapa, criar uma secao interna por cluster. Cada secao
+   recebe todas as referencias cruas daquele cluster: caminho feliz,
+   erros e desdobramentos que pertencem a etapa. Instancie componentes
+   do IDS, sem variaveis e sem componentizar.
+5. Na mesma pagina, reservar uma secao interna para os templates
+   aprovados. Referencias e templates nunca se misturam.
 6. **Ligar as telas por prototipo, na ordem, e nomear o ponto de
-   partida pelo caso de uso ("Caso feliz").** Uma pagina por convenio.
+   partida pelo caso de uso ("Caso feliz").** Cada cluster tem seus
+   proprios pontos de partida dentro da pagina da etapa.
 
 O passo 6 nao e opcional e nao e para apresentacao: o prototipo e a
 FONTE do mapa de fluxo. O comparador extrai dele quais telas existem,
@@ -117,16 +124,17 @@ O que nao e tolerado e nao existir tela.
 
 Daqui em diante isso se repete por etapa e por convenio novo.
 
-1. `/comparador compare as referencias dos dois convenios na etapa X`
-   Ele devolve uma tabela: o que muda entre convenios, com o conteudo
-   real de cada tela lado a lado, e a proposta de variaveis.
-2. **VOCE REVISA e aprova.** Checkpoint obrigatorio, nao pule mesmo que
-   pareca obvio. Este e o momento de decisao humana: o agente acha a
-   diferenca, mas so voce sabe se ela e regra de convenio ou descuido.
-3. `/montador componentize e binde conforme o schema aprovado`
+1. `/leitor leia a pagina da etapa X`
+2. `/comparador compare os clusters da etapa X`
+3. `/generalizador proponha o nucleo e o template-base da etapa X`
+4. `/especializador classifique as diferencas restantes da etapa X`
+5. **VOCE REVISA e aprova a proposta consolidada.** Checkpoint
+   obrigatorio, nao pule mesmo que pareca obvio. Este e o momento de
+   decidir se uma diferenca e regra real ou descuido de construcao.
+6. `/montador componentize e binde conforme a proposta aprovada`
    Ele cria as variaveis, componentiza a tela, conecta tudo e carimba a
    descricao do componente.
-4. `/validador valide`
+7. `/validador valide`
    Layout quebrado, texto cortado, conexoes faltando, consistencia com
    o mapa, em TODOS os convenios.
 5. Publicar a lib (acao manual, nao tem API).
@@ -135,8 +143,9 @@ Daqui em diante isso se repete por etapa e por convenio novo.
 
 - Mudou um texto num convenio? Edite a celula na tabela de variaveis do
   Figma. So isso.
-- Entrou convenio novo? Adicione o mode, escreva o manual dele, rode o
-  comparador no material novo, preencha os valores.
+- Entrou convenio novo? Adicione o mode, escreva o manual da jornada,
+  coloque referencias nas paginas das etapas usadas e rode a cadeia de
+  analise. Nao copie uma etapa para dentro do cluster.
 - O IDS mudou? Rode `/validador`: ele varre o impacto em tudo.
 
 ---
@@ -160,7 +169,7 @@ Daqui em diante isso se repete por etapa e por convenio novo.
 | Onde | O que e | Muda no banco? |
 | --- | --- | --- |
 | `AGENTS.md` | Regras sempre ativas, lidas por todo agente | Nao |
-| `.github/agents/` | Definicao dos 4 agentes | Nao |
+| `.github/agents/` | Definicao dos 7 agentes | Nao |
 | `.github/skills/` | Metodo detalhado que os agentes seguem | Nao |
 | `.claude/commands/` | Os slash commands | Nao |
 | `scripts/validateLayout.js` | Checagem automatica de quebra visual | Nao |

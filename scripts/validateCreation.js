@@ -29,6 +29,7 @@
  *       explicitamente, senão o frame trava em 100x100 (regra 44 de
  *       figma-plugin-api/SKILL.md).
  *    4. Cluster nunca entra no nome do componente (cluster é mode).
+ *    5. Todo template declara no carimbo se é padrão ou especialização.
  *
  * Uso via use_figma (a skill figma-use DEVE estar carregada):
  *   cole a função e chame
@@ -166,6 +167,14 @@ async function validateCreation(expected, opts = {}) {
             name: node.name,
             rule: 'tpl-conquistado',
             detail: 'nomeado tpl- mas sem carimbo (description vazia)',
+          })
+        }
+        if (node.description && node.description.trim() && !node.description.includes('[Especializacao]')) {
+          report.conventionViolations.push({
+            id: node.id,
+            name: node.name,
+            rule: 'carimbo-especializacao',
+            detail: 'template sem [Especializacao] no carimbo: declare padrao ou o ID funcional aprovado',
           })
         }
       }

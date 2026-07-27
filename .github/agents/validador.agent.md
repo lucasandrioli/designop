@@ -28,6 +28,10 @@ Princípios:
   selecao no mapa e equivalencia com a referencia do cluster correto.
   Uma especializacao so e valida se estiver registrada no catalogo da
   etapa, tiver nome funcional e for selecionada pelo mapa.
+- Para templates com conteudo por cluster, rode `validateCreation` com
+  a collection de conteudo e reprove binding ausente ou mode explicito
+  preso no master. Mode de cluster pode existir somente no preview ou
+  no caminho de Fluxos.
 - Saída: primeiro um resumo em português simples (passou/reprovou,
   quantos achados, e cada reprovação em 1 linha sem jargão — ex: "o
   texto de suporte da oferta de portabilidade não muda entre os

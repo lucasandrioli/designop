@@ -105,6 +105,11 @@ falha silenciosa.
     mesmo mode — não é preciso pinar tela por tela.
     `clearExplicitVariableModeForCollection(collection)` remove o
     override do nó, voltando a herdar do contexto.
+    **Clone de referencia:** antes de componentizar uma referencia,
+    varra o clone e limpe o mode explicito da collection de conteudo no
+    clone e em todos os descendentes. Um mode herdado deixa o template
+    preso no cluster de origem. Master de template nunca pina mode de
+    cluster; somente wrapper de preview ou frame de Fluxos pode pinar.
 19. **Variável de biblioteca remota:**
     `await figma.variables.importVariableByKeyAsync(key)`. Funciona em
     plano Pro (validado).
@@ -290,3 +295,9 @@ falha silenciosa.
     "sem binding" para quem olha só o nó. Ao auditar bindings, leia
     sempre os dois lugares; ao reportar ausência de binding, diga em
     qual dos dois você procurou.
+47. **Token visual do IDS não prova binding de conteúdo.** Um template
+    pode conter fonte ou cor bindada dentro de uma instancia remota e
+    ainda nao trocar texto por cluster. Ao validar `tpl-`, confira alias
+    da collection de conteudo em `componentPropertyDefinitions`,
+    `instance.componentProperties` ou fallback local. Ignore tokens
+    internos do IDS como prova de conteudo variavel.

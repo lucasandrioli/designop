@@ -47,6 +47,9 @@
  * @param {object} [opts]
  * @param {string[]} [opts.clusterIds=[]] - ids de cluster (ex: ['c1-mg'])
  *   para a checagem 4. Sem isso ela é pulada.
+ * @param {string} [opts.contentCollectionId] - collection que contém o
+ *   conteúdo variável por cluster. Quando informada, o script exige binding
+ *   real dessa collection e proíbe mode explícito no template-mestre.
  * @returns {Promise<{
  *   checked: number,
  *   missing: Array<{id: string}>,
@@ -55,13 +58,16 @@
  *   wrongChildCount: Array<{id: string, name: string, expected: string, actual: number}>,
  *   missingAutoLayout: Array<{id: string, name: string}>,
  *   missingBindings: Array<{id: string, name: string, prop: string}>,
+ *   missingContentBindings: Array<{id: string, name: string, collectionId: string}>,
  *   missingDescription: Array<{id: string, name: string}>,
+ *   pinnedContentModes: Array<{id: string, name: string, collectionId: string, modeId: string}>,
  *   conventionViolations: Array<{id: string, name: string, rule: string, detail: string}>,
  *   passed: boolean
  * }>}
  */
 async function validateCreation(expected, opts = {}) {
   const clusterIds = opts.clusterIds ?? []
+  const contentCollectionId = opts.contentCollectionId
 
   const report = {
     checked: 0,
@@ -71,7 +77,9 @@ async function validateCreation(expected, opts = {}) {
     wrongChildCount: [],
     missingAutoLayout: [],
     missingBindings: [],
+    missingContentBindings: [],
     missingDescription: [],
+    pinnedContentModes: [],
     conventionViolations: [],
     passed: true,
   }
@@ -82,6 +90,60 @@ async function validateCreation(expected, opts = {}) {
       for (const c of node.children) if (hasAnyBinding(c)) return true
     }
     return false
+  }
+
+  // O binding de conteúdo pode viver em property do componente ou da
+  // instância. Tokens visuais aninhados do IDS não provam que o template
+  // troca conteúdo por cluster, portanto só contam aliases da collection
+  // de conteúdo informada pelo Validador.
+  const contentVariableIds = new Set()
+  if (contentCollectionId) {
+    const variables = await figma.variables.getLocalVariablesAsync()
+    for (const variable of variables) {
+      if (variable.variableCollectionId === contentCollectionId) {
+        contentVariableIds.add(variable.id)
+      }
+    }
+  }
+
+  const variableIdsIn = (value, ids = new Set()) => {
+    if (!value || typeof value !== 'object') return ids
+    if (value.type === 'VARIABLE_ALIAS' && typeof value.id === 'string') {
+      ids.add(value.id)
+      return ids
+    }
+    for (const child of Object.values(value)) variableIdsIn(child, ids)
+    return ids
+  }
+
+  const hasContentAlias = (value) =>
+    [...variableIdsIn(value)].some((id) => contentVariableIds.has(id))
+
+  const hasContentBinding = (node, insideInstance = false) => {
+    if ('componentPropertyDefinitions' in node && hasContentAlias(node.componentPropertyDefinitions)) {
+      return true
+    }
+    if ('componentProperties' in node && hasContentAlias(node.componentProperties)) {
+      return true
+    }
+    if (!insideInstance && hasContentAlias(node.boundVariables)) return true
+    if ('children' in node) {
+      for (const child of node.children) {
+        if (hasContentBinding(child, insideInstance || node.type === 'INSTANCE')) return true
+      }
+    }
+    return false
+  }
+
+  const pinnedContentModes = (node) => {
+    if (!contentCollectionId) return []
+    const candidates = [node, ...('children' in node ? node.findAll(() => true) : [])]
+    return candidates.flatMap((candidate) => {
+      const modeId = candidate.explicitVariableModes?.[contentCollectionId]
+      return modeId
+        ? [{ id: candidate.id, name: candidate.name, collectionId: contentCollectionId, modeId }]
+        : []
+    })
   }
 
   for (const spec of expected) {
@@ -143,6 +205,17 @@ async function validateCreation(expected, opts = {}) {
 
     const base = node.name.split('/').pop()
 
+    if (contentCollectionId) {
+      if (!hasContentBinding(node)) {
+        report.missingContentBindings.push({
+          id: node.id,
+          name: node.name,
+          collectionId: contentCollectionId,
+        })
+      }
+      report.pinnedContentModes.push(...pinnedContentModes(node))
+    }
+
     // 1. tpl- é conquistado: COMPONENT + binding + carimbo
     if (base.startsWith('tpl-')) {
       if (node.type !== 'COMPONENT' && node.type !== 'COMPONENT_SET') {
@@ -153,12 +226,17 @@ async function validateCreation(expected, opts = {}) {
           detail: `nomeado tpl- mas é ${node.type}, não COMPONENT. Renomear para ref-<nome>-<cluster> ou componentizar de verdade`,
         })
       } else {
-        if (!hasAnyBinding(node)) {
+        const hasRequiredBinding = contentCollectionId
+          ? hasContentBinding(node)
+          : hasAnyBinding(node)
+        if (!hasRequiredBinding) {
           report.conventionViolations.push({
             id: node.id,
             name: node.name,
             rule: 'tpl-conquistado',
-            detail: 'nomeado tpl- mas não tem nenhum binding: ainda é referência crua',
+            detail: contentCollectionId
+              ? 'nomeado tpl- mas não tem binding da collection de conteúdo: ainda não adapta por cluster'
+              : 'nomeado tpl- mas não tem nenhum binding: ainda é referência crua',
           })
         }
         if (!(node.description && node.description.trim())) {
@@ -226,7 +304,9 @@ async function validateCreation(expected, opts = {}) {
     report.wrongChildCount.length === 0 &&
     report.missingAutoLayout.length === 0 &&
     report.missingBindings.length === 0 &&
+    report.missingContentBindings.length === 0 &&
     report.missingDescription.length === 0 &&
+    report.pinnedContentModes.length === 0 &&
     report.conventionViolations.length === 0
 
   return report

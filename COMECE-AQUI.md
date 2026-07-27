@@ -135,15 +135,18 @@ Daqui em diante isso se repete por etapa e por convenio novo.
 4. **VOCE REVISA e aprova a proposta consolidada.** Checkpoint
    obrigatorio, nao pule mesmo que pareca obvio. Este e o momento de
    decidir se uma diferenca e regra real ou descuido de construcao.
-5. Clique em `Montar apos aprovacao` somente depois de escrever a
+5. Antes de montar pela primeira vez, decida a topologia em
+   `docs/topologia-biblioteca.md`: arquivo unico ou arquivo por etapa.
+   O agente nao escolhe isso por voce.
+6. Clique em `Montar apos aprovacao` somente depois de escrever a
    aprovacao explicita na conversa.
-6. O Montador componentiza e binda conforme a proposta aprovada.
+7. O Montador componentiza e binda conforme a proposta aprovada.
    Ele cria as variaveis, componentiza a tela, conecta tudo e carimba a
    descricao do componente.
-7. Clique em `Validar entrega`, revise o prompt e envie.
+8. Clique em `Validar entrega`, revise o prompt e envie.
    Layout quebrado, texto cortado, conexoes faltando, consistencia com
    o mapa, em TODOS os convenios.
-8. Publicar a lib (acao manual, nao tem API).
+9. Publicar a lib (acao manual, nao tem API).
 
 ### Depois: a manutencao, onde o investimento se paga
 

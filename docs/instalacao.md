@@ -19,7 +19,8 @@ usem. Voce precisa de:
 6. Prototipo ligado e flow starting point nomeado em cada caso que
    tenha duas ou mais telas.
 7. Arquivo consumidor separado do IDS, bibliotecas IDS habilitadas e
-   uma collection de conteudo com um mode por cluster.
+   `docs/topologia-biblioteca.md` decidido. A collection de conteudo e
+   seus modes sao criados pelo Montador conforme essa topologia.
 
 `laboratorio/` pode mostrar formato, mas nunca substitui esses itens.
 
@@ -71,6 +72,8 @@ designer prepara pagina da etapa + documentos minimos
     v
 designer aprova a proposta consolidada
     v
+topologia da biblioteca decidida
+    v
 /montador: componentes, variaveis, bindings e carimbo
     v
 /validador: equivalencia, mapa, catalogo e layout
@@ -85,8 +88,8 @@ explicita do designer.
 ## Crescimento
 
 - Novo cluster: manual com a jornada, referencias nas paginas das
-  etapas usadas, coluna no mapa e mode na collection. Nunca copie uma
-  etapa para dentro do cluster.
+  etapas usadas, coluna no mapa e mode na collection resolvida para
+  cada etapa. Nunca copie uma etapa para dentro do cluster.
 - Nova etapa: novo catalogo, pagina Figma e primeiro conjunto de
   referencias. Ela so entra em jornadas depois de estar no mapa.
 - Diferenca estrutural: o Especializador propoe um template funcional

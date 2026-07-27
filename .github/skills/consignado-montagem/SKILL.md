@@ -16,8 +16,9 @@ bloqueios de uma vez:
    `docs/`. `laboratorio/` nunca substitui esses documentos.
 3. O arquivo Figma, a pagina da etapa e as secoes de referencia de cada
    cluster foram informados pelo designer.
-4. A collection de conteudo foi encontrada ou a criacao de uma nova
-   collection por dominio foi aprovada.
+4. A topologia em `docs/topologia-biblioteca.md` esta decidida e a
+   collection de conteudo correspondente foi encontrada, ou sua
+   criacao foi aprovada. Com topologia `[DECIDIR]`, pare.
 
 Sem um desses itens, pare. Nao crie tela, componente, variavel ou
 binding para preencher lacuna.
@@ -26,8 +27,11 @@ binding para preencher lacuna.
 
 1. Leia catalogo, mapa, manuais e proposta aprovada. A regra ativa de
    cada cluster precisa ter mecanismo classificado.
-2. Localize ou crie a collection de conteudo do dominio. Cada mode e um
-   cluster. Nunca crie collection por etapa ou por tela.
+2. Resolva a collection de conteudo pela topologia: ela pode ser unica
+   para a biblioteca, exclusiva da etapa no arquivo unico, ou local do
+   arquivo da etapa. Cada mode segue a opcao registrada. O nome da
+   variavel sempre comeca por `<etapa>/`. Nunca crie collection ou
+   escolha topologia por conta propria.
 3. Crie somente as variaveis e os papeis previstos no contrato de
    conteudo aprovado, com valores extraidos das referencias.
 4. Clone a referencia indicada para o template. A referencia original

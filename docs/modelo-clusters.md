@@ -5,14 +5,21 @@ skill e agente do projeto segue este modelo.
 
 ## Estrutura
 
-- UMA collection de variaveis por dominio de conteudo (ex:
-  `conteudo-consignado`), onde CADA MODE E UM CLUSTER:
-  cluster-1-mg, cluster-2, cluster-2-1, cluster-4-federais, cluster-5
-- Cada variavel e uma linha da tabela; cada celula e o valor daquela
-  variavel naquele cluster.
-- A etapa e definida UMA vez, com templates-base e bindings. Trocar o
-  mode da instancia troca o conteudo do cluster. Um template
-  especializado so existe quando a estrutura nao cabe no template-base.
+- A ETAPA e sempre o namespace logico: organiza pagina, referencias,
+  templates, mapa e nomes de variavel. O nome Figma sempre preserva
+  esse namespace, por exemplo `anuencia/orientacao/descricao`.
+- A COLLECTION e uma decisao fisica de arquivo, registrada em
+  `docs/topologia-biblioteca.md` antes do Montador escrever no Figma:
+  pode ser uma collection unica, collections por etapa no mesmo
+  arquivo, ou uma collection local em cada arquivo de etapa.
+- Em qualquer topologia, CADA MODE E UM CLUSTER que realmente usa a
+  etapa. Exemplo: `Gov SP`, `Cluster 4`. A ausencia da etapa nao cria
+  mode nem boolean: vive no mapa de fluxo.
+- Cada variavel e uma linha da tabela; cada celula e o valor daquele
+  cluster naquela etapa. A etapa e definida UMA vez, com templates-base
+  e bindings. Trocar o mode da instancia troca o conteudo do cluster.
+  Um template especializado so existe quando a estrutura nao cabe no
+  template-base.
 
 ## Mapeamento dos tipos de variacao
 
@@ -29,9 +36,12 @@ skill e agente do projeto segue este modelo.
 - Modalidade (primeira concessao vs refinanciamento) NUNCA e mode:
   e estrutura de template separada.
 - Texto identico em todos os clusters NAO vira variavel.
-- Nomes de variavel: grupo/nome-kebab (ex: orgao/nome-exibicao,
-  elegibilidade/mostra-oferta-adicional).
-- Nomes de mode: cluster-N-apelido.
+- Nomes de variavel: etapa/grupo/nome-kebab (ex:
+  anuencia/orientacao/descricao,
+  simulacao/elegibilidade/mostra-oferta-adicional). O namespace da
+  etapa e sempre visivel, inclusive em arquivo ou collection dedicados.
+- Nomes de mode: nome funcional do cluster, sem repetir a etapa (ex:
+  Gov SP, Cluster 4).
 - Todo texto bindado: fonte carregada antes do binding e textAutoResize
   HEIGHT ou WIDTH_AND_HEIGHT.
 - Template-mestre nao pina mode de cluster. O mode explicito fica no
@@ -156,16 +166,22 @@ prototipo e a fonte de onde ele e gerado e contra a qual e conferido.
 - O mapa de fluxo e a fonte unica de COMPOSICAO e SELECAO: quais
   etapas existem, em que ordem, em quais clusters e se usam padrao ou
   especializacao. Muda por PR no repo.
-- A collection e a fonte unica de CONTEUDO (o que cada tela mostra por
-  cluster). Muda pela tabela de variaveis no Figma.
+- A collection resolvida pela topologia e a fonte unica de CONTEUDO (o
+  que cada tela mostra por cluster). Muda pela tabela de variaveis no
+  Figma.
+- Topologia fisica e pre-requisito do Montador, nao da analise. Com
+  `docs/topologia-biblioteca.md` em `[DECIDIR]`, os quatro agentes de
+  analise entregam proposta normalmente e o Montador para antes de
+  escrever.
 - NUNCA duplicar composicao como boolean de variavel (ex:
   fluxo/tem-consentimento). Verdade duplicada diverge.
 - Populacao: Leitor gera o rascunho do grafo, Comparador registra o
   pareamento, Generalizador propoe o catalogo e Especializador propoe
   a classificacao. O designer aprova antes de qualquer escrita.
 - Onboarding de cluster novo: (1) jornada no manual, (2) coluna no
-  mapa, (3) mode na collection, (4) referencias nas paginas das etapas
-  usadas. Nada de duplicar etapa ou arquivo.
+  mapa, (3) mode na collection resolvida para cada etapa usada, (4)
+  referencias nas paginas dessas etapas. Nada de duplicar etapa para
+  dentro do cluster.
 
 ## Prova de conceito anterior do fluxo designer-no-centro (lab)
 

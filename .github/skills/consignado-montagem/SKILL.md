@@ -28,8 +28,8 @@ binding para preencher lacuna.
    cada cluster precisa ter mecanismo classificado.
 2. Localize ou crie a collection de conteudo do dominio. Cada mode e um
    cluster. Nunca crie collection por etapa ou por tela.
-3. Crie somente as variaveis previstas no schema aprovado, com valores
-   extraidos das referencias.
+3. Crie somente as variaveis e os papeis previstos no contrato de
+   conteudo aprovado, com valores extraidos das referencias.
 4. Clone a referencia indicada para o template. A referencia original
    permanece intacta.
 5. Remova modes herdados do clone antes de componentizar.
@@ -75,6 +75,10 @@ somente em wrappers de preview ou em frames de primeiro nivel da pagina
 - Etapa presente ou ausente vem do mapa de fluxo, nunca de booleano.
 - Cluster nao entra no nome do componente. Modalidade e estrutura,
   nunca mode.
+- Ao finalizar, monte o objeto de entrada de `validateContentContract`:
+  cada papel aprovado precisa declarar a variavel e o alvo unico do
+  binding. Use `target: { scope: 'template' }` para property exposta no
+  template raiz. Nao acrescente papel porque um texto parece importante.
 
 ## Carimbo e nomes
 
@@ -96,6 +100,10 @@ Para cada cluster selecionado no mapa:
 5. Rode `validateLayout` no preview em cada mode.
 6. Confirme que Fluxos instancia o template correto e que o grafo bate
    com o mapa.
+7. Entregue ao Validador os previews por cluster com wrapper, mode,
+   instancia, template, referencia, raiz de layout e os mesmos papeis
+   aprovados. A raiz de layout precisa estar dentro do wrapper, e o
+   wrapper e o unico no que pode ter mode explicito de conteudo.
 
 ## Saida
 

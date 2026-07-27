@@ -54,14 +54,45 @@ cluster. O mapa de fluxo escolhe onde cada especializacao e usada.
 | --- | --- | --- | --- | --- |
 | <ex: confirmacao-com-matricula> | <motivo> | `<etapa>/tpl-<nome>` | <lista> | [PROPOSTA | APROVADA] |
 
-## Contrato de variaveis (proposto pelo Generalizador)
+## Contrato de conteudo aprovado
 
-Nome e tipo, sem valores. Os valores sao definidos por mode na
-collection de conteudo, apenas para clusters que usam o template.
+O Generalizador propoe; o designer aprova antes da montagem. Este e o
+contrato que diz **quais papeis realmente variam**. Nao e uma lista de
+todos os textos da tela, nem um palpite do Validador. Valores por
+cluster continuam apenas na collection do Figma.
 
-| Variavel | Tipo | Obrigatoria quando | Observacao |
-| --- | --- | --- | --- |
-| <grupo/nome-kebab> | <string, boolean ou number> | <caso> | <n/a> |
+Registre um papel para cada conteudo que precisa responder ao mode. O
+campo `type` usa os mesmos valores da interface: `text` exige variavel
+`STRING`; `visible` exige `BOOLEAN`. O `alvo` descreve como o Montador
+encontra o binding sem depender de node ID. Para uma property exposta
+no COMPONENT ou COMPONENT_SET raiz, use `escopo: template`; para uma
+property em componente aninhado ou binding interno, use `escopo: node`
+e um nome de no unico. Um papel de visibilidade usa `campo: visible`.
+Para `binding: node`, `text` usa obrigatoriamente `campo: characters`
+e `visible` usa `campo: visible`. Para `component-property`, a property
+exposta precisa ser `TEXT` ou `BOOLEAN`, respectivamente.
+
+```yaml
+collection: <nome da collection de conteudo>
+papeis:
+  - id: <titulo>
+    variavel: <grupo/nome-kebab>
+    type: <text | visible>
+    binding:
+      tipo: <component-property | node>
+      alvo:
+        escopo: <template | node>
+        nome: <obrigatorio somente no escopo node>
+      property: <nome da property, quando houver>
+      campo: <characters | visible, quando binding for node>
+```
+
+O Montador traduz esse contrato para `validateContentContract` usando
+`collectionId`, `id`, `variavel`, `type`, `binding.kind`,
+`target.scope`, `target.nodeName` e `field`. O Validador usa os mesmos
+`id` e `type` em `validateModeBehavior` e passa todos os papeis
+aprovados em `expectedRoles`. Se o papel ainda nao foi aprovado, marque
+`[CONFIRMAR]`; nao o inclua como obrigatorio no teste.
 
 ## Comportamento de campo e estado de UI (extraido dos agentes)
 

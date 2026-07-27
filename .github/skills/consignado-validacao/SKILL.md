@@ -25,9 +25,11 @@ nem acesso a disco dentro do sandbox da Plugin API. Para usar:
 
 Cole a versão atual do arquivo, sempre — nunca uma de memória. O
 `validateLayout` tem 6 checagens (a 6ª é `emptyBoundText`) e o
-`validateCreation` cobre estrutura mais 4 convenções do projeto; uma
-versão reescrita de cabeça perde checagem em silêncio e o relatório sai
-dizendo "passou" com menos rigor do que aparenta.
+`validateCreation` cobre estrutura mais convenções do projeto. Há dois
+scripts complementares: `validateContentContract.js` confere o binding
+de cada papel aprovado e `validateModeBehavior.js` prova os previews
+por mode. Uma versão reescrita de cabeça perde checagem em silêncio e o
+relatório sai dizendo "passou" com menos rigor do que aparenta.
 
 ## Descoberta do escopo
 
@@ -116,6 +118,12 @@ Verifique também:
 - `pinnedContentModes` reprova: master de template e seus descendentes
   nao podem ter mode explicito da collection de conteudo. O mode fica
   somente no wrapper de preview ou no frame de Fluxos.
+- rode `validateContentContract` com o contrato aprovado da etapa. Cada
+  papel precisa apontar para a variavel certa, e a saida deve nomear o
+  papel que falhou. Se nao houver contrato aprovado, a cobertura de
+  conteudo fica **NAO VERIFICAVEL**; nao invente papeis a partir da
+  referencia. `type: text` exige variavel `STRING`; `type: visible`
+  exige `BOOLEAN`.
 
 ### 3b. Equivalência contra as referências cruas
 
@@ -135,11 +143,22 @@ num mode cujo conteúdo aparece na referência é o caso mais comum, e é
 invisível para qualquer checagem de layout.
 
 **Preview só é prova válida se não tiver override em relação ao
-master.** Frames de preview pinados por mode são o veículo prático para
-testar cluster a cluster, mas um override manual num preview quebra a
-prova: você mede uma coisa que o template não entrega. Antes de usar um
-preview como evidência, confira `overrides` / properties da instância
-contra o master e reporte qualquer divergência como achado próprio.
+master.** Use `validateModeBehavior` para cada preview do mapa: ele
+confere o mode explícito somente no wrapper, proíbe mode em qualquer
+descendente, exige a instância do template selecionado sem override
+manual, exige todos e somente os papéis aprovados, compara-os à
+referência e roda `validateLayout` dentro daquele wrapper. Frames de
+preview pinados por mode são o veículo prático para testar cluster a
+cluster, mas um override manual num preview quebra a prova: você mede
+uma coisa que o template não entrega.
+
+Excecao estrita: a API pode registrar somente `name` como override
+direto da propria instância de preview quando ela foi renomeada pelo
+papel que exerce. Isso e permitido pela regra 34 de
+`figma-plugin-api`, e `validateModeBehavior` registra em
+`ignoredOverrides`. A excecao nao vale para outro campo, para um
+registro com `name` mais outro campo, nem para `name` em no ou instância
+filha: todos esses casos reprovam.
 
 ### 4. Screenshot (fallback, se o ambiente permitir)
 get_screenshot por SEÇÃO (não da tela inteira em resolução reduzida),
@@ -243,3 +262,39 @@ no wrapper de preview ou no frame de Fluxos
 (`setExplicitVariableModeForCollection`, com fontes carregadas antes),
 compare o conteudo com a referencia e rode validateLayout de novo EM
 CADA MODO. Texto que cabe em MG pode estourar em outro cluster.
+
+### Interface minima entre Montador e Validador
+
+O Montador entrega dois objetos, derivados do contrato aprovado da
+etapa, sem IDs permanentes no repositorio:
+
+```js
+const contentContract = {
+  collectionId: '<id da collection no arquivo atual>',
+  roles: [
+    {
+      id: '<papel aprovado>',
+      variable: '<grupo/nome-kebab>',
+      type: '<text|visible>',
+      binding: {
+        kind: '<component-property|node>',
+        target: { scope: '<template|node>', nodeName: '<obrigatorio no escopo node>' },
+        property: '<quando component-property>',
+        field: '<characters|visible, quando node>',
+      },
+    },
+  ],
+}
+```
+
+O Validador chama `validateContentContract(templateId, contentContract)`.
+Depois recebe uma entrada para cada cluster selecionado no mapa e chama
+`validateModeBehavior(previews, {
+contentCollectionId,
+expectedRoles: contentContract.roles.map(({ id, type }) => ({ id, type })),
+validateLayout,
+})`. Cada preview declara wrapper, mode, instancia, template,
+referencia, raiz de layout dentro do wrapper e os mesmos papeis, com
+`type` e seletor de no no preview e na referencia. Node IDs servem
+apenas a execucao atual; a etapa documenta nomes e papeis, nao IDs do
+Figma.

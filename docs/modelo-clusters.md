@@ -41,6 +41,36 @@ skill e agente do projeto segue este modelo.
   setExplicitVariableModeForCollection): texto que cabe num cluster
   pode estourar em outro.
 
+## Contrato de conteudo e prova de comportamento
+
+Cada etapa aprovada declara em `docs/etapas/<etapa>.md` somente os
+papeis de conteudo que devem variar por cluster. Cada papel aponta para
+uma variavel da collection, seu tipo e seu mecanismo de binding. `text`
+exige variavel Figma `STRING`; `visible` exige `BOOLEAN`. Exemplo de
+papel: `titulo`, `descricao`, `cta` ou `mostrar-aviso`. O Validador nao
+deduz esses papeis observando a tela: se nao constarem no contrato, a
+ausencia e `[CONFIRMAR]`, nao um erro inventado.
+
+A prova tem duas camadas independentes:
+
+1. **Contrato de conteudo:** `validateContentContract` verifica, papel
+   por papel, se o alvo declarado esta ligado a variavel declarada. Um
+   token de cor, tipografia ou espacamento vindo do IDS nunca satisfaz
+   essa prova.
+2. **Comportamento por mode:** `validateModeBehavior` recebe previews
+   ja construidos e a lista completa de papeis `{ id, type }` do
+   contrato.
+   Confirma o mode somente no wrapper, reprova o mesmo mode em qualquer
+   descendente, reprova override manual na instancia, exige todos e
+   somente os papeis aprovados, compara cada valor efetivo com a
+   referencia do cluster e chama `validateLayout` dentro do wrapper. A
+   estrutura do template continua sendo responsabilidade de
+   `validateCreation`.
+
+O schema aprovado define os papeis; o mapa define quais clusters usam
+o template; as referencias cruas definem o resultado esperado. Nenhuma
+dessas tres verdades e substituida por booleano ou por inspecao visual.
+
 ## Limite de plano (checar no banco)
 
 Modes por collection dependem do plano Figma. Professional: 4.

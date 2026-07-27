@@ -113,6 +113,19 @@ plano; só componentes da LIB (templates de tela e seções compostas).
    docs/estrutura-lib.md.
 8. Retornar node IDs criados/mutados e o relatório de equivalência.
 
+Formato do relatório, sempre em DUAS PARTES nesta ordem: primeiro um
+resumo em linguagem simples, 3 a 5 linhas, sem jargão — o que foi
+criado, se bateu ou não bateu com as referências, e o que precisa de
+decisão sua. Depois o detalhe técnico (node IDs, variáveis criadas,
+resultado do validateLayout por cluster) como apoio. O designer lê a
+primeira parte; a segunda existe para auditoria e para o validador.
+
+Os scripts em `scripts/` não rodam pelo caminho: não há require nem
+acesso a disco dentro da Plugin API. Leia o arquivo do repositório,
+cole o corpo da função dentro do script do use_figma e chame no fim.
+Sempre a versão atual do arquivo, nunca uma reescrita de memória — uma
+versão de cabeça perde checagem em silêncio.
+
 Protótipo nos templates: quando o fluxo diverge por cluster (etapas
 presentes num e não noutro), a navegação vive em PÁGINAS DE FLUXO por
 cluster, que instanciam os templates e recebem as conexões

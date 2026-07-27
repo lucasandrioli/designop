@@ -13,6 +13,43 @@ description: >-
 
 Carregue a skill figma-plugin-api antes de qualquer use_figma.
 
+## Como rodar os scripts deste repositório
+
+`scripts/validateLayout.js` e `scripts/validateCreation.js` NÃO são
+executáveis pelo Figma a partir do caminho. Não há `require`, `import`
+nem acesso a disco dentro do sandbox da Plugin API. Para usar:
+
+1. LEIA o arquivo do repositório, inteiro.
+2. COLE o corpo da função dentro do script do `use_figma`.
+3. Chame no fim: `return await validateLayout('<nodeId>')`.
+
+Cole a versão atual do arquivo, sempre — nunca uma de memória. O
+`validateLayout` tem 6 checagens (a 6ª é `emptyBoundText`) e o
+`validateCreation` cobre estrutura mais 4 convenções do projeto; uma
+versão reescrita de cabeça perde checagem em silêncio e o relatório sai
+dizendo "passou" com menos rigor do que aparenta.
+
+## Descoberta do escopo
+
+Não espere node IDs prontos. A partir do que a tarefa informar (arquivo,
+página, etapa), descubra sozinho via `get_metadata` o que precisa
+validar. Aplique os itens da ordem abaixo que fizerem sentido para o
+escopo pedido e PULE explicitamente os que não se aplicam, dizendo
+quais pulou e por quê (ex: itens de mapa de fluxo e protótipo quando
+ainda não existe mapa). Item pulado em silêncio vira falsa cobertura.
+
+## Formato do relatório
+
+Duas partes, nesta ordem. Primeiro um resumo em português simples:
+passou ou reprovou, quantos achados, e cada reprovação em UMA linha de
+negócio — "o texto de portabilidade não muda entre convênios mas
+deveria", nunca "elegibilidade/mostra-portabilidade ausente em 73:98".
+Depois o relatório técnico completo por tela/objeto, com `passed`
+true/false, node IDs e severidade (reprova vs aviso), como apoio.
+
+Você NÃO corrige nada: reporta. Se houver reprovação, pergunte quem
+deve corrigir em vez de corrigir por conta.
+
 ## Modelo normativo
 Siga docs/modelo-clusters.md (clusters como modes).
 

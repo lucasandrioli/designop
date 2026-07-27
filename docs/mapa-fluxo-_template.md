@@ -27,12 +27,52 @@ de outra), ou `[CONFIRMAR]`.
 Nivel 1 = etapa obrigatoria do fluxo. Nivel 2 = tela de apoio, abre de
 dentro de uma etapa de nivel 1 (detalhe, saiba mais, edicao).
 
-## Ordem
-Se a ordem das etapas diverge entre convenios, descreva aqui. A tabela
-acima diz o QUE existe; esta secao diz em que SEQUENCIA.
+## Grafo por convenio (um diagrama por convenio, por caso de uso)
 
-- <convenio A>: 1 -> 2 -> 4
-- <convenio B>: 2 -> 3 -> 4
+A tabela acima diz o QUE existe. O grafo diz em que ORDEM, o que
+BIFURCA, e o que VOLTA. Sao coisas diferentes e nao se substituem: a
+tabela compara N convenios de relance (uma coluna cada), o grafo mostra
+a topologia de UM convenio de cada vez.
+
+Se voce se pegar escrevendo prosa numa celula da tabela — "apos a
+senha; o retorno atualiza a efetivacao", "abre pelo trail do item" —
+essa informacao e de grafo e o lugar dela e aqui.
+
+Este bloco e GERADO pelo comparador a partir do prototipo (Modo
+Fluxos), nao desenhado a mao. O prototipo e a fonte; isto e a
+documentacao derivada, e o validador confere se as duas ainda batem.
+
+### Notacao (fixa, nao invente outra)
+
+| Simbolo | Significado |
+| --- | --- |
+| `[texto]` | ETAPA de nivel 1 |
+| `([texto])` | DESDOBRAMENTO de nivel 2 (tela de apoio, ida e volta) |
+| `{texto}` | RAMO DE EXCECAO (bifurcacao real, 2+ avancos possiveis) |
+| `-->` | avanco no fluxo principal |
+| `-.->` | ida e volta de desdobramento |
+| `\|gatilho\|` | rotulo REAL do elemento que dispara (texto do botao) |
+| no apontando para si mesmo | estado de espera passiva |
+
+A classificacao vem da TOPOLOGIA, nunca do rotulo do botao (ver Modo
+Fluxos na skill consignado-comparador).
+
+### <convenio A> — <caso de uso, ex: caminho feliz>
+
+```mermaid
+flowchart TD
+    a[Etapa 1] --> b[Etapa 2]
+    b --> c[Etapa 3]
+    b -.->|Ver detalhes| d([Detalhe de apoio])
+    d -.-> b
+```
+
+### <convenio B> — <caso de uso>
+
+```mermaid
+flowchart TD
+    a[Etapa 1] --> c[Etapa 3]
+```
 
 ## Divergencias e o porque
 Para cada `nao` ou diferenca de ordem, aponte a regra do manual do

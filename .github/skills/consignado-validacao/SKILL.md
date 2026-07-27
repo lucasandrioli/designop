@@ -63,6 +63,18 @@ com as validações 1-3 como critério de aceite.
 ### 5. Consistência mapa de fluxo <-> arquivo
 - Todo template listado em docs/mapa-fluxo-*.md existe no arquivo da lib
 - Nenhum template no arquivo esta fora do mapa (orfao)
+- O GRAFO do mapa ainda bate com o prototipo. Extraia o grafo do
+  prototipo do cluster do mesmo jeito que o comparador faz (Modo
+  Fluxos: reactions ON_CLICK/NAVIGATE, resolvendo destinationId para a
+  tela de topo) e compare com o bloco mermaid daquele cluster no mapa.
+  Reportar como achado, por cluster: aresta no prototipo e nao no mapa,
+  aresta no mapa e nao no prototipo, e no com nivel/forma divergente
+  (`[etapa]` virou `([desdobramento])` ou vice-versa).
+  Isto e DERIVA, o achado mais comum depois que o fluxo muda e ninguem
+  atualiza o doc. O prototipo e a fonte; o mapa e a documentacao. Se
+  divergirem, reporte os dois lados e pergunte qual esta certo — nao
+  assuma que o prototipo venceu, porque o mapa tambem carrega decisao
+  de negocio que pode ainda nao ter sido construida.
 - Toda variavel bindada em um template tem valor preenchido em todos os
   modes dos clusters onde a etapa existe (valor vazio so e aceitavel em
   cluster onde o mapa diz que a etapa nao existe, e nesse caso deve ser

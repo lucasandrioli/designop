@@ -243,12 +243,43 @@ que receberão variável, divergências que parecem acidente
 
 ### Passo 7 — Mapa de fluxo
 Derive do pareamento o rascunho do mapa de fluxo por cluster
-(docs/mapa-fluxo-<escopo>.md): etapa | nivel (1 obrigatoria, 2 opcional)
-| presenca por cluster | gatilho | template. Telas SEM_PAR indicam
-presenca divergente. Marque incertezas como [VERIFICAR COM DESIGNER].
-Se o mapa ja existe, gere um diff proposto, nunca sobrescreva sem
-revisao. O mapa e a FONTE UNICA de composicao de fluxo; nunca proponha
-booleans de variavel para presenca de etapa.
+(docs/mapa-fluxo-<escopo>.md), em DUAS formas complementares. As duas
+saem do mesmo grafo extraido no Modo Fluxos; nao escolha uma.
+
+**7a. Tabela de presenca** — etapa | nivel (1 obrigatoria, 2 opcional)
+| presenca por cluster | template. Uma coluna por cluster: e a forma
+que se compara de relance. Telas SEM_PAR indicam presenca divergente.
+
+**7b. Grafo por cluster** — um bloco ```mermaid por cluster e por caso
+de uso (flowStartingPoint), com a notacao fixa do template
+`docs/mapa-fluxo-_template.md`:
+`[etapa]`, `([desdobramento])`, `{ramo de excecao}`, `-->` avanco,
+`-.->` ida e volta, `|gatilho|` com o rotulo REAL do elemento que tem a
+reaction, no apontando para si mesmo = espera passiva.
+
+O grafo NAO e enfeite nem duplicata da tabela: e o que impede o
+achatamento. Ordem, bifurcacao, aresta de retorno e de qual etapa um
+desdobramento pendura sao informacao que a tabela nao tem onde guardar
+— e que, sem o grafo, vaza como prosa numa celula ("apos a senha; o
+retorno atualiza a efetivacao"). Voce ja extraiu o grafo do prototipo
+no Modo Fluxos; emita-o, nao o achate.
+
+REGRA: se voce estiver prestes a escrever uma frase explicativa dentro
+de uma celula da tabela, pare — aquilo e uma aresta, e o lugar dela e
+no mermaid.
+
+Cuidado especifico, aprendido em laboratorio: quando a MESMA etapa tem
+topologia diferente entre clusters (mais nos internos, saida ativa vs
+espera passiva), isso e "mesma etapa com mais passos", NAO "duas etapas
+diferentes". Emita os dois grafos e deixe a diferenca visivel; a
+INTERPRETACAO do que ela significa e [VERIFICAR COM DESIGNER], nunca
+sua conclusao. (Teste 11, laboratorio/fila-de-testes.md: essa conclusao
+forte foi tirada sem confirmacao e estava errada.)
+
+Marque incertezas como [VERIFICAR COM DESIGNER]. Se o mapa ja existe,
+gere um diff proposto, nunca sobrescreva sem revisao. O mapa e a FONTE
+UNICA de composicao de fluxo; nunca proponha booleans de variavel para
+presenca de etapa.
 
 ## Regras aprendidas em laboratorio (obrigatorias)
 - Nomes de frame NUNCA com barra (/): quebra pareamento por caminho.

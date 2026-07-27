@@ -22,6 +22,66 @@ testado aqui — linhas fora do que foi testado ficam [CONFIRMAR], nao
 | Canal de confirmacao (SMS/e-mail) | 2 | nao | nao | sim | botao "Escolher canal de confirmacao" dentro da etapa Anuencia | [CONFIRMAR] nome definitivo; construido cru em Fluxo-gov-sp/t2b-canal para teste |
 | Efetivacao | 1 | sim | sim | [CONFIRMAR] | n/a | tpl-efetivacao (variant efetivado; tracking vertical, imprimir contrato, voltar, fechar) |
 
+## Grafo por convenio
+
+Um diagrama por convenio. Notacao em `docs/mapa-fluxo-_template.md`:
+`[etapa]` nivel 1, `([desdobramento])` nivel 2, `-->` avanco, `-.->`
+ida e volta, `|gatilho|` rotulo real, no apontando para si = espera
+passiva.
+
+### c1-mg — caso feliz
+
+```mermaid
+flowchart TD
+    entrada[Entrada: card oferta] --> simulacao[Simulacao]
+    simulacao --> autorizacao[Autorizacao de debito]
+    autorizacao --> resumo[Resumo]
+    resumo --> info[Informacoes importantes]
+    info --> senha[Senha]
+    senha --> efetivacao[Efetivacao]
+
+    simulacao -.->|trail do item| seguro([Detalhe seguro consignado])
+    seguro -.-> simulacao
+    simulacao -.->|trail do item| porta([Detalhe portabilidade])
+    porta -.-> simulacao
+```
+
+### c4-federais — caso feliz
+
+```mermaid
+flowchart TD
+    entrada[Entrada: card oferta] --> consent[Consentimento de dados]
+    consent --> simulacao[Simulacao]
+    simulacao --> autorizacao[Autorizacao de debito]
+    autorizacao --> resumo[Resumo]
+    resumo --> info[Informacoes importantes]
+    info --> senha[Senha]
+    senha --> anuencia[Anuencia]
+    anuencia --> efetivacao[Efetivacao]
+
+    consent -.->|botao secundario| dados([Dados consultados])
+    dados -.-> consent
+    simulacao -.->|trail do item| seguro([Detalhe seguro consignado])
+    seguro -.-> simulacao
+    simulacao -.->|trail do item| porta([Detalhe portabilidade])
+    porta -.-> simulacao
+    anuencia -.->|orgao confirma; cliente aguarda| anuencia
+```
+
+### gov-sp — caso feliz
+
+Linhas ainda [CONFIRMAR] na tabela nao aparecem aqui: so foi testado do
+senha em diante (Teste 11).
+
+```mermaid
+flowchart TD
+    senha[Senha] --> anuencia[Anuencia]
+    anuencia -->|cliente confirma| efetivacao[Efetivacao]
+
+    anuencia -.->|Escolher canal de confirmacao| canal([Canal de confirmacao SMS/e-mail])
+    canal -.-> anuencia
+```
+
 ## Nota (2026-07-25, corrigida): Anuencia e UMA etapa, com mais passos em alguns clusters
 Correcao de uma leitura errada da mesma rodada: o agente comparador (e
 o coordenador) interpretaram a divergencia entre c4-federais e gov-sp

@@ -41,9 +41,18 @@ Siga docs/modelo-clusters.md (clusters como modes).
 
 ## Checagem inicial (a PRIMEIRA coisa, antes até do intake)
 
-Não comece a comparar num terreno que não existe. Verifique, na ordem,
-e PARE se faltar — devolvendo a lista do que falta em linguagem de
-negócio, não em nome de arquivo. Referência completa: `docs/instalacao.md`.
+Não comece a comparar num terreno que não existe. Verifique o que falta
+e PARE — devolvendo a lista em linguagem de negócio, não em nome de
+arquivo. Referência completa: `docs/instalacao.md`.
+
+**Rode TODAS as checagens antes de reportar, mesmo depois de já ter
+encontrado um bloqueio.** Os itens 1 a 4 se resolvem lendo o
+repositório; o item 5 exige abrir o arquivo do Figma (leitura, sempre
+permitida). Parar no primeiro bloqueio e reportar só ele custa uma ida
+e volta a mais para o designer: ele escreve os manuais, volta, e só
+então descobre que falta protótipo. Uma lista completa de uma vez vale
+as duas chamadas de leitura a mais. Só pule a checagem 5 se você ainda
+não souber onde as telas estão (intake incompleto).
 
 1. **Existe manual dos clusters envolvidos?** (`docs/clusters/<cluster>.md`)
    Se não existir, PARE. Sem ele você vai inventar a razão de cada

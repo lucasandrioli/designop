@@ -169,7 +169,7 @@ continua acessível na instância mesmo quando o variant ativo
 a property vive na instância, não no variant visível. NUNCA reduza a
 comparação ao que aparece expandido na tela/screenshot: leia todas as
 instâncias por `componentProperties`, aberto ou fechado, sempre.
-(Confirmado com dado real: docs/fila-de-testes.md, Teste 12.)
+(Confirmado com dado real: laboratorio/fila-de-testes.md, Teste 12.)
 
 ### Passo 2b — Composição local e componente local do designer
 
@@ -211,7 +211,7 @@ Passo 0. Component key que não resolve = [LOCAL], candidato a problema.
 Resolva sempre por `mainComponent.key` (ou `getMainComponentAsync()`),
 nunca pelo `instance.name` — uma instância pode estar renomeada por
 PAPEL (ex: uma instância de `banner-desconto` chamada
-`aviso-consentimento` na tela, convenção de docs/receitas/_comuns.md).
+`aviso-consentimento` na tela — convenção de nomeação por papel).
 Nome de instância divergente do nome do componente NÃO é sinal de
 `[LOCAL]` nem de duplicação; só a key decide (regra 34 de
 figma-plugin-api/SKILL.md).

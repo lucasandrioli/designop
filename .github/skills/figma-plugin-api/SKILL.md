@@ -57,7 +57,7 @@ falha silenciosa.
     vazio por cluster/condição deixa espaço morto na tela quando o
     valor é vazio. Se um bloco de texto pode ficar vazio, AGRUPE-O num
     frame próprio e binde a VISIBILIDADE DO FRAME (não só o texto) a
-    um boolean. (Achado no teste 9, docs/fila-de-testes.md.)
+    um boolean. (Achado no teste 9, laboratorio/fila-de-testes.md.)
 
 ## Texto e fontes
 
@@ -129,7 +129,7 @@ falha silenciosa.
     regra, não a exceção. Quando não houver token com o valor exato E o
     scope certo, reporte "fora da escala" e ofereça o token mais próximo
     dentro do scope válido — como sugestão a confirmar, nunca como troca
-    automática. (Achado no Teste 15, docs/fila-de-testes.md.)
+    automática. (Achado no Teste 15, laboratorio/fila-de-testes.md.)
 
 ## Component properties
 
@@ -172,7 +172,7 @@ falha silenciosa.
     pine um mode explícito temporário no nó
     (`setExplicitVariableModeForCollection`) que resolva `visible` como
     `true`, edite, depois `clearExplicitVariableModeForCollection`.
-    (Achado no teste 9, docs/fila-de-testes.md.)
+    (Achado no teste 9, laboratorio/fila-de-testes.md.)
 
 ## Componentes e biblioteca
 
@@ -204,7 +204,8 @@ falha silenciosa.
 34. **Instância pode estar renomeada por PAPEL, com nome diferente do
     componente real.** Convenção do projeto: uma instância de
     `banner-desconto` pode se chamar `aviso-consentimento` na tela
-    porque é esse o papel dela ali (docs/receitas/_comuns.md). Isso não
+    porque é esse o papel dela ali (convenção registrada em
+    docs/receitas/_comuns.md quando o aprendiz já tiver rodado). Isso não
     é duplicação nem componente `[LOCAL]` — confirme sempre pelo
     `mainComponent.key` (ou `(await instance.getMainComponentAsync()).name`),
     nunca pelo `instance.name`, antes de reportar um componente como

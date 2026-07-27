@@ -26,7 +26,7 @@ Cluster NUNCA entra no nome do componente (cluster é mode). Modalidade
 SEMPRE multiplica template, nunca vira variável nem boolean — o eixo
 de modes é único por collection e usá-lo para modalidade forçaria o
 produto cartesiano cluster × modalidade, estourando o limite de plano
-(ver Teste 16 em docs/fila-de-testes.md). Se o schema aprovado propuser
+(ver Teste 16 em laboratorio/fila-de-testes.md). Se o schema aprovado propuser
 uma variável de modalidade, PARE e reporte: é erro de modelo.
 
 Plano de componentização: proposto pelo comparador junto do schema.

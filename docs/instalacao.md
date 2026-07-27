@@ -67,7 +67,14 @@ agentes tem proibicao explicita de inventar.
 | 2.2 | Quais modalidades entram | docs/estrutura-lib.md | 1 (modalidade multiplica TEMPLATE, ver modelo-clusters) |
 | 2.3 | Manual de cada cluster | docs/clusters/<cluster>.md (usar `_template.md`) | so as regras que tocam a etapa escolhida |
 | 2.4 | Definicao da etapa | docs/etapas/<etapa>.md (usar `_template.md`) | a etapa escolhida |
-| 2.5 | Mapa de fluxo | docs/mapa-fluxo-<escopo>.md | pode ser rascunho; o comparador gera do prototipo (Modo Fluxos) |
+| 2.5 | Mapa de fluxo | docs/mapa-fluxo-<escopo>.md (usar `mapa-fluxo-_template.md`) | pode ser rascunho; o comparador gera do prototipo (Modo Fluxos) |
+
+Todos os itens da bloco 2 chegam VAZIOS neste repo, so com os moldes
+`_template.md`. Isso e proposital, nao um esquecimento: preencher e o
+primeiro trabalho de conteudo do projeto. Ha exemplos preenchidos em
+`laboratorio/clusters/` e `laboratorio/etapas/` — servem para ver o
+FORMATO esperado, nunca para copiar o conteudo (sao convenios
+ficticios, com regras que inventei no lab para ter o que comparar).
 
 Regra de ouro da bloco 2: **regra que nao esta escrita, o agente nao
 conhece — e ele vai perguntar, nao adivinhar.** Isso e proposital. Se um

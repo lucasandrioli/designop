@@ -7,7 +7,7 @@ com assistentes de IA cuidando da parte repetitiva."
 
 | Nome tecnico (interno) | Nome de apresentacao | O que faz, em uma frase |
 | --- | --- | --- |
-| Agente comparador/comparador | O Comparador | Le as telas dos convenios e aponta o que muda entre eles |
+| Agente comparador | O Comparador | Le as telas dos convenios e aponta o que muda entre eles |
 | Agente montador | O Montador | Transforma as telas de exemplo em templates que se adaptam por convenio |
 | Agente validador | O Revisor | Confere cada entrega: layout quebrado, texto cortado, conteudo faltando |
 | Telas de referencia | Telas de exemplo | As telas que o designer desenha, uma versao por convenio, lado a lado |
@@ -19,7 +19,7 @@ com assistentes de IA cuidando da parte repetitiva."
 | Desdobramento (nivel 2) | Tela de apoio | Tela opcional que abre de dentro de outra (detalhe, saiba mais) |
 | Ramo de excecao | Caminho de excecao | O que acontece quando algo sai do padrao (ex: anuencia pendente) |
 | Dossie de cluster | Manual do convenio | As regras de negocio de cada convenio, escritas |
-| Receitas (camada 2) | Caderno de padroes | Como o designer constroi, documentado para o assistente aprender |
+| Receitas (Bloco 3) | Caderno de padroes | Como o designer constroi, documentado para o assistente aprender |
 | Etapas macro | Jornada | consentimento -> simular e contratar -> revisar -> formalizar |
 
 Regra de ouro ao apresentar: nunca dizer "MCP", "binding", "mode" ou

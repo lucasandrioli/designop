@@ -17,7 +17,7 @@ IA, não o padrão de construção do designer real. Antes de extrair
 qualquer receita, confirme que a tela foi de fato desenhada por um
 humano designer; se houver dúvida, pergunte em vez de assumir. Telas
 assim costumam estar documentadas como teste/lab em
-docs/fila-de-testes.md, não em docs/receitas/.
+laboratorio/fila-de-testes.md, não em docs/receitas/.
 
 ## O que extrair (somente fatos observados, nunca invenção)
 

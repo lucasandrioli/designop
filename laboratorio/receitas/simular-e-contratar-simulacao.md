@@ -1,7 +1,7 @@
 # Receita: tela de simulacao
 
 ## Anatomia
-Herda docs/receitas/_comuns.md. Estrutura especifica:
+Herda laboratorio/receitas/_comuns.md (exemplo do lab). Estrutura especifica:
 
     raiz (360, VERTICAL, FIXED)
     +- header-fluxo [IDS]  (Titulo: "Simulacao", voltar+fechar visiveis)

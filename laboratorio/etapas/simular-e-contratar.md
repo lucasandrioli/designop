@@ -8,7 +8,7 @@
 
 ## Aviso: este doc cobre só a primeira concessão
 
-Medido no Teste 16 (docs/fila-de-testes.md), comparando a mesma etapa e
+Medido no Teste 16 (laboratorio/fila-de-testes.md), comparando a mesma etapa e
 o MESMO cluster nas duas modalidades: o refinanciamento é
 estruturalmente disjunto. As 3 seções do corpo da primeira concessão
 (campo-valor, oferta-seguro, oferta-portabilidade) não existem no
@@ -35,7 +35,7 @@ variants), não a estrutura da tela. Ver docs/estrutura-lib.md,
 
 | Template | Componente na lib | Observado em |
 | --- | --- | --- |
-| Simulação | `simular-e-contratar/tpl-simulacao` | Lab - Consignado Piloto, node `73:102`, construído e validado via os 3 agentes reais (comparador/montador/validador) em 2026-07-25 — ver docs/fila-de-testes.md, Teste 10 |
+| Simulação | `simular-e-contratar/tpl-simulacao` | Lab - Consignado Piloto, node `73:102`, construído e validado via os 3 agentes reais (comparador/montador/validador) em 2026-07-25 — ver laboratorio/fila-de-testes.md, Teste 10 |
 
 ### Nível 2 (opcional, alcançável a partir do nível 1)
 

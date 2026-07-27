@@ -1,7 +1,7 @@
 # Mapa de fluxo — consignado OP, primeira concessao (piloto: c1-mg, c4-federais, gov-sp)
 
 Coluna `gov-sp` adicionada em 2026-07-25 a partir do teste do Modo
-Fluxos do agente comparador (docs/fila-de-testes.md, Teste 11). Gov SP
+Fluxos do agente comparador (laboratorio/fila-de-testes.md, Teste 11). Gov SP
 é convenio novo, ainda SEM manual proprio confirmado alem do que foi
 testado aqui — linhas fora do que foi testado ficam [CONFIRMAR], nao
 "nao" por suposicao.

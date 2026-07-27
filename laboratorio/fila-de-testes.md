@@ -158,7 +158,7 @@ Achados novos:
   dentro de `tpl-simulacao` (template pre-existente) nao e um
   componente duplicado do que criei no Mini DS — e uma instancia de
   `banner-desconto` renomeada por PAPEL (convencao ja documentada em
-  docs/receitas/_comuns.md). Confirmado via getMainComponentAsync().name.
+  laboratorio/receitas/_comuns.md (exemplo do lab)). Confirmado via getMainComponentAsync().name.
 - Auditoria pos-construcao (Passo 2 do comparador: characters +
   boundVariables de todo TEXT) achou 2 gaps reais no
   `tpl-consentimento`, ambos de TECNICA de construcao, nao de

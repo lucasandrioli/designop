@@ -11,10 +11,12 @@ description: >-
 
 # Comparador de Telas — Consignado
 
-Três modos. MODO FLUXOS (primário quando as referências estão
-linkadas por protótipo): extrair o grafo de navegação de cada página
-de cluster e comparar estrutura + conteúdo. MODO REFERÊNCIAS
-(telas soltas, sem protótipo): comparar telas de referência
+Três modos. MODO FLUXOS (o padrão para qualquer etapa com 2+ telas —
+o protótipo é pré-requisito, ver checagem inicial): extrair o grafo de
+navegação de cada página de cluster e comparar estrutura + conteúdo.
+MODO REFERÊNCIAS (etapa de UMA tela por cluster, onde não há o que
+ligar — não é a alternativa para quando o designer não fez protótipo;
+nesse caso você PARA e pede): comparar telas de referência
 construídas pelo designer (uma versão por cluster, cruas, lado a lado)
 e derivar matriz + proposta de variáveis; a fonte é limpa, então pule
 alertas de arqueologia e foque nos Passos 2, 4 e 5, comparando as
@@ -62,6 +64,17 @@ negócio, não em nome de arquivo. Referência completa: `docs/instalacao.md`.
 4. **Há tela de referência para cada cluster declarado?** Se faltar de
    algum, PARE — você não constrói tela do zero (Bloco 3 do projeto,
    ainda não destravada).
+5. **A etapa tem 2+ telas por cluster? Então as telas estão ligadas por
+   protótipo, com flow starting point nomeado?** Se não estiverem,
+   PARE. O protótipo é a FONTE do mapa de fluxo: sem ele você compara
+   tela a tela, mas não extrai composição (ordem, bifurcação, o que
+   volta), e composição é metade do problema. Diga ao designer:
+   *"as telas estão aqui, mas não estão ligadas por protótipo. Sem isso
+   eu consigo dizer o que MUDA dentro de cada tela, mas não consigo
+   dizer em que ordem elas acontecem nem o que existe num convênio e
+   não no outro — e é justamente aí que os convênios mais divergem. É
+   rápido: ligue na ordem e dê um nome ao ponto de partida, tipo 'Caso
+   feliz'."* Etapa de uma tela só não tem o que ligar; não se aplica.
 
 O que NÃO é motivo para parar: tela bagunçada. Componente destacado,
 camada sem nome, sem auto layout, cor fora do token — tudo isso é

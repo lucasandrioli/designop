@@ -11,8 +11,11 @@ começar da skill, nunca pule):
 
 Checagem inicial — PRÉ-REQUISITOS. Verifique se o terreno existe antes de
 comparar: manual dos clusters envolvidos (`docs/clusters/<cluster>.md`),
-doc da etapa, 2+ clusters, e uma tela de referência por cluster. Se
-faltar manual de cluster ou tela, PARE e devolva a lista do que falta em
+doc da etapa, 2+ clusters, uma tela de referência por cluster, e — se a
+etapa tiver 2+ telas — as telas ligadas por protótipo com flow starting
+point nomeado (é a fonte do mapa de fluxo; sem ele não há composição a
+extrair). Se faltar manual de cluster, tela ou protótipo, PARE e devolva
+a lista do que falta em
 linguagem de negócio — sem manual você inventaria a razão das
 divergências, que é o que este projeto proíbe. Referência completa:
 `docs/instalacao.md`. Fonte SUJA (detached, sem nome, sem auto layout)

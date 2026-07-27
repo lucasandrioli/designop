@@ -94,7 +94,16 @@ conhece — e ele vai perguntar, nao adivinhar.
    pagina Referencias. Instanciando componentes do IDS. Sem variaveis,
    sem componentizar. So a tela, como ela e hoje.
 5. Construir as MESMAS telas do convenio B, ao lado.
-6. Linkar com prototipo e nomear o starting point ("Caso feliz").
+6. **Ligar as telas por prototipo, na ordem, e nomear o ponto de
+   partida pelo caso de uso ("Caso feliz").** Uma pagina por convenio.
+
+O passo 6 nao e opcional e nao e para apresentacao: o prototipo e a
+FONTE do mapa de fluxo. O comparador extrai dele quais telas existem,
+em que ordem, o que bifurca e o que volta — e sem isso ele consegue
+dizer o que MUDA dentro de cada tela, mas nao consegue dizer o que
+existe num convenio e nao no outro. E aí que os convenios mais divergem.
+Cada ponto de partida nomeado vira um caso de uso comparavel. Se a etapa
+tem uma tela so, nao ha o que ligar.
 
 Nao se preocupe com nomenclatura nem com organizacao. Voce declara ao
 agente "estas telas sao da etapa X, esta e do convenio A" e ele

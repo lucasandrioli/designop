@@ -95,12 +95,26 @@ Dono: voce. E o material concreto no arquivo.
 | 3.2 | Bibliotecas do IDS habilitadas nesse arquivo | as 4 do IDS |
 | 3.3 | Collection de conteudo, com um mode por cluster | 1 collection, 2 modes |
 | 3.4 | Telas de referencia cruas, 1 por cluster, da etapa escolhida | 2 telas |
-| 3.5 | (opcional) prototipo ligando as telas | so se a etapa tiver mais de uma tela |
+| 3.5 | Prototipo ligando as telas, com flow starting point nomeado | obrigatorio se a etapa tiver 2+ telas |
 
 Sobre 3.1: NUNCA construa referencia, template ou binding dentro do
 arquivo do IDS. O IDS e catalogo publicado; telas de consumo vivem no
 arquivo consumidor. Isso ja foi errado uma vez neste projeto e teve que
 ser desfeito.
+
+Sobre 3.5: o prototipo e a FONTE do mapa de fluxo, nao um extra de
+apresentacao. O comparador extrai dele o grafo (quais telas, em que
+ordem, o que bifurca, o que volta) e gera o mapa; o validador depois
+confere se o doc ainda bate com o arquivo. Sem prototipo o Modo Fluxos
+inteiro cai e sobra so a comparacao tela a tela — voce descobre o que
+MUDA entre convenios, mas nao descobre a composicao do fluxo, e a
+composicao e metade do problema (uma etapa que existe num convenio e
+nao noutro se resolve no mapa, nunca com variavel).
+
+O custo e baixo e o retorno e alto: ligar as telas na ordem e nomear o
+flow starting point pelo caso de uso ("Caso feliz"). Cada
+flowStartingPoint nomeado vira um caso de uso comparavel entre
+convenios. Etapa de uma tela so nao tem o que ligar; ai nao se aplica.
 
 Sobre 3.4: as telas podem chegar BAGUNCADAS — componente destacado,
 camada sem nome, sem auto layout. Isso e tolerado e esperado (ver Testes

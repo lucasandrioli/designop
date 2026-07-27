@@ -159,6 +159,7 @@ Daqui em diante isso se repete por etapa e por convenio novo.
 
 | Onde | O que e | Muda no banco? |
 | --- | --- | --- |
+| `AGENTS.md` | Regras sempre ativas, lidas por todo agente | Nao |
 | `.github/agents/` | Definicao dos 4 agentes | Nao |
 | `.github/skills/` | Metodo detalhado que os agentes seguem | Nao |
 | `.claude/commands/` | Os slash commands | Nao |

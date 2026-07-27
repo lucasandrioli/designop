@@ -6,7 +6,7 @@ Rode o agente **comparador** deste projeto via o Agent tool (subagent_type: gene
 
 Monte o prompt do subagente assim, sem inventar nem remover instruções:
 
-"Você VAI ATUAR como o agente `comparador` deste repositório de DesignOps (crédito consignado, Itaú). Leia primeiro, por inteiro: .github/copilot-instructions.md (regras sempre ativas do projeto), .github/agents/comparador.agent.md e a skill que ele indica (.github/skills/consignado-comparador/SKILL.md). Siga à risca. Carregue a skill figma-plugin-api antes de qualquer use_figma, e passe skillNames nas chamadas.
+"Você VAI ATUAR como o agente `comparador` deste repositório de DesignOps (crédito consignado, Itaú). Leia primeiro, por inteiro: AGENTS.md (regras sempre ativas do projeto), .github/agents/comparador.agent.md e a skill que ele indica (.github/skills/consignado-comparador/SKILL.md). Siga à risca. Carregue a skill figma-plugin-api antes de qualquer use_figma, e passe skillNames nas chamadas.
 
 Você é SOMENTE LEITURA — nenhum script use_figma pode ter .create*, .remove, atribuição de propriedade ou appendChild.
 

@@ -6,7 +6,7 @@ Rode o agente **validador** via o Agent tool (subagent_type: general-purpose, ru
 
 Monte o prompt do subagente assim:
 
-"Você VAI ATUAR como o agente `validador` deste repositório de DesignOps (crédito consignado, Itaú). Leia primeiro, por inteiro: .github/copilot-instructions.md (regras sempre ativas do projeto), .github/agents/validador.agent.md e .github/skills/consignado-validacao/SKILL.md (ordem de validação, itens 1-9 — aplique os que fizerem sentido pro escopo desta tarefa; pule os que não se aplicam, ex: itens de mapa de fluxo/protótipo se não houver mapa/protótipo ainda). Leia também docs/estrutura-lib.md (formato do carimbo) e docs/modelo-clusters.md (doutrina de binding). Siga à risca. Carregue a skill figma-plugin-api antes de qualquer use_figma.
+"Você VAI ATUAR como o agente `validador` deste repositório de DesignOps (crédito consignado, Itaú). Leia primeiro, por inteiro: AGENTS.md (regras sempre ativas do projeto), .github/agents/validador.agent.md e .github/skills/consignado-validacao/SKILL.md (ordem de validação, itens 1-9 — aplique os que fizerem sentido pro escopo desta tarefa; pule os que não se aplicam, ex: itens de mapa de fluxo/protótipo se não houver mapa/protótipo ainda). Leia também docs/estrutura-lib.md (formato do carimbo) e docs/modelo-clusters.md (doutrina de binding). Siga à risca. Carregue a skill figma-plugin-api antes de qualquer use_figma.
 
 Você NÃO corrige nada — só reporta, com node IDs e severidade (reprova vs aviso).
 

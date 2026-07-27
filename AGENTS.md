@@ -1,0 +1,137 @@
+# Regras sempre ativas — DesignOps consignado
+
+Este e o documento canonico de regras deste repositorio. Vale para
+qualquer agente, em qualquer ferramenta (Codex, Copilot, Claude Code).
+Se outra instrucao contradisser esta, esta vence.
+
+Comece por `COMECE-AQUI.md` se voce nao conhece o projeto.
+
+## O que e este projeto
+
+Uma biblioteca Figma de templates de telas do credito consignado
+(orgaos publicos), que se adapta por convenio, mantida com ajuda de
+agentes. Consolida telas hoje espalhadas em 7+ arquivos.
+
+E uma ferramenta de design para design: DesignOps interno. O produto
+final sao bibliotecas, templates e variaveis no Figma, consumidos por
+designers.
+
+FORA DE ESCOPO: geracao de codigo de producao, handoff para
+desenvolvimento, Code Connect, export para devs. Nao sugira nem derive
+para essas frentes; se o usuario pedir, confirme que e uma mudanca
+consciente de escopo antes.
+
+## Onde este agente esta rodando (leia antes de planejar)
+
+O trabalho deste projeto se divide em dois tipos, e nem todo ambiente
+faz os dois.
+
+**Trabalho de Figma** (comparar telas, montar template, validar):
+exige o MCP do Figma conectado. Se voce nao tem as ferramentas
+`use_figma` / `get_metadata` disponiveis, voce NAO consegue fazer este
+tipo de trabalho. Nao simule, nao descreva o que faria como se tivesse
+feito, nao invente node ID. Diga que o ambiente nao tem Figma e ofereca
+o trabalho de texto.
+
+**Trabalho de texto** (escrever manual de convenio, doc de etapa, mapa
+de fluxo, revisar doutrina, mexer nas skills e nos agentes): funciona
+em qualquer ambiente, sem Figma.
+
+No Codex em nuvem so o segundo tipo funciona: o container nao tem o MCP
+do Figma e a internet fica desligada apos a configuracao.
+
+## Divisao de trabalho
+
+- O DESIGNER constroi as telas de referencia (uma por cluster, cruas) e
+  liga por prototipo.
+- O agente COMPARADOR compara as referencias e propoe o schema de
+  variaveis. Somente leitura.
+- O designer APROVA o schema. Checkpoint obrigatorio, nunca pulado.
+- O agente MONTADOR cria variaveis, binda o template, carimba e valida
+  equivalencia contra as referencias.
+- O agente VALIDADOR roda em toda entrega.
+- O agente APRENDIZ roda apos cada tela do designer, extraindo receitas
+  para `docs/receitas/`. Nao pule: o conhecimento se perde se as telas
+  passarem sem observacao.
+
+Definicao de cada um em `.github/agents/`. O metodo detalhado esta nas
+skills em `.github/skills/`.
+
+## Regras sempre ativas
+
+### Conhecimento de negocio
+
+- Antes de construir ou validar um cluster, LEIA
+  `docs/clusters/<cluster>.md` (o manual do convenio): e la que estao as
+  REGRAS e o PORQUE de cada divergencia. Regra que nao esta escrita, o
+  agente nao conhece: nunca infira a razao de uma divergencia, pergunte
+  ou marque `[CONFIRMAR]`.
+
+- **`laboratorio/` NUNCA e fonte de conhecimento.** E evidencia de
+  teste: convenios ficticios, com regras inventadas para forcar o
+  sistema a quebrar. Se `docs/clusters/<cluster>.md` nao existir, o
+  manual NAO EXISTE — pare e peca. Nao substitua por
+  `laboratorio/clusters/<mesmo nome>.md`, mesmo que o nome bata, mesmo
+  que o conteudo pareca plausivel, mesmo que seja o unico arquivo com
+  aquele nome no repo. Vale para clusters, etapas, mapa de fluxo e
+  receitas.
+  Voce PODE citar `laboratorio/` para duas coisas: mostrar ao designer
+  o FORMATO esperado de um documento, e citar a evidencia de por que uma
+  regra de doutrina existe (ex: "Teste 16"). Nunca para afirmar que uma
+  regra de negocio e verdadeira.
+  Esta regra existe porque o caso aconteceu: o montador citou
+  `laboratorio/clusters/c1-mg.md` como autoridade e teria construido em
+  cima de regra falsa.
+
+### Modelo
+
+- Clusters variam por VARIAVEIS (modes); modalidades variam por
+  ESTRUTURA (templates separados). Nao misturar. O modelo completo esta
+  em `docs/modelo-clusters.md` e e NORMATIVO.
+- Composicao de fluxo (etapa existe ou nao num convenio) vive no mapa
+  de fluxo, nunca em variavel booleana.
+- IDS e fonte unica de componentes: nunca recriar o que existe la.
+- Taxonomia em `docs/estrutura-lib.md`: templates publicados como
+  `etapa/tpl-nome`; secoes internas com prefixo `_` (nao publicadas);
+  referencias cruas sem barra no nome. O prefixo `tpl-` e CONQUISTADO:
+  so depois de ser COMPONENT, ter binding e ter carimbo.
+
+### Execucao
+
+- Figma: toda escrita via `use_figma` exige a skill `figma-plugin-api`
+  carregada antes.
+- Os scripts em `scripts/` NAO rodam pelo caminho. Nao ha `require` nem
+  acesso a disco dentro da Plugin API: leia o arquivo, cole o corpo da
+  funcao dentro do script do `use_figma` e chame no fim. Sempre a versao
+  atual do arquivo, nunca reescrita de memoria.
+- Nenhuma tela e entregue sem validacao (skill `consignado-validacao`).
+
+### Comunicacao
+
+- Portugues brasileiro, tom direto, sem jargao corporativo.
+- Nunca usar travessao (em dash) em textos gerados.
+- Relatorio sempre em duas partes: primeiro o resumo em linguagem de
+  negocio, depois o detalhe tecnico como apoio. O designer le a
+  primeira parte.
+- Incerteza vira `[VERIFICAR COM DESIGNER]` ou `[CONFIRMAR]`, nunca uma
+  conclusao mais forte do que a evidencia sustenta.
+
+## Mapa do repositorio
+
+| Onde | O que e |
+| --- | --- |
+| `COMECE-AQUI.md` | Ponto de entrada. Ordem de instalacao e ciclo de trabalho |
+| `AGENTS.md` | Este arquivo. Regras sempre ativas |
+| `.github/agents/` | Definicao dos 4 agentes |
+| `.github/skills/` | Metodo detalhado que os agentes seguem |
+| `.claude/commands/` | Slash commands (so Claude Code) |
+| `docs/` | Doutrina + moldes `_template.md` a preencher |
+| `scripts/` | Validacao de layout e de estrutura |
+| `laboratorio/` | Evidencia de teste. NAO e fonte de regra |
+
+## Sincronizacao
+
+`.github/copilot-instructions.md` aponta para este arquivo, porque o
+Copilot carrega aquele caminho automaticamente. Mudou regra aqui, nao
+precisa mexer la — mas se voce ADICIONAR uma regra critica de
+seguranca, confira se aquele arquivo continua apontando para ca.

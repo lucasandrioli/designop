@@ -15,7 +15,7 @@ cair em `docs/` o agente trata como regra real de convenio.
 | # | Criar em |
 | --- | --- |
 | 1 | `.github/skills/figma-plugin-api/SKILL.md` |
-| 2 | `.github/copilot-instructions.md` |
+| 2 | `AGENTS.md` (raiz) + `.github/copilot-instructions.md` |
 | 3 | `.github/agents/comparador.agent.md` |
 | 4 | `.github/agents/montador.agent.md` |
 | 5 | `.github/agents/validador.agent.md` |

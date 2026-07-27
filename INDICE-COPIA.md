@@ -24,7 +24,7 @@ cair em `docs/` o agente trata como regra real de convenio.
 | 8 | `.github/skills/consignado-validacao/SKILL.md` |
 | 9 | `scripts/validateLayout.js` |
 
-O arquivo 1 e o mais importante de todos: sao as 44 regras da Plugin
+O arquivo 1 e o mais importante de todos: sao as 46 regras da Plugin
 API que fizeram tudo funcionar no laboratorio. Sem ele, o agente comete
 os mesmos erros que ja cometemos e corrigimos.
 

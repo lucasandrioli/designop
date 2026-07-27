@@ -32,8 +32,12 @@ dizendo "passou" com menos rigor do que aparenta.
 ## Descoberta do escopo
 
 Não espere node IDs prontos. A partir do que a tarefa informar (arquivo,
-página, etapa), descubra sozinho via `get_metadata` o que precisa
-validar. Aplique os itens da ordem abaixo que fizerem sentido para o
+página, etapa), descubra sozinho o que precisa validar.
+
+CUIDADO: `get_metadata` sem `nodeId` pode devolver apenas UMA página do
+arquivo, não todas. Confiar nisso leva a concluir que um template não
+existe e reprovar por ausência algo que está lá. Enumere as páginas por
+script (`figma.root.children`) antes de decidir que algo não existe. Aplique os itens da ordem abaixo que fizerem sentido para o
 escopo pedido e PULE explicitamente os que não se aplicam, dizendo
 quais pulou e por quê (ex: itens de mapa de fluxo e protótipo quando
 ainda não existe mapa). Item pulado em silêncio vira falsa cobertura.
@@ -81,13 +85,55 @@ entregue. Se falhar, corrija e revalide. Não prossiga para a próxima
 tela com validação pendente.
 
 ### 3. Validação de bindings e IDS
-Script de leitura verificando:
-- todo TEXT que representa conteúdo variável por cluster tem
-  boundVariables preenchido
+
+**Procure o binding nos DOIS lugares, sempre, e nesta ordem.** Um
+template bem construído segue PROPERTY FIRST (docs/modelo-clusters.md):
+o binding vive em `instance.componentProperties[key].boundVariables`, e
+o nó de TEXT lá dentro fica com `boundVariables` VAZIO. Olhar só o nó
+de texto reprova o template correto e aprova o errado — é falso
+positivo garantido em trabalho bem feito.
+
+    1. instance.componentProperties[<key>].boundVariables  <- o normal
+    2. node.boundVariables no nó interno                   <- fallback
+
+Um binding achado só em (2), num conteúdo que poderia estar exposto
+como property, é AVISO de fragilidade, não aprovação: nó interno de
+instância remota invisible fica inacessível (regra 25 de
+figma-plugin-api).
+
+Verifique também:
 - nenhuma instância detached
-- todo componente resolve para as library keys do IDS
+- todo componente resolve para as library keys do IDS (por
+  `mainComponent.key`, nunca por `instance.name` — instância pode estar
+  renomeada pelo papel, regra 34)
 - textos bindados têm textAutoResize compatível (HEIGHT ou
   WIDTH_AND_HEIGHT; nunca NONE/TRUNCATION)
+- todo conteúdo que DEVERIA variar por cluster está bindado em algum
+  dos dois lugares — cruze com a matriz do comparador, se houver
+
+### 3b. Equivalência contra as referências cruas
+
+Os scripts podem dar `passed: true` num template que contradiz a tela
+que o designer desenhou: eles medem geometria e estrutura, não
+intenção. Esta checagem é o que pega isso, e é obrigatória sempre que
+existirem referências cruas da etapa.
+
+Para cada cluster: extraia os textos visíveis em ordem de documento do
+template no mode daquele cluster, e da referência crua daquele cluster.
+Devem bater, sem faltas nem sobras. Divergência é REPROVA, e o achado
+se descreve pelos dois lados ("o template esconde X no convênio Y, mas
+a referência que você desenhou mostra X").
+
+Compare também a VISIBILIDADE de blocos, não só texto: bloco escondido
+num mode cujo conteúdo aparece na referência é o caso mais comum, e é
+invisível para qualquer checagem de layout.
+
+**Preview só é prova válida se não tiver override em relação ao
+master.** Frames de preview pinados por mode são o veículo prático para
+testar cluster a cluster, mas um override manual num preview quebra a
+prova: você mede uma coisa que o template não entrega. Antes de usar um
+preview como evidência, confira `overrides` / properties da instância
+contra o master e reporte qualquer divergência como achado próprio.
 
 ### 4. Screenshot (fallback, se o ambiente permitir)
 get_screenshot por SEÇÃO (não da tela inteira em resolução reduzida),
@@ -151,6 +197,20 @@ updates de biblioteca exigem aceite manual no arquivo consumidor.
   a partir de 2026-07-25 e deriva de formato, reporte como aviso.
 - [Nivel] 2 exige [Gatilho] preenchido; nivel 2 sem gatilho declarado e
   reprovacao (quem consome nao sabe como chegar naquela tela).
+
+### 8b. Varredura de publicacao (quando a pergunta e "esta pronto para publicar?")
+O escopo aqui e o ARQUIVO, nao o template. Publicar e uma acao de
+arquivo inteiro: tudo que for COMPONENT sem prefixo `_` entra na
+biblioteca junto, esteja ou nao no escopo da tarefa.
+
+Varra todos os COMPONENT e COMPONENT_SET do arquivo e reporte os que
+nao pertencem a taxonomia de docs/estrutura-lib.md: nome sem prefixo de
+etapa, sem descricao, resto de rascunho, componente solto largado numa
+pagina de referencias. Cada um e uma reprova, porque entra na lib no
+proximo publish e vira divida permanente para quem consome.
+
+Se a pergunta foi so "o template X esta certo?", isto e aviso, nao
+reprova — mas reporte mesmo assim.
 
 ### 9. Conformidade com o manual do convenio
 Para cada cluster, leia docs/clusters/<cluster>.md e verifique cada

@@ -271,3 +271,22 @@ falha silenciosa.
     detecta isso hoje). Sempre setar os DOIS eixos (`primaryAxisSizingMode`
     E `counterAxisSizingMode`) em frame auto layout novo, nunca confiar
     no default.
+
+## Descoberta (leitura)
+
+45. **`get_metadata` sem `nodeId` pode devolver só UMA página**, não o
+    arquivo inteiro. Concluir "não existe" a partir daí é erro comum e
+    caro: o validador quase reprovou um template por ausência quando
+    ele estava na 2ª de 4 páginas. Para saber o que existe de fato,
+    enumere por script: `figma.root.children` para as páginas e
+    `page.findAll(...)` dentro de cada uma. Só afirme que algo não
+    existe depois de varrer assim.
+
+46. **Binding feito via component property NÃO aparece em
+    `node.boundVariables` do nó interno** — ele vive em
+    `instance.componentProperties[<key>].boundVariables`, e o TEXT lá
+    dentro fica com `boundVariables` vazio. Como a doutrina do projeto
+    é PROPERTY FIRST, o template CORRETO é exatamente o que parece
+    "sem binding" para quem olha só o nó. Ao auditar bindings, leia
+    sempre os dois lugares; ao reportar ausência de binding, diga em
+    qual dos dois você procurou.

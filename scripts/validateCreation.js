@@ -16,7 +16,8 @@
  *
  * A) CONFERÊNCIA CONTRA A ESPECIFICAÇÃO (`expected`): para cada nó
  *    declarado, checa existência, tipo, nome, contagem de filhos,
- *    presença de auto layout e de bindings.
+ *    presença de auto layout e de bindings. A checagem detalhada de
+ *    conteúdo por papel vive em validateContentContract.js.
  *
  * B) CONVENÇÕES DO PROJETO (automáticas, sem precisar declarar):
  *    1. `tpl-` é CONQUISTADO: só pode nomear algo que seja COMPONENT,
@@ -48,8 +49,10 @@
  * @param {string[]} [opts.clusterIds=[]] - ids de cluster (ex: ['c1-mg'])
  *   para a checagem 4. Sem isso ela é pulada.
  * @param {string} [opts.contentCollectionId] - collection que contém o
- *   conteúdo variável por cluster. Quando informada, o script exige binding
- *   real dessa collection e proíbe mode explícito no template-mestre.
+ *   conteúdo variável por cluster. Quando informada, o script exige ao menos
+ *   um binding real dessa collection e proíbe mode explícito no
+ *   template-mestre. Use validateContentContract para conferir cada papel
+ *   aprovado e sua variável específica.
  * @returns {Promise<{
  *   checked: number,
  *   missing: Array<{id: string}>,

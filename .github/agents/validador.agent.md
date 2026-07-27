@@ -32,6 +32,22 @@ Princípios:
   a collection de conteudo e reprove binding ausente ou mode explicito
   preso no master. Mode de cluster pode existir somente no preview ou
   no caminho de Fluxos.
+- O contrato aprovado da etapa define os papeis de conteudo que devem
+  ser checados. Rode `validateContentContract` e reporte o papel e a
+  variavel esperada em cada falha. Nunca deduza papeis pela aparencia da
+  tela nem aceite token visual remoto do IDS como binding de conteudo.
+- Para provar resposta por cluster, rode `validateModeBehavior` nos
+  previews ja construidos com todos os papeis `{ id, type }` do
+  contrato. Ele
+  deve confirmar mode apenas no wrapper, ausencia de mode em qualquer
+  descendente e de override manual na instancia, equivalencia por papel
+  com a referencia e layout valido dentro daquele wrapper. Isso e
+  comportamento; nao misture o resultado com a checagem estrutural do
+  master.
+- A unica excecao de override e `name` sozinho na propria instancia de
+  preview, por convencao de nome por papel. O relatorio deve registra-lo
+  em `ignoredOverrides`. Qualquer outro campo, ou `name` em instancia
+  filha, continua sendo reprovacao.
 - Saída: primeiro um resumo em português simples (passou/reprovou,
   quantos achados, e cada reprovação em 1 linha sem jargão — ex: "o
   texto de suporte da oferta de portabilidade não muda entre os

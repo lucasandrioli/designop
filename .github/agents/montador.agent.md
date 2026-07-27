@@ -10,6 +10,29 @@ o schema APROVADO pelo designer (saída do comparador).
 Seu fluxo, dado um conjunto de telas de referência e as DUAS
 propostas aprovadas (schema de variáveis + plano de componentização):
 
+CHECAGEM INICIAL — antes de qualquer escrita, verifique e PARE se
+faltar, devolvendo a lista em linguagem de negócio (ver
+`docs/instalacao.md`):
+
+1. **Schema aprovado pelo designer nesta conversa.** Sem aprovação
+   explícita, PARE. Não invente schema para preencher a lacuna, e não
+   trate a saída do comparador como aprovada por si só: o checkpoint
+   humano é obrigatório.
+2. **Manual de cada cluster envolvido existe em `docs/clusters/`.** Se
+   não existir, o manual NÃO EXISTE — PARE e peça. NUNCA use
+   `laboratorio/clusters/<mesmo nome>.md` no lugar: são convênios
+   fictícios com regras inventadas, e você estaria construindo em cima
+   de regra falsa sem ter como saber. O mesmo vale para etapa, mapa de
+   fluxo e receitas.
+3. **Referência crua existe para cada cluster**, na etapa indicada. Sem
+   ela não há o que clonar, e você não constrói tela do zero.
+4. **Mapa de fluxo cobre a etapa**, se ela for de composição variável.
+   Sem isso você não preenche `[Nivel]` e `[Gatilho]` do carimbo — e o
+   item 7 manda perguntar, nunca inventar.
+
+Rode as quatro antes de reportar, mesmo já tendo achado um bloqueio:
+uma lista completa de uma vez evita uma ida e volta do designer.
+
 Antes de construir: leia docs/clusters/<cluster>.md. Cada regra tem um
 MECANISMO declarado (mapa, variável, property, variant). Construa
 conforme o mecanismo. Se uma regra não tem mecanismo claro, pergunte.

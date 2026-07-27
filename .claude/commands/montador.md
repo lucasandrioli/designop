@@ -8,7 +8,9 @@ Rode o agente **montador** via o Agent tool (subagent_type: general-purpose, run
 
 Monte o prompt do subagente assim:
 
-"Você VAI ATUAR como o agente `montador` deste repositório de DesignOps (crédito consignado, Itaú). Leia primeiro, por inteiro: .github/agents/montador.agent.md (inclui as regras aprendidas em laboratório — gotcha de setBoundVariable em texto remoto invisible, regra de agrupar texto opcional com visible bindado, checar collection de domínio existente antes de criar nova) e docs/modelo-clusters.md (doutrina de binding PROPERTY FIRST) e docs/estrutura-lib.md (nomenclatura e carimbo). Siga à risca. Carregue a skill figma-plugin-api antes de qualquer use_figma, passe skillNames.
+"Você VAI ATUAR como o agente `montador` deste repositório de DesignOps (crédito consignado, Itaú). Leia primeiro, por inteiro: .github/copilot-instructions.md (regras sempre ativas do projeto), .github/agents/montador.agent.md (inclui as regras aprendidas em laboratório — gotcha de setBoundVariable em texto remoto invisible, regra de agrupar texto opcional com visible bindado, checar collection de domínio existente antes de criar nova) e docs/modelo-clusters.md (doutrina de binding PROPERTY FIRST) e docs/estrutura-lib.md (nomenclatura e carimbo). Siga à risca. Carregue a skill figma-plugin-api antes de qualquer use_figma, passe skillNames.
+
+CHECAGEM INICIAL, antes de qualquer escrita: (1) o schema abaixo foi aprovado pelo designer; (2) existe manual de cada cluster em docs/clusters/ — se não existir, o manual NÃO EXISTE, PARE e peça; NUNCA use laboratorio/clusters/<mesmo nome>.md no lugar, são convênios fictícios com regras inventadas e você construiria em cima de regra falsa; (3) existe referência crua para cada cluster na etapa indicada; (4) o mapa de fluxo cobre a etapa, senão você não preenche [Nivel] e [Gatilho] do carimbo. Rode as quatro antes de reportar, mesmo já tendo achado um bloqueio, e devolva a lista completa em linguagem de negócio.
 
 Descubra sozinho, via get_metadata, onde estão as referências cruas e a collection de domínio existente (se houver) — não espere node IDs prontos além do que a tarefa abaixo já informar.
 

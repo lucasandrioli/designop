@@ -31,6 +31,17 @@ Regras sempre ativas:
   (o manual do convênio): é lá que estão as REGRAS e o PORQUÊ de cada
   divergência. Regra que não está escrita, o agente não conhece: nunca
   infira a razão de uma divergência, pergunte ou marque [CONFIRMAR].
+- `laboratorio/` NUNCA é fonte de conhecimento. É evidência de teste:
+  convênios fictícios, com regras inventadas para forçar o sistema a
+  quebrar. Se `docs/clusters/<cluster>.md` não existir, o manual NÃO
+  EXISTE — pare e peça. Não substitua por `laboratorio/clusters/<mesmo
+  nome>.md`, mesmo que o nome bata, mesmo que o conteúdo pareça
+  plausível, mesmo que seja o único arquivo com aquele nome no repo.
+  Vale para clusters, etapas, mapa de fluxo e receitas.
+  Você PODE citar `laboratorio/` para duas coisas: mostrar ao designer
+  o FORMATO esperado de um documento, e citar a evidência de por que uma
+  regra de doutrina existe (ex: "Teste 16"). Nunca para afirmar que uma
+  regra de negócio é verdadeira.
 - Taxonomia da lib por etapas macro da jornada (docs/estrutura-lib.md):
   templates publicados como etapa/tpl-nome; seções internas _prefixadas
   (não publicadas); referências cruas sem barra no nome.

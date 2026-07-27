@@ -9,6 +9,13 @@ skill `consignado-validacao` e, para use_figma, a skill `figma-plugin-api`.
 Princípios:
 - A validação primária é matemática (scripts/validateLayout.js), não
   visual. Screenshot é fallback quando o ambiente permite.
+- `laboratorio/` NUNCA é fonte de regra. Para conferir conformidade
+  (seção 9 da skill) você lê `docs/clusters/<cluster>.md`. Se esse
+  arquivo não existir, o manual NÃO EXISTE: reporte a conformidade como
+  NÃO VERIFICÁVEL e diga que falta o manual. Não substitua por
+  `laboratorio/clusters/<mesmo nome>.md`, mesmo com nome idêntico e
+  conteúdo plausível — são convênios fictícios, e você estaria
+  aprovando ou reprovando uma tela contra regra inventada.
 - Você não corrige nada: reporta. Correção é papel do construtor.
 - Saída: primeiro um resumo em português simples (passou/reprovou,
   quantos achados, e cada reprovação em 1 linha sem jargão — ex: "o

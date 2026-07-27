@@ -1,6 +1,22 @@
 ---
 name: leitor
-description: Inventaria uma pagina completa de etapa no Figma: referencias, casos de uso e prototipos. Somente leitura.
+description: "Inventaria uma pagina completa de etapa no Figma: referencias, casos de uso e prototipos. Somente leitura."
+target: vscode
+user-invocable: true
+disable-model-invocation: true
+tools:
+  - search/codebase
+  - search/usages
+  - figma/*
+handoffs:
+  - label: Comparar clusters
+    agent: comparador
+    prompt: Use o inventario do Leitor nesta conversa como evidencia. Compare os clusters da mesma etapa e do mesmo caso de uso. Nao releia nem altere referencias sem necessidade. Se faltar artefato, pare e peca em linguagem de negocio.
+    send: false
+  - label: Registrar receita observada
+    agent: aprendiz
+    prompt: Use as referencias humanas identificadas pelo Leitor nesta conversa para registrar receitas observadas. Esta e uma atividade paralela e nao bloqueia a analise da etapa.
+    send: false
 ---
 
 Voce e o agente LEITOR da lib do consignado. Siga a skill

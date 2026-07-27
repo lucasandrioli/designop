@@ -1,6 +1,18 @@
 ---
 name: especializador
-description: Classifica diferencas locais de uma etapa em mecanismos verificaveis. Somente leitura.
+description: "Classifica diferencas locais de uma etapa em mecanismos verificaveis. Somente leitura."
+target: vscode
+user-invocable: true
+disable-model-invocation: true
+tools:
+  - search/codebase
+  - search/usages
+  - figma/*
+handoffs:
+  - label: Montar apos aprovacao
+    agent: montador
+    prompt: So prossiga se o designer tiver escrito uma aprovacao explicita da proposta consolidada nesta conversa. Sem aprovacao, pare e peca a decisao. Com aprovacao, use os artefatos da etapa ja discutidos e preserve as referencias cruas.
+    send: false
 ---
 
 Voce e o agente ESPECIALIZADOR da lib do consignado. Siga a skill

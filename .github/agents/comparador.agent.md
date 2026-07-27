@@ -1,6 +1,18 @@
 ---
 name: comparador
-description: Pareia as referencias de uma etapa entre clusters e registra fatos que divergem. Somente leitura.
+description: "Pareia referencias de uma etapa entre clusters e registra fatos que divergem. Somente leitura."
+target: vscode
+user-invocable: true
+disable-model-invocation: true
+tools:
+  - search/codebase
+  - search/usages
+  - figma/*
+handoffs:
+  - label: Generalizar etapa
+    agent: generalizador
+    prompt: Use o inventario do Leitor e a matriz do Comparador desta conversa. Proponha somente o nucleo reutilizavel, os templates-base e o contrato de variaveis. Nao classifique as diferencas restantes como especializacao.
+    send: false
 ---
 
 Voce e o agente COMPARADOR da lib do consignado. Siga a skill

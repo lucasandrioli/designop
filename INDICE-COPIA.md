@@ -35,7 +35,7 @@ O arquivo 1 e o mais importante de todos: sao as 46 regras da Plugin
 API que fizeram tudo funcionar no laboratorio. Sem ele, o agente comete
 os mesmos erros que ja cometemos e corrigimos.
 
-## ESSENCIAL (a doutrina que os agentes leem) — 5 arquivos
+## ESSENCIAL (a doutrina e o ambiente compartilhado) — 6 arquivos
 
 | # | Criar em |
 | --- | --- |
@@ -44,29 +44,31 @@ os mesmos erros que ja cometemos e corrigimos.
 | 19 | `docs/instalacao.md` |
 | 20 | `docs/runbook-banco.md` |
 | 21 | `COMECE-AQUI.md` |
+| 22 | `.vscode/mcp.json` |
 
 ## MOLDES (os formularios que voce vai preencher) — 4 arquivos
 
 | # | Criar em |
 | --- | --- |
-| 22 | `docs/clusters/_template.md` |
-| 23 | `docs/etapas/_template.md` |
-| 24 | `docs/mapa-fluxo-_template.md` |
-| 25 | `docs/receitas/_template.md` |
+| 23 | `docs/clusters/_template.md` |
+| 24 | `docs/etapas/_template.md` |
+| 25 | `docs/mapa-fluxo-_template.md` |
+| 26 | `docs/receitas/_template.md` |
 
 Estes chegam VAZIOS de proposito. Preencher os manuais de convenio e o
 primeiro trabalho de conteudo do projeto, com produto e juridico.
 
-## APOIO (util, nao bloqueia) — 6 arquivos
+## APOIO (util, nao bloqueia) — 7 arquivos
 
 | # | Criar em |
 | --- | --- |
-| 26 | `.claude/commands/leitor.md` |
-| 27 | `.claude/commands/comparador.md` |
-| 28 | `.claude/commands/generalizador.md` |
-| 29 | `.claude/commands/especializador.md` |
-| 30 | `.claude/commands/montador.md` |
-| 31 | `.claude/commands/validador.md` |
+| 27 | `docs/runbook-copilot.md` |
+| 28 | `.claude/commands/leitor.md` |
+| 29 | `.claude/commands/comparador.md` |
+| 30 | `.claude/commands/generalizador.md` |
+| 31 | `.claude/commands/especializador.md` |
+| 32 | `.claude/commands/montador.md` |
+| 33 | `.claude/commands/validador.md` |
 
 Os slash commands so valem no Claude Code. No Copilot os agentes sao
 selecionados no seletor de agente, entao estes comandos sao dispensaveis la.
@@ -78,6 +80,7 @@ nao entram no caminho de leitura dos agentes.
 
 ## Depois de copiar
 
-1. Conectar o MCP do Figma no VS Code (ver `COMECE-AQUI.md`)
-2. Conferir `/skills` no chat
+1. Abrir o workspace, autenticar o MCP Figma e conferir os agentes
+   (ver `COMECE-AQUI.md`)
+2. Rodar `docs/runbook-copilot.md` e registrar a primeira cadeia manual
 3. Rodar a bateria de fumaca (`docs/runbook-banco.md`) ANTES de construir

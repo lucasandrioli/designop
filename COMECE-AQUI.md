@@ -37,13 +37,17 @@ Cada passo protege o seguinte. Nao pule.
 ### Passo 1 — Ambiente. ~1h
 
 1. Baixar este repo e abrir a pasta no VS Code.
-2. Conectar o Figma:
-   Cmd/Ctrl+Shift+P > "MCP: Add Server" > HTTP >
-   URL: https://mcp.figma.com/mcp > id: figma
-3. Autenticar com a conta Figma do Itau quando abrir o navegador.
-4. Conferir no chat: `/skills` deve listar as skills deste repo, e os
-   agentes leitor, comparador, generalizador, especializador, montador
-   e validador devem aparecer.
+2. O servidor Figma ja esta declarado em `.vscode/mcp.json`. Rode
+   `MCP: List Servers`, inicie `figma` e autentique com a conta Figma
+   do Itau quando abrir o navegador. Em VS Code antigo que nao le o
+   arquivo, use `MCP: Add Server` > HTTP >
+   `https://mcp.figma.com/mcp` > id `figma`.
+3. Rode `Chat: Open Customizations` e confira os sete agentes: leitor,
+   comparador, generalizador, especializador, montador, validador e
+   aprendiz. Em Chat Diagnostics, nao pode haver erro de agente ou
+   skill.
+4. Em Configure Tools, confirme que o MCP Figma esta visivel. Mantenha
+   a permissao em `Ask` durante os testes.
 5. Teste de vida: "liste as bibliotecas conectadas neste arquivo Figma",
    passando o link de um arquivo do consignado. Se responder, conectou.
 
@@ -124,20 +128,22 @@ O que nao e tolerado e nao existir tela.
 
 Daqui em diante isso se repete por etapa e por convenio novo.
 
-1. `/leitor leia a pagina da etapa X`
-2. `/comparador compare os clusters da etapa X`
-3. `/generalizador proponha o nucleo e o template-base da etapa X`
-4. `/especializador classifique as diferencas restantes da etapa X`
-5. **VOCE REVISA e aprova a proposta consolidada.** Checkpoint
+1. Selecione `Leitor` no menu de agentes e leia a pagina da etapa X.
+2. Clique no handoff `Comparar clusters`, revise o prompt preenchido e
+   envie manualmente.
+3. Repita com `Generalizar etapa` e `Classificar especializacoes`.
+4. **VOCE REVISA e aprova a proposta consolidada.** Checkpoint
    obrigatorio, nao pule mesmo que pareca obvio. Este e o momento de
    decidir se uma diferenca e regra real ou descuido de construcao.
-6. `/montador componentize e binde conforme a proposta aprovada`
+5. Clique em `Montar apos aprovacao` somente depois de escrever a
+   aprovacao explicita na conversa.
+6. O Montador componentiza e binda conforme a proposta aprovada.
    Ele cria as variaveis, componentiza a tela, conecta tudo e carimba a
    descricao do componente.
-7. `/validador valide`
+7. Clique em `Validar entrega`, revise o prompt e envie.
    Layout quebrado, texto cortado, conexoes faltando, consistencia com
    o mapa, em TODOS os convenios.
-5. Publicar a lib (acao manual, nao tem API).
+8. Publicar a lib (acao manual, nao tem API).
 
 ### Depois: a manutencao, onde o investimento se paga
 

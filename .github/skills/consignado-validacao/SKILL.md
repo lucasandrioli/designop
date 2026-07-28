@@ -13,6 +13,10 @@ disable-model-invocation: true
 
 # Validação — Consignado
 
+Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
+skill prova e relata. Ela nao corrige, monta, reclassifica regra ou
+promove um rascunho.
+
 ## Recursos obrigatorios
 
 Leia antes de qualquer chamada Figma:
@@ -337,3 +341,12 @@ Some a essa interface a lista de screenshots revisados e o resultado
 de `validateCreation` e `validateLayout` por preview. O Montador usa o
 veredito e esses resultados como entrada de `validatePromotion`; sem
 eles, nao ha promocao.
+
+Encerre com o pacote:
+
+```text
+[PAPEL CONCLUIDO] Validador
+[ENTREGA] <APTO PARA PROMOCAO|REPROVADO|NAO VERIFICAVEL>
+[PENDENCIAS] <lista ou nenhuma>
+[PROXIMO PAPEL] <Montador somente se apto, ou papel responsavel>
+```

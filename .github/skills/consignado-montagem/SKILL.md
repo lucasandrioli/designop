@@ -11,6 +11,10 @@ Esta skill e chamada manualmente com `/consignado-montagem`. Ela nao
 substitui a aprovacao humana nem permite que uma referencia crua seja
 promovida por parecer parecida com um template.
 
+Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Montagem
+nao decide regra, classificacao nem veredito de validacao; devolva a
+pendencia ao papel responsavel.
+
 ## Recursos obrigatorios desta execucao
 
 Leia estes recursos antes de qualquer chamada Figma. Os links existem
@@ -151,3 +155,12 @@ Primeiro, resumo simples: estado do objeto, o que foi criado ou
 promovido, o que bateu com cada referencia e o que bloqueia a proxima
 acao. Depois, evidencia tecnica: IDs, collection, modes, bindings,
 scripts, screenshots e documentos alterados.
+
+Encerre com o pacote:
+
+```text
+[PAPEL CONCLUIDO] Montador
+[ENTREGA] <rascunho criado ou template promovido>
+[PENDENCIAS] <lista ou nenhuma>
+[PROXIMO PAPEL] <Validador ou publicacao manual>
+```

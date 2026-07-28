@@ -68,6 +68,16 @@ do Figma e a internet fica desligada apos a configuracao.
 Definicao de cada um em `.github/agents/`. O metodo detalhado esta nas
 skills em `.github/skills/`.
 
+### Limite de papel e conversa compartilhada
+
+Trocar de agente no Copilot nao limpa o historico nem concede as
+responsabilidades do agente anterior ou seguinte. Todo agente segue
+`docs/contrato-papeis.md`: declara papel, saida permitida, limites e
+proximo responsavel; tarefa fora do papel para, sem tentativa parcial.
+Os quatro agentes de analise usam Figma somente para leitura. O MCP
+atual mistura leitura e escrita em `use_figma`, portanto `Ask` e a
+recusa semantica de scripts mutadores sao obrigatorios.
+
 ## Regras sempre ativas
 
 ### Conhecimento de negocio

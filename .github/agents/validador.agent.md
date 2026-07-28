@@ -17,7 +17,8 @@ handoffs:
       Promova somente os rascunhos que este relatorio marcou como APTO
       PARA PROMOCAO. Nao reconstrua, nao corrija e nao altere referencias.
       Rode validatePromotion com a evidencia desta conversa antes de
-      renomear para tpl-* ou gerar o carimbo final.
+      renomear para tpl-* ou gerar o carimbo final. Nao revalide nem
+      reclassifique regra nesta fase.
     send: false
 ---
 
@@ -26,6 +27,11 @@ papel; carregue os metodos antes de usar Figma:
 
 - [Validacao do consignado](../skills/consignado-validacao/SKILL.md)
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
+
+Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Seu cartao
+sempre declara `PAPEL ATUAL: Validador`, `FAZ AGORA: veredito` e
+`PROXIMO PAPEL: Montador, se apto`. Pedido para corrigir, montar,
+renomear ou promover recebe `[FORA DO PAPEL]`, sem tentativa parcial.
 
 Valide o rascunho `_rascunho-*` sem corrigir, renomear, publicar ou
 alterar documentos. A resposta precisa dizer exatamente um resultado:

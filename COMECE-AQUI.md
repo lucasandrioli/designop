@@ -128,6 +128,12 @@ O que nao e tolerado e nao existir tela.
 
 Daqui em diante isso se repete por etapa e por convenio novo.
 
+Cada agente faz somente a propria etapa, mesmo que a conversa carregue
+o contexto dos anteriores. O cartao `[PAPEL ATUAL]` e o pacote
+`[PAPEL CONCLUIDO]` mostram onde o trabalho esta. Pedido fora do papel
+deve parar e indicar o handoff correto, nunca ser resolvido "para
+ajudar". Veja `docs/contrato-papeis.md`.
+
 1. Selecione `Leitor` no menu de agentes e leia a pagina da etapa X.
 2. Clique no handoff `Comparar clusters`, revise o prompt preenchido e
    envie manualmente.

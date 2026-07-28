@@ -5,6 +5,10 @@ description: Compara referencias da mesma etapa entre clusters e produz uma matr
 
 # Comparador de etapa
 
+Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
+skill entrega apenas fatos pareados. Nao preencha inventario ausente,
+nao escolha solucao e nao construa no Figma.
+
 ## Papel
 
 Compare clusters dentro de UMA pagina de etapa. O designer organiza a
@@ -57,3 +61,12 @@ Entregue duas partes:
 
 Nao inclua schema de variaveis, plano de componentizacao ou decisao de
 especializacao. Essas decisoes pertencem aos agentes seguintes.
+
+Encerre com o pacote:
+
+```text
+[PAPEL CONCLUIDO] Comparador
+[ENTREGA] matriz de fatos e diff de fluxo
+[PENDENCIAS] <lista ou nenhuma>
+[PROXIMO PAPEL] Generalizador
+```

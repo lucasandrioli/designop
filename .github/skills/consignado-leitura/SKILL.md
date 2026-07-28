@@ -5,6 +5,10 @@ description: Le uma pagina completa de etapa do consignado e produz inventario d
 
 # Leitura de etapa
 
+Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
+skill entrega apenas inventario. Nao execute pedido de comparar,
+generalizar, classificar ou montar recebido no mesmo historico.
+
 ## Entrada e checagem
 
 Receba arquivo Figma, pagina da etapa, clusters representados pelas
@@ -34,3 +38,15 @@ escrita no Figma ou em documentos oficiais.
 Primeiro, resumo por cluster dos casos e telas encontrados. Depois,
 inventario tecnico completo que o Comparador consiga consumir sem abrir
 a pagina novamente.
+
+Encerre com o pacote:
+
+```text
+[PAPEL CONCLUIDO] Leitor
+[ENTREGA] inventario verificavel
+[PENDENCIAS] <lista ou nenhuma>
+[PROXIMO PAPEL] Comparador
+```
+
+Nao acrescente comparacao, regra, schema ou proposta. Isso pertence ao
+proximo papel.

@@ -24,6 +24,7 @@ aqui reflete em todo cluster que a usa, sem editar manual nenhum.
 | Secao interna | _secoes/nome | _secoes/acao-rodape | NAO (prefixo _ bloqueia publish) |
 | Frame de referencia cru | ref-nome-cluster (SEM barra) | ref-simulacao-c1-mg | n/a (nao e componente) |
 | Frame de referencia cru, outra modalidade | ref-nome-modalidade-cluster | ref-simulacao-refin-c1-mg | n/a |
+| Rascunho de montagem | _rascunho-etapa-nome | _rascunho-anuencia-orientacao | NAO (aguarda validacao) |
 | Pagina da lib | uma por etapa + Fluxos | Anuencia | n/a |
 
 Barra (/) em nome de COMPONENTE cria hierarquia no painel de assets e
@@ -73,17 +74,20 @@ designer nao precisa memorizar convencoes de camada.
 
 ## O prefixo `tpl-` e CONQUISTADO, nao assumido
 
-Um objeto so pode se chamar `tpl-` se cumprir as TRES condicoes:
+Um objeto so pode se chamar `tpl-` se cumprir as QUATRO condicoes:
 
 1. E COMPONENT ou COMPONENT_SET (nunca FRAME);
 2. Passou por variabilizacao (tem bindings reais para a collection de
    conteudo, ou declara explicitamente que nao varia por cluster);
 3. Tem a descricao/carimbo preenchida.
+4. O Validador devolveu `APTO PARA PROMOCAO` e o Montador passou em
+   `validatePromotion` com essa evidencia.
 
 Frame com `tpl-` no nome e uma MENTIRA no arquivo: promete um template
-publicavel e entrega um rascunho. Enquanto nao cumprir as tres, o nome
-correto e `ref-nome-cluster` (referencia crua). Isso ja aconteceu de
-verdade neste projeto: 9 frames foram construidos a mao com prefixo
+publicavel e entrega um rascunho. Enquanto nao cumprir as quatro, a
+copia de trabalho se chama `_rascunho-<etapa>-<nome>`. `ref-*` e sempre
+a tela humana intocavel, nunca o nome de uma copia ou componente. Isso
+ja aconteceu de verdade neste projeto: 9 frames foram construidos a mao com prefixo
 `tpl-` sem serem componentes nem terem passado pelo montador, e
 so foram pegos numa auditoria manual — o validador nao checava isso.
 Agora checa (secao 8 da skill consignado-validacao).

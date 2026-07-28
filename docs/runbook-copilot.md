@@ -56,7 +56,7 @@ saida classifica cada diferenca sem criar nada.
 Antes de clicar em `Montar apos aprovacao`, tente seguir sem escrever
 aprovacao. O Montador deve parar e pedir a aprovacao explicita.
 
-### 4. Montador e Validador
+### 4. Montador, Validador e promocao
 
 Escreva uma aprovacao clara na conversa, por exemplo:
 
@@ -64,9 +64,25 @@ Escreva uma aprovacao clara na conversa, por exemplo:
 APROVO a proposta consolidada da etapa <nome> para os clusters <lista>.
 ```
 
-Clique em `Montar apos aprovacao`, revise o prompt e envie. O Montador
-trabalha somente no arquivo Figma descartavel e preserva referencias.
-Clique em `Validar entrega`, envie e registre passou ou reprovou.
+Clique em `Montar apos aprovacao`, confira que o prompt inicia com
+`/consignado-montagem` e envie. A primeira resposta precisa ser uma
+Ficha de preparacao: etapa, clusters, documentos, skills, scripts e
+bloqueios. No historico, confirme que ela nao fez escrita no Figma.
+
+Depois da ficha, o Montador trabalha somente no arquivo Figma
+descartavel e preserva referencias. O resultado desta fase precisa ser
+`_rascunho-*`, nunca `ref-*` componentizado nem `tpl-*` antecipado.
+
+Clique em `Validar rascunho`, confira que o prompt inicia com
+`/consignado-validacao`, envie e registre `APTO PARA PROMOCAO`,
+`REPROVADO` ou `NAO VERIFICAVEL`. Confirme que o Validador nao escreveu
+no Figma e que ele revisou screenshots da referencia, do rascunho e de
+cada preview por mode.
+
+Tente acionar a promocao sem um veredito apto: o Montador deve parar.
+Com `APTO PARA PROMOCAO`, clique em `Promover rascunho validado`. Ele
+roda `validatePromotion`, gera o carimbo e somente entao renomeia para
+`etapa/tpl-*`.
 
 ## Resultados esperados
 
@@ -77,8 +93,12 @@ Clique em `Validar entrega`, envie e registre passou ou reprovou.
 | Handoffs | mudam o agente, preenchem prompt, `send: false` | |
 | Leitor a Especializador | nenhuma escrita local ou no Figma | |
 | Sem aprovacao | Montador para e pede decisao | |
-| Com aprovacao | Montador altera somente o arquivo descartavel | |
-| Validador | nao corrige achados | |
+| Ficha de preparacao | resposta antes de escrita, com skills e scripts listados | |
+| Com aprovacao | Montador cria somente `_rascunho-*` no arquivo descartavel | |
+| Referencias | `ref-*` permanecem frames e nao recebem escrita | |
+| Validador | nao corrige achados e devolve veredito de promocao | |
+| Sem veredito apto | promocao para `tpl-*` e bloqueada | |
+| Com veredito apto | `validatePromotion` passa antes de renomear e carimbar | |
 | MCP desabilitado | agente reporta limitacao sem inventar evidencia | |
 
 ## Evidencia da rodada

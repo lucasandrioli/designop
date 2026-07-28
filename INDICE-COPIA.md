@@ -45,6 +45,7 @@ scripts/validateLayout.js
 scripts/validateCreation.js
 scripts/validateContentContract.js
 scripts/validateModeBehavior.js
+scripts/validatePromotion.js
 ```
 
 ## Doutrina e operacao

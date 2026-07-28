@@ -35,10 +35,17 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
 8. VALIDADOR: rodar validateLayout numa tela real existente do
    consignado; conferir que bounding box e clipsContent se comportam
    igual ao lab.
-9. SCREENSHOT: testar get_screenshot; se bloqueado no ambiente,
-   registrar e operar so com validacao matematica (ja suportado).
+9. SCREENSHOT: testar get_screenshot. Se for bloqueado no ambiente,
+   registrar e definir a revisao visual manual do designer antes de
+   promover qualquer rascunho. Validacao matematica sozinha nao libera
+   `tpl-*`.
 10. ESCALA: get_metadata numa pagina real do consignado (arquivos
     grandes); observar payload e rate limit.
+11. SKILLS: selecione Montador, dispare `/consignado-montagem` e
+    confirme que a primeira resposta e a Ficha de preparacao, sem
+    escrita no Figma. No handoff de validacao, confira
+    `/consignado-validacao` e confirme que os links para scripts e
+    Plugin API foram carregados antes da validacao.
 
 Cada item: PASSOU / FALHOU + nota. Item 5 falhou = parar e redesenhar
 o binding antes de seguir. Demais falhas: avaliar contorno.
@@ -49,4 +56,5 @@ o binding antes de seguir. Demais falhas: avaliar contorno.
 - Rate limits com arquivos de producao (grandes)
 - Restricoes corporativas: screenshot, rede, extensoes
 - Diferencas praticas Copilot vs Claude Code na execucao das skills
+  (a Ficha de preparacao e o teste 11 tornam isso observavel)
 - Publish/aceite de updates em lib com dezenas de consumidores

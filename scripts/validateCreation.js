@@ -20,9 +20,10 @@
  *    conteúdo por papel vive em validateContentContract.js.
  *
  * B) CONVENÇÕES DO PROJETO (automáticas, sem precisar declarar):
- *    1. `tpl-` é CONQUISTADO: só pode nomear algo que seja COMPONENT,
- *       tenha pelo menos um binding e tenha descrição (carimbo). FRAME
- *       chamado `tpl-` é o erro mais comum e mais caro — ver
+ *    1. `ref-` é referência crua, `_rascunho-` é material de montagem
+ *       e `tpl-` é CONQUISTADO: só pode nomear um COMPONENT aprovado
+ *       para promoção, com binding e carimbo. FRAME chamado `tpl-` ou
+ *       COMPONENT chamado `ref-` misturam estados distintos — ver
  *       "O prefixo tpl- é CONQUISTADO" em docs/estrutura-lib.md.
  *    2. Prefixo `_` bloqueia publicação. Um `_secoes/x` é intencional;
  *       um `_` no meio do caminho de um template publicável não é.
@@ -219,14 +220,33 @@ async function validateCreation(expected, opts = {}) {
       report.pinnedContentModes.push(...pinnedContentModes(node))
     }
 
-    // 1. tpl- é conquistado: COMPONENT + binding + carimbo
+    // 1. Estados de montagem e publicação
+    if (base.startsWith('ref-') && (node.type === 'COMPONENT' || node.type === 'COMPONENT_SET')) {
+      report.conventionViolations.push({
+        id: node.id,
+        name: node.name,
+        rule: 'referencia-crua',
+        detail: 'ref- e referencia humana, nao COMPONENT. Preserve a referencia e use _rascunho- para a copia de montagem',
+      })
+    }
+
+    if (base.startsWith('_rascunho-') && node.type !== 'COMPONENT' && node.type !== 'COMPONENT_SET') {
+      report.conventionViolations.push({
+        id: node.id,
+        name: node.name,
+        rule: 'rascunho-componentizado',
+        detail: '_rascunho- precisa ser COMPONENT ou COMPONENT_SET para seguir para validacao',
+      })
+    }
+
+    // tpl- é conquistado: COMPONENT + binding + carimbo
     if (base.startsWith('tpl-')) {
       if (node.type !== 'COMPONENT' && node.type !== 'COMPONENT_SET') {
         report.conventionViolations.push({
           id: node.id,
           name: node.name,
           rule: 'tpl-conquistado',
-          detail: `nomeado tpl- mas é ${node.type}, não COMPONENT. Renomear para ref-<nome>-<cluster> ou componentizar de verdade`,
+          detail: `nomeado tpl- mas é ${node.type}, não COMPONENT. Renomear para _rascunho-<etapa>-<nome> ou componentizar de verdade`,
         })
       } else {
         const hasRequiredBinding = contentCollectionId
@@ -239,7 +259,7 @@ async function validateCreation(expected, opts = {}) {
             rule: 'tpl-conquistado',
             detail: contentCollectionId
               ? 'nomeado tpl- mas não tem binding da collection de conteúdo: ainda não adapta por cluster'
-              : 'nomeado tpl- mas não tem nenhum binding: ainda é referência crua',
+              : 'nomeado tpl- mas não tem nenhum binding: ainda é rascunho de montagem',
           })
         }
         if (!(node.description && node.description.trim())) {

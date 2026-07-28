@@ -56,9 +56,11 @@ do Figma e a internet fica desligada apos a configuracao.
   leitura.
 - O designer APROVA a proposta consolidada. Checkpoint obrigatorio,
   nunca pulado.
-- O agente MONTADOR cria variaveis, binda o template, carimba e valida
-  equivalencia contra as referencias.
-- O agente VALIDADOR roda em toda entrega.
+- O agente MONTADOR cria variaveis, bindings, secoes e previews em um
+  `_rascunho-*`, preservando a referencia crua. Ele so promove para
+  `tpl-*` depois do veredito independente e de `validatePromotion`.
+- O agente VALIDADOR roda em todo rascunho: prova estrutura, conteudo,
+  modes, layout e revisao visual, mas nao corrige nem promove.
 - O agente APRENDIZ roda apos cada tela do designer, extraindo receitas
   para `docs/receitas/`. Nao pule: o conhecimento se perde se as telas
   passarem sem observacao.
@@ -108,6 +110,10 @@ skills em `.github/skills/`.
 
 - Figma: toda escrita via `use_figma` exige a skill `figma-plugin-api`
   carregada antes.
+- Montagem tem dois estados obrigatorios: `ref-*` e fonte humana
+  intocavel; clone em trabalho e `_rascunho-*`; so a promocao aprovada
+  pode criar `etapa/tpl-*`. Nao use `ref-*` para nomear copia ou
+  componente.
 - Os scripts em `scripts/` NAO rodam pelo caminho. Nao ha `require` nem
   acesso a disco dentro da Plugin API: leia o arquivo, cole o corpo da
   funcao dentro do script do `use_figma` e chame no fim. Sempre a versao

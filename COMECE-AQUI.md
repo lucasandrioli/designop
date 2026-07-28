@@ -139,14 +139,20 @@ Daqui em diante isso se repete por etapa e por convenio novo.
    `docs/topologia-biblioteca.md`: arquivo unico ou arquivo por etapa.
    O agente nao escolhe isso por voce.
 6. Clique em `Montar apos aprovacao` somente depois de escrever a
-   aprovacao explicita na conversa.
-7. O Montador componentiza e binda conforme a proposta aprovada.
-   Ele cria as variaveis, componentiza a tela, conecta tudo e carimba a
-   descricao do componente.
-8. Clique em `Validar entrega`, revise o prompt e envie.
-   Layout quebrado, texto cortado, conexoes faltando, consistencia com
-   o mapa, em TODOS os convenios.
-9. Publicar a lib (acao manual, nao tem API).
+   aprovacao explicita na conversa. O prompt inicia
+   `/consignado-montagem`.
+7. Confira a `Ficha de preparacao` do Montador. Ela mostra o que ele
+   leu, o que usara e qualquer bloqueio antes de alterar o Figma.
+8. O Montador cria somente `_rascunho-*`: variaveis, bindings, secoes e
+   previews. `ref-*` continua sendo a referencia crua; `tpl-*` ainda
+   nao existe.
+9. Clique em `Validar rascunho`, revise o prompt e envie. O Validador
+   confere layout, conteudo, modes, referencias, mapa e screenshots de
+   todos os convenios. Ele devolve `APTO PARA PROMOCAO` ou `REPROVADO`.
+10. Somente quando estiver apto, clique em `Promover rascunho validado`.
+    O Montador roda o portao final, gera o carimbo e renomeia para
+    `etapa/tpl-*`.
+11. Publicar a lib (acao manual, nao tem API).
 
 ### Depois: a manutencao, onde o investimento se paga
 

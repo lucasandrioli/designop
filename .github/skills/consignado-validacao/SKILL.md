@@ -7,11 +7,25 @@ description: >-
   aderência ao IDS, ou como etapa final obrigatória após qualquer
   construção de tela. Gatilhos: validar, verificar quebra, checar
   layout, auditoria pós-construção, QA de tela.
+user-invocable: true
+disable-model-invocation: true
 ---
 
 # Validação — Consignado
 
-Carregue a skill figma-plugin-api antes de qualquer use_figma.
+## Recursos obrigatorios
+
+Leia antes de qualquer chamada Figma:
+
+- [Plugin API do Figma](../figma-plugin-api/SKILL.md)
+- [Validacao estrutural](../../../scripts/validateCreation.js)
+- [Validacao do contrato de conteudo](../../../scripts/validateContentContract.js)
+- [Validacao de comportamento por mode](../../../scripts/validateModeBehavior.js)
+- [Elegibilidade para promocao](../../../scripts/validatePromotion.js)
+- [Taxonomia de nomes e carimbo](../../../docs/estrutura-lib.md)
+
+Os links fazem parte da execucao. Citar o nome de uma skill ou script
+na resposta nao prova que seu conteudo foi carregado.
 
 ## Como rodar os scripts deste repositório
 
@@ -65,7 +79,7 @@ Siga docs/modelo-clusters.md (clusters como modes).
 Use scripts/validateCreation.js: nós existem, tipo certo, contagem de
 filhos esperada.
 
-### 2. Validação matemática de layout (primária, não depende de imagem)
+### 2. Validacao matematica e visual de layout
 Use scripts/validateLayout.js no frame raiz de cada tela construída.
 Reprovam a tela: clippedText, overlaps, missingFonts.
 Metrica de corte: absoluteBoundingBox do texto contra ancestrais com
@@ -83,8 +97,11 @@ ilustras, cujos filhos sao apenas shapes; sobreposicao ali e
 intencional). Clipping de texto e fonte faltando continuam checados
 em qualquer nivel.
 Regra: toda tela deve passar com passed=true antes de ser considerada
-entregue. Se falhar, corrija e revalide. Não prossiga para a próxima
-tela com validação pendente.
+entregue. Alem da prova matematica, obtenha screenshot da referencia,
+do rascunho e do preview de cada cluster. Compare visualmente geometria,
+hierarquia e blocos essenciais. Screenshot nao e decoracao nem pode
+ser substituido por uma afirmacao de que a tela parece correta. Se
+falhar, reporte e nao prossiga para promocao.
 
 ### 3. Validação de bindings e IDS
 
@@ -206,11 +223,17 @@ conferir que todas as instancias mapeadas refletem a mudanca e rodar
 validateLayout em cada tela afetada, em todos os modes. Lembrete:
 updates de biblioteca exigem aceite manual no arquivo consumidor.
 
-### 8. Descricao dos templates (carimbo) e legitimidade do prefixo tpl-
+### 8. Rascunho, promocao e legitimidade do prefixo tpl-
+- Durante a validacao independente, o objeto correto e
+  `_rascunho-<etapa>-<nome>`: COMPONENT ou COMPONENT_SET fora da pagina
+  de referencias. Ele ainda nao pode se chamar `tpl-*`.
+- `ref-*` e somente referencia crua. Reprove `ref-*` que seja
+  COMPONENT ou COMPONENT_SET, pois mistura a fonte humana com o
+  resultado da montagem.
 - PREFIXO CONQUISTADO: varra o arquivo por qualquer no com `tpl-` no
   nome e reprove todo que NAO for COMPONENT/COMPONENT_SET. Frame com
   `tpl-` promete template publicavel e entrega rascunho; o nome certo
-  nesse caso e `ref-nome-cluster`. Este check existe porque o caso
+  nesse caso e `_rascunho-<etapa>-<nome>`. Este check existe porque o caso
   aconteceu de verdade: 9 frames com prefixo `tpl-` passaram
   despercebidos ate uma auditoria manual (docs/estrutura-lib.md, "O
   prefixo tpl- e CONQUISTADO").
@@ -225,6 +248,17 @@ updates de biblioteca exigem aceite manual no arquivo consumidor.
   a partir de 2026-07-25 e deriva de formato, reporte como aviso.
 - [Nivel] 2 exige [Gatilho] preenchido; nivel 2 sem gatilho declarado e
   reprovacao (quem consome nao sabe como chegar naquela tela).
+
+### 8c. Veredito para promocao
+O Validador nao renomeia nem corrige. Para cada `_rascunho-*`, devolva
+apenas um destes vereditos:
+
+- `APTO PARA PROMOCAO`: estrutura, contrato, modes, layout, revisao
+  visual, mapa e manuais passaram; entregue tambem as evidencias para
+  `validatePromotion`.
+- `REPROVADO`: liste achados e mantenha o objeto como rascunho.
+- `NAO VERIFICAVEL`: falta manual, mapa, referencia, screenshot ou
+  outra evidencia; isso nao autoriza promocao.
 
 ### 8b. Varredura de publicacao (quando a pergunta e "esta pronto para publicar?")
 O escopo aqui e o ARQUIVO, nao o template. Publicar e uma acao de
@@ -298,3 +332,8 @@ referencia, raiz de layout dentro do wrapper e os mesmos papeis, com
 `type` e seletor de no no preview e na referencia. Node IDs servem
 apenas a execucao atual; a etapa documenta nomes e papeis, nao IDs do
 Figma.
+
+Some a essa interface a lista de screenshots revisados e o resultado
+de `validateCreation` e `validateLayout` por preview. O Montador usa o
+veredito e esses resultados como entrada de `validatePromotion`; sem
+eles, nao ha promocao.

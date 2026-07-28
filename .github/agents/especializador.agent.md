@@ -11,7 +11,15 @@ tools:
 handoffs:
   - label: Montar apos aprovacao
     agent: montador
-    prompt: So prossiga se o designer tiver escrito uma aprovacao explicita da proposta consolidada nesta conversa. Sem aprovacao, pare e peca a decisao. Com aprovacao, use os artefatos da etapa ja discutidos e preserve as referencias cruas.
+    prompt: >-
+      /consignado-montagem
+
+      Faca somente a montagem do rascunho. So prossiga se o designer
+      tiver escrito uma aprovacao explicita da proposta consolidada
+      nesta conversa. Sem aprovacao, pare e peca a decisao. Com
+      aprovacao, use os artefatos da etapa ja discutidos, preserve as
+      referencias cruas e mantenha o resultado como _rascunho-* ate a
+      validacao independente.
     send: false
 ---
 

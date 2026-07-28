@@ -74,9 +74,11 @@ designer aprova a proposta consolidada
     v
 topologia da biblioteca decidida
     v
-/montador: componentes, variaveis, bindings e carimbo
+/montador: componentes, variaveis, bindings e previews em _rascunho-*
     v
-/validador: equivalencia, mapa, catalogo e layout
+/validador: equivalencia, mapa, catalogo, layout e revisao visual
+    v
+/montador: promocao para tpl-* e carimbo final
     v
 publicacao manual da biblioteca
 ```

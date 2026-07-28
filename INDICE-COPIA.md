@@ -30,6 +30,7 @@ AGENTS.md
 .github/agents/aprendiz.agent.md
 
 .github/skills/figma-plugin-api/SKILL.md
+.github/skills/consignado-aprendizado/SKILL.md
 .github/skills/consignado-leitura/SKILL.md
 .github/skills/consignado-comparador/SKILL.md
 .github/skills/consignado-generalizacao/SKILL.md
@@ -68,6 +69,7 @@ docs/clusters/_template.md
 docs/etapas/_template.md
 docs/mapa-fluxo-_template.md
 docs/receitas/_template.md
+docs/receitas/_comuns.md
 ```
 
 Esses moldes chegam vazios de proposito. Preencha somente o que for

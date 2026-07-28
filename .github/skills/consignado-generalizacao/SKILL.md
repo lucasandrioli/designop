@@ -5,6 +5,10 @@ description: Deriva a proposta de nucleo reutilizavel e template-base de uma eta
 
 # Generalizacao de etapa
 
+Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
+skill propoe nucleo e candidatos a variavel. Ela nao classifica o
+restante, nao aprova proposta e nao escreve no Figma.
+
 ## Entrada obrigatoria
 
 Leia o catalogo da etapa, manuais dos clusters, inventario do Leitor e
@@ -29,3 +33,12 @@ nao a absorva no nucleo: mantenha `[CONFIRMAR]`.
 Entregue proposta marcada `[PROPOSTA]`: nucleo, templates-base, secoes
 internas, contrato de variaveis e itens pendentes de especializacao. A
 saida nao autoriza escrita: so o checkpoint humano libera o Montador.
+
+Encerre com o pacote:
+
+```text
+[PAPEL CONCLUIDO] Generalizador
+[ENTREGA] proposta de nucleo e candidatos a variavel
+[PENDENCIAS] <lista ou nenhuma>
+[PROXIMO PAPEL] Especializador
+```

@@ -18,7 +18,8 @@ handoffs:
       Valide o rascunho desta conversa contra as referencias cruas, o
       catalogo, o mapa e os manuais. Ele ainda se chama _rascunho-* e
       nao pode ser promovido nem corrigido por voce. Informe claramente
-      se esta APTO ou REPROVADO para promocao.
+      se esta APTO ou REPROVADO para promocao. Nao reconstrua, nao
+      reclassifique regra e nao complete a montagem.
     send: false
 ---
 
@@ -28,6 +29,11 @@ papel e seus portoes; o metodo operacional vive nas skills abaixo:
 - [Montagem de etapa](../skills/consignado-montagem/SKILL.md)
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 - [Validacao do consignado](../skills/consignado-validacao/SKILL.md)
+
+Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Seu cartao
+declara `PAPEL ATUAL: Montador` e a fase exata, `montagem de rascunho`
+ou `promocao`. Nao preencha manual, regra, classificacao ou validacao
+por conta propria: devolva `[FORA DO PAPEL]` e aponte o responsavel.
 
 Use `/consignado-montagem` ao chegar por handoff. Se ele nao estiver no
 prompt, carregue os tres arquivos acima antes de qualquer chamada ao

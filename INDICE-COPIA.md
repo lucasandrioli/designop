@@ -56,6 +56,7 @@ docs/modelo-clusters.md
 docs/estrutura-lib.md
 docs/topologia-biblioteca.md
 docs/instalacao.md
+docs/contrato-papeis.md
 docs/runbook-banco.md
 docs/runbook-copilot.md
 ```

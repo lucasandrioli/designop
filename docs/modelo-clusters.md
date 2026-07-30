@@ -44,9 +44,11 @@ skill e agente do projeto segue este modelo.
   Gov SP, Cluster 4).
 - Todo texto bindado: fonte carregada antes do binding e textAutoResize
   HEIGHT ou WIDTH_AND_HEIGHT.
-- Template-mestre nao pina mode de cluster. O mode explicito fica no
-  wrapper de preview ou no frame de Fluxos. Ao clonar referencia para
-  montar template, limpe modes herdados do clone e seus descendentes.
+- Template-mestre nao pina mode de cluster. Durante a validacao, o
+  mode explicito fica somente no wrapper de preview da pagina
+  `_verificacao-<etapa>`. Depois da promocao, uma jornada montada em
+  `Fluxos` tambem pode pinar o mode no seu frame de topo. O template
+  nasce da arvore-alvo aprovada, nao de clone de referencia.
 - Validacao obrigatoria EM CADA MODE (validateLayout por mode via
   setExplicitVariableModeForCollection): texto que cabe num cluster
   pode estourar em outro.
@@ -101,7 +103,7 @@ previstas em `docs/topologia-biblioteca.md` ou negocie o tier adequado.
    (ex: consentimento so no cluster 4; anuencia externa so em 4 e 2.1).
    Mecanismo: todos os templates de etapa existem na lib; um MAPA DE
    FLUXO POR CLUSTER (tabela markdown versionada em docs/, gerada pelo
-   Leitor e revisada pelo Comparador) define a
+   Analista) define a
    sequencia. Mode controla conteudo; mapa controla sequencia.
 4. ESTADO DE UI: variacao por acao do usuario dentro da tela (oferta
    adicionada/removida, efetivacao aguardando anuencia/confirmada,
@@ -139,8 +141,8 @@ regras: elas vem da tabela.
 ## Prototipo como fonte do mapa
 
 Quando as telas de referencia estao conectadas por prototipo na pagina
-da etapa, o mapa de fluxo e DERIVADO do grafo de navegacao pelo Leitor
-e revisado pelo Comparador, nao escrito a mao:
+da etapa, o mapa de fluxo e DERIVADO do grafo de navegacao pelo Analista,
+nao escrito a mao:
 - telas = nos; reactions NAVIGATE = arestas; flowStartingPoints
   nomeados = casos de uso
 - caminho principal = cadeia a partir do starting point; tela com ida
@@ -162,14 +164,14 @@ prototipo e a fonte de onde ele e gerado e contra a qual e conferido.
   que cada tela mostra por cluster). Muda pela tabela de variaveis no
   Figma.
 - Topologia fisica e pre-requisito do Montador, nao da analise. Com
-  `docs/topologia-biblioteca.md` em `[DECIDIR]`, os quatro agentes de
-  analise entregam proposta normalmente e o Montador para antes de
+  `docs/topologia-biblioteca.md` em `[DECIDIR]`, o Analista entrega
+  proposta normalmente e o Montador para antes de
   escrever.
 - NUNCA duplicar composicao como boolean de variavel (ex:
   fluxo/tem-consentimento). Verdade duplicada diverge.
-- Populacao: Leitor gera o rascunho do grafo, Comparador registra o
-  pareamento, Generalizador propoe o catalogo e Especializador propoe
-  a classificacao. O designer aprova antes de qualquer escrita.
+- Populacao: o Analista gera inventario, grafo, pareamento, catalogo e
+  classificacao em uma unica proposta. O designer aprova antes de
+  qualquer escrita.
 - Onboarding de cluster novo: (1) jornada no manual, (2) coluna no
   mapa, (3) mode na collection resolvida para cada etapa usada, (4)
   referencias nas paginas dessas etapas. Nada de duplicar etapa para

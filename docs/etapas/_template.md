@@ -17,13 +17,15 @@ vivem no mapa de fluxo.
 
 ## Informacoes humanas minimas
 
-<Escreva somente o objetivo e as regras de negocio compartilhadas. Nao
-descreva conteudo de tela, textos, campos, botoes, visibilidade ou
-template. Essas evidencias sao extraidas pelos agentes da pagina Figma.>
+<Explique somente o objetivo e as regras de negocio compartilhadas. No
+modo /consignado-contexto, o Analista transforma sua explicacao em
+rascunho para aprovacao antes de registrar este documento. Nao descreva
+conteudo de tela, textos, campos, botoes, visibilidade ou template.
+Essas evidencias sao extraidas pelos agentes da pagina Figma.>
 
-## Inventario observado (preenchido pelo Leitor)
+## Inventario observado (preenchido pelo Analista)
 
-Uma etapa e um conjunto de telas. O Leitor extrai casos, telas,
+Uma etapa e um conjunto de telas. O Analista extrai casos, telas,
 prototipos e propriedades observadas da pagina Figma. O designer revisa
 o inventario, mas nao o transcreve manualmente.
 
@@ -31,7 +33,7 @@ o inventario, mas nao o transcreve manualmente.
 | --- | --- | --- | --- | --- |
 | <ex: caminho feliz> | 1 | <lista em ordem> | <nome real> | [CONFIRMAR] |
 
-## Proposta de nucleo reutilizavel (preenchido pelo Generalizador)
+## Proposta de nucleo reutilizavel (preenchido pelo Analista)
 
 ### Templates-base
 
@@ -45,7 +47,7 @@ o inventario, mas nao o transcreve manualmente.
 | --- | --- | --- |
 | <nome> | `_secoes/<nome>` | <templates> |
 
-## Especializacoes estruturais aprovadas (propostas pelo Especializador)
+## Especializacoes estruturais aprovadas (propostas pelo Analista)
 
 Use esta secao somente quando a diferenca nao couber em variavel,
 property, variant ou mapa de fluxo. O nome e funcional, nunca o nome do
@@ -57,7 +59,7 @@ cluster. O mapa de fluxo escolhe onde cada especializacao e usada.
 
 ## Contrato de conteudo aprovado
 
-O Generalizador propoe; o designer aprova antes da montagem. Este e o
+O Analista propoe; o designer aprova antes da montagem. Este e o
 contrato que diz **quais papeis realmente variam**. Nao e uma lista de
 todos os textos da tela, nem um palpite do Validador. Valores por
 cluster continuam apenas na collection do Figma resolvida para a etapa.
@@ -95,11 +97,96 @@ O Montador traduz esse contrato para `validateContentContract` usando
 aprovados em `expectedRoles`. Se o papel ainda nao foi aprovado, marque
 `[CONFIRMAR]`; nao o inclua como obrigatorio no teste.
 
+## Contrato tecnico de reconstrucao aprovado
+
+Esta secao nasce na proposta do Analista e e registrada pelo Montador
+somente depois da aprovacao humana unica. Ela nao redescreve regra de
+negocio nem guarda node IDs permanentes. Ela transforma a referencia em
+uma prova deterministica para que a arvore nova possa ser melhor que a
+arvore antiga sem mudar o resultado visivel.
+
+Uma referencia define aparencia e comportamento. O contrato abaixo diz
+como provar isso: cada papel e unico, a arvore-alvo define pai e ordem,
+o mapa IDS define o que vem da biblioteca e a geometria compara caixas
+relativas ao frame raiz. A referencia continua sendo evidencia visual,
+nao molde de camadas.
+
+```yaml
+templates:
+  - id: <orientacao-externa>
+    componente: <etapa>/tpl-<nome>
+    status: <APROVADO>
+    tolerancia-px: 2
+    referencias:
+      - cluster: <cluster>
+        papel-raiz: <tela>
+        origem: <nome do frame de referencia, sem node ID>
+        seletores-geometricos: <nomes observados para esse cluster>
+    arvore:
+      - papel: <tela>
+        alvo: { raiz: true }
+        referencia: { raiz: true }
+        tipo: COMPONENT
+        origem: local-layout
+        layout:
+          modo: VERTICAL
+          padding: [<top>, <right>, <bottom>, <left>]
+          gap: <numero>
+      - papel: <acao-primaria>
+        alvo: { nome: <nome unico no rascunho> }
+        referencia: { nome: <nome observado na referencia> }
+        pai: <tela>
+        ordem: <indice a partir de zero>
+        tipo: INSTANCE
+        origem: ids-instance
+        ids:
+          component-key: <key real>
+          properties: [<property publica>]
+      - papel: <bloco-local>
+        alvo: { nome: <nome unico no rascunho> }
+        referencia: { nome: <nome observado na referencia> }
+        pai: <tela>
+        ordem: <indice a partir de zero>
+        tipo: FRAME
+        origem: local-layout
+        excecao-local-aprovada: true
+        tokens:
+          - campo: <itemSpacing | paddingTop | fills/...>
+            variavel: <nome real do token IDS>
+            # ou, somente quando aprovado:
+            literal-aprovado: <valor>
+```
+
+`origem` aceita `ids-instance`, `local-layout`, `local-component`,
+`text` ou `asset`. `local-component` exige `excecao-local-aprovada`.
+Componente IDS sem property ou slot suficiente fica `[CONFIRMAR]` ou
+`SEM_EQUIVALENTE` na proposta, nunca e contornado silenciosamente.
+Token manual que tenha equivalente exato no IDS precisa virar binding;
+literal so e permitido quando estiver declarado e aprovado.
+
+O Validador traduz este contrato para
+`validateReconstructionContract`. Ele devolve tres blocos: arvore,
+geometria e IDS. Aprovacao exige os tres sem achado, alem das validacoes
+de conteudo, mode, layout e screenshot.
+
+Na chamada do script, `papel`, `alvo`, `referencia`, `pai`, `tipo`,
+`origem` e `excecao-local-aprovada` viram, respectivamente, `id`,
+`target`, `reference`, `parent`, `type`, `source` e `localException`.
+`nome` vira `nodeName`; `raiz: true` permanece `root: true`. Assim o
+catalogo continua legivel e o script recebe chaves estaveis.
+
+Arvore e IDS sao auditados uma vez no rascunho. Geometria e rodada uma
+vez por cluster, com `geometryCandidateId` apontando para a instancia no
+preview daquele mode. Quando a referencia usa nome diferente para o
+mesmo papel, o Montador passa o seletor daquele cluster em
+`reference` ou `geometryTarget`, sem alterar a arvore-alvo aprovada.
+`literal-aprovado` vira `approvedLiteral` no script.
+
 ## Comportamento de campo e estado de UI (extraido dos agentes)
 
 Estados de UI sao variants ou properties, nunca modes de cluster. O
-designer nao preenche uma especificacao visual aqui: o Leitor observa,
-o Comparador evidencia e o Especializador classifica.
+designer nao preenche uma especificacao visual aqui: o Analista observa,
+evidencia e classifica antes da aprovacao humana.
 
 | Campo ou componente | Componente IDS | Estados possiveis | Regra |
 | --- | --- | --- | --- |

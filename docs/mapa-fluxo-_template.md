@@ -30,8 +30,8 @@ especializacao seleciona o template funcional aprovado no catalogo.
 ## Grafo por convenio e caso de uso
 
 A tabela compara presenca e selecao. O grafo registra ordem,
-bifurcacao e retorno. Ele e gerado pelo Leitor a partir do prototipo e
-revisado pelo Comparador, nunca desenhado de memoria.
+bifurcacao e retorno. Ele e gerado pelo Analista a partir do prototipo,
+nunca desenhado de memoria.
 
 ### Notacao fixa
 

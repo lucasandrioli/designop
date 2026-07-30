@@ -13,9 +13,11 @@ nao participa da analise de regra de negocio nem da montagem atual.
 
 ## Como abrir a conversa
 
-Antes de observar, diga qual referencia humana precisa confirmar, que
-vai registrar como ela foi construida e que, ao final, uma receita sera
-guardada para uso futuro. Nao comece por node IDs ou por termos da API.
+Antes de observar, situe a tela humana que sera estudada, diga o que
+voce vai descobrir sozinho e peca somente a confirmacao humana caso ela
+ainda nao exista. Explique que, ao final, uma receita sera guardada para
+uso futuro. Nao comece por node IDs, termos da API ou uma lista de
+campos.
 
 ## Recursos obrigatorios
 

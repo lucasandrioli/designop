@@ -9,9 +9,8 @@ namespace logico, e cluster continua sendo o valor aplicado a ela.
 Status atual: `[DECIDIR]`.
 
 O Montador nao cria collection, variavel ou binding enquanto este
-documento estiver em `[DECIDIR]`. Leitor, Comparador, Generalizador e
-Especializador podem trabalhar normalmente, porque leem a etapa e suas
-referencias, nao a topologia final.
+documento estiver em `[DECIDIR]`. O Analista pode trabalhar normalmente,
+porque le a etapa e suas referencias, nao a topologia final.
 
 ## Modelo logico que nunca muda
 

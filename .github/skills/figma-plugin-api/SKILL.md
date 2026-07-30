@@ -105,11 +105,13 @@ falha silenciosa.
     mesmo mode — não é preciso pinar tela por tela.
     `clearExplicitVariableModeForCollection(collection)` remove o
     override do nó, voltando a herdar do contexto.
-    **Clone de referencia:** antes de componentizar uma referencia,
-    varra o clone e limpe o mode explicito da collection de conteudo no
-    clone e em todos os descendentes. Um mode herdado deixa o template
-    preso no cluster de origem. Master de template nunca pina mode de
-    cluster; somente wrapper de preview ou frame de Fluxos pode pinar.
+    **Clone de referencia:** este projeto nao usa clone de tela como
+    ponto de partida de template. Se um asset visual aprovado precisar
+    ser clonado, varra o clone e limpe o mode explicito da collection de
+    conteudo no clone e em todos os descendentes. Um mode herdado deixa
+    o template preso no cluster de origem. Master de template nunca
+    pina mode de cluster; somente wrapper de preview ou frame de Fluxos
+    pode pinar.
 19. **Variável de biblioteca remota:**
     `await figma.variables.importVariableByKeyAsync(key)`. Funciona em
     plano Pro (validado).

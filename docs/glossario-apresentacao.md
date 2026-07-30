@@ -7,12 +7,10 @@ com assistentes de IA cuidando da parte repetitiva."
 
 | Nome tecnico (interno) | Nome de apresentacao | O que faz, em uma frase |
 | --- | --- | --- |
-| Agente leitor | O Leitor | Inventaria as telas, casos de uso e conexoes de uma etapa |
-| Agente comparador | O Comparador | Pareia referencias dos convenios e aponta fatos que divergem |
-| Agente generalizador | O Generalizador | Propoe o nucleo reutilizavel e o template-base da etapa |
-| Agente especializador | O Especializador | Classifica diferencas locais em mecanismos verificaveis |
+| Agente analista | Analista da Etapa | Entende as telas da etapa, compara convenios e propoe uma unica solucao para aprovar |
 | Agente montador | O Montador | Transforma as telas de exemplo em templates que se adaptam por convenio |
 | Agente validador | O Revisor | Confere cada entrega: layout quebrado, texto cortado, conteudo faltando |
+| Contrato tecnico | Prova combinada | A lista aprovada do que a nova tela precisa conter, medir e usar do IDS |
 | Telas de referencia | Telas de exemplo | As telas que o designer desenha, uma versao por convenio, lado a lado |
 | Collection com modes | Tabela de conteudo | Uma planilha dentro do Figma: cada linha e um texto/regra, cada coluna e um convenio |
 | Mapa de fluxo | Mapa da jornada | A tabela que diz quais telas existem em cada convenio e em que ordem |

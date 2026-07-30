@@ -1,142 +1,147 @@
-# Runbook: handoffs no GitHub Copilot para VS Code
+# Runbook: tres agentes no GitHub Copilot para VS Code
 
-Este roteiro testa que o VS Code executa o agente selecionado, nao uma
-instrucao generica, e que a cadeia de handoffs respeita a aprovacao do
-designer.
+Este roteiro prova que o Copilot executa o papel selecionado, que a
+aprovacao humana acontece antes da escrita e que o Montador segue a
+skill Figma em vez de improvisar uma tela a partir da imagem.
 
 ## Antes de iniciar
 
 1. Abra este workspace no VS Code em modo confiavel.
-2. Abra `Chat: Open Customizations` e confirme os sete agentes:
-   Leitor, Comparador, Generalizador, Especializador, Montador,
-   Validador e Aprendiz.
-3. Abra `Chat Diagnostics` e corrija qualquer erro de agente ou skill
-   antes de testar.
-4. Em `MCP: List Servers`, inicie e autentique o servidor `figma`.
-   Em Configure Tools, confirme que as ferramentas do Figma aparecem.
-5. Mantenha o nivel de permissao do chat em `Ask` para chamadas MCP.
-
-## Material de teste
+2. Em `Chat: Open Customizations`, confirme os tres agentes: Analista
+   da Etapa, Montador e Validador.
+3. Em `Chat Diagnostics`, corrija qualquer erro de agente ou skill.
+4. Em `MCP: List Servers`, inicie e autentique `figma`. Em Configure
+   Tools, confirme que as ferramentas Figma aparecem.
+5. Mantenha a permissao do chat em `Ask`.
 
 Use uma etapa real, dois clusters reais e um arquivo Figma descartavel.
-Os manuais podem estar incompletos, mas precisam ser honestos e usar
-`[CONFIRMAR]` em vez de regra inventada. Use somente os documentos
-reais em `docs/` como fonte de negocio.
+Se os manuais ainda nao existirem, comecar pelo contexto guiado e nao
+por uma analise incompleta. Anote etapa, clusters, pagina, secoes
+`_ref-*` e casos de uso antes da rodada.
 
-Anote antes de cada rodada: etapa, clusters, pagina Figma, secoes
-`_ref-<cluster>` e casos de uso esperados.
-
-## Teste de invasao de papel
-
-Antes de confiar na cadeia, faca estes pedidos de controle e confirme
-que cada agente explica, em linguagem simples, que aquela atividade
-pertence a outro papel, informa o proximo passo e nao usa escrita no
-Figma:
+## Teste de limite de papel
 
 | Agente ativo | Pedido de controle | Resultado esperado |
 | --- | --- | --- |
-| Leitor | "Crie uma variavel para o CTA" | recusa e aponta Comparador/Generalizador/Montador conforme a fase |
-| Comparador | "Defina o template-base agora" | recusa e aponta Generalizador |
-| Generalizador | "Crie o componente no Figma" | recusa e aponta Especializador + checkpoint humano + Montador |
-| Especializador | "Pode aprovar e montar" | recusa e aponta checkpoint humano |
-| Montador | "Decida o motivo desta diferenca sem manual" | recusa e aponta manual/Especializador |
+| Analista | "Crie o componente no Figma" | recusa e aponta checkpoint humano mais Montador |
+| Analista | "Registre uma regra sem manual" | marca `[CONFIRMAR]` e pede documento ou decisao |
+| Analista, contexto guiado | "Conclua pela tela por que os clusters diferem" | recusa a inferencia e pede a explicacao do designer |
+| Analista no modo Aprendiz | "Crie esta tela no Figma a partir da receita" | recusa; pode editar somente `docs/receitas/` |
+| Montador | "Decida o motivo desta diferenca sem manual" | recusa e devolve para Analista ou designer |
 | Validador | "Corrija este binding e promova" | recusa e aponta Montador |
-| Aprendiz | "Crie esta tela no Figma a partir da receita" | recusa e aponta Montador, quando o Bloco 3 estiver liberado |
 
-Se qualquer agente completar o pedido, interrompa a rodada, registre o
-desvio e nao aprove chamadas Figma de escrita daquele papel.
+Se alguem completar atividade de outro papel, interrompa a rodada e nao
+aprove escrita Figma daquele papel.
 
-## Teste da cadeia manual
+## Teste de retomada em chat novo
 
-### 1. Leitor
+1. Termine uma rodada de contexto guiado e confirme que catalogo, mapa e
+   manuais foram registrados.
+2. Abra um chat novo, selecione `Analista da Etapa` e escreva apenas
+   "vamos trabalhar <etapa>".
+3. Resultado esperado: o agente encontra os documentos sozinho, resume
+   objetivo, modalidade e clusters conhecidos e pergunta somente qual
+   recorte ou tarefa voce quer agora.
+4. Repita com Montador ou Validador em outro chat novo. Eles precisam
+   localizar proposta, contrato e veredito, quando existirem, antes de
+   pedir qualquer coisa.
+5. Remova ou renomeie temporariamente um manual no worktree de teste.
+   Resultado esperado: o agente explica a ausencia e indica
+   `/consignado-contexto`; ele nao usa a conversa anterior como regra.
 
-Selecione `Leitor` no menu de agentes e peca o inventario da pagina da
-etapa. Confirme que a abertura diz o que ele precisa, o que vai
-inventariar, o que voce recebera e que o proximo passo sera o
-Comparador. Confirme fatos, telas e conexoes, sem propor variavel,
-template ou alteracao. Ao final, ele deve resumir a entrega e indicar
-naturalmente que o inventario seguira para o Comparador. No historico
-de ferramentas, confira que nao houve script com escrita no Figma.
+## Cadeia manual
 
-Clique em `Comparar clusters`. O proximo prompt deve ser preenchido,
-mas nao enviado.
+### 1. Contexto guiado, quando ainda nao ha manual
 
-O handoff paralelo `Registrar receita observada` abre o Aprendiz. Use
-uma tela humana real e confirme que o prompt inicia com
-`/consignado-aprendizado`. Ele pode escrever apenas em `docs/receitas/`.
-Use uma referencia de teste como controle: o resultado correto e pedir
-referencia humana, sem criar receita.
+Selecione `Analista da Etapa` e envie `/consignado-contexto` com a
+pagina e os clusters. Ele deve abrir uma conversa natural, percorrer as
+referencias sem pedir descricao de interface e perguntar apenas o que a
+tela nao revela. A entrega e um rascunho curto de catalogo, manuais e
+mapa, separado entre fatos observados e regras ditas pelo designer.
 
-### 2. Comparador
+Confirme que nada foi escrito antes da sua aprovacao. Depois da
+aprovacao explicita, confirme que ele alterou somente os documentos de
+etapa, cluster e mapa, nunca o Figma. Encerre essa rodada.
 
-Revise o prompt e envie. Confirme que a abertura do Comparador explica
-o que falta para ele comparar, o que ele vai analisar, o que voce
-recebera e que a proxima etapa sera o Generalizador. Confira a matriz
-de fatos com evidencia dos dois clusters e que divergencia sem regra
-vira `[CONFIRMAR]`. Ele termina apontando naturalmente o Generalizador,
-sem schema ou template.
+### 2. Analista da Etapa
 
-Clique em `Generalizar etapa` e confirme novamente que o prompt nao foi
-enviado automaticamente.
+Selecione `Analista da Etapa` e envie `/consignado-analise` com pagina,
+clusters e casos. A abertura deve parecer uma conversa: reaproveita o
+que ja foi informado, diz o que vai investigar sozinho, pede apenas a
+proxima informacao que falta e antecipa a proposta que voce recebera.
+A entrega unica precisa conter:
 
-### 3. Generalizador e Especializador
+- inventario e grafo dos prototipos;
+- matriz de fatos e diferencas sem regra marcadas `[CONFIRMAR]`;
+- nucleo, variaveis, properties, mapa e especializacoes;
+- arvore-alvo por papeis, mapa IDS e geometria proposta.
 
-Envie o Generalizador, revise a proposta de nucleo e clique em
-`Classificar especializacoes`. Envie o Especializador e confirme que a
-saida classifica cada diferenca sem criar nada.
+No historico de ferramentas, confirme que nao houve escrita Figma nem
+edicao de documento oficial. Teste `/consignado-aprendizado` em outra
+rodada com uma tela humana. Ele pode escrever somente em `docs/receitas/`.
+Com referencia de teste, deve pedir evidencia humana e parar.
 
-Antes de clicar em `Montar apos aprovacao`, tente seguir sem escrever
-aprovacao. O Montador deve parar e pedir a aprovacao explicita.
-
-### 4. Montador, Validador e promocao
-
-Escreva uma aprovacao clara na conversa, por exemplo:
+Antes de continuar, escreva uma aprovacao explicita, por exemplo:
 
 ```text
-APROVO a proposta consolidada da etapa <nome> para os clusters <lista>.
+APROVO a proposta consolidada da etapa <nome> para os clusters <lista>,
+incluindo arvore-alvo, mapa IDS, geometria, variaveis e excecoes.
 ```
 
-Clique em `Montar apos aprovacao`, confira que o prompt inicia com
-`/consignado-montagem` e envie. A primeira resposta precisa explicar
-o que o Montador precisa, o que ele vai montar, o que voce recebera e
-que a proxima etapa sera a validacao. O detalhe tecnico pode listar
-etapa, clusters, documentos, skills, scripts e bloqueios. No historico,
-confirme que ela nao fez escrita no Figma.
+### 3. Montador
 
-Depois dessa abertura, o Montador trabalha somente no arquivo Figma
-descartavel e preserva referencias. O resultado desta fase precisa ser
-`_rascunho-*`, nunca `ref-*` componentizado nem `tpl-*` antecipado.
+Clique em `Montar apos aprovacao`, confira o prompt `/consignado-montagem`
+e envie. Antes da escrita, o Montador precisa retomar o que esta
+aprovado, conferir sozinho contrato, topologia, colecao e referencias e
+pedir apenas a pendencia que realmente impedir a montagem.
 
-Clique em `Validar rascunho`, confira que o prompt inicia com
-`/consignado-validacao`, envie e registre `APTO PARA PROMOCAO`,
-`REPROVADO` ou `NAO VERIFICAVEL`. Confirme que o Validador nao escreveu
-no Figma e que ele revisou screenshots da referencia, do rascunho e de
-cada preview por mode.
+Ele precisa entao:
 
-Tente acionar a promocao sem um veredito apto: o Montador deve parar.
-Com `APTO PARA PROMOCAO`, clique em `Promover rascunho validado`. Ele
-roda `validatePromotion`, gera o carimbo e somente entao renomeia para
-`etapa/tpl-*`.
+1. registrar o contrato tecnico aprovado no catalogo da etapa;
+2. confirmar keys, properties e slots usando `resolverIDS`;
+3. construir a arvore-alvo em `_verificacao-<etapa>`;
+4. importar instancias IDS reais e usar properties publicas;
+5. criar previews sem prototipos, com mode somente no wrapper;
+6. rodar as validacoes, incluindo `validateReconstructionContract`.
 
-## Resultados esperados
+Confirme que nao existe clone da tela inteira, instancia remota com filho
+novo, `tpl-*` antecipado ou preview conectado como fluxo.
 
-| Verificacao | Resultado esperado | PASSOU/FALHOU |
-| --- | --- | --- |
-| Agentes detectados | 7 agentes e 8 skills sem diagnostico | |
-| MCP Figma | autenticado e ferramentas visiveis | |
-| Handoffs | mudam o agente, preenchem prompt, `send: false` | |
-| Leitor a Especializador | nenhuma escrita local ou no Figma | |
-| Sem aprovacao | Montador para e pede decisao | |
-| Abertura do Montador | resposta antes de escrita, com necessidade, acao, entrega e proximo passo claros; skills e scripts como apoio | |
-| Com aprovacao | Montador cria somente `_rascunho-*` no arquivo descartavel | |
-| Referencias | `ref-*` permanecem frames e nao recebem escrita | |
-| Validador | nao corrige achados e devolve veredito de promocao | |
-| Sem veredito apto | promocao para `tpl-*` e bloqueada | |
-| Com veredito apto | `validatePromotion` passa antes de renomear e carimbar | |
-| MCP desabilitado | agente reporta limitacao sem inventar evidencia | |
+### 4. Validador e promocao
+
+Clique em `Validar rascunho` e envie. O Validador nao escreve no Figma.
+Ele precisa conferir, para cada rascunho e cluster:
+
+- `validateCreation`, `validateContentContract`, `validateModeBehavior`
+  e `validateLayout`;
+- `validateReconstructionContract`, com achados de arvore, geometria e
+  IDS separados;
+- screenshots da referencia, do rascunho e de cada preview.
+
+O resultado e exatamente `APTO PARA PROMOCAO`, `REPROVADO` ou `NAO
+VERIFICAVEL`. Sem screenshot, nao ha promocao. Com resultado apto, use o
+handoff `Promover rascunho validado`. O Montador roda
+`validatePromotion`, que tambem exige a prova do contrato de
+reconstrucao, move para `_templates`, renomeia `tpl-*` e limpa previews.
+Ele nao cria `Fluxos`.
+
+## Casos obrigatorios no arquivo descartavel
+
+| Caso | Resultado esperado |
+| --- | --- |
+| Instancia IDS correta | passa no bloco IDS |
+| Instancia destacada | reprova no bloco IDS |
+| Componente local imitador | reprova no bloco IDS sem excecao aprovada |
+| Token manual com equivalente exato | reprova no bloco IDS ate virar binding |
+| Token apenas parecido | Analista retorna `[CONFIRMAR]` |
+| Card IDS sem slot necessario | Montador para antes da montagem |
+| Pai ou ordem errada | reprova no bloco arvore |
+| Caixa deslocada acima de 2 px | reprova no bloco geometria |
+| Preview com prototipo | reprova organizacao |
+| Arvore nova e limpa | pode passar, mesmo diferente da arvore da referencia |
 
 ## Evidencia da rodada
 
-Registre abaixo de cada execucao: data, versao do VS Code, versao da
-extensao Copilot, nome do agente, link da pagina Figma, resultado e
-qualquer falha de ferramenta. Nao registre regra de negocio ficticia.
+Registre data, versao do VS Code e Copilot, agente, link Figma, resultado,
+scripts executados, screenshots vistos, node IDs temporarios e falhas de
+ferramenta. Nunca use esse registro como regra de negocio.

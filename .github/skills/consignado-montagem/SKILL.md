@@ -1,6 +1,6 @@
 ---
 name: consignado-montagem
-description: Monta um rascunho de template aprovado a partir de referencias cruas e so o promove apos validacao independente. Use no agente Montador, sempre depois da aprovacao humana.
+description: Monta a arvore-alvo de um template aprovado, com referencias cruas como evidencia, e so o promove apos validacao independente. Use no agente Montador, sempre depois da aprovacao humana.
 user-invocable: true
 disable-model-invocation: true
 ---
@@ -15,6 +15,11 @@ Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Montagem
 nao decide regra, classificacao nem veredito de validacao; devolva a
 pendencia ao papel responsavel.
 
+Em chat novo, recupere catalogo, mapa, manuais, proposta aprovada e
+veredito anterior antes de abrir a conversa. Se algum deles nao puder
+ser localizado, diga qual e a unica pendencia real. Nunca substitua esse
+contexto por uma lembranca ou resumo de conversa anterior.
+
 ## Recursos obrigatorios desta execucao
 
 Leia estes recursos antes de qualquer chamada Figma. Os links existem
@@ -22,30 +27,38 @@ para que o Copilot carregue o conteudo e os arquivos auxiliares, nao
 apenas reconheca seus nomes.
 
 - [Plugin API do Figma](../figma-plugin-api/SKILL.md)
+- [Reconstrucao Figma](../figma-reconstrucao/SKILL.md)
 - [Validacao do consignado](../consignado-validacao/SKILL.md)
 - [Validacao estrutural](../../../scripts/validateCreation.js)
+- [Validacao de layout](../../../scripts/validateLayout.js)
 - [Validacao do contrato de conteudo](../../../scripts/validateContentContract.js)
 - [Validacao de comportamento por mode](../../../scripts/validateModeBehavior.js)
+- [Validacao do contrato de reconstrucao](../../../scripts/validateReconstructionContract.js)
 - [Elegibilidade para promocao](../../../scripts/validatePromotion.js)
 - [Taxonomia de nomes e carimbo](../../../docs/estrutura-lib.md)
 - [Modelo de variaveis e modes](../../../docs/modelo-clusters.md)
 
-Na primeira resposta, antes de escrever no Figma, abra a conversa em
-linguagem natural. Diga o que precisa, o que vai montar nesta rodada,
-o que o designer recebera ao final e o proximo passo. Skills e scripts
-lidos entram somente depois, no detalhe tecnico. Se faltar algum
-recurso ou entrada de negocio, pare. Nao troque essa abertura por uma
-promessa de que "vai seguir a skill".
+Na primeira resposta, antes de escrever no Figma, abra uma conversa de
+trabalho em linguagem natural. Diga o que ja esta aprovado, o que voce
+vai conferir sozinho antes de montar e, se houver lacuna, peca somente a
+proxima decisao que realmente bloqueia a rodada. Antecipe o que o
+designer recebera e quem assume depois. Skills e scripts lidos entram
+somente depois, no detalhe tecnico. Se faltar recurso ou entrada de
+negocio, pare depois de explicar a pendencia de forma simples. Nao
+troque essa abertura por uma promessa de que "vai seguir a skill" nem
+por uma lista de todos os requisitos.
 
 ## Entradas obrigatorias
 
-1. Proposta consolidada aprovada explicitamente pelo designer nesta
-   conversa: template-base, especializacoes, schema de variaveis e
-   plano de componentizacao.
+1. Proposta consolidada e contrato tecnico aprovados explicitamente pelo
+   designer nesta conversa: template-base, especializacoes, schema de
+   variaveis, arvore-alvo, mapa IDS, geometria e excecoes locais.
 2. Catalogo da etapa, mapa de fluxo e manual de cada cluster em
    `docs/`.
-3. Arquivo Figma, pagina de referencias, referencias por cluster e area
-   de montagem informados pelo designer.
+3. Arquivo Figma, pagina de referencias e referencias por cluster
+   informados pelo designer. A area de montagem e sempre a pagina
+   `_verificacao-<etapa>`; se nao existir, crie-a somente depois da
+   aprovacao.
 4. Topologia decidida em `docs/topologia-biblioteca.md` e collection
    resolvida para a etapa.
 5. Para promocao: relatorio mais recente do Validador dizendo `APTO
@@ -59,58 +72,57 @@ tela, variavel, binding, componente ou documento oficial.
 | Estado | Nome | Onde vive | Pode publicar? |
 | --- | --- | --- | --- |
 | Referencia humana | `ref-...` | pagina ou secao de referencias | nao |
-| Material de construcao | `_rascunho-<etapa>-<nome>` | pagina ou secao de montagem | nao |
+| Material de construcao | `_rascunho-<etapa>-<nome>` | `_verificacao-<etapa>` | nao |
+| Preview por mode | `preview-<cluster>-<template>` | `_verificacao-<etapa>`, sem prototipo | nao |
 | Template aprovado | `etapa/tpl-...` | `_templates` | sim |
 
-`ref-*` nunca e componentizado nem renomeado. Clonar uma referencia e
-permitido, desde que a copia se torne `_rascunho-*` antes de qualquer
-alteracao. O clone nao herda direito ao prefixo `tpl-*`.
+`ref-*` nunca e componentizado nem renomeado. O rascunho nasce da
+arvore-alvo aprovada, e nao de clone. Clonar uma referencia so e
+permitido para um asset visual que o contrato tenha indicado. O clone
+nunca herda direito ao prefixo `tpl-*`.
 
 ## Fase A: contrato visual antes da escrita
 
-1. Leia as referencias e registre, para cada tela selecionada: node ID,
-   textos visiveis, blocos visiveis, instancias IDS, properties
-   expostas, tamanho relativo dos blocos e screenshot de referencia.
-   Isso e o contrato visual da rodada, nao uma regra de negocio nova.
-2. Descubra as properties reais das instancias IDS. Nunca invente keys
-   como `Label` ou sufixos `#...`; use as definitions expostas no
-   arquivo atual.
-3. Audite styles e tokens IDS aplicados. Carregar uma fonte so permite
-   editar texto na API; nao prova que a tipografia segue IDS. Token
-   proximo exige aprovacao humana registrada.
-4. Planeje o que sera preservado, reutilizado como secao interna e
-   variabilizado. Limpar uma arvore nunca justifica retirar hero,
-   ilustracao, fundo, card, espacamento ou hierarquia visivel da
-   referencia.
-5. Confirme que toda escrita ocorrera fora da pagina ou secao de
-   referencias. Se o plano aponta para ela, pare.
+1. Execute `inspecionarReferencia` somente para conferir a evidencia e
+   os papeis aprovados. Nao derive uma nova proposta nessa fase.
+2. Execute `resolverIDS` e confirme key, property publica, variant e
+   capacidade de composicao de cada escolha aprovada. Nunca invente keys
+   como `Label` ou sufixos `#...`.
+3. Pare se houver candidato `[CONFIRMAR]`, `SEM_EQUIVALENTE` sem excecao
+   aprovada, token apenas parecido ou instancia IDS sem slot/property
+   para a composicao declarada.
+4. Registre o contrato tecnico aprovado no catalogo da etapa antes da
+   primeira escrita no Figma. Ele nao recebe node IDs permanentes.
+5. Confirme que toda escrita de rascunho e preview ocorrera em
+   `_verificacao-<etapa>`, fora da pagina de referencias e fora de
+   `Fluxos`. Se o plano aponta para outro lugar, pare.
 
 ## Fase B: montar somente o rascunho
 
-1. Crie ou localize a area de montagem da etapa. Preserve a pagina de
-   referencias somente leitura.
-2. Antes de clonar, anexar ou editar texto, carregue as fontes reais
+1. Crie ou localize a pagina `_verificacao-<etapa>`. Preserve a pagina
+   de referencias e `_templates` somente leitura durante a montagem.
+2. Antes de criar, anexar ou editar texto, carregue as fontes reais
    de todos os nos textuais envolvidos. Fonte sem `family` e bloqueio,
    nao valor para substituir.
-3. Clone a referencia escolhida para a area de montagem e renomeie para
-   `_rascunho-<etapa>-<nome>`. Limpe o mode explicito da collection de
-   conteudo no clone e em seus descendentes locais antes de
-   componentizar.
-4. Ao varrer a arvore, pare em `INSTANCE`. Nao atravesse instancia
-   remota para editar texto interno ou procurar um no stale. Use a
-   property publica exposta ou registre o fallback como bloqueio.
+3. Execute `montarArvore`: crie o rascunho a partir da arvore-alvo com
+   Auto Layout, sizing, padding, gap, ordem e sobreposicoes do contrato.
+4. Importe instancias IDS pela key real. Ao chegar em `INSTANCE`, use
+   somente property publica ou slot documentado. Nunca insira filho em
+   instancia remota nem tente editar sua arvore interna.
 5. Crie somente variaveis previstas no schema aprovado. Cada nome
    comeca com `<etapa>/`; modes sao clusters que usam a etapa. Ausencia
    de etapa pertence somente ao mapa.
-6. Componentize secoes internas aprovadas e depois o rascunho. Use
-   property first nas instancias IDS, com as keys reais descobertas na
+6. Crie secao ou componente local somente se a excecao aprovada declarar
+   esse papel. Componentize secoes aprovadas e depois o rascunho. Use
+   property first nas instancias IDS, com as keys reais confirmadas na
    fase A. No interno e fallback documentado.
 7. Aplique bindings estruturais e de conteudo no master. Texto bindado
    usa `textAutoResize` HEIGHT ou WIDTH_AND_HEIGHT. O master nunca
    recebe mode explicito.
-8. Crie um wrapper de preview por cluster e aplique nele o mode do
-   cluster. A instancia dentro do wrapper nao recebe override manual
-   de conteudo.
+8. Crie um wrapper de preview por cluster em `_verificacao-<etapa>` e
+   aplique nele o mode do cluster. A instancia dentro do wrapper nao
+   recebe override manual de conteudo. Preview nao recebe reaction nem
+   faz parte de uma linha de fluxo.
 
 ## Fase C: prova do rascunho
 
@@ -121,11 +133,12 @@ Ainda nao renomeie para `tpl-*` nem atualize documentos oficiais.
 3. Rode `validateModeBehavior` em cada preview. A entrada inclui
    wrapper, mode, instancia, referencia, raiz de layout e papeis.
 4. Rode `validateLayout` em cada preview resolvido por mode.
-5. Produza screenshots lado a lado: referencia, rascunho sem mode e
+5. Rode `validateReconstructionContract` em cada rascunho e referencia.
+6. Produza screenshots lado a lado: referencia, rascunho sem mode e
    preview de cada cluster. Revise geometria, hierarquia e blocos
    essenciais. Uma validacao matematica aprovada nao dispensa essa
    revisao visual.
-6. Entregue ao Validador: IDs dos rascunhos, contratos, previews,
+7. Entregue ao Validador: IDs dos rascunhos, contratos, previews,
    referencias, collection, modes, scripts e screenshots revisados.
 
 Reprovacao em qualquer item mantem o estado `_rascunho-*`. Corrija ou
@@ -146,9 +159,21 @@ Nao reconstrua tela, mude regra ou altere referencia nesta fase.
    `docs/estrutura-lib.md`; nunca copie um carimbo de memoria.
 3. Se o carimbo estiver completo, renomeie o componente para a taxonomia final
    `etapa/tpl-nome` ou especializacao funcional aprovada.
-4. Mova ou mantenha o template aprovado em `_templates`, atualize
-   somente os documentos oficiais que ja estavam aprovados e registre
-   a evidencia da promocao.
+4. Mova o template aprovado para `_templates`, remova os previews da
+   rodada em `_verificacao-<etapa>`, atualize somente os documentos
+   oficiais que ja estavam aprovados e registre a evidencia da
+   promocao. Nao crie `Fluxos` nesta fase.
+
+## Fluxos e uma operacao posterior
+
+O prototipo de cada referencia e a fonte do mapa daquela etapa. Por
+isso, o Montador nao cria uma segunda linha de telas conectadas durante
+a montagem ou validacao.
+
+So monte ou altere a pagina `Fluxos` se o designer pedir explicitamente
+uma jornada completa e o mapa selecionar apenas `tpl-*` aprovados. Use
+instancias desses templates e conecte etapas distintas. Nunca use
+referencia, `_rascunho-*`, preview ou evidencia externa nessa pagina.
 
 ## Saida
 

@@ -41,6 +41,9 @@ capacidade de composicao. Instancia remota e opaca: nao existe "colocar
 um texto dentro" se o componente nao expuser slot ou property. Classifique:
 
 - `EXATO`: key, property ou token e uso conferidos;
+- `PROVA_DE_MONTAGEM`: a leitura confirma que o mecanismo e permitido
+  pela API, mas o efeito depende de uma escrita real no arquivo, por
+  exemplo binding de `visible` diretamente em uma INSTANCE remota;
 - `[CONFIRMAR]`: dois candidatos adequados, token apenas parecido ou
   composicao ainda nao comprovada;
 - `SEM_EQUIVALENTE`: nenhum componente ou token IDS atende ao papel.
@@ -48,7 +51,40 @@ um texto dentro" se o componente nao expuser slot ou property. Classifique:
 `SEM_EQUIVALENTE` vira uma excecao local proposta, nunca um componente
 inventado. Token com o mesmo numero em escopo diferente nao e exato.
 
-## 3. `montarArvore` (escrita exclusiva do Montador)
+O Analista pode propor `PROVA_DE_MONTAGEM`, mas nunca executa essa
+prova, nem de forma temporaria ou com reversao. O contrato precisa dizer
+qual papel sera provado, qual mecanismo sera exercitado e qual resultado
+e esperado. `PROVA_DE_MONTAGEM` nao e uma regra de negocio em aberto:
+depois da aprovacao humana, ela pertence exclusivamente ao Montador.
+
+## 3. `provarMecanismo` (escrita exclusiva do Montador)
+
+Use esta rotina somente para cada `PROVA_DE_MONTAGEM` que constar no
+contrato aprovado. Ela acontece antes do rascunho completo e nunca em
+uma referencia.
+
+1. Trabalhe apenas em `_verificacao-<etapa>` e crie um objeto temporario
+   com nome `_prova-<papel>`.
+2. Use somente a variavel semantica ja aprovada para a etapa. Nunca
+   reutilize `prop/*`, `teste-*` ou uma collection de laboratorio para
+   provar uma regra de negocio.
+3. Exercite o mecanismo declarado. Para visibilidade de uma INSTANCE,
+   o binding pode ser aplicado diretamente no no INSTANCE quando nao
+   houver property publica de visibilidade. Isso nao autoriza editar
+   filhos internos da instancia remota.
+4. Leia o resultado em chamada separada. Em Auto Layout vertical,
+   confirme tambem que o item oculto nao deixa espaco morto.
+5. Registre sucesso ou falha no relatorio da rodada e remova somente o
+   objeto temporario. Se a variavel semantica tiver sido criada somente
+   para esta prova que falhou, remova-a tambem; nunca remova variavel que
+   ja existia. Se falhar, nao inicie o rascunho completo: devolva a
+   pendencia ao designer e ao Analista.
+
+Uma prova bem-sucedida libera apenas o mecanismo que foi aprovado. Ela
+nao permite trocar componente, criar nova variavel ou ampliar a arvore
+alvo por conta propria.
+
+## 4. `montarArvore` (escrita exclusiva do Montador)
 
 Exige contrato tecnico aprovado e topologia resolvida. Antes de criar,
 confira novamente as keys e properties do mapa IDS. Pare diante de
@@ -68,7 +104,7 @@ slot necessario.
 6. Crie previews sem reactions em `_verificacao-<etapa>`; mode fica
    apenas no wrapper.
 
-## 4. `auditarReconstrucao` (leitura)
+## 5. `auditarReconstrucao` (leitura)
 
 Validador roda `validateReconstructionContract` junto das validacoes
 existentes. A auditoria compara papéis, nao a arvore interna suja da

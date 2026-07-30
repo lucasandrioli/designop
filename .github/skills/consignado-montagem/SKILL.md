@@ -90,7 +90,8 @@ nunca herda direito ao prefixo `tpl-*`.
    como `Label` ou sufixos `#...`.
 3. Pare se houver candidato `[CONFIRMAR]`, `SEM_EQUIVALENTE` sem excecao
    aprovada, token apenas parecido ou instancia IDS sem slot/property
-   para a composicao declarada.
+   para a composicao declarada. `PROVA_DE_MONTAGEM` so pode continuar
+   quando estiver nomeada e aprovada no contrato tecnico.
 4. Registre o contrato tecnico aprovado no catalogo da etapa antes da
    primeira escrita no Figma. Ele nao recebe node IDs permanentes.
 5. Confirme que toda escrita de rascunho e preview ocorrera em
@@ -101,25 +102,34 @@ nunca herda direito ao prefixo `tpl-*`.
 
 1. Crie ou localize a pagina `_verificacao-<etapa>`. Preserve a pagina
    de referencias e `_templates` somente leitura durante a montagem.
-2. Antes de criar, anexar ou editar texto, carregue as fontes reais
+2. Crie ou localize a collection e somente as variaveis semanticas do
+   schema aprovado que uma `PROVA_DE_MONTAGEM` precisa exercitar. Se a
+   prova falhar, remova apenas a variavel criada exclusivamente para ela.
+3. Execute `provarMecanismo` para cada `PROVA_DE_MONTAGEM` aprovada. A
+   prova usa somente `_prova-<papel>` dentro de `_verificacao-<etapa>`;
+   nao toca referencias e nao inicia o rascunho completo se falhar.
+4. Antes de criar, anexar ou editar texto, carregue as fontes reais
    de todos os nos textuais envolvidos. Fonte sem `family` e bloqueio,
    nao valor para substituir.
-3. Execute `montarArvore`: crie o rascunho a partir da arvore-alvo com
+5. Execute `montarArvore`: crie o rascunho a partir da arvore-alvo com
    Auto Layout, sizing, padding, gap, ordem e sobreposicoes do contrato.
-4. Importe instancias IDS pela key real. Ao chegar em `INSTANCE`, use
+6. Importe instancias IDS pela key real. Ao chegar em `INSTANCE`, use
    somente property publica ou slot documentado. Nunca insira filho em
    instancia remota nem tente editar sua arvore interna.
-5. Crie somente variaveis previstas no schema aprovado. Cada nome
-   comeca com `<etapa>/`; modes sao clusters que usam a etapa. Ausencia
-   de etapa pertence somente ao mapa.
-6. Crie secao ou componente local somente se a excecao aprovada declarar
+7. Crie somente variaveis previstas no schema aprovado. Cada nome
+   comeca com `<etapa>/` e descreve o papel da etapa. Nunca reutilize
+   `prop/*`, `teste-*`, `teste-props` ou variavel de outra etapa, mesmo
+   que ela tenha o mesmo tipo BOOLEAN ou o mesmo valor. Modes sao
+   clusters que usam a etapa. Ausencia de etapa pertence somente ao
+   mapa.
+8. Crie secao ou componente local somente se a excecao aprovada declarar
    esse papel. Componentize secoes aprovadas e depois o rascunho. Use
    property first nas instancias IDS, com as keys reais confirmadas na
    fase A. No interno e fallback documentado.
-7. Aplique bindings estruturais e de conteudo no master. Texto bindado
+9. Aplique bindings estruturais e de conteudo no master. Texto bindado
    usa `textAutoResize` HEIGHT ou WIDTH_AND_HEIGHT. O master nunca
    recebe mode explicito.
-8. Crie um wrapper de preview por cluster em `_verificacao-<etapa>` e
+10. Crie um wrapper de preview por cluster em `_verificacao-<etapa>` e
    aplique nele o mode do cluster. A instancia dentro do wrapper nao
    recebe override manual de conteudo. Preview nao recebe reaction nem
    faz parte de uma linha de fluxo.

@@ -43,6 +43,7 @@ ela. Resultado reprovado: deduzir setas pela ordem visual dos frames.
 | Analista | "Registre uma regra sem manual" | marca `[CONFIRMAR]` e pede documento ou decisao |
 | Analista, contexto guiado | "Conclua pela tela por que os clusters diferem" | recusa a inferencia e pede a explicacao do designer |
 | Analista no modo Aprendiz | "Crie esta tela no Figma a partir da receita" | recusa; pode editar somente `docs/receitas/` |
+| Analista | "Binde `visible`, teste e depois desfaça" | recusa; registra `PROVA_DE_MONTAGEM` para o Montador apos aprovacao |
 | Montador | "Decida o motivo desta diferenca sem manual" | recusa e devolve para Analista ou designer |
 | Validador | "Corrija este binding e promova" | recusa e aponta Montador |
 
@@ -115,10 +116,17 @@ Ele precisa entao:
 
 1. registrar o contrato tecnico aprovado no catalogo da etapa;
 2. confirmar keys, properties e slots usando `resolverIDS`;
-3. construir a arvore-alvo em `_verificacao-<etapa>`;
-4. importar instancias IDS reais e usar properties publicas;
-5. criar previews sem prototipos, com mode somente no wrapper;
-6. rodar as validacoes, incluindo `validateReconstructionContract`.
+3. criar somente a variavel semantica aprovada que uma prova precisar;
+4. executar cada `PROVA_DE_MONTAGEM` em `_prova-<papel>`, removendo o
+   objeto temporario depois de registrar o resultado e limpando a
+   variavel somente se a prova falhar e ela tiver sido criada para isso;
+5. construir a arvore-alvo em `_verificacao-<etapa>` somente se essas
+   provas passarem;
+6. importar instancias IDS reais e usar properties publicas;
+7. criar variaveis no namespace da etapa, nunca `prop/*` ou variaveis
+   de teste;
+8. criar previews sem prototipos, com mode somente no wrapper;
+9. rodar as validacoes, incluindo `validateReconstructionContract`.
 
 Confirme que nao existe clone da tela inteira, instancia remota com filho
 novo, `tpl-*` antecipado ou preview conectado como fluxo.
@@ -150,6 +158,8 @@ Ele nao cria `Fluxos`.
 | Componente local imitador | reprova no bloco IDS sem excecao aprovada |
 | Token manual com equivalente exato | reprova no bloco IDS ate virar binding |
 | Token apenas parecido | Analista retorna `[CONFIRMAR]` |
+| Binding direto de `visible` sem property publica | Analista marca `PROVA_DE_MONTAGEM`; Montador prova em `_verificacao-<etapa>` e nunca em `ref-*` |
+| Variavel generica de teste para conteudo da etapa | Montador recusa e cria somente a variavel semantica `<etapa>/...` aprovada |
 | Card IDS sem slot necessario | Montador para antes da montagem |
 | Pai ou ordem errada | reprova no bloco arvore |
 | Caixa deslocada acima de 2 px | reprova no bloco geometria |

@@ -84,8 +84,11 @@ conversa:
 
 Entregue UMA proposta consolidada. Diferenca sem regra ou componente IDS
 ambiguo fica `[CONFIRMAR]`; nao existe proposta de montagem parcial para
-esses itens. Nunca cria, renomeia, binda, componentiza, altera prototipo
-nem muda documentos oficiais durante essa analise.
+esses itens. Quando a leitura indicar um mecanismo permitido, mas nao
+provar seu efeito no arquivo, marque `PROVA_DE_MONTAGEM` e descreva o
+teste que o Montador fara depois da aprovacao. Nunca cria, renomeia,
+binda, troca mode, testa e desfaz, componentiza, altera prototipo nem
+muda documentos oficiais durante essa analise.
 
 ## Comando explicito: aprender receita
 

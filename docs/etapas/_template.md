@@ -92,12 +92,20 @@ Para `binding: node`, `text` usa obrigatoriamente `campo: characters`
 e `visible` usa `campo: visible`. Para `component-property`, a property
 exposta precisa ser `TEXT` ou `BOOLEAN`, respectivamente.
 
+Toda `variavel` precisa comecar com `<etapa>/` e representar o papel de
+negocio daquela etapa. Nunca reutilize `prop/*`, `teste-*`, collection
+de laboratorio ou variavel de outra etapa so porque o tipo ou o valor
+coincide. Quando o binding direto no no ainda precisar ser exercitado
+num arquivo real, registre `prova-de-montagem: true`; o Analista propoe,
+mas somente o Montador prova isso em `_verificacao-<etapa>`.
+
 ```yaml
 collection: <nome da collection resolvida para esta etapa>
 papeis:
   - id: <titulo>
     variavel: <etapa/grupo/nome-kebab>
     type: <text | visible>
+    prova-de-montagem: <true | false>
     binding:
       tipo: <component-property | node>
       alvo:

@@ -7,6 +7,7 @@ justificam suas diferencas. Ele nao redefine a etapa.
 - Cluster: `cluster-4`
 - Mode no contexto da etapa: [CONFIRMAR]
 - Orgao/convenio: convenios distribuidos nacionalmente
+- Modalidades ativas: [CONFIRMAR]
 - Mapa de fluxo: `docs/mapa-fluxo-anuencia-piloto.md`
 
 ## Jornada por etapa

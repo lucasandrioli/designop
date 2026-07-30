@@ -7,6 +7,7 @@ justificam suas diferencas. Ele nao redefine a etapa.
 - Cluster: `gov-sp`
 - Mode no contexto da etapa: [CONFIRMAR]
 - Orgao/convenio: Governo de Sao Paulo
+- Modalidades ativas: [CONFIRMAR]
 - Mapa de fluxo: `docs/mapa-fluxo-anuencia-piloto.md`
 
 ## Jornada por etapa

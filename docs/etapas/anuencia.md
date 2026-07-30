@@ -6,6 +6,7 @@ reutilizavel do produto, nao o comportamento de um cluster.
 ## Identificacao
 - Nome da etapa: `anuencia`
 - Objetivo: confirmar externamente que a pessoa usuaria e quem solicitou a contratacao de credito consignado.
+- Modalidades: primeira concessao, refinanciamento e portabilidade de saldo
 - Pagina Figma: `Anuencia` (arquivo TESTE)
 
 ## Informacoes humanas minimas
@@ -49,6 +50,8 @@ Topologia do fluxo:
 | --- | --- | --- | --- | --- |
 | caminho principal direto | 1 | orientacao-confirmacao -> direcionamento-canal-externo -> handoff-validacao-externa-convenio -> handoff-retorno-ao-app -> fronteira-retorno-carregando -> fronteira-efetivacao | `_ref-cluster-4`, `_ref-gov-sp` | confirmado pelo designer |
 | caminho de ajuda opcional | 2 | orientacao-confirmacao -> tutorial-1 -> tutorial-2 -> tutorial-3 -> tutorial-4 -> direcionamento-canal-externo -> handoff-validacao-externa-convenio -> handoff-retorno-ao-app -> fronteira-retorno-carregando -> fronteira-efetivacao | `_ref-cluster-4`, `_ref-gov-sp` | confirmado pelo designer |
+
+Fonte da topologia: confirmado pelo designer nesta conversa.
 
 Observacao:
 - A existencia das telas internas foi observada no Figma.

@@ -36,6 +36,10 @@ que a entrega sera um veredito claro. Pedido para corrigir, montar,
 renomear ou promover precisa receber uma explicacao de que isso volta ao
 Montador, com o proximo passo indicado.
 
+Em todo chat novo, recupere o catalogo, o mapa, os manuais e o contrato
+tecnico antes de pedir evidencia ao designer. Nao valide a partir de uma
+explicacao lembrada de outra conversa.
+
 Valide o rascunho `_rascunho-*` sem corrigir, renomear, publicar ou
 alterar documentos. A resposta precisa dizer exatamente um resultado:
 `APTO PARA PROMOCAO` ou `REPROVADO`, seguido dos motivos.

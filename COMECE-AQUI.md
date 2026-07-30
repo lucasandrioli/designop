@@ -134,48 +134,59 @@ o que voce vera ao final e qual sera a proxima decisao. Pedido fora do
 papel deve parar e indicar o handoff correto, nunca ser resolvido "para
 ajudar". Veja `docs/contrato-papeis.md`.
 
-1. Selecione `Analista da Etapa` e rode `/consignado-analise` para ler
-   a pagina inteira. Ele entrega inventario, matriz, nucleo,
+Em um chat novo, basta dizer a etapa e o que voce quer fazer. O agente
+recupera sozinho catalogo, mapa e manuais. Ele pede o link Figma, os
+clusters ou o caso de uso apenas se nao conseguir descobrir esse recorte
+nos documentos. Etapa ainda sem documentos comeca por
+`/consignado-contexto`; etapa ja documentada pula direto para o papel
+pedido.
+
+1. Se ainda nao existirem manuais, selecione `Analista da Etapa` e rode
+   `/consignado-contexto`. Fale do fluxo em linguagem comum. Ele le as
+   referencias, devolve um rascunho curto de catalogo, manuais e mapa e
+   so registra os documentos depois da sua aprovacao explicita.
+2. Selecione `Analista da Etapa` e rode `/consignado-analise` para ler
+   a pagina inteira e os documentos aprovados. Ele entrega inventario, matriz, nucleo,
    classificacao, arvore-alvo, mapa IDS e contrato geometrico em uma
    unica proposta.
-2. **VOCE REVISA e aprova a proposta consolidada.** Checkpoint
+3. **VOCE REVISA e aprova a proposta consolidada.** Checkpoint
    obrigatorio, nao pule mesmo que pareca obvio. Este e o momento de
    decidir se uma diferenca e regra real, qual componente IDS usar e
    qual geometria precisa ser preservada.
-3. Antes de montar pela primeira vez, decida a topologia em
+4. Antes de montar pela primeira vez, decida a topologia em
    `docs/topologia-biblioteca.md`: arquivo unico ou arquivo por etapa.
    O agente nao escolhe isso por voce.
-4. Clique em `Montar apos aprovacao` somente depois de escrever a
+5. Clique em `Montar apos aprovacao` somente depois de escrever a
    aprovacao explicita na conversa. O prompt inicia
    `/consignado-montagem`.
-5. Confira a abertura do Montador. Antes de alterar o Figma, ele deve
+6. Confira a abertura do Montador. Antes de alterar o Figma, ele deve
    retomar o que ja foi aprovado, dizer o que vai conferir sozinho e
    pedir somente a proxima pendencia real. O detalhe de skills, scripts
    e bloqueios vem em seguida como apoio.
-6. O Montador registra o contrato tecnico aprovado no catalogo e cria a
+7. O Montador registra o contrato tecnico aprovado no catalogo e cria a
    pagina temporaria `_verificacao-<etapa>`. Nela ele monta a arvore-alvo
    aprovada, sem clonar a tela inteira, e gera `_rascunho-*` e previews
    por cluster. Esses previews nao sao fluxo nem recebem conexoes.
-7. Clique em `Validar rascunho`, revise o prompt e envie. O Validador
+8. Clique em `Validar rascunho`, revise o prompt e envie. O Validador
    confere arvore, IDS, geometria, layout, conteudo, modes, referencias,
    mapa e screenshots de todos os convenios. Ele devolve `APTO PARA
    PROMOCAO`, `REPROVADO` ou `NAO VERIFICAVEL`.
-8. Somente quando estiver apto, clique em `Promover rascunho validado`.
+9. Somente quando estiver apto, clique em `Promover rascunho validado`.
     O Montador roda o portao final, gera o carimbo, move o componente
     para `_templates`, renomeia para `etapa/tpl-*` e remove os previews
     temporarios daquela rodada.
-9. Quando houver uma jornada inteira aprovada, voce pode pedir
+10. Quando houver uma jornada inteira aprovada, voce pode pedir
     separadamente `Montar Fluxos`. O Montador usa somente instancias de
     `tpl-*` aprovados e o mapa. Isso nao recria os prototipos das
     referencias.
-10. Publicar a lib (acao manual, nao tem API).
+11. Publicar a lib (acao manual, nao tem API).
 
 ### Depois: a manutencao, onde o investimento se paga
 
 - Mudou um texto num convenio? Edite a celula na tabela de variaveis do
   Figma. So isso.
-- Entrou convenio novo? Adicione o mode, escreva o manual da jornada,
-  coloque referencias nas paginas das etapas usadas e rode a analise da
+- Entrou convenio novo? Registre o contexto guiado, aprove o manual da
+  jornada, coloque referencias nas paginas das etapas usadas e rode a
   analise. Nao copie uma etapa para dentro do cluster.
 - O IDS mudou? Rode `/validador`: ele varre o impacto em tudo.
 
@@ -183,9 +194,9 @@ ajudar". Veja `docs/contrato-papeis.md`.
 
 ## O que NAO fazer
 
-- Nao use arquivo de exemplo, conversa anterior ou tela semelhante como
-  regra de negocio. O agente so pode usar os documentos reais em
-  `docs/`.
+- Fora de `/consignado-contexto`, nao use arquivo de exemplo, conversa
+  anterior ou tela semelhante como regra de negocio. O agente so pode
+  usar os documentos reais em `docs/`.
 - Nao peca ao agente para criar telas do zero (ainda). Ele nao sabe
   como voce constroi. Isso e o Bloco 3, e depende de `docs/receitas/`
   acumular material via aprendiz.

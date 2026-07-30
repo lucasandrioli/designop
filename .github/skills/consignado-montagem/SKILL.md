@@ -15,6 +15,11 @@ Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Montagem
 nao decide regra, classificacao nem veredito de validacao; devolva a
 pendencia ao papel responsavel.
 
+Em chat novo, recupere catalogo, mapa, manuais, proposta aprovada e
+veredito anterior antes de abrir a conversa. Se algum deles nao puder
+ser localizado, diga qual e a unica pendencia real. Nunca substitua esse
+contexto por uma lembranca ou resumo de conversa anterior.
+
 ## Recursos obrigatorios desta execucao
 
 Leia estes recursos antes de qualquer chamada Figma. Os links existem

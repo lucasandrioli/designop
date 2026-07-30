@@ -50,15 +50,23 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
    `tpl-*`.
 12. ESCALA: get_metadata numa pagina real do consignado (arquivos
     grandes); observar payload e rate limit.
-13. SKILLS: selecione Analista, dispare `/consignado-analise` e
-    confirme que ele le sem escrever e entrega uma proposta com
-    arvore-alvo, mapa IDS e contrato geometrico. Em seguida selecione
+13. SKILLS: sem manuais, selecione Analista e dispare
+    `/consignado-contexto`; confirme que ele le o Figma sem escrever,
+    conversa sobre o que a tela nao prova e so registra catalogo,
+    manuais e mapa depois de aprovacao humana. Em seguida, dispare
+    `/consignado-analise` e confirme que ele le sem escrever e entrega
+    uma proposta com arvore-alvo, mapa IDS e contrato geometrico. Em seguida selecione
     Montador, dispare `/consignado-montagem` e
     confirme que a primeira resposta retoma o que ja esta aprovado,
     explica o que ele vai conferir sozinho e pede somente a pendencia
     real, sem escrita no Figma. No handoff de validacao, confira
     `/consignado-validacao` e confirme que os links para scripts e
     Plugin API e Reconstrucao Figma foram carregados antes da validacao.
+14. RETOMADA: depois de registrar uma etapa, abra um chat novo e cite
+    somente seu nome. O agente deve recuperar catalogo, mapa e manuais
+    sozinho, resumir o que encontrou e pedir apenas o recorte que faltar.
+    Sem manual, deve apontar contexto guiado, nunca tratar conversa
+    anterior como regra.
 
 Cada item: PASSOU / FALHOU + nota. Item 5 falhou = parar e redesenhar
 o binding antes de seguir. Itens 8 e 9 falhos bloqueiam montagem no IDS

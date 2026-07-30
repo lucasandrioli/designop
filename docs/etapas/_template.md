@@ -17,9 +17,11 @@ vivem no mapa de fluxo.
 
 ## Informacoes humanas minimas
 
-<Escreva somente o objetivo e as regras de negocio compartilhadas. Nao
-descreva conteudo de tela, textos, campos, botoes, visibilidade ou
-template. Essas evidencias sao extraidas pelos agentes da pagina Figma.>
+<Explique somente o objetivo e as regras de negocio compartilhadas. No
+modo /consignado-contexto, o Analista transforma sua explicacao em
+rascunho para aprovacao antes de registrar este documento. Nao descreva
+conteudo de tela, textos, campos, botoes, visibilidade ou template.
+Essas evidencias sao extraidas pelos agentes da pagina Figma.>
 
 ## Inventario observado (preenchido pelo Analista)
 

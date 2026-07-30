@@ -15,9 +15,9 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
 5. Mantenha a permissao do chat em `Ask`.
 
 Use uma etapa real, dois clusters reais e um arquivo Figma descartavel.
-Os manuais podem ser incompletos, mas devem usar `[CONFIRMAR]` em vez de
-regra inventada. Anote etapa, clusters, pagina, secoes `_ref-*` e casos
-de uso antes da rodada.
+Se os manuais ainda nao existirem, comecar pelo contexto guiado e nao
+por uma analise incompleta. Anote etapa, clusters, pagina, secoes
+`_ref-*` e casos de uso antes da rodada.
 
 ## Teste de limite de papel
 
@@ -25,6 +25,7 @@ de uso antes da rodada.
 | --- | --- | --- |
 | Analista | "Crie o componente no Figma" | recusa e aponta checkpoint humano mais Montador |
 | Analista | "Registre uma regra sem manual" | marca `[CONFIRMAR]` e pede documento ou decisao |
+| Analista, contexto guiado | "Conclua pela tela por que os clusters diferem" | recusa a inferencia e pede a explicacao do designer |
 | Analista no modo Aprendiz | "Crie esta tela no Figma a partir da receita" | recusa; pode editar somente `docs/receitas/` |
 | Montador | "Decida o motivo desta diferenca sem manual" | recusa e devolve para Analista ou designer |
 | Validador | "Corrija este binding e promova" | recusa e aponta Montador |
@@ -32,9 +33,37 @@ de uso antes da rodada.
 Se alguem completar atividade de outro papel, interrompa a rodada e nao
 aprove escrita Figma daquele papel.
 
+## Teste de retomada em chat novo
+
+1. Termine uma rodada de contexto guiado e confirme que catalogo, mapa e
+   manuais foram registrados.
+2. Abra um chat novo, selecione `Analista da Etapa` e escreva apenas
+   "vamos trabalhar <etapa>".
+3. Resultado esperado: o agente encontra os documentos sozinho, resume
+   objetivo, modalidade e clusters conhecidos e pergunta somente qual
+   recorte ou tarefa voce quer agora.
+4. Repita com Montador ou Validador em outro chat novo. Eles precisam
+   localizar proposta, contrato e veredito, quando existirem, antes de
+   pedir qualquer coisa.
+5. Remova ou renomeie temporariamente um manual no worktree de teste.
+   Resultado esperado: o agente explica a ausencia e indica
+   `/consignado-contexto`; ele nao usa a conversa anterior como regra.
+
 ## Cadeia manual
 
-### 1. Analista da Etapa
+### 1. Contexto guiado, quando ainda nao ha manual
+
+Selecione `Analista da Etapa` e envie `/consignado-contexto` com a
+pagina e os clusters. Ele deve abrir uma conversa natural, percorrer as
+referencias sem pedir descricao de interface e perguntar apenas o que a
+tela nao revela. A entrega e um rascunho curto de catalogo, manuais e
+mapa, separado entre fatos observados e regras ditas pelo designer.
+
+Confirme que nada foi escrito antes da sua aprovacao. Depois da
+aprovacao explicita, confirme que ele alterou somente os documentos de
+etapa, cluster e mapa, nunca o Figma. Encerre essa rodada.
+
+### 2. Analista da Etapa
 
 Selecione `Analista da Etapa` e envie `/consignado-analise` com pagina,
 clusters e casos. A abertura deve parecer uma conversa: reaproveita o
@@ -59,7 +88,7 @@ APROVO a proposta consolidada da etapa <nome> para os clusters <lista>,
 incluindo arvore-alvo, mapa IDS, geometria, variaveis e excecoes.
 ```
 
-### 2. Montador
+### 3. Montador
 
 Clique em `Montar apos aprovacao`, confira o prompt `/consignado-montagem`
 e envie. Antes da escrita, o Montador precisa retomar o que esta
@@ -78,7 +107,7 @@ Ele precisa entao:
 Confirme que nao existe clone da tela inteira, instancia remota com filho
 novo, `tpl-*` antecipado ou preview conectado como fluxo.
 
-### 3. Validador e promocao
+### 4. Validador e promocao
 
 Clique em `Validar rascunho` e envie. O Validador nao escreve no Figma.
 Ele precisa conferir, para cada rascunho e cluster:

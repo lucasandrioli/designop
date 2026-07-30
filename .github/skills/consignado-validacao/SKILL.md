@@ -17,6 +17,11 @@ Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
 skill prova e relata. Ela nao corrige, monta, reclassifica regra ou
 promove um rascunho.
 
+Em chat novo, localize catalogo, mapa, manuais, contrato tecnico e
+rascunho antes de abrir a validacao. Resumo de conversa anterior nao e
+evidencia. Pergunte somente pelo elemento que nao puder localizar ou
+pela confirmacao que bloquear o veredito.
+
 ## Como abrir a conversa
 
 Antes de validar, situe qual entrega sera conferida, diga o que voce

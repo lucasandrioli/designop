@@ -45,9 +45,13 @@ do Figma e a internet fica desligada apos a configuracao.
 - O DESIGNER trabalha uma ETAPA por vez. Na pagina da etapa, constroi
   referencias cruas em uma secao por cluster e liga todas as telas de
   cada caso de uso por prototipo.
-- O ANALISTA DA ETAPA le a pagina completa, inventaria, compara,
+- O ANALISTA DA ETAPA tem dois modos explicitos. Em
+  `/consignado-contexto`, conduz a conversa inicial e registra manuais
+  somente depois da aprovacao humana do texto. Em
+  `/consignado-analise`, le a pagina completa, inventaria, compara,
   generaliza e classifica em uma unica proposta. Ele tambem propoe a
-  arvore-alvo, o mapa IDS e o contrato geometrico. Somente leitura.
+  arvore-alvo, o mapa IDS e o contrato geometrico. Essa analise e
+  somente leitura.
 - O designer APROVA a proposta consolidada. Checkpoint obrigatorio,
   nunca pulado.
 - O agente MONTADOR cria variaveis, bindings e rascunhos somente na
@@ -68,15 +72,18 @@ skills em `.github/skills/`.
 ### Limite de papel e conversa compartilhada
 
 Trocar de agente no Copilot nao limpa o historico nem concede as
-responsabilidades do agente anterior ou seguinte. Todo agente segue
-`docs/contrato-papeis.md`: abre a conversa explicando o que precisa, o
-que fara, o que entregara e o proximo passo. Tarefa fora do papel para,
-sem tentativa parcial, mas a explicacao continua natural para o
-designer.
+responsabilidades do agente anterior ou seguinte. Chat novo tambem nao
+preserva contexto de negocio: todo agente recupera catalogo, mapa e
+manuais antes de agir, seguindo `docs/contrato-papeis.md`. Ele procura o
+que ja existe sozinho e pergunta somente o que ainda falta. Tarefa fora
+do papel para, sem tentativa parcial, mas a explicacao continua natural
+para o designer.
 O Analista usa Figma somente para leitura. O MCP atual mistura leitura
 e escrita em `use_figma`, portanto `Ask` e a recusa semantica de
-scripts mutadores sao obrigatorios. O comando de Aprendiz nao muda essa
-regra: sua unica escrita permitida e em `docs/receitas/`.
+scripts mutadores sao obrigatorios. Em `/consignado-contexto`, sua unica
+escrita adicional permitida e nos documentos oficiais aprovados pelo
+designer. O comando de Aprendiz nao muda essa regra: sua unica escrita
+permitida e em `docs/receitas/`.
 
 ## Regras sempre ativas
 
@@ -88,11 +95,19 @@ regra: sua unica escrita permitida e em `docs/receitas/`.
   agente nao conhece: nunca infira a razao de uma divergencia, pergunte
   ou marque `[CONFIRMAR]`.
 
-- A unica fonte de conhecimento de negocio e `docs/`: catalogo da
-  etapa, manual do cluster e mapa de fluxo. Se
-  `docs/clusters/<cluster>.md` nao existir, o manual NAO EXISTE: pare e
-  peca. Nunca use arquivos de exemplo, conversas anteriores ou telas
-  semelhantes como substitutos de uma regra documentada.
+- A unica fonte de conhecimento de negocio depois da captura e `docs/`:
+  catalogo da etapa, manual do cluster e mapa de fluxo. Se
+  `docs/clusters/<cluster>.md` nao existir, o manual NAO EXISTE:
+  `/consignado-analise` para e aponta `/consignado-contexto`. Nunca use
+  arquivos de exemplo, conversas anteriores ou telas semelhantes como
+  substitutos de uma regra documentada.
+
+- A excecao controlada e `/consignado-contexto`: nele, o Analista pode
+  ouvir uma explicacao do designer e mostrar um rascunho em conversa.
+  So apos aprovacao explicita do texto ele registra os documentos. Tela
+  e prototipo continuam sendo evidencia de fluxo, nunca origem de uma
+  regra. O Analista nao pode transformar uma diferenca visual em regra
+  durante essa captura.
 
 ### Modelo
 

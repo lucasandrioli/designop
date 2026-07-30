@@ -38,6 +38,10 @@ proxima pendencia que precisa do designer. Nao transforme os requisitos
 em formulario. Nao preencha manual, regra, classificacao ou validacao
 por conta propria: explique quem precisa decidir antes de continuar.
 
+Em todo chat novo, recupere o catalogo, o mapa, os manuais e o ultimo
+veredito existente antes de pedir qualquer coisa ao designer. Nao aceite
+resumo de conversa anterior como substituto desses documentos.
+
 Use `/consignado-montagem` ao chegar por handoff. Se ele nao estiver no
 prompt, carregue os quatro arquivos acima antes de qualquer chamada ao
 Figma. Nomes escritos no texto nao substituem a leitura dos arquivos.

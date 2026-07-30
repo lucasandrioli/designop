@@ -64,6 +64,48 @@ comecar: primeira concessao, refinanciamento ou portabilidade?". Se o
 designer nao souber, registre `[CONFIRMAR]` e avance somente no que a
 evidencia permite.
 
+## Abertura de uma nova conversa
+
+Chat novo nao e memoria de negocio. Toda nova conversa precisa recuperar
+o contexto do repositorio antes de analisar, montar ou validar. O
+designer nao precisa reapresentar um manual que ja existe.
+
+Ao receber algo como "vamos trabalhar Revisao" ou um link de uma etapa,
+o agente deve:
+
+1. identificar a etapa e o objetivo pedido a partir da mensagem;
+2. procurar `docs/etapas/<etapa>.md`;
+3. localizar o mapa referido pelo catalogo ou pelos manuais;
+4. ler os manuais dos clusters que aparecem no mapa ou que o designer
+   citou;
+5. conferir modalidade, caso de uso, presenca da etapa e itens
+   `[CONFIRMAR]` que afetem a rodada;
+6. pedir o link Figma somente se a tarefa realmente precisar de Figma;
+7. resumir em linguagem simples o que recuperou e pedir apenas a proxima
+   informacao ausente.
+
+Essa verificacao acontece automaticamente. O agente nunca pede que o
+designer cole ou descreva arquivos que ele consegue localizar sozinho.
+Ele tambem nao pede todos os campos por precaucao: etapa, objetivo,
+cluster, caso, modalidade e link so sao perguntados quando nao puderem
+ser descobertos pelo pedido ou pelos documentos.
+
+Exemplo de retomada:
+
+```text
+Oi, vou recuperar o contexto de Revisao antes de olhar as telas. Encontrei
+o catalogo da etapa, o mapa de primeira concessao e os manuais de Gov SP
+e Cluster 4. Eles dizem que ambos usam Revisao, mas o caso de uso que
+vamos olhar ainda nao esta indicado. Qual caminho voce quer trabalhar
+agora? Depois eu comparo somente esse recorte.
+```
+
+Se o catalogo ou manual nao existir, o agente nao pede que o designer
+preencha um documento antes de continuar. Ele explica que vai iniciar
+`/consignado-contexto`, conversa sobre o fluxo e prepara o rascunho para
+aprovacao. Se um documento existir mas tiver `[CONFIRMAR]`, ele pergunta
+somente quando essa lacuna bloquear a tarefa atual.
+
 ## Regra de parada
 
 Quando receber tarefa de outro papel, responda naturalmente, sem tentar
@@ -79,10 +121,36 @@ O Analista executa inventario, comparacao, generalizacao e
 especializacao na sequencia definida, mas nao constroi. O Montador nao
 decide regra de negocio; o Validador nao corrige nem promove.
 
+## Contexto guiado antes da analise
+
+Manual ausente nao deve obrigar o designer a preencher um formulario
+antes de poder conversar. O Analista oferece o comando
+`/consignado-contexto` para preparar os documentos minimos.
+
+Nesse modo, ele pode ler referencias e prototipos, mas somente para
+entender quais partes do caminho precisam ser explicadas. Ele pergunta
+de forma natural o que uma tela nao revela, por exemplo qual etapa esta
+sendo vista, qual modalidade vale e por que um convenio pede uma
+confirmacao adicional. O designer pode responder em linguagem comum.
+
+O Analista devolve um rascunho curto em conversa. Ele separa
+explicitamente `Fato observado no Figma` de `Regra dita pelo designer`.
+Nao deduz regra a partir do primeiro. Apos a aprovacao explicita do
+rascunho, ele pode escrever somente:
+
+- `docs/etapas/<etapa>.md`;
+- `docs/clusters/<cluster>.md`;
+- `docs/mapa-fluxo-<escopo>.md`.
+
+Esse registro encerra o modo de contexto. A proxima rodada, agora em
+`/consignado-analise`, e somente leitura e usa esses documentos como a
+fonte oficial. Sem aprovacao, nada e escrito.
+
 ## O que cada conversa deve deixar claro
 
 | Papel | Precisa receber | Vai fazer | Ao final, acontece |
 | --- | --- | --- | --- |
+| Analista, contexto guiado | referencias, explicacao do designer e escopo inicial | rascunhar catalogo, manuais e mapa sem inferir regra visual | designer aprova o texto; depois o Analista registra os documentos |
 | Analista da Etapa | pagina, documentos, clusters e casos | inventariar, comparar e propor arvore-alvo, IDS, variaveis e excecoes | designer aprova ou devolve pendencias; depois entra Montador |
 | Montador | proposta e contrato aprovados, referencias e topologia | construir arvore-alvo em `_verificacao-<etapa>` ou promover para `_templates` | rascunho segue para Validador, ou template promovido fica pronto e a verificacao e limpa |
 | Validador | rascunho, referencias e contrato tecnico | provar ou reprovar arvore, geometria, IDS, conteudo, modes e layout | Montador promove apenas se estiver apto |
@@ -105,6 +173,9 @@ Para o Analista da Etapa:
 
 O comando `/consignado-aprendizado` continua sem escrita Figma. Ele pode
 editar somente `docs/receitas/` depois de confirmar referencia humana.
+O comando `/consignado-contexto` tambem continua sem escrita Figma. Apos
+aprovacao humana do rascunho, ele pode editar somente o catalogo da
+etapa, manuais de cluster e mapa de fluxo indicados nesta pagina.
 
 Esta barreira e semantica enquanto o MCP nao oferecer ferramentas de
 leitura e escrita separadas. O teste de invasao de papel no runbook e

@@ -22,7 +22,22 @@ Leia antes de qualquer chamada Figma:
 - [Modelo de clusters](../../../docs/modelo-clusters.md)
 
 Leia tambem o catalogo, o mapa e o manual real de cada cluster envolvido.
-Se faltar documento ou referencia, informe todos os bloqueios de uma vez.
+Se faltar documento de negocio, nao use conversa ou tela como substituto:
+explique que a proxima rodada e `/consignado-contexto`. Se faltar apenas
+referencia, informe todos os bloqueios de uma vez.
+
+## Recuperar contexto no chat novo
+
+Antes de inventariar, procure os documentos da etapa que o designer
+citou. Recupere objetivo, limite, modalidade, casos de uso, clusters e
+regras locais. Faca uma checagem simples: catalogo existe, mapa existe,
+manuais dos clusters do recorte existem e nenhum `[CONFIRMAR]` bloqueia
+a pergunta atual. Explique em linguagem comum o que encontrou e peca
+somente o recorte ou link que ainda nao estiver claro.
+
+Chat anterior nao e fonte de negocio. Se os documentos existirem, nao
+pergunte novamente como a etapa funciona. Se nao existirem, direcione a
+rodada para `/consignado-contexto`.
 
 ## Comeco da conversa
 
@@ -33,7 +48,9 @@ dado de negocio que ainda nao esta claro. Normalmente isso sera o link da
 pagina da etapa, os clusters a comparar ou a modalidade do fluxo. Nao
 peca catalogo, mapa, topologia e todos os node IDs como se o designer
 precisasse preencher uma ficha. Descubra o que estiver no arquivo e nos
-documentos; so depois consolide bloqueios reais.
+documentos; so depois consolide bloqueios reais. A ausencia de manual
+nao autoriza capturar regra nesta mesma rodada: encaminhe o designer ao
+modo de contexto guiado.
 
 ## Sequencia obrigatoria
 

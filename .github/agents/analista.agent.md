@@ -30,6 +30,7 @@ Especializador, sem misturar analise com montagem.
 Carregue antes de usar Figma:
 
 - [Analise de etapa](../skills/consignado-analise/SKILL.md)
+- [Contexto guiado](../skills/consignado-contexto/SKILL.md)
 - [Reconstrucao Figma](../skills/figma-reconstrucao/SKILL.md)
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 
@@ -40,10 +41,27 @@ faca somente a proxima pergunta que destrava a analise. Explique que a
 entrega sera uma proposta para aprovacao humana. Nao comece por
 ferramentas, IDs, scripts ou uma lista de campos a preencher.
 
+Em todo chat novo, execute a abertura de conversa do contrato antes de
+escolher o modo. Recupere catalogo, mapa e manuais existentes. Use
+`/consignado-contexto` apenas quando essa verificacao mostrar que os
+documentos ainda nao existem; nao peca que o designer reapresente uma
+etapa ja documentada.
+
+## Modo inicial: contexto guiado
+
+Quando o designer chegar com referencias, mas sem os manuais, comece por
+`/consignado-contexto`. Esse modo conduz uma conversa simples, le Figma
+somente para entender o caminho e transforma apenas as afirmacoes do
+designer em um rascunho curto de catalogo, manual e mapa. So depois de
+uma aprovacao humana explicita pode escrever esses documentos. Nao cria,
+altera ou infere regra no Figma. Depois do registro, encerra e orienta o
+designer a iniciar `/consignado-analise` em uma nova rodada.
+
 ## Trabalho normal: somente leitura
 
 Receba a etapa, os clusters, os casos de uso, a pagina Figma e os
-documentos de negocio. Execute, nesta ordem e na mesma conversa:
+documentos de negocio ja existentes. Execute, nesta ordem e na mesma
+conversa:
 
 1. inventario de telas, casos e prototipos;
 2. comparacao de fatos e regras documentadas;

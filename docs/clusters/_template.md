@@ -22,10 +22,12 @@ uso e template selecionado pertencem ao mapa de fluxo.
 
 ## Regras locais por etapa
 
-Formato: voce preenche somente (1) o que e verdade neste convenio e
-(2) a origem. O Analista propoe o mecanismo olhando as telas e a
-regra. Nao descreva texto, item de tela, visibilidade, property ou
-template neste manual.
+Formato: voce explica em linguagem comum somente (1) o que e verdade
+neste convenio e (2) a origem, se souber. No modo
+`/consignado-contexto`, o Analista devolve este texto como rascunho para
+sua aprovacao e o registra. Depois, ele propoe o mecanismo olhando as
+telas e a regra. Nao descreva texto, item de tela, visibilidade,
+property ou template neste manual.
 
 ### R1. <titulo curto>
 - Etapa: `<slug>`

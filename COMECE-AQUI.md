@@ -33,22 +33,28 @@ Cada passo protege o seguinte. Nao pule.
 
 ### Passo 1 — Ambiente. ~1h
 
-1. Baixar este repo e abrir a pasta no VS Code.
-2. O servidor Figma ja esta declarado em `.vscode/mcp.json`. Rode
-   `MCP: List Servers`, inicie `figma` e autentique com a conta Figma
-   do Itau quando abrir o navegador. Em VS Code antigo que nao le o
-   arquivo, use `MCP: Add Server` > HTTP >
-   `https://mcp.figma.com/mcp` > id `figma`.
-3. Rode `Chat: Open Customizations` e confira os tres agentes: analista,
-   montador e validador. Em Chat Diagnostics, nao pode haver erro de
-   agente ou skill.
-4. Em Configure Tools, confirme que o MCP Figma esta visivel. Mantenha
-   a permissao em `Ask` durante os testes.
-5. Teste de vida: "liste as bibliotecas conectadas neste arquivo Figma",
+1. Baixar este repo e abrir a pasta no cliente que voce vai usar.
+2. No **GitHub Copilot App**, o servidor ja esta declarado em
+   `.github/mcp.json`. Abra o Figma Desktop, entre em Dev Mode, habilite
+   o servidor MCP e mantenha o arquivo Figma aberto. O App o conecta por
+   SSE local em `http://127.0.0.1:3845/sse`, sem login OAuth.
+3. No **VS Code**, permanece a configuracao remota em `.vscode/mcp.json`.
+   Rode `MCP: List Servers`, inicie `figma` e autentique quando o navegador
+   abrir. Em VS Code antigo que nao le o arquivo, use `MCP: Add Server` >
+   HTTP > `https://mcp.figma.com/mcp` > id `figma`.
+4. Atualize a lista de MCPs no cliente e confirme que `figma` aparece.
+   No Copilot App, aceite a confianca do repositorio quando ele perguntar.
+   Mantenha a permissao em `Ask` durante os testes.
+5. Confira os tres agentes: analista, montador e validador. Em Chat
+   Diagnostics, quando existir, nao pode haver erro de agente ou skill.
+6. Teste de vida: "liste as bibliotecas conectadas neste arquivo Figma",
    passando o link de um arquivo do consignado. Se responder, conectou.
 
-Se travar: o seat do Figma precisa ser Dev ou Full. View/Collab tem
-limite de 6 chamadas por MES, inviavel. Resolva isso antes de tudo.
+Se travar no Copilot App: confirme que o Figma Desktop esta aberto, que
+o servidor MCP foi habilitado nele e que seu seat e Dev ou Full. O
+servidor desktop exige um plano pago. No VS Code, o servidor remoto
+aceita todos os seats e planos, mas exige HTTP e OAuth. Resolva isso
+antes de tudo.
 
 ### Passo 2 — Bateria de fumaca. ~3h
 

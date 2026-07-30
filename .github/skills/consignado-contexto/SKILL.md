@@ -59,6 +59,30 @@ entendeu e faca somente a proxima pergunta necessaria.
 
 ### 1. Ler o que o Figma prova
 
+Antes de fazer qualquer pergunta de negocio, conclua o inventario da
+pagina. O criterio minimo e uma lista verificavel de todas as secoes
+`_ref-<cluster>` encontradas, com ao menos um caso de uso ou a ausencia
+dele para cada secao. Sem essa lista, o contexto ainda esta incompleto.
+
+#### Quando a leitura vier truncada
+
+Uma mensagem como `Output too large` ou `Saved to: <caminho>` nao e
+evidencia parcial utilizavel. Ela e um bloqueio de inventario.
+
+1. Use a ferramenta `read` para abrir o artefato salvo pelo retorno do
+   Figma e recuperar a estrutura completa da pagina.
+2. A partir da lista completa de secoes, leia cada `_ref-<cluster>` por
+   node ID e inventarie suas telas e reacoes.
+3. Se o artefato nao puder ser lido, faca uma chamada Figma de leitura
+   que enumere secoes pelo nome. Se essa chamada tambem nao estiver
+   disponivel, pare e informe `NAO VERIFICAVEL: nao foi possivel listar
+   todas as secoes da pagina`.
+
+Nunca conclua a pagina pela previa, nunca tente node IDs vizinhos e
+nunca afirme que uma secao nao existe sem ter enumerado a pagina
+completa. O parametro `m=dev` no link Figma nao invalida a leitura:
+ele apenas abre o mesmo arquivo em Dev Mode.
+
 Inventarie, sem interpretar regra:
 
 - secoes `_ref-<cluster>`;

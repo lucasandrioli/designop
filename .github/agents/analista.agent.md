@@ -5,6 +5,7 @@ target: vscode
 user-invocable: true
 disable-model-invocation: true
 tools:
+  - read
   - search/codebase
   - search/usages
   - edit
@@ -33,6 +34,12 @@ Carregue antes de usar Figma:
 - [Contexto guiado](../skills/consignado-contexto/SKILL.md)
 - [Reconstrucao Figma](../skills/figma-reconstrucao/SKILL.md)
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
+
+Quando o Figma devolver uma leitura truncada, use a ferramenta `read`
+para abrir o artefato temporario indicado pelo proprio retorno. Uma
+pre-visualizacao truncada nunca e inventario suficiente. Se o artefato
+nao estiver acessivel, pare e diga que o inventario esta incompleto;
+nunca tente adivinhar node IDs por proximidade numerica.
 
 Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Abra a
 rodada como uma conversa de trabalho: situe a etapa, aproveite o

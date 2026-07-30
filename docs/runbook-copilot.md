@@ -22,6 +22,12 @@ Se os manuais ainda nao existirem, comecar pelo contexto guiado e nao
 por uma analise incompleta. Anote etapa, clusters, pagina, secoes
 `_ref-*` e casos de uso antes da rodada.
 
+Se uma leitura Figma vier marcada como truncada, o Analista precisa ler
+o artefato temporario indicado pelo retorno antes de concluir qualquer
+inventario. Resultado esperado: ele lista todas as secoes `_ref-*` e
+so depois entra na conversa de negocio. Resultado reprovado: resumir a
+previa, supor que uma secao nao existe ou tentar node IDs vizinhos.
+
 ## Teste de limite de papel
 
 | Agente ativo | Pedido de controle | Resultado esperado |

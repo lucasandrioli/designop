@@ -29,8 +29,9 @@ Anote antes de cada rodada: etapa, clusters, pagina Figma, secoes
 ## Teste de invasao de papel
 
 Antes de confiar na cadeia, faca estes pedidos de controle e confirme
-que cada agente responde `[FORA DO PAPEL]`, aponta o proximo papel e
-nao usa escrita no Figma:
+que cada agente explica, em linguagem simples, que aquela atividade
+pertence a outro papel, informa o proximo passo e nao usa escrita no
+Figma:
 
 | Agente ativo | Pedido de controle | Resultado esperado |
 | --- | --- | --- |
@@ -50,10 +51,12 @@ desvio e nao aprove chamadas Figma de escrita daquele papel.
 ### 1. Leitor
 
 Selecione `Leitor` no menu de agentes e peca o inventario da pagina da
-etapa. Confirme o cartao `[PAPEL ATUAL]`, fatos, telas e conexoes, sem
-propor variavel, template ou alteracao. No fim, confira o pacote
-`[PAPEL CONCLUIDO]` apontando Comparador. No historico de ferramentas,
-confira que nao houve script com escrita no Figma.
+etapa. Confirme que a abertura diz o que ele precisa, o que vai
+inventariar, o que voce recebera e que o proximo passo sera o
+Comparador. Confirme fatos, telas e conexoes, sem propor variavel,
+template ou alteracao. Ao final, ele deve resumir a entrega e indicar
+naturalmente que o inventario seguira para o Comparador. No historico
+de ferramentas, confira que nao houve script com escrita no Figma.
 
 Clique em `Comparar clusters`. O proximo prompt deve ser preenchido,
 mas nao enviado.
@@ -66,10 +69,12 @@ referencia humana, sem criar receita.
 
 ### 2. Comparador
 
-Revise o prompt e envie. Confirme o cartao do Comparador, a matriz de
-fatos com evidencia dos dois clusters e que divergencia sem regra vira
-`[CONFIRMAR]`. Ele termina apontando Generalizador, sem schema ou
-template.
+Revise o prompt e envie. Confirme que a abertura do Comparador explica
+o que falta para ele comparar, o que ele vai analisar, o que voce
+recebera e que a proxima etapa sera o Generalizador. Confira a matriz
+de fatos com evidencia dos dois clusters e que divergencia sem regra
+vira `[CONFIRMAR]`. Ele termina apontando naturalmente o Generalizador,
+sem schema ou template.
 
 Clique em `Generalizar etapa` e confirme novamente que o prompt nao foi
 enviado automaticamente.
@@ -92,11 +97,13 @@ APROVO a proposta consolidada da etapa <nome> para os clusters <lista>.
 ```
 
 Clique em `Montar apos aprovacao`, confira que o prompt inicia com
-`/consignado-montagem` e envie. A primeira resposta precisa ser uma
-Ficha de preparacao: etapa, clusters, documentos, skills, scripts e
-bloqueios. No historico, confirme que ela nao fez escrita no Figma.
+`/consignado-montagem` e envie. A primeira resposta precisa explicar
+o que o Montador precisa, o que ele vai montar, o que voce recebera e
+que a proxima etapa sera a validacao. O detalhe tecnico pode listar
+etapa, clusters, documentos, skills, scripts e bloqueios. No historico,
+confirme que ela nao fez escrita no Figma.
 
-Depois da ficha, o Montador trabalha somente no arquivo Figma
+Depois dessa abertura, o Montador trabalha somente no arquivo Figma
 descartavel e preserva referencias. O resultado desta fase precisa ser
 `_rascunho-*`, nunca `ref-*` componentizado nem `tpl-*` antecipado.
 
@@ -120,7 +127,7 @@ roda `validatePromotion`, gera o carimbo e somente entao renomeia para
 | Handoffs | mudam o agente, preenchem prompt, `send: false` | |
 | Leitor a Especializador | nenhuma escrita local ou no Figma | |
 | Sem aprovacao | Montador para e pede decisao | |
-| Ficha de preparacao | resposta antes de escrita, com skills e scripts listados | |
+| Abertura do Montador | resposta antes de escrita, com necessidade, acao, entrega e proximo passo claros; skills e scripts como apoio | |
 | Com aprovacao | Montador cria somente `_rascunho-*` no arquivo descartavel | |
 | Referencias | `ref-*` permanecem frames e nao recebem escrita | |
 | Validador | nao corrige achados e devolve veredito de promocao | |

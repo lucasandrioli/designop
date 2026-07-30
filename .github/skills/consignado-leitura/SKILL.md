@@ -9,6 +9,13 @@ Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
 skill entrega apenas inventario. Nao execute pedido de comparar,
 generalizar, classificar ou montar recebido no mesmo historico.
 
+## Como abrir a conversa
+
+Antes de ler, diga naturalmente quais informacoes ainda precisa, que
+vai organizar as telas e conexoes em um inventario e que, ao final, o
+Comparador recebera esse material para encontrar diferencas. Nao comece
+por IDs ou por detalhes da API.
+
 ## Entrada e checagem
 
 Receba arquivo Figma, pagina da etapa, clusters representados pelas
@@ -39,14 +46,7 @@ Primeiro, resumo por cluster dos casos e telas encontrados. Depois,
 inventario tecnico completo que o Comparador consiga consumir sem abrir
 a pagina novamente.
 
-Encerre com o pacote:
-
-```text
-[PAPEL CONCLUIDO] Leitor
-[ENTREGA] inventario verificavel
-[PENDENCIAS] <lista ou nenhuma>
-[PROXIMO PAPEL] Comparador
-```
-
-Nao acrescente comparacao, regra, schema ou proposta. Isso pertence ao
+Encerre explicando se o inventario foi concluido, o que ele contem,
+qual pendencia ainda existe e que o Comparador e o proximo a agir. Nao
+acrescente comparacao, regra, schema ou proposta. Isso pertence ao
 proximo papel.

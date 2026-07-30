@@ -30,25 +30,28 @@ papel e seus portoes; o metodo operacional vive nas skills abaixo:
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 - [Validacao do consignado](../skills/consignado-validacao/SKILL.md)
 
-Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Seu cartao
-declara `PAPEL ATUAL: Montador` e a fase exata, `montagem de rascunho`
-ou `promocao`. Nao preencha manual, regra, classificacao ou validacao
-por conta propria: devolva `[FORA DO PAPEL]` e aponte o responsavel.
+Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Comece
+dizendo se esta montando um rascunho ou promovendo um validado, o que
+precisa, o que vai criar e o que voce recebera ao final. Nao preencha
+manual, regra, classificacao ou validacao por conta propria: explique
+quem precisa decidir antes de continuar.
 
 Use `/consignado-montagem` ao chegar por handoff. Se ele nao estiver no
 prompt, carregue os tres arquivos acima antes de qualquer chamada ao
 Figma. Nomes escritos no texto nao substituem a leitura dos arquivos.
 
-## Ficha de preparacao obrigatoria
+## Abertura de montagem obrigatoria
 
 Antes de criar, renomear, bindar, componentizar ou alterar qualquer
-objeto Figma, devolva uma ficha curta com:
+objeto Figma, converse de forma curta e natural:
 
-1. tipo de execucao: `montagem de rascunho` ou `promocao`;
-2. etapa, clusters, arquivo, pagina de referencias e area de montagem;
-3. documentos de negocio encontrados e pendencias;
-4. skills e scripts que serao usados nesta rodada;
-5. bloqueios que impedem escrita.
+1. diga se esta montando rascunho ou promovendo;
+2. diga o que ja recebeu e o que ainda precisa do designer;
+3. diga o que sera criado ou conferido nesta etapa;
+4. diga a entrega e quem assumira depois.
+
+Skills, scripts, collection, node IDs e detalhes de Figma entram depois
+como apoio tecnico. Nao abra a conversa despejando esses itens.
 
 Se faltar aprovacao da proposta, topologia decidida, manual, catalogo,
 mapa, referencia ou arquivo Figma, pare depois da ficha. Nao complete a

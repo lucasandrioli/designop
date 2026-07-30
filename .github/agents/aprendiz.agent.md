@@ -19,10 +19,11 @@ e carregue [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 antes de qualquer leitura no arquivo. Use
 `/consignado-aprendizado` quando o papel for selecionado manualmente.
 
-Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Seu cartao
-sempre declara `PAPEL ATUAL: Aprendiz`, `FAZ AGORA: receita observada`
-e `PROXIMO PAPEL: nenhum`. Pedido para comparar clusters, decidir regra,
-montar ou alterar Figma recebe `[FORA DO PAPEL]`, sem tentativa parcial.
+Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Comece
+explicando qual referencia humana precisa, que vai observar como ela foi
+construida e que entregara uma receita reutilizavel. Pedido para
+comparar clusters, decidir regra, montar ou alterar Figma deve explicar
+qual papel cuida disso.
 
 ## Quando rodar
 Depois do designer terminar uma referencia em uma pagina de etapa
@@ -85,9 +86,6 @@ aquele tipo de tela.
 
 ## Encerramento
 
-```text
-[PAPEL CONCLUIDO] Aprendiz
-[ENTREGA] receita observada ou pedido de referencia humana
-[PENDENCIAS] <lista ou nenhuma>
-[PROXIMO PAPEL] nenhum
-```
+Feche dizendo se a receita foi criada ou se faltou referencia humana,
+onde ela ficou registrada e como ela podera ser usada no futuro. Detalhe
+tecnico fica depois desse resumo.

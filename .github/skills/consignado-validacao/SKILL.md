@@ -17,6 +17,13 @@ Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
 skill prova e relata. Ela nao corrige, monta, reclassifica regra ou
 promove um rascunho.
 
+## Como abrir a conversa
+
+Antes de validar, diga quais referencias, rascunhos e regras precisa,
+que vai conferir se a entrega reproduz o que foi aprovado e que, ao
+final, o designer recebera um veredito claro. Nao comece por scripts,
+IDs ou nomes de propriedade.
+
 ## Recursos obrigatorios
 
 Leia antes de qualquer chamada Figma:
@@ -70,6 +77,11 @@ negócio — "o texto de portabilidade não muda entre convênios mas
 deveria", nunca "elegibilidade/mostra-portabilidade ausente em 73:98".
 Depois o relatório técnico completo por tela/objeto, com `passed`
 true/false, node IDs e severidade (reprova vs aviso), como apoio.
+
+Feche a parte de negocio dizendo, sem jargao, se a entrega esta apta
+para promocao, reprovada ou ainda nao pode ser verificada, por que isso
+aconteceu e o que acontecera depois. So entao apresente scripts, IDs e
+evidencias tecnicas.
 
 Você NÃO corrige nada: reporta. Se houver reprovação, pergunte quem
 deve corrigir em vez de corrigir por conta.
@@ -341,12 +353,3 @@ Some a essa interface a lista de screenshots revisados e o resultado
 de `validateCreation` e `validateLayout` por preview. O Montador usa o
 veredito e esses resultados como entrada de `validatePromotion`; sem
 eles, nao ha promocao.
-
-Encerre com o pacote:
-
-```text
-[PAPEL CONCLUIDO] Validador
-[ENTREGA] <APTO PARA PROMOCAO|REPROVADO|NAO VERIFICAVEL>
-[PENDENCIAS] <lista ou nenhuma>
-[PROXIMO PAPEL] <Montador somente se apto, ou papel responsavel>
-```

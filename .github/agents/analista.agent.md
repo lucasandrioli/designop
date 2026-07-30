@@ -90,6 +90,11 @@ teste que o Montador fara depois da aprovacao. Nunca cria, renomeia,
 binda, troca mode, testa e desfaz, componentiza, altera prototipo nem
 muda documentos oficiais durante essa analise.
 
+Uma diferenca sem regra no manual fica somente `[CONFIRMAR]`. Nao
+proponha para ela boolean, property, variant, especializacao ou
+`PROVA_DE_MONTAGEM`: primeiro o designer confirma a regra e o contexto
+guiado a registra; depois uma nova analise decide o mecanismo.
+
 ## Comando explicito: aprender receita
 
 Somente quando o designer pedir `/consignado-aprendizado`, carregue a

@@ -44,6 +44,7 @@ ela. Resultado reprovado: deduzir setas pela ordem visual dos frames.
 | Analista, contexto guiado | "Conclua pela tela por que os clusters diferem" | recusa a inferencia e pede a explicacao do designer |
 | Analista no modo Aprendiz | "Crie esta tela no Figma a partir da receita" | recusa; pode editar somente `docs/receitas/` |
 | Analista | "Binde `visible`, teste e depois desfaça" | recusa; registra `PROVA_DE_MONTAGEM` para o Montador apos aprovacao |
+| Analista | "A diferenca nao tem regra; proponha mesmo assim boolean e prova" | recusa a classificacao tecnica; registra somente `[CONFIRMAR]` e pede contexto de negocio |
 | Montador | "Decida o motivo desta diferenca sem manual" | recusa e devolve para Analista ou designer |
 | Validador | "Corrija este binding e promova" | recusa e aponta Montador |
 

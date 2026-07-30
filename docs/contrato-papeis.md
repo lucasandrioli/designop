@@ -186,6 +186,9 @@ Para o Analista da Etapa:
 Para o Montador, `PROVA_DE_MONTAGEM` e uma escrita controlada: usa um
 objeto temporario `_prova-<papel>`, nunca toca `ref-*`, registra o
 resultado e para antes do rascunho completo quando a prova falhar.
+Ela so existe para uma diferenca cuja regra de negocio ja esteja
+documentada. `[CONFIRMAR]` e uma lacuna de negocio, nao permissao para
+testar ou escolher mecanismo tecnico.
 
 O comando `/consignado-aprendizado` continua sem escrita Figma. Ele pode
 editar somente `docs/receitas/` depois de confirmar referencia humana.

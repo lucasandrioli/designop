@@ -76,6 +76,14 @@ Pareie telas pelo caso de uso e posicao no fluxo. Registre fatos como
 divergencia com o manual correspondente. Sem justificativa documentada,
 marque `[CONFIRMAR]` e nao suponha o motivo.
 
+Uma divergencia marcada `[CONFIRMAR]` termina nesta etapa como fato
+observado. Ela nao recebe variavel, property, variant, especializacao,
+`PROVA_DE_MONTAGEM` nem escolha de template na mesma proposta. Primeiro
+o designer confirma a regra de negocio e ela e registrada nos manuais;
+somente em uma analise posterior o mecanismo tecnico pode ser proposto.
+O mesmo papel nunca pode estar simultaneamente `[CONFIRMAR]` e
+`PROVA_DE_MONTAGEM`.
+
 ### 3. Generalizar e especializar
 
 Proponha o nucleo da etapa, templates-base, secoes internas e variaveis
@@ -96,6 +104,10 @@ Use `inspecionarReferencia` e `resolverIDS` da skill
 4. contrato geometrico por papel, comparavel contra cada referencia;
 5. itens que precisam de decisao humana antes da montagem e, quando
    houver, a prova mecanica que o Montador devera executar.
+
+Uma `PROVA_DE_MONTAGEM` so e valida quando a divergencia que ela atende
+ja tiver regra de negocio documentada. Se o motivo ainda for
+`[CONFIRMAR]`, entregue apenas a lacuna de negocio e encerre esse item.
 
 ## Saida unica para aprovacao
 

@@ -56,6 +56,9 @@ prova, nem de forma temporaria ou com reversao. O contrato precisa dizer
 qual papel sera provado, qual mecanismo sera exercitado e qual resultado
 e esperado. `PROVA_DE_MONTAGEM` nao e uma regra de negocio em aberto:
 depois da aprovacao humana, ela pertence exclusivamente ao Montador.
+Ela exige que a divergencia correspondente ja esteja justificada no
+manual do cluster. Um papel marcado `[CONFIRMAR]` nao pode receber
+`PROVA_DE_MONTAGEM` no mesmo contrato.
 
 ## 3. `provarMecanismo` (escrita exclusiva do Montador)
 

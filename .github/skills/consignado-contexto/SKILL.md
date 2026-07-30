@@ -14,6 +14,9 @@ aprovados sao a verdade de negocio.
 
 Esta nao e uma analise de template. Nao propoe variavel, property,
 variant, especializacao, arvore-alvo, componente IDS ou montagem.
+Tambem nao escolhe `padrao` ou `especializacao:<id>` no mapa: essa
+classificacao pertence a `/consignado-analise`, depois do contexto
+registrado e aprovado.
 
 Nao use esta skill apenas porque a conversa e nova. Primeiro procure o
 catalogo, o mapa e os manuais da etapa citada. Se eles existirem, a
@@ -30,6 +33,8 @@ guiado e somente a porta para uma etapa ainda nao documentada.
   explicita, nao edita arquivo algum.
 - Depois da aprovacao, pode escrever somente catalogo de etapa, manuais
   de cluster e mapa de fluxo. Nao cria, edita ou renomeia nada no Figma.
+- Nao cria regra local de futuro, como "pode mudar depois". O manual
+  registra somente a verdade atual; o que nao se sabe fica `[CONFIRMAR]`.
 - Ao terminar o registro, encerra esta rodada. A analise comeca depois,
   em `/consignado-analise`.
 
@@ -93,18 +98,40 @@ Inventarie, sem interpretar regra:
 
 Rotule esse material como `Fato observado no Figma`.
 
+#### Cobertura obrigatoria da topologia
+
+Para cada tela de referencia com acao navegavel, registre pelo menos:
+
+| Origem | Acao observada | Destino | Tipo de caminho | Fonte |
+| --- | --- | --- | --- | --- |
+| <tela> | <texto ou nome da acao> | <tela, handoff ou [VERIFICAR COM DESIGNER]> | <principal, opcional, retorno ou excecao> | <prototipo ou designer> |
+
+Em telas com duas ou mais acoes, inventarie cada saida. Classifique o
+caminho direto, a ajuda opcional, o retorno e a excecao sem achatar tudo
+em uma sequencia linear. Registre tambem onde os caminhos se reencontram,
+quando houver.
+
+Se o MCP nao expuser uma reacao ou seu destino, nao desenhe essa seta
+como fato. Pergunte ao designer sobre aquele caminho e use a fonte
+`confirmado pelo designer nesta conversa`. Sem essa resposta, mantenha
+`[VERIFICAR COM DESIGNER]` no inventario e no mapa. Handoff e fronteira
+sao eventos da jornada, nao telas que o agente possa inventar no Figma.
+
 ### 2. Capturar o que so o designer sabe
 
 Conduza uma pergunta de cada vez. Prioridade:
 
 1. etapa, objetivo, inicio e fim;
-2. modalidade e caso de uso do fluxo;
+2. modalidades explicitamente cobertas e caso de uso do fluxo;
 3. quais clusters participam;
 4. regra que explica cada diferenca relevante;
 5. origem conhecida da regra, quando houver.
 
 Quando o designer nao souber, use `[CONFIRMAR]`. Nao complete com uma
 suposicao baseada no nome de tela, no texto ou no numero de passos.
+Nunca use `ambas` como modalidade: liste cada modalidade conhecida. Quando
+a mesma etapa for chamada mais de uma vez na jornada, registre cada chamada
+e seu gatilho no mapa, sem duplicar a definicao da etapa.
 
 ### 3. Mostrar rascunho para aprovacao
 
@@ -117,7 +144,7 @@ Entendi assim:
 
 - Etapa: <nome e objetivo>.
 - Limite: <onde comeca e termina>.
-- Modalidade: <valor ou [CONFIRMAR]>.
+- Modalidades: <lista explicita ou [CONFIRMAR]>.
 - <cluster A>: <regra dita pelo designer>.
 - <cluster B>: <regra dita pelo designer>.
 ```
@@ -134,17 +161,26 @@ Aprovacao precisa ser clara, por exemplo:
 APROVO o contexto e o texto dos manuais da etapa <etapa>.
 ```
 
-Depois dela, crie ou atualize:
+Depois dela, crie ou atualize somente:
 
 1. `docs/etapas/<etapa>.md`, com objetivo, limite e regras
    compartilhadas que o designer aprovou;
 2. `docs/clusters/<cluster>.md`, com modalidades ativas, presenca da
    etapa e regras locais aprovadas. Nao transcreva interface;
-3. `docs/mapa-fluxo-<escopo>.md`, com os caminhos e presencas que o
-   prototipo mostrou, apontando regras pelo identificador do manual.
+3. `docs/mapa-fluxo-<escopo>.md`, com chamadas, caminhos, handoffs,
+   fronteiras e presencas da etapa, apontando regras pelo identificador
+   do manual.
 
-Regra aprovada pelo designer recebe origem informada por ele. Se a
-origem nao foi dada, escreva `Origem: [CONFIRMAR]`, nao invente uma.
+O registro de contexto pode conter apenas: objetivo, limite, regras
+compartilhadas, chamadas conhecidas da etapa, regras locais, inventario,
+topologia, handoffs e fronteiras. Nao inclua `tpl-*`, IDS, variaveis,
+properties, variants, especializacoes ou contrato tecnico.
+
+Regra aprovada pelo designer recebe `Origem: informado pelo designer
+nesta conversa`, exceto quando ele nomear explicitamente uma fonte como
+convenio, regulacao ou decisao de produto. Se a origem nao foi dada e a
+regra nao foi afirmada pelo designer, escreva `Origem: [CONFIRMAR]`, nao
+invente uma.
 Fato de prototipo pode registrar a fonte como `referencia Figma`, mas
 nunca como origem de negocio.
 

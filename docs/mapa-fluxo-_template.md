@@ -9,29 +9,43 @@ cluster.
 Renomeie o arquivo para `mapa-fluxo-<escopo>.md`.
 
 ## Escopo
-- Modalidade: <primeira concessao | refinanciamento>
+- Modalidades: <lista explicita ou [CONFIRMAR]>
 - Convenios cobertos: <lista>
 
-## Tabela de composicao
+## Tabela de composicao de contexto
 
-Uma linha por etapa ou tela, uma coluna por convenio. Em cada celula,
-preencha `nao`, `padrao`, `especializacao:<id>` ou `[CONFIRMAR]`.
-`<id>` precisa existir em `docs/etapas/<etapa>.md`.
+Uma linha por etapa, tela, handoff ou fronteira, uma coluna por convenio.
+No contexto guiado, preencha `presente`, `ausente`, `sem diferenca
+registrada` ou `[CONFIRMAR]`. A escolha de template ainda nao existe
+nesta fase.
 
-| # | Etapa / tela | Caso de uso | Nivel | Gatilho | <convenio A> | <convenio B> |
+| # | Elemento | Tipo | Caso de uso | Nivel | Gatilho | <convenio A> | <convenio B> |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | <ex: anuencia/confirmacao> | <caminho feliz> | 1 | n/a | padrao | especializacao:confirmacao-com-matricula |
-| 2 | <ex: detalhe da anuencia> | <caminho feliz> | 2 | <texto real> | padrao | nao |
+| 1 | <ex: anuencia/confirmacao> | etapa ou tela | <caminho feliz> | 1 | n/a | presente | presente |
+| 2 | <ex: handoff/validacao-externa> | handoff | <caminho feliz> | 1 | <acao observada> | [CONFIRMAR] | [CONFIRMAR] |
 
-Nivel 1 = obrigatorio no fluxo. Nivel 2 = tela de apoio, aberta de uma
-etapa de nivel 1. `padrao` seleciona o template-base da etapa. Uma
-especializacao seleciona o template funcional aprovado no catalogo.
+Nivel 1 = caminho principal. Nivel 2 = apoio ou caminho opcional aberto
+por acao observada. Handoff e fronteira registram mudanca de contexto da
+jornada e nao viram template nem tela inventada.
+
+## Selecao tecnica de template (preenchida pelo Analista)
+
+Somente depois de `/consignado-analise` e da aprovacao humana, registre
+o template selecionado para cada tela da etapa. `padrao` seleciona o
+template-base; `especializacao:<id>` exige ID funcional aprovado no
+catalogo. Handoff e fronteira nunca entram nesta tabela.
+
+| Tela da etapa | <convenio A> | <convenio B> | Fonte da decisao |
+| --- | --- | --- | --- |
+| <ex: anuencia/confirmacao> | padrao | especializacao:<id> | proposta aprovada |
 
 ## Grafo por convenio e caso de uso
 
-A tabela compara presenca e selecao. O grafo registra ordem,
-bifurcacao e retorno. Ele e gerado pelo Analista a partir do prototipo,
-nunca desenhado de memoria.
+A tabela de contexto compara presenca. O grafo registra ordem,
+bifurcacao e retorno. Ele e gerado pelo Analista a partir das reacoes do
+prototipo ou de confirmacao explicita do designer, nunca desenhado de
+memoria. Quando a reacao nao estiver exposta, registre
+`[VERIFICAR COM DESIGNER]` em vez de criar uma seta.
 
 ### Notacao fixa
 
@@ -63,7 +77,7 @@ flowchart TD
 
 ## Justificativas das diferencas
 
-Toda diferenca de `nao`, ordem ou especializacao precisa apontar uma
+Toda diferenca de `ausente`, ordem ou selecao tecnica precisa apontar uma
 regra ativa no manual do cluster. Sem regra, use `[CONFIRMAR]`.
 
 | Divergencia | Cluster | Regra que explica |

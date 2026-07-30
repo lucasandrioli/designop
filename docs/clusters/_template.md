@@ -8,7 +8,7 @@ uma etapa existe uma unica vez em `docs/etapas/<etapa>.md`.
 - Cluster: <id, ex: c4>
 - Mode no contexto da etapa: <ex: c4-federais>
 - Orgao/convenio: <nome>
-- Modalidades ativas: <primeira concessao | refinanciamento | ambas>
+- Modalidades ativas: <lista explicita ou [CONFIRMAR]>
 - Mapa de fluxo: `docs/mapa-fluxo-<escopo>.md`
 
 ## Jornada por etapa
@@ -32,10 +32,14 @@ property ou template neste manual.
 ### R1. <titulo curto>
 - Etapa: `<slug>`
 - Regra: <o que e verdade neste convenio>
-- Origem: <convenio | regulacao | decisao de produto | restricao tecnica>
+- Origem: <convenio | regulacao | decisao de produto | restricao tecnica | informado pelo designer nesta conversa | [CONFIRMAR]>
 - Status: [ATIVA | EM REVISAO | REVOGADA em <data>]
 
 ### R2. ...
+
+Registre somente a verdade atual do convenio. Nao acrescente regras
+hipoteticas de futuro; uma regra ainda desconhecida permanece
+`[CONFIRMAR]`.
 
 ## Implementacao aprovada (preenchido pelo Montador)
 

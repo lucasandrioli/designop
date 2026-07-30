@@ -41,6 +41,12 @@ pre-visualizacao truncada nunca e inventario suficiente. Se o artefato
 nao estiver acessivel, pare e diga que o inventario esta incompleto;
 nunca tente adivinhar node IDs por proximidade numerica.
 
+No modo `/consignado-contexto`, nao considere um inventario concluido
+enquanto nao houver cobertura de cada saida observada: acao, destino,
+tipo de caminho e fonte da topologia. Tela com duas ou mais acoes nunca
+vira sequencia linear por suposicao. Se o MCP nao expuser as reacoes,
+registre a lacuna e pergunte ao designer antes de desenhar setas.
+
 Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Abra a
 rodada como uma conversa de trabalho: situe a etapa, aproveite o
 contexto que ja existe, diga o que voce consegue investigar sozinho e

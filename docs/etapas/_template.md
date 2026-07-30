@@ -12,7 +12,7 @@ vivem no mapa de fluxo.
 ## Identificacao
 - Nome da etapa: `<slug, ex: anuencia>`
 - Objetivo: <capacidade entregue ao cliente>
-- Modalidade: <primeira concessao | refin | ambas>
+- Modalidades aplicaveis: <lista explicita ou [CONFIRMAR]>
 - Pagina Figma: `<nome da pagina da etapa>`
 
 ## Informacoes humanas minimas
@@ -23,15 +23,32 @@ rascunho para aprovacao antes de registrar este documento. Nao descreva
 conteudo de tela, textos, campos, botoes, visibilidade ou template.
 Essas evidencias sao extraidas pelos agentes da pagina Figma.>
 
+## Chamadas na jornada
+
+<A mesma etapa pode ser chamada mais de uma vez em momentos diferentes
+da jornada. Registre aqui apenas a regra compartilhada; o mapa de fluxo
+registra cada chamada, seu gatilho e seu caso de uso. Nao duplique a
+etapa para representar recorrencia.>
+
 ## Inventario observado (preenchido pelo Analista)
 
 Uma etapa e um conjunto de telas. O Analista extrai casos, telas,
 prototipos e propriedades observadas da pagina Figma. O designer revisa
 o inventario, mas nao o transcreve manualmente.
 
-| Caso de uso | Nivel | Telas | Ponto de partida no Figma | Status |
-| --- | --- | --- | --- | --- |
-| <ex: caminho feliz> | 1 | <lista em ordem> | <nome real> | [CONFIRMAR] |
+| Caso de uso | Nivel | Passos e fronteiras | Ponto de partida no Figma | Fonte da topologia | Status |
+| --- | --- | --- | --- | --- | --- |
+| <ex: caminho feliz> | 1 | <lista em ordem> | <nome real> | <prototipo, designer ou [VERIFICAR COM DESIGNER]> | [CONFIRMAR] |
+
+Handoff e fronteira sao eventos de jornada, nao telas Figma. Quando uma
+reacao de prototipo nao estiver disponivel, o caminho correspondente fica
+`[VERIFICAR COM DESIGNER]`; ele nunca e inferido pela ordem dos frames.
+
+## Escopo do contexto guiado
+
+No primeiro registro, o documento para aqui. Template, IDS, variaveis,
+properties, variants, especializacoes e contratos tecnicos pertencem a
+`/consignado-analise`, em rodada posterior e somente leitura.
 
 ## Proposta de nucleo reutilizavel (preenchido pelo Analista)
 

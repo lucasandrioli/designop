@@ -146,6 +146,14 @@ Esse registro encerra o modo de contexto. A proxima rodada, agora em
 `/consignado-analise`, e somente leitura e usa esses documentos como a
 fonte oficial. Sem aprovacao, nada e escrito.
 
+O inventario do contexto so termina depois de procurar as reacoes de
+prototipo em cada referencia. Para cada acao navegavel, o Analista
+registra origem, acao, destino, tipo de caminho e fonte. Tela com mais de
+uma acao exige todas as saidas, inclusive ajuda opcional, retorno,
+excecao e reencontro. Se o MCP nao expuser uma reacao, o agente pergunta
+ao designer ou registra `[VERIFICAR COM DESIGNER]`; nunca transforma a
+ordem visual dos frames em seta confirmada.
+
 ## O que cada conversa deve deixar claro
 
 | Papel | Precisa receber | Vai fazer | Ao final, acontece |

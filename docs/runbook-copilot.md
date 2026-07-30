@@ -28,6 +28,13 @@ inventario. Resultado esperado: ele lista todas as secoes `_ref-*` e
 so depois entra na conversa de negocio. Resultado reprovado: resumir a
 previa, supor que uma secao nao existe ou tentar node IDs vizinhos.
 
+Quando uma referencia tiver duas ou mais acoes navegaveis, o Analista
+precisa procurar as reacoes de cada acao antes de desenhar o fluxo.
+Resultado esperado: inventario com origem, acao, destino, tipo de caminho
+e fonte, incluindo bifurcacoes, ajuda opcional e reencontro. Se o MCP nao
+expor a reacao, ele registra `[VERIFICAR COM DESIGNER]` e pergunta sobre
+ela. Resultado reprovado: deduzir setas pela ordem visual dos frames.
+
 ## Teste de limite de papel
 
 | Agente ativo | Pedido de controle | Resultado esperado |

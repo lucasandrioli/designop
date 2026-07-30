@@ -32,24 +32,37 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
    de volta e ler o rotulo interno.
 7. MODES: criar collection de teste com 2 modes; conferir limite de
    modes do plano da org (5 clusters exigem 5+; Enterprise = 40).
-8. VALIDADOR: rodar validateLayout numa tela real existente do
-   consignado; conferir que bounding box e clipsContent se comportam
-   igual ao lab.
-9. SCREENSHOT: testar get_screenshot. Se for bloqueado no ambiente,
+8. RECONSTRUCAO: em um frame descartavel, testar
+   `validateReconstructionContract` com uma instancia IDS correta e
+   depois com um componente destacado, uma ordem de filhos errada e uma
+   caixa deslocada mais de 2 px. Os tres precisam reprovar nos blocos
+   IDS, arvore e geometria, respectivamente.
+9. COMPOSICAO: pesquisar um card real do IDS e conferir properties e
+   slots antes de tentar usa-lo. Sem slot para o conteudo desejado, o
+   resultado esperado e `[CONFIRMAR]` ou `SEM_EQUIVALENTE`, nunca anexar
+   um filho dentro da instancia.
+10. VALIDADOR: rodar validateLayout numa tela real existente do
+    consignado; conferir que bounding box e clipsContent se comportam
+    igual ao lab.
+11. SCREENSHOT: testar get_screenshot. Se for bloqueado no ambiente,
    registrar e definir a revisao visual manual do designer antes de
    promover qualquer rascunho. Validacao matematica sozinha nao libera
    `tpl-*`.
-10. ESCALA: get_metadata numa pagina real do consignado (arquivos
+12. ESCALA: get_metadata numa pagina real do consignado (arquivos
     grandes); observar payload e rate limit.
-11. SKILLS: selecione Montador, dispare `/consignado-montagem` e
+13. SKILLS: selecione Analista, dispare `/consignado-analise` e
+    confirme que ele le sem escrever e entrega uma proposta com
+    arvore-alvo, mapa IDS e contrato geometrico. Em seguida selecione
+    Montador, dispare `/consignado-montagem` e
     confirme que a primeira resposta explica naturalmente o que ele
     precisa, vai fazer, entregara e o proximo passo, sem escrita no
     Figma. No handoff de validacao, confira
     `/consignado-validacao` e confirme que os links para scripts e
-    Plugin API foram carregados antes da validacao.
+    Plugin API e Reconstrucao Figma foram carregados antes da validacao.
 
 Cada item: PASSOU / FALHOU + nota. Item 5 falhou = parar e redesenhar
-o binding antes de seguir. Demais falhas: avaliar contorno.
+o binding antes de seguir. Itens 8 e 9 falhos bloqueiam montagem no IDS
+real. Demais falhas: avaliar contorno.
 
 ## Riscos residuais conhecidos (o que o lab NAO provou)
 - Override de texto bindado em aninhamento profundo do IDS (item 5)

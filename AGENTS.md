@@ -45,25 +45,22 @@ do Figma e a internet fica desligada apos a configuracao.
 - O DESIGNER trabalha uma ETAPA por vez. Na pagina da etapa, constroi
   referencias cruas em uma secao por cluster e liga todas as telas de
   cada caso de uso por prototipo.
-- O LEITOR inventaria fatos da pagina completa da etapa: telas, casos
-  de uso e conexoes. Somente leitura.
-- O COMPARADOR pareia as referencias entre clusters e registra as
-  divergencias, sem inferir a razao. Somente leitura.
-- O GENERALIZADOR identifica o nucleo reutilizavel da etapa, o
-  template-base e os candidatos a variavel. Somente leitura.
-- O ESPECIALIZADOR classifica o que nao cabe no nucleo: variavel,
-  property, variant, mapa de fluxo ou template especializado. Somente
-  leitura.
+- O ANALISTA DA ETAPA le a pagina completa, inventaria, compara,
+  generaliza e classifica em uma unica proposta. Ele tambem propoe a
+  arvore-alvo, o mapa IDS e o contrato geometrico. Somente leitura.
 - O designer APROVA a proposta consolidada. Checkpoint obrigatorio,
   nunca pulado.
-- O agente MONTADOR cria variaveis, bindings, secoes e previews em um
-  `_rascunho-*`, preservando a referencia crua. Ele so promove para
-  `tpl-*` depois do veredito independente e de `validatePromotion`.
-- O agente VALIDADOR roda em todo rascunho: prova estrutura, conteudo,
-  modes, layout e revisao visual, mas nao corrige nem promove.
-- O agente APRENDIZ roda apos cada tela do designer, extraindo receitas
-  para `docs/receitas/`. Nao pule: o conhecimento se perde se as telas
-  passarem sem observacao.
+- O agente MONTADOR cria variaveis, bindings e rascunhos somente na
+  pagina temporaria `_verificacao-<etapa>`. Os previews tambem vivem
+  ali, sem prototipo. A pagina da etapa recebe apenas referencias e,
+  depois da aprovacao, `tpl-*`. `Fluxos` nao faz parte da montagem
+  padrao. Ele so e montado por pedido explicito, apos os templates
+  envolvidos estarem aprovados.
+- O agente VALIDADOR roda em todo rascunho: prova arvore-alvo,
+  geometria, IDS, conteudo, modes, layout e revisao visual, mas nao
+  corrige nem promove.
+- O APRENDIZ e um comando explicito do Analista. Ele observa uma tela
+  humana e pode editar somente `docs/receitas/`.
 
 Definicao de cada um em `.github/agents/`. O metodo detalhado esta nas
 skills em `.github/skills/`.
@@ -76,9 +73,10 @@ responsabilidades do agente anterior ou seguinte. Todo agente segue
 que fara, o que entregara e o proximo passo. Tarefa fora do papel para,
 sem tentativa parcial, mas a explicacao continua natural para o
 designer.
-Os quatro agentes de analise usam Figma somente para leitura. O MCP
-atual mistura leitura e escrita em `use_figma`, portanto `Ask` e a
-recusa semantica de scripts mutadores sao obrigatorios.
+O Analista usa Figma somente para leitura. O MCP atual mistura leitura
+e escrita em `use_figma`, portanto `Ask` e a recusa semantica de
+scripts mutadores sao obrigatorios. O comando de Aprendiz nao muda essa
+regra: sua unica escrita permitida e em `docs/receitas/`.
 
 ## Regras sempre ativas
 
@@ -113,6 +111,11 @@ recusa semantica de scripts mutadores sao obrigatorios.
 - Composicao de fluxo (etapa existe ou nao num convenio) vive no mapa
   de fluxo, nunca em variavel booleana.
 - IDS e fonte unica de componentes: nunca recriar o que existe la.
+- Referencia define aparencia e comportamento, nao a arvore interna que
+  o Montador precisa preservar. O Analista traduz a referencia em um
+  contrato tecnico aprovado: papeis, arvore-alvo, IDS, geometria,
+  conteudo e excecoes. Depois da aprovacao, Montador e Validador seguem
+  esse contrato de forma deterministica.
 - Taxonomia em `docs/estrutura-lib.md`: templates publicados como
   `etapa/tpl-nome`; secoes internas com prefixo `_` (nao publicadas);
   referencias cruas sem barra no nome. O prefixo `tpl-` e CONQUISTADO:
@@ -122,10 +125,14 @@ recusa semantica de scripts mutadores sao obrigatorios.
 
 - Figma: toda escrita via `use_figma` exige a skill `figma-plugin-api`
   carregada antes.
-- Montagem tem dois estados obrigatorios: `ref-*` e fonte humana
-  intocavel; clone em trabalho e `_rascunho-*`; so a promocao aprovada
-  pode criar `etapa/tpl-*`. Nao use `ref-*` para nomear copia ou
-  componente.
+- Montagem tem tres estados obrigatorios: `ref-*` e fonte humana
+  intocavel; `_rascunho-*` construido a partir da arvore-alvo; so a
+  promocao aprovada pode criar `etapa/tpl-*`. Clone so e permitido para
+  asset visual explicitamente aprovado, nunca para iniciar a tela.
+- Rascunhos e previews nunca ficam na pagina da etapa nem em `Fluxos`.
+  Preview e prova temporaria, nao uma segunda versao da jornada. Depois
+  da promocao, o Montador remove os previews daquela rodada e preserva
+  a evidencia no relatorio de validacao.
 - Os scripts em `scripts/` NAO rodam pelo caminho. Nao ha `require` nem
   acesso a disco dentro da Plugin API: leia o arquivo, cole o corpo da
   funcao dentro do script do `use_figma` e chame no fim. Sempre a versao
@@ -148,11 +155,10 @@ recusa semantica de scripts mutadores sao obrigatorios.
 | --- | --- |
 | `COMECE-AQUI.md` | Ponto de entrada. Ordem de instalacao e ciclo de trabalho |
 | `AGENTS.md` | Este arquivo. Regras sempre ativas |
-| `.github/agents/` | Definicao dos 7 agentes |
+| `.github/agents/` | Definicao dos 3 agentes visiveis |
 | `.github/skills/` | Metodo detalhado que os agentes seguem |
-| `.claude/commands/` | Slash commands (so Claude Code) |
 | `docs/` | Doutrina + moldes `_template.md` a preencher |
-| `scripts/` | Validacao de layout e de estrutura |
+| `scripts/` | Validacao de arvore, geometria, IDS, conteudo e layout |
 
 ## Sincronizacao
 

@@ -21,6 +21,8 @@ usem. Voce precisa de:
 7. Arquivo consumidor separado do IDS, bibliotecas IDS habilitadas e
    `docs/topologia-biblioteca.md` decidido. A collection de conteudo e
    seus modes sao criados pelo Montador conforme essa topologia.
+8. Aprovacao humana unica da proposta do Analista: arvore-alvo, mapa
+   IDS, variaveis, geometria e excecoes locais.
 
 Nenhum arquivo de exemplo substitui esses itens.
 
@@ -50,42 +52,51 @@ Anuencia
     Excecao: telas conectadas
   _templates
     resultados aprovados pelo Montador
+
+_verificacao-anuencia
+  _rascunho-anuencia-<tela>
+  preview-<cluster>-<template>
+
+Fluxos (somente quando solicitado depois da aprovacao)
+  jornadas completas feitas com instancias de tpl-*
 ```
 
 As referencias permanecem cruas e intactas. Os prototipos dentro da
-pagina descrevem somente a navegacao interna da etapa. A pagina
-`Fluxos` conecta instancias de templates para mostrar a jornada completa
-de cada cluster.
+pagina descrevem a navegacao interna da etapa e sao a fonte do mapa.
+`_verificacao-anuencia` e uma pagina temporaria do Montador: guarda
+rascunhos e previews sem conexoes, nunca referencias ou templates
+aprovados. A pagina `Fluxos` so e criada ou atualizada depois de um
+pedido explicito, com instancias de templates ja aprovados.
 
 ## Ordem de execucao
 
 ```text
 designer prepara pagina da etapa + documentos minimos
     v
-/leitor: inventario de fatos e grafos
-    v
-/comparador: matriz de divergencias verificaveis
-    v
-/generalizador: nucleo e templates-base propostos
-    v
-/especializador: mecanismos e especializacoes propostos
+/consignado-analise: inventario, matriz, nucleo, mecanismos,
+arvore-alvo, IDS e geometria propostos
     v
 designer aprova a proposta consolidada
     v
 topologia da biblioteca decidida
     v
-/montador: componentes, variaveis, bindings e previews em _rascunho-*
+/montador: registra o contrato aprovado e constroi a arvore-alvo,
+componentes, variaveis, bindings e previews em _verificacao-<etapa>
     v
-/validador: equivalencia, mapa, catalogo, layout e revisao visual
+/validador: contrato, IDS, geometria, equivalencia, mapa, catalogo,
+layout e revisao visual
     v
-/montador: promocao para tpl-* e carimbo final
+/montador: promocao para tpl-*, carimbo final e limpeza dos previews
     v
 publicacao manual da biblioteca
 ```
 
-Os quatro primeiros agentes sao somente leitura. Nenhum resultado deles
-autoriza escrita sozinho. O Montador para se nao houver aprovacao
-explicita do designer.
+`Fluxos` nao entra nessa cadeia automaticamente. Ele e uma operacao
+posterior e explicita, quando os templates de todas as etapas que
+aparecem naquela jornada ja estiverem aprovados.
+
+O Analista e somente leitura. Nenhuma proposta autoriza escrita sozinha.
+O Montador para se nao houver aprovacao explicita do designer.
 
 ## Crescimento
 
@@ -94,6 +105,6 @@ explicita do designer.
   cada etapa. Nunca copie uma etapa para dentro do cluster.
 - Nova etapa: novo catalogo, pagina Figma e primeiro conjunto de
   referencias. Ela so entra em jornadas depois de estar no mapa.
-- Diferenca estrutural: o Especializador propoe um template funcional
+- Diferenca estrutural: o Analista propoe um template funcional
   separado. Ele precisa estar no catalogo da etapa e selecionado pelo
   mapa antes de o Montador construir.

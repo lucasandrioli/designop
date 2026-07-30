@@ -1,32 +1,29 @@
 # Comece aqui
 
-Este repo instala sete agentes que cuidam da parte repetitiva de manter
+Este repo instala tres agentes que cuidam da parte repetitiva de manter
 uma biblioteca de etapas do consignado que se adapta por convenio.
 
 Ele chega **vazio de conteudo e cheio de metodo**. Os manuais de
 convenio, os docs de etapa e o mapa de fluxo comecam em branco, so com
 os moldes (`_template.md`). Isso e proposital: os agentes tem proibicao
 explicita de inventar regra de negocio, e a checagem inicial do
-comparador PARA e pede o que falta em vez de comecar sem.
+Analista PARA e pede o que falta em vez de comecar sem.
 
 O repositorio chega vazio de regras de negocio de proposito. Os agentes
 trabalham somente com o que estiver documentado em `docs/` e marcado
 como verdadeiro pelo time responsavel.
 
-## Os sete agentes
+## Os tres agentes
 
 | Comando | Nome | O que faz |
 | --- | --- | --- |
-| `/leitor` | O Leitor | Inventaria todas as telas, casos de uso e conexoes de uma etapa. Somente leitura |
-| `/comparador` | O Comparador | Pareia as referencias dos clusters e aponta os fatos que divergem. Somente leitura |
-| `/generalizador` | O Generalizador | Propoe o nucleo reutilizavel e o template-base da etapa. Somente leitura |
-| `/especializador` | O Especializador | Classifica as diferencas locais e propoe o mecanismo de cada uma. Somente leitura |
+| `/consignado-analise` | Analista da Etapa | Inventaria, compara e entrega uma unica proposta de arvore-alvo, IDS, variaveis e especializacoes. Somente leitura |
 | `/montador` | O Montador | Transforma a tela aprovada em template que se adapta por convenio |
 | `/validador` | O Revisor | Confere cada entrega: layout quebrado, texto cortado, conteudo faltando |
 
-O setimo agente, o `aprendiz`, roda depois de cada referencia que voce
-desenha e vai anotando como voce constroi, em `docs/receitas/`. Ele nao
-entrega nada hoje; ele acumula para o Bloco 3.
+`/consignado-aprendizado` e um comando opcional do Analista. Ele observa
+uma referencia criada por pessoa designer e escreve somente em
+`docs/receitas/`.
 
 ---
 
@@ -42,10 +39,9 @@ Cada passo protege o seguinte. Nao pule.
    do Itau quando abrir o navegador. Em VS Code antigo que nao le o
    arquivo, use `MCP: Add Server` > HTTP >
    `https://mcp.figma.com/mcp` > id `figma`.
-3. Rode `Chat: Open Customizations` e confira os sete agentes: leitor,
-   comparador, generalizador, especializador, montador, validador e
-   aprendiz. Em Chat Diagnostics, nao pode haver erro de agente ou
-   skill.
+3. Rode `Chat: Open Customizations` e confira os tres agentes: analista,
+   montador e validador. Em Chat Diagnostics, nao pode haver erro de
+   agente ou skill.
 4. Em Configure Tools, confirme que o MCP Figma esta visivel. Mantenha
    a permissao em `Ask` durante os testes.
 5. Teste de vida: "liste as bibliotecas conectadas neste arquivo Figma",
@@ -97,7 +93,9 @@ conhece — e ele vai perguntar, nao adivinhar.
 
 1. Criar o arquivo novo e limpo: "Consignado OP — Lib" (vazio).
 2. Adicionar nele as 4 bibliotecas do IDS (Assets > Libraries).
-3. Criar as paginas: Fluxos e uma por etapa. Exemplo: `Anuencia`.
+3. Criar uma pagina por etapa. Exemplo: `Anuencia`. Nao crie nem peca
+   `Fluxos` nesta preparacao: ele e uma demonstracao posterior da
+   jornada completa, nao a fonte do fluxo da etapa.
 4. Na pagina da etapa, criar uma secao interna por cluster. Cada secao
    recebe todas as referencias cruas daquele cluster: caminho feliz,
    erros e desdobramentos que pertencem a etapa. Instancie componentes
@@ -109,7 +107,7 @@ conhece — e ele vai perguntar, nao adivinhar.
    proprios pontos de partida dentro da pagina da etapa.
 
 O passo 6 nao e opcional e nao e para apresentacao: o prototipo e a
-FONTE do mapa de fluxo. O comparador extrai dele quais telas existem,
+FONTE do mapa de fluxo. O Analista extrai dele quais telas existem,
 em que ordem, o que bifurca e o que volta — e sem isso ele consegue
 dizer o que MUDA dentro de cada tela, mas nao consegue dizer o que
 existe num convenio e nao no outro. E aí que os convenios mais divergem.
@@ -134,40 +132,48 @@ que vai fazer, o que voce recebera e qual sera o proximo passo. Pedido
 fora do papel deve parar e indicar o handoff correto, nunca ser
 resolvido "para ajudar". Veja `docs/contrato-papeis.md`.
 
-1. Selecione `Leitor` no menu de agentes e leia a pagina da etapa X.
-2. Clique no handoff `Comparar clusters`, revise o prompt preenchido e
-   envie manualmente.
-3. Repita com `Generalizar etapa` e `Classificar especializacoes`.
-4. **VOCE REVISA e aprova a proposta consolidada.** Checkpoint
+1. Selecione `Analista da Etapa` e rode `/consignado-analise` para ler
+   a pagina inteira. Ele entrega inventario, matriz, nucleo,
+   classificacao, arvore-alvo, mapa IDS e contrato geometrico em uma
+   unica proposta.
+2. **VOCE REVISA e aprova a proposta consolidada.** Checkpoint
    obrigatorio, nao pule mesmo que pareca obvio. Este e o momento de
-   decidir se uma diferenca e regra real ou descuido de construcao.
-5. Antes de montar pela primeira vez, decida a topologia em
+   decidir se uma diferenca e regra real, qual componente IDS usar e
+   qual geometria precisa ser preservada.
+3. Antes de montar pela primeira vez, decida a topologia em
    `docs/topologia-biblioteca.md`: arquivo unico ou arquivo por etapa.
    O agente nao escolhe isso por voce.
-6. Clique em `Montar apos aprovacao` somente depois de escrever a
+4. Clique em `Montar apos aprovacao` somente depois de escrever a
    aprovacao explicita na conversa. O prompt inicia
    `/consignado-montagem`.
-7. Confira a abertura do Montador. Antes de alterar o Figma, ele deve
+5. Confira a abertura do Montador. Antes de alterar o Figma, ele deve
    dizer o que precisa, o que vai montar, o que voce recebera e o que
    acontecera depois. O detalhe de skills, scripts e bloqueios vem em
    seguida como apoio.
-8. O Montador cria somente `_rascunho-*`: variaveis, bindings, secoes e
-   previews. `ref-*` continua sendo a referencia crua; `tpl-*` ainda
-   nao existe.
-9. Clique em `Validar rascunho`, revise o prompt e envie. O Validador
-   confere layout, conteudo, modes, referencias, mapa e screenshots de
-   todos os convenios. Ele devolve `APTO PARA PROMOCAO` ou `REPROVADO`.
-10. Somente quando estiver apto, clique em `Promover rascunho validado`.
-    O Montador roda o portao final, gera o carimbo e renomeia para
-    `etapa/tpl-*`.
-11. Publicar a lib (acao manual, nao tem API).
+6. O Montador registra o contrato tecnico aprovado no catalogo e cria a
+   pagina temporaria `_verificacao-<etapa>`. Nela ele monta a arvore-alvo
+   aprovada, sem clonar a tela inteira, e gera `_rascunho-*` e previews
+   por cluster. Esses previews nao sao fluxo nem recebem conexoes.
+7. Clique em `Validar rascunho`, revise o prompt e envie. O Validador
+   confere arvore, IDS, geometria, layout, conteudo, modes, referencias,
+   mapa e screenshots de todos os convenios. Ele devolve `APTO PARA
+   PROMOCAO`, `REPROVADO` ou `NAO VERIFICAVEL`.
+8. Somente quando estiver apto, clique em `Promover rascunho validado`.
+    O Montador roda o portao final, gera o carimbo, move o componente
+    para `_templates`, renomeia para `etapa/tpl-*` e remove os previews
+    temporarios daquela rodada.
+9. Quando houver uma jornada inteira aprovada, voce pode pedir
+    separadamente `Montar Fluxos`. O Montador usa somente instancias de
+    `tpl-*` aprovados e o mapa. Isso nao recria os prototipos das
+    referencias.
+10. Publicar a lib (acao manual, nao tem API).
 
 ### Depois: a manutencao, onde o investimento se paga
 
 - Mudou um texto num convenio? Edite a celula na tabela de variaveis do
   Figma. So isso.
 - Entrou convenio novo? Adicione o mode, escreva o manual da jornada,
-  coloque referencias nas paginas das etapas usadas e rode a cadeia de
+  coloque referencias nas paginas das etapas usadas e rode a analise da
   analise. Nao copie uma etapa para dentro do cluster.
 - O IDS mudou? Rode `/validador`: ele varre o impacto em tudo.
 
@@ -181,7 +187,7 @@ resolvido "para ajudar". Veja `docs/contrato-papeis.md`.
 - Nao peca ao agente para criar telas do zero (ainda). Ele nao sabe
   como voce constroi. Isso e o Bloco 3, e depende de `docs/receitas/`
   acumular material via aprendiz.
-- Nao comece com 1 convenio so. Sem comparacao o comparador nao tem o
+- Nao comece com 1 convenio so. Sem comparacao o Analista nao tem o
   que fazer.
 - Nao construa a lib inteira de uma vez. Uma etapa por vez, validando.
 - Nao pule a bateria de fumaca. Serio.
@@ -193,10 +199,9 @@ resolvido "para ajudar". Veja `docs/contrato-papeis.md`.
 | Onde | O que e | Muda no banco? |
 | --- | --- | --- |
 | `AGENTS.md` | Regras sempre ativas, lidas por todo agente | Nao |
-| `.github/agents/` | Definicao dos 7 agentes | Nao |
+| `.github/agents/` | Definicao dos 3 agentes visiveis | Nao |
 | `.github/skills/` | Metodo detalhado que os agentes seguem | Nao |
-| `.claude/commands/` | Os slash commands | Nao |
-| `scripts/validateLayout.js` | Checagem automatica de quebra visual | Nao |
+| `scripts/validateReconstructionContract.js` | Checagem de arvore, geometria e IDS contra o contrato aprovado | Nao |
 | `docs/modelo-clusters.md` | Doutrina: convenio = mode, doutrina de binding | Nao |
 | `docs/estrutura-lib.md` | Nomenclatura, carimbo, o que publica | Nao |
 | `docs/instalacao.md` | O que precisa existir antes de rodar agente | Nao |

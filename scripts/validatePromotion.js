@@ -15,6 +15,7 @@
  *     creationPassed: true,
  *     contentContractPassed: true,
  *     modeBehaviorPassed: true,
+ *     reconstructionContractPassed: true,
  *     layoutPassed: true,
  *     visualReviewPassed: true,
  *   },
@@ -157,6 +158,7 @@ async function validatePromotion(candidateId, opts = {}) {
     'creationPassed',
     'contentContractPassed',
     'modeBehaviorPassed',
+    'reconstructionContractPassed',
     'layoutPassed',
     'visualReviewPassed',
   ]

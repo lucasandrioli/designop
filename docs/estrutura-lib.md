@@ -25,11 +25,13 @@ aqui reflete em todo cluster que a usa, sem editar manual nenhum.
 | Frame de referencia cru | ref-nome-cluster (SEM barra) | ref-simulacao-c1-mg | n/a (nao e componente) |
 | Frame de referencia cru, outra modalidade | ref-nome-modalidade-cluster | ref-simulacao-refin-c1-mg | n/a |
 | Rascunho de montagem | _rascunho-etapa-nome | _rascunho-anuencia-orientacao | NAO (aguarda validacao) |
-| Pagina da lib | uma por etapa + Fluxos | Anuencia | n/a |
+| Preview de validacao | preview-cluster-template | preview-gov-sp-tpl-orientacao | NAO (temporario) |
+| Pagina temporaria de verificacao | _verificacao-etapa | _verificacao-anuencia | n/a |
+| Pagina da biblioteca | uma por etapa + Fluxos posterior | Anuencia | n/a |
 
 Barra (/) em nome de COMPONENTE cria hierarquia no painel de assets e
 e a convencao correta. Barra em nome de FRAME de referencia quebra o
-pareamento do comparador e e proibida. As duas regras coexistem porque
+pareamento do Analista e e proibida. As duas regras coexistem porque
 sao objetos diferentes.
 
 ## Modalidade na nomenclatura (decidido em 2026-07-25)
@@ -58,18 +60,49 @@ Quem instala a lib ve APENAS os templates de tela, organizados por
 etapa. Secoes _prefixadas existem para manutencao granular (editar o
 master da secao propaga aos templates) mas nao aparecem no consumo.
 
-## Pagina da etapa e referencias
+## Tres espacos que nao se misturam
+
+### 1. Pagina da etapa: referencia e biblioteca aprovada
 
 O designer trabalha uma pagina por etapa. Dentro dela, cada secao
 interna `_ref-<cluster>` contem todas as referencias cruas daquele
 cluster para a etapa, agrupadas por caso de uso e conectadas por
-prototipo. A secao `_templates` contem apenas os resultados aprovados.
-Os prototipos locais descrevem a navegacao dentro da etapa; a pagina
-`Fluxos` monta a jornada completa por cluster com instancias dos
-templates.
+prototipo. A secao `_templates` contem somente resultados aprovados.
+Rascunho, preview, screenshot de checagem e fluxo montado sao proibidos
+nesta pagina.
+
+Os prototipos das referencias sao a fonte da navegacao interna da
+etapa. O Analista le esses prototipos para formar e revisar
+o mapa. Eles nao precisam de uma segunda linha de telas para descobrir
+o caminho.
+
+### 2. Pagina temporaria: construcao e verificacao
+
+O Montador cria ou reutiliza `_verificacao-<etapa>`. Nela ficam somente
+`_rascunho-*` e `preview-<cluster>-<template>`. Cada preview serve para
+provar o mode contra uma referencia e nao recebe conexao de prototipo.
+Rascunhos reprovados permanecem ali para correcao; nao se cria outro
+rascunho para a mesma tela. O rascunho e construido da arvore-alvo
+aprovada, nunca por clone da tela de referencia.
+
+Depois de `APTO PARA PROMOCAO`, o componente aprovado sai do rascunho,
+vai para `_templates` e recebe o nome `etapa/tpl-*`. O Montador remove
+os previews da rodada. O relatorio do Validador preserva a evidencia;
+o arquivo da biblioteca nao guarda uma segunda jornada de teste.
+
+### 3. Pagina Fluxos: demonstracao posterior da jornada completa
+
+`Fluxos` e opcional e so existe quando o designer pedir explicitamente
+para montar uma jornada completa. Ela usa apenas instancias de
+templates `tpl-*` ja aprovados e o mapa de fluxo. Nunca recebe
+referencia crua, `_rascunho-*`, preview ou evidencia externa.
+
+Ela nao substitui nem repete o prototipo da pagina da etapa: o
+prototipo explica como aquela etapa funciona; `Fluxos` mostra como
+etapas aprovadas se encadeiam numa jornada maior.
 
 Ao entregar a pagina, o designer declara somente a etapa e quais
-secoes representam cada cluster. O Leitor normaliza o inventario; o
+secoes representam cada cluster. O Analista normaliza o inventario; o
 designer nao precisa memorizar convencoes de camada.
 
 ## O prefixo `tpl-` e CONQUISTADO, nao assumido

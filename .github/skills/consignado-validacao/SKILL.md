@@ -29,9 +29,12 @@ IDs ou nomes de propriedade.
 Leia antes de qualquer chamada Figma:
 
 - [Plugin API do Figma](../figma-plugin-api/SKILL.md)
+- [Reconstrucao Figma](../figma-reconstrucao/SKILL.md)
 - [Validacao estrutural](../../../scripts/validateCreation.js)
+- [Validacao de layout](../../../scripts/validateLayout.js)
 - [Validacao do contrato de conteudo](../../../scripts/validateContentContract.js)
 - [Validacao de comportamento por mode](../../../scripts/validateModeBehavior.js)
+- [Validacao do contrato de reconstrucao](../../../scripts/validateReconstructionContract.js)
 - [Elegibilidade para promocao](../../../scripts/validatePromotion.js)
 - [Taxonomia de nomes e carimbo](../../../docs/estrutura-lib.md)
 
@@ -91,6 +94,22 @@ Siga docs/modelo-clusters.md (clusters como modes).
 
 ## Ordem de validação (após QUALQUER construção de tela)
 
+### 0. Contrato de reconstrucao aprovado
+
+Antes de medir o rascunho, confira que o catalogo da etapa contem o
+contrato tecnico aprovado para aquele template: arvore por papeis, mapa
+IDS, geometria comparavel, conteudo e excecoes. Rode
+`validateReconstructionContract` com o rascunho e cada referencia por
+cluster. Ela devolve tres blocos: `treeIssues`, `geometryIssues` e
+`idsIssues`.
+
+O script valida a arvore nova contra o contrato aprovado, nunca contra a
+hierarquia acidental da referencia. Geometria e comparada de forma
+relativa ao frame raiz, com tolerancia de 2 px salvo decisao diferente
+no contrato. Instancia remota e opaca: valide sua key e properties
+publicas, nao seus filhos. Qualquer bloco dos tres reprovado bloqueia
+promocao.
+
 ### 1. Validação estrutural
 Use scripts/validateCreation.js: nós existem, tipo certo, contagem de
 filhos esperada.
@@ -144,7 +163,7 @@ Verifique também:
 - textos bindados têm textAutoResize compatível (HEIGHT ou
   WIDTH_AND_HEIGHT; nunca NONE/TRUNCATION)
 - todo conteúdo que DEVERIA variar por cluster está bindado em algum
-  dos dois lugares — cruze com a matriz do comparador, se houver
+  dos dois lugares — cruze com a proposta aprovada do Analista
 - rode `validateCreation` informando `contentCollectionId` da collection
   de conteudo. `missingContentBindings` reprova: token visual do IDS nao
   substitui binding de conteudo.
@@ -175,8 +194,11 @@ Compare também a VISIBILIDADE de blocos, não só texto: bloco escondido
 num mode cujo conteúdo aparece na referência é o caso mais comum, e é
 invisível para qualquer checagem de layout.
 
-**Preview só é prova válida se não tiver override em relação ao
-master.** Use `validateModeBehavior` para cada preview do mapa: ele
+**Preview so e prova valida se estiver em `_verificacao-<etapa>` e nao
+tiver override em relacao ao master.** Preview na pagina da etapa ou em
+`Fluxos`, ou preview que tenha reaction de prototipo, reprova a rodada
+por misturar construcao, apresentacao e validacao. Use
+`validateModeBehavior` para cada preview do mapa: ele
 confere o mode explícito somente no wrapper, proíbe mode em qualquer
 descendente, exige a instância do template selecionado sem override
 manual, exige todos e somente os papéis aprovados, compara-os à
@@ -193,13 +215,13 @@ papel que exerce. Isso e permitido pela regra 34 de
 registro com `name` mais outro campo, nem para `name` em no ou instância
 filha: todos esses casos reprovam.
 
-### 4. Screenshot (fallback, se o ambiente permitir)
-get_screenshot por SEÇÃO (não da tela inteira em resolução reduzida),
-procurando texto cortado e sobreposições. Use quando: validateLayout
-passou mas o resultado envolve conteúdo visual que a matemática não
-cobre (imagem esticada, ilustração errada, contraste). Se captura for
-bloqueada no ambiente, registre [VALIDAÇÃO VISUAL PENDENTE] e siga
-com as validações 1-3 como critério de aceite.
+### 4. Screenshot (obrigatorio)
+Obtenha screenshot por secao, sem reduzir a tela inteira, e compare
+referencia, rascunho e cada preview. Use para localizar imagem esticada,
+ilustracao errada, contraste ou bloco visual ausente, que a matematica
+nao cobre. Screenshot nao e o unico criterio: o contrato deterministico
+continua sendo a base do veredito. Se a captura for bloqueada, registre
+`NAO VERIFICAVEL`; validacoes 1-3 nao liberam `tpl-*` sozinhas.
 
 ### 5. Consistência mapa de fluxo <-> arquivo
 - Todo template-base ou especializado selecionado em docs/mapa-fluxo-*.md existe no arquivo da lib
@@ -208,7 +230,7 @@ com as validações 1-3 como critério de aceite.
   `docs/etapas/<etapa>.md`, tem nome funcional e nao contem o nome de
   um cluster. Especializacao ausente no catalogo e REPROVACAO.
 - O GRAFO do mapa ainda bate com o prototipo. Extraia o grafo do
-  prototipo do cluster do mesmo jeito que o comparador faz (Modo
+  prototipo do cluster do mesmo jeito que o Analista faz (Modo
   Fluxos: reactions ON_CLICK/NAVIGATE, resolvendo destinationId para a
   tela de topo) e compare com o bloco mermaid daquele cluster no mapa.
   Reportar como achado, por cluster: aresta no prototipo e nao no mapa,
@@ -307,8 +329,8 @@ conforme?", que e a linguagem de auditoria.
 
 ## Teste de troca de modo (obrigatório para templates com variáveis)
 Para cada tela, primeiro confirme que master e descendentes nao tem
-mode explicito da collection de conteudo. Depois alterne o mode apenas
-no wrapper de preview ou no frame de Fluxos
+mode explicito da collection de conteudo. Durante esta validacao,
+alterna o mode apenas no wrapper de preview em `_verificacao-<etapa>`
 (`setExplicitVariableModeForCollection`, com fontes carregadas antes),
 compare o conteudo com a referencia e rode validateLayout de novo EM
 CADA MODO. Texto que cabe em MG pode estourar em outro cluster.

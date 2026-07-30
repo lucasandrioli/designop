@@ -23,7 +23,7 @@ uso e template selecionado pertencem ao mapa de fluxo.
 ## Regras locais por etapa
 
 Formato: voce preenche somente (1) o que e verdade neste convenio e
-(2) a origem. O Especializador propoe o mecanismo olhando as telas e a
+(2) a origem. O Analista propoe o mecanismo olhando as telas e a
 regra. Nao descreva texto, item de tela, visibilidade, property ou
 template neste manual.
 
@@ -37,7 +37,7 @@ template neste manual.
 
 ## Implementacao aprovada (preenchido pelo Montador)
 
-Esta secao nasce da proposta aprovada do Especializador. Nao preencha
+Esta secao nasce da proposta aprovada do Analista. Nao preencha
 antes da analise.
 
 | Regra | Mecanismo aplicado | Evidencia no Figma |

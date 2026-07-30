@@ -95,8 +95,19 @@ falha silenciosa.
     - **NÓ INTERNO só como fallback**, quando o componente não expõe
       property para aquele conteúdo. Quebra se o DS refatorar por
       dentro. Registrar como ponto frágil. Ver regra 25: em instância
-      REMOTA, nó interno como fallback também pode falhar tecnicamente,
-      não só ser frágil a refatoração.
+    REMOTA, nó interno como fallback também pode falhar tecnicamente,
+    não só ser frágil a refatoração.
+17a. **Visibilidade no nó da instância:** quando um componente remoto
+    não expõe property pública BOOLEAN, é permitido bindar a variável
+    BOOLEAN no próprio nó `INSTANCE`:
+    ```js
+    instancia.setBoundVariable('visible', variavelBoolean)
+    ```
+    Isto não abre nem altera filhos internos da instância. Use apenas
+    para um papel de visibilidade aprovado no contrato e, se o efeito
+    ainda não estiver comprovado naquele arquivo, execute primeiro a
+    `PROVA_DE_MONTAGEM` em `_verificacao-<etapa>`. Nunca faça essa prova
+    em `ref-*` nem no papel do Analista.
 18. **Modes:** `node.setExplicitVariableModeForCollection(collection,
     modeId)` aplica um mode a uma subárvore. É como uma tela troca de
     cluster. O mode propaga por toda a hierarquia: pinar UMA VEZ num

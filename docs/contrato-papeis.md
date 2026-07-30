@@ -178,6 +178,14 @@ Para o Analista da Etapa:
    altere prototipo.
 3. A permissao do VS Code permanece em `Ask`; qualquer pedido de
    escrita Figma deve ser recusado, nao aprovado.
+4. Um experimento que escreve e depois desfaz continua proibido. Se a
+   leitura nao provar um mecanismo, o Analista registra
+   `PROVA_DE_MONTAGEM`; so o Montador pode executa-la, depois da
+   aprovacao humana, dentro de `_verificacao-<etapa>`.
+
+Para o Montador, `PROVA_DE_MONTAGEM` e uma escrita controlada: usa um
+objeto temporario `_prova-<papel>`, nunca toca `ref-*`, registra o
+resultado e para antes do rascunho completo quando a prova falhar.
 
 O comando `/consignado-aprendizado` continua sem escrita Figma. Ele pode
 editar somente `docs/receitas/` depois de confirmar referencia humana.

@@ -85,6 +85,15 @@ o mapa IDS trouxer `[CONFIRMAR]`, se o componente remoto nao expuser a
 property ou slot necessario, ou se faltar excecao aprovada para uma
 secao local.
 
+Quando o contrato trouxer `PROVA_DE_MONTAGEM`, execute primeiro a prova
+isolada em `_prova-<papel>` dentro de `_verificacao-<etapa>`. Ela pode
+testar um binding direto de `visible` no no INSTANCE quando nao houver
+property publica, mas nunca toca filhos internos de instancia remota nem
+referencias. Se o mecanismo falhar, remova a prova temporaria e pare
+antes do rascunho completo. Variaveis da etapa continuam obrigatoriamente
+no namespace `<etapa>/...`; uma variavel generica de teste nao pode virar
+conteudo de producao.
+
 Ao terminar, rode as provas mecanicas exigidas pela skill e entregue ao
 Validador os contratos, previews, referencias, modos e resultados. Nao
 use `tpl-*`, nao publique e nao atualize documentos oficiais nesta fase.

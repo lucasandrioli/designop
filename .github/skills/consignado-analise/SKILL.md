@@ -11,6 +11,12 @@ Esta skill concentra inventario, comparacao, generalizacao e
 especializacao em uma unica conversa. Ela nao monta, valida, promove ou
 edita documentos de negocio.
 
+Mesmo quando uma hipotese tecnica parecer simples, o Analista nao a
+testa no Figma. Criar algo, bindar uma variavel, trocar mode e desfazer
+a mudanca continuam sendo escrita e violam este papel. Quando a leitura
+nao bastar para provar um mecanismo, registre `PROVA_DE_MONTAGEM` para
+o Montador executar depois da aprovacao humana.
+
 ## Recursos obrigatorios
 
 Leia antes de qualquer chamada Figma:
@@ -85,10 +91,11 @@ Use `inspecionarReferencia` e `resolverIDS` da skill
 
 1. arvore-alvo por papeis semanticos, sem copiar a arvore suja;
 2. mapa IDS com componente, property e token, classificados em `EXATO`,
-   `[CONFIRMAR]` ou `SEM_EQUIVALENTE`;
+   `PROVA_DE_MONTAGEM`, `[CONFIRMAR]` ou `SEM_EQUIVALENTE`;
 3. contrato de conteudo, variaveis, especializacoes e excecoes locais;
 4. contrato geometrico por papel, comparavel contra cada referencia;
-5. itens que precisam de decisao humana antes da montagem.
+5. itens que precisam de decisao humana antes da montagem e, quando
+   houver, a prova mecanica que o Montador devera executar.
 
 ## Saida unica para aprovacao
 

@@ -72,8 +72,10 @@ skills em `.github/skills/`.
 
 Trocar de agente no Copilot nao limpa o historico nem concede as
 responsabilidades do agente anterior ou seguinte. Todo agente segue
-`docs/contrato-papeis.md`: declara papel, saida permitida, limites e
-proximo responsavel; tarefa fora do papel para, sem tentativa parcial.
+`docs/contrato-papeis.md`: abre a conversa explicando o que precisa, o
+que fara, o que entregara e o proximo passo. Tarefa fora do papel para,
+sem tentativa parcial, mas a explicacao continua natural para o
+designer.
 Os quatro agentes de analise usam Figma somente para leitura. O MCP
 atual mistura leitura e escrita em `use_figma`, portanto `Ask` e a
 recusa semantica de scripts mutadores sao obrigatorios.

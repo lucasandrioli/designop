@@ -9,6 +9,12 @@ Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
 skill classifica mecanismos, mas nao aprova, constroi nem altera Figma
 ou documentos oficiais.
 
+## Como abrir a conversa
+
+Antes de classificar, diga quais regras e propostas precisa, que vai
+indicar a forma tecnica mais simples para cada diferenca e que, ao
+final, o designer tera uma proposta pronta para aprovar ou devolver.
+
 ## Regra de classificacao
 
 Para cada item fora do nucleo, aplique esta ordem e pare no primeiro
@@ -37,11 +43,6 @@ Entregue a tabela `cluster x etapa x mecanismo`, o diff proposto para o
 mapa e as linhas propostas para o catalogo da etapa. Item sem regra
 documentada fica `[CONFIRMAR]`, sem mecanismo e sem template proposto.
 
-Encerre com o pacote:
-
-```text
-[PAPEL CONCLUIDO] Especializador
-[ENTREGA] proposta consolidada de mecanismos
-[PENDENCIAS] <lista ou nenhuma>
-[PROXIMO PAPEL] checkpoint humano, depois Montador
-```
+Encerre explicando quais mecanismos foram propostos, o que ainda precisa
+de confirmacao e que a proxima acao e a aprovacao humana antes de chamar
+o Montador.

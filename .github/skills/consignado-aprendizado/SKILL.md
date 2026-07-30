@@ -11,6 +11,12 @@ Esta skill e chamada manualmente com `/consignado-aprendizado`. Ela
 acumula como o designer constroi telas, para uso futuro do Bloco 3. Ela
 nao participa da analise de regra de negocio nem da montagem atual.
 
+## Como abrir a conversa
+
+Antes de observar, diga qual referencia humana precisa confirmar, que
+vai registrar como ela foi construida e que, ao final, uma receita sera
+guardada para uso futuro. Nao comece por node IDs ou por termos da API.
+
 ## Recursos obrigatorios
 
 Leia antes de observar ou editar receita:
@@ -28,11 +34,12 @@ Leia antes de observar ou editar receita:
    agente, placeholder, laboratorio ou arquivo de teste nao vira
    receita.
 
-Se faltar a confirmacao humana, pare e devolva:
+Se faltar a confirmacao humana, pare e explique:
 
 ```text
-[BLOQUEIO] A tela nao esta confirmada como referencia humana.
-[PROXIMO PAPEL] Designer
+Ainda preciso confirmar que esta tela foi criada por um designer.
+Sem isso, eu nao vou transforma-la em receita.
+O proximo passo e o designer indicar uma referencia humana.
 ```
 
 ## Observacao permitida
@@ -50,8 +57,8 @@ intencao que pareca plausivel:
 5. Padroes que se repetem em mais de uma referencia humana.
 
 Nao compare clusters, nao deduza regra, nao proponha template e nao
-chame operacao Figma mutadora. Pedido assim recebe `[FORA DO PAPEL]` e
-aponta o agente correto.
+chame operacao Figma mutadora. Pedido assim recebe uma explicacao de
+qual agente cuida disso e do proximo passo correto.
 
 ## Escrita permitida
 
@@ -72,11 +79,6 @@ produzem confianca baixa, nao uma regra para o Montador.
 Primeiro, resumo simples da receita criada ou refinada. Depois, a
 evidencia observada e o caminho do arquivo alterado.
 
-Encerre com:
-
-```text
-[PAPEL CONCLUIDO] Aprendiz
-[ENTREGA] receita observada ou pedido de referencia humana
-[PENDENCIAS] <lista ou nenhuma>
-[PROXIMO PAPEL] nenhum
-```
+Feche dizendo se a receita foi criada ou se faltou referencia humana,
+onde ela ficou registrada e como ela podera ser usada no futuro. O
+detalhe tecnico vem depois desse resumo.

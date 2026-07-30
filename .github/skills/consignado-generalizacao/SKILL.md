@@ -9,6 +9,13 @@ Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
 skill propoe nucleo e candidatos a variavel. Ela nao classifica o
 restante, nao aprova proposta e nao escreve no Figma.
 
+## Como abrir a conversa
+
+Antes de generalizar, diga quais artefatos precisa, que vai identificar
+o que as referencias realmente compartilham e que, ao final, o
+Especializador classificara o que sobrou. Deixe claro que a proposta
+ainda precisa de aprovacao humana.
+
 ## Entrada obrigatoria
 
 Leia o catalogo da etapa, manuais dos clusters, inventario do Leitor e
@@ -34,11 +41,5 @@ Entregue proposta marcada `[PROPOSTA]`: nucleo, templates-base, secoes
 internas, contrato de variaveis e itens pendentes de especializacao. A
 saida nao autoriza escrita: so o checkpoint humano libera o Montador.
 
-Encerre com o pacote:
-
-```text
-[PAPEL CONCLUIDO] Generalizador
-[ENTREGA] proposta de nucleo e candidatos a variavel
-[PENDENCIAS] <lista ou nenhuma>
-[PROXIMO PAPEL] Especializador
-```
+Encerre explicando qual nucleo foi proposto, quais pontos ficaram em
+aberto e que o Especializador e o proximo a classificar as diferencas.

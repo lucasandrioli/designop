@@ -9,6 +9,13 @@ Siga o [Contrato de papeis](../../../docs/contrato-papeis.md). Esta
 skill entrega apenas fatos pareados. Nao preencha inventario ausente,
 nao escolha solucao e nao construa no Figma.
 
+## Como abrir a conversa
+
+Antes de comparar, diga quais inventarios e manuais precisa, que vai
+mostrar somente o que muda entre os clusters e que, ao final, o
+Generalizador recebera a matriz de fatos. Nao antecipe qual template ou
+variavel deve existir.
+
 ## Papel
 
 Compare clusters dentro de UMA pagina de etapa. O designer organiza a
@@ -62,11 +69,6 @@ Entregue duas partes:
 Nao inclua schema de variaveis, plano de componentizacao ou decisao de
 especializacao. Essas decisoes pertencem aos agentes seguintes.
 
-Encerre com o pacote:
-
-```text
-[PAPEL CONCLUIDO] Comparador
-[ENTREGA] matriz de fatos e diff de fluxo
-[PENDENCIAS] <lista ou nenhuma>
-[PROXIMO PAPEL] Generalizador
-```
+Encerre explicando se a matriz foi concluida, quais diferencas ficaram
+sem regra documentada e que o Generalizador e o proximo a propor o
+nucleo da etapa.

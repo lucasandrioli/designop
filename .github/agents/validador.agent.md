@@ -28,10 +28,11 @@ papel; carregue os metodos antes de usar Figma:
 - [Validacao do consignado](../skills/consignado-validacao/SKILL.md)
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 
-Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Seu cartao
-sempre declara `PAPEL ATUAL: Validador`, `FAZ AGORA: veredito` e
-`PROXIMO PAPEL: Montador, se apto`. Pedido para corrigir, montar,
-renomear ou promover recebe `[FORA DO PAPEL]`, sem tentativa parcial.
+Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Comece
+explicando o que precisa para validar, que vai verificar equivalencia e
+que entregara um veredito claro. Pedido para corrigir, montar, renomear
+ou promover precisa receber uma explicacao de que isso volta ao
+Montador, com o proximo passo indicado.
 
 Valide o rascunho `_rascunho-*` sem corrigir, renomear, publicar ou
 alterar documentos. A resposta precisa dizer exatamente um resultado:

@@ -30,11 +30,12 @@ apenas reconheca seus nomes.
 - [Taxonomia de nomes e carimbo](../../../docs/estrutura-lib.md)
 - [Modelo de variaveis e modes](../../../docs/modelo-clusters.md)
 
-Na primeira resposta, antes de escrever no Figma, entregue a **Ficha
-de preparacao** pedida pelo agente Montador. Diga quais desses recursos
-foram lidos e quais scripts serao usados. Se faltar algum recurso ou
-entrada de negocio, pare. Nao troque essa ficha por uma promessa de que
-"vai seguir a skill".
+Na primeira resposta, antes de escrever no Figma, abra a conversa em
+linguagem natural. Diga o que precisa, o que vai montar nesta rodada,
+o que o designer recebera ao final e o proximo passo. Skills e scripts
+lidos entram somente depois, no detalhe tecnico. Se faltar algum
+recurso ou entrada de negocio, pare. Nao troque essa abertura por uma
+promessa de que "vai seguir a skill".
 
 ## Entradas obrigatorias
 
@@ -151,16 +152,10 @@ Nao reconstrua tela, mude regra ou altere referencia nesta fase.
 
 ## Saida
 
-Primeiro, resumo simples: estado do objeto, o que foi criado ou
-promovido, o que bateu com cada referencia e o que bloqueia a proxima
-acao. Depois, evidencia tecnica: IDs, collection, modes, bindings,
-scripts, screenshots e documentos alterados.
+Primeiro, em linguagem simples, diga o estado do objeto, o que foi
+criado ou promovido, o que bateu com cada referencia, o que bloqueia a
+proxima acao e o que o designer pode revisar agora. Diga tambem se o
+proximo passo e o Validador ou a publicacao manual.
 
-Encerre com o pacote:
-
-```text
-[PAPEL CONCLUIDO] Montador
-[ENTREGA] <rascunho criado ou template promovido>
-[PENDENCIAS] <lista ou nenhuma>
-[PROXIMO PAPEL] <Validador ou publicacao manual>
-```
+Depois, apresente a evidencia tecnica: IDs, collection, modes,
+bindings, scripts, screenshots e documentos alterados.

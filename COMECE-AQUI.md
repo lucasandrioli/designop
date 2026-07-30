@@ -129,10 +129,10 @@ O que nao e tolerado e nao existir tela.
 Daqui em diante isso se repete por etapa e por convenio novo.
 
 Cada agente faz somente a propria etapa, mesmo que a conversa carregue
-o contexto dos anteriores. O cartao `[PAPEL ATUAL]` e o pacote
-`[PAPEL CONCLUIDO]` mostram onde o trabalho esta. Pedido fora do papel
-deve parar e indicar o handoff correto, nunca ser resolvido "para
-ajudar". Veja `docs/contrato-papeis.md`.
+o contexto dos anteriores. Antes de agir, ele explica o que precisa, o
+que vai fazer, o que voce recebera e qual sera o proximo passo. Pedido
+fora do papel deve parar e indicar o handoff correto, nunca ser
+resolvido "para ajudar". Veja `docs/contrato-papeis.md`.
 
 1. Selecione `Leitor` no menu de agentes e leia a pagina da etapa X.
 2. Clique no handoff `Comparar clusters`, revise o prompt preenchido e
@@ -147,8 +147,10 @@ ajudar". Veja `docs/contrato-papeis.md`.
 6. Clique em `Montar apos aprovacao` somente depois de escrever a
    aprovacao explicita na conversa. O prompt inicia
    `/consignado-montagem`.
-7. Confira a `Ficha de preparacao` do Montador. Ela mostra o que ele
-   leu, o que usara e qualquer bloqueio antes de alterar o Figma.
+7. Confira a abertura do Montador. Antes de alterar o Figma, ele deve
+   dizer o que precisa, o que vai montar, o que voce recebera e o que
+   acontecera depois. O detalhe de skills, scripts e bloqueios vem em
+   seguida como apoio.
 8. O Montador cria somente `_rascunho-*`: variaveis, bindings, secoes e
    previews. `ref-*` continua sendo a referencia crua; `tpl-*` ainda
    nao existe.

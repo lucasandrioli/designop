@@ -54,9 +54,9 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
     confirme que ele le sem escrever e entrega uma proposta com
     arvore-alvo, mapa IDS e contrato geometrico. Em seguida selecione
     Montador, dispare `/consignado-montagem` e
-    confirme que a primeira resposta explica naturalmente o que ele
-    precisa, vai fazer, entregara e o proximo passo, sem escrita no
-    Figma. No handoff de validacao, confira
+    confirme que a primeira resposta retoma o que ja esta aprovado,
+    explica o que ele vai conferir sozinho e pede somente a pendencia
+    real, sem escrita no Figma. No handoff de validacao, confira
     `/consignado-validacao` e confirme que os links para scripts e
     Plugin API e Reconstrucao Figma foram carregados antes da validacao.
 

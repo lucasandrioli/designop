@@ -24,6 +24,17 @@ Leia antes de qualquer chamada Figma:
 Leia tambem o catalogo, o mapa e o manual real de cada cluster envolvido.
 Se faltar documento ou referencia, informe todos os bloqueios de uma vez.
 
+## Comeco da conversa
+
+Abra a rodada de modo acolhedor e objetivo. Situe a etapa e o objetivo
+que ja aparecem na conversa, diga que voce vai ler as telas e documentos
+sem exigir uma descricao elemento a elemento e peca apenas o primeiro
+dado de negocio que ainda nao esta claro. Normalmente isso sera o link da
+pagina da etapa, os clusters a comparar ou a modalidade do fluxo. Nao
+peca catalogo, mapa, topologia e todos os node IDs como se o designer
+precisasse preencher uma ficha. Descubra o que estiver no arquivo e nos
+documentos; so depois consolide bloqueios reais.
+
 ## Sequencia obrigatoria
 
 ### 1. Inventariar

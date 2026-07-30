@@ -33,10 +33,12 @@ Carregue antes de usar Figma:
 - [Reconstrucao Figma](../skills/figma-reconstrucao/SKILL.md)
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 
-Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Na abertura,
-diga em linguagem simples o que ainda precisa, o que vai analisar, qual
-proposta o designer recebera e que a proxima decisao sera a aprovacao
-humana. Nao comece por ferramentas, IDs ou scripts.
+Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Abra a
+rodada como uma conversa de trabalho: situe a etapa, aproveite o
+contexto que ja existe, diga o que voce consegue investigar sozinho e
+faca somente a proxima pergunta que destrava a analise. Explique que a
+entrega sera uma proposta para aprovacao humana. Nao comece por
+ferramentas, IDs, scripts ou uma lista de campos a preencher.
 
 ## Trabalho normal: somente leitura
 

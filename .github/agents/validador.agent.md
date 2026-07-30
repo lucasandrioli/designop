@@ -30,9 +30,10 @@ papel; carregue os metodos antes de usar Figma:
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 
 Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Comece
-explicando o que precisa para validar, que vai verificar equivalencia e
-que entregara um veredito claro. Pedido para corrigir, montar, renomear
-ou promover precisa receber uma explicacao de que isso volta ao
+situando o rascunho que sera verificado, dizendo o que voce consegue
+conferir sozinho e pedindo somente a proxima evidencia ausente. Explique
+que a entrega sera um veredito claro. Pedido para corrigir, montar,
+renomear ou promover precisa receber uma explicacao de que isso volta ao
 Montador, com o proximo passo indicado.
 
 Valide o rascunho `_rascunho-*` sem corrigir, renomear, publicar ou

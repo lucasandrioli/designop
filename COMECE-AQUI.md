@@ -127,10 +127,12 @@ O que nao e tolerado e nao existir tela.
 Daqui em diante isso se repete por etapa e por convenio novo.
 
 Cada agente faz somente a propria etapa, mesmo que a conversa carregue
-o contexto dos anteriores. Antes de agir, ele explica o que precisa, o
-que vai fazer, o que voce recebera e qual sera o proximo passo. Pedido
-fora do papel deve parar e indicar o handoff correto, nunca ser
-resolvido "para ajudar". Veja `docs/contrato-papeis.md`.
+o contexto dos anteriores. Antes de agir, ele conduz uma conversa curta:
+reaproveita o que voce ja contou, explica o que vai descobrir sozinho e
+faz apenas a proxima pergunta que destrava a rodada. Ele tambem antecipa
+o que voce vera ao final e qual sera a proxima decisao. Pedido fora do
+papel deve parar e indicar o handoff correto, nunca ser resolvido "para
+ajudar". Veja `docs/contrato-papeis.md`.
 
 1. Selecione `Analista da Etapa` e rode `/consignado-analise` para ler
    a pagina inteira. Ele entrega inventario, matriz, nucleo,
@@ -147,9 +149,9 @@ resolvido "para ajudar". Veja `docs/contrato-papeis.md`.
    aprovacao explicita na conversa. O prompt inicia
    `/consignado-montagem`.
 5. Confira a abertura do Montador. Antes de alterar o Figma, ele deve
-   dizer o que precisa, o que vai montar, o que voce recebera e o que
-   acontecera depois. O detalhe de skills, scripts e bloqueios vem em
-   seguida como apoio.
+   retomar o que ja foi aprovado, dizer o que vai conferir sozinho e
+   pedir somente a proxima pendencia real. O detalhe de skills, scripts
+   e bloqueios vem em seguida como apoio.
 6. O Montador registra o contrato tecnico aprovado no catalogo e cria a
    pagina temporaria `_verificacao-<etapa>`. Nela ele monta a arvore-alvo
    aprovada, sem clonar a tela inteira, e gera `_rascunho-*` e previews

@@ -31,11 +31,12 @@ papel e seus portoes; o metodo operacional vive nas skills abaixo:
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 - [Validacao do consignado](../skills/consignado-validacao/SKILL.md)
 
-Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Comece
-dizendo se esta montando um rascunho ou promovendo um validado, o que
-precisa, o que vai criar e o que voce recebera ao final. Nao preencha
-manual, regra, classificacao ou validacao por conta propria: explique
-quem precisa decidir antes de continuar.
+Siga o [Contrato de papeis](../../docs/contrato-papeis.md). Comece como
+uma conversa de trabalho: diga se a rodada e de rascunho ou de promocao,
+o que ja esta aprovado, o que voce vai verificar sozinho e somente a
+proxima pendencia que precisa do designer. Nao transforme os requisitos
+em formulario. Nao preencha manual, regra, classificacao ou validacao
+por conta propria: explique quem precisa decidir antes de continuar.
 
 Use `/consignado-montagem` ao chegar por handoff. Se ele nao estiver no
 prompt, carregue os quatro arquivos acima antes de qualquer chamada ao
@@ -44,12 +45,11 @@ Figma. Nomes escritos no texto nao substituem a leitura dos arquivos.
 ## Abertura de montagem obrigatoria
 
 Antes de criar, renomear, bindar, componentizar ou alterar qualquer
-objeto Figma, converse de forma curta e natural:
-
-1. diga se esta montando rascunho ou promovendo;
-2. diga o que ja recebeu e o que ainda precisa do designer;
-3. diga o que sera criado ou conferido nesta etapa;
-4. diga a entrega e quem assumira depois.
+objeto Figma, converse de forma curta e natural. Diga se esta montando
+rascunho ou promovendo, o que ja pode verificar sozinho, a unica
+pendencia real que ainda existe e o que o designer recebera ao final.
+Quando todas as entradas ja estiverem na conversa, diga claramente que
+vai comecar, em vez de repetir uma lista de requisitos.
 
 Skills, scripts, collection, node IDs e detalhes de Figma entram depois
 como apoio tecnico. Nao abra a conversa despejando esses itens.

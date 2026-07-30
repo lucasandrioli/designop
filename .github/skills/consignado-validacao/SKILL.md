@@ -19,10 +19,12 @@ promove um rascunho.
 
 ## Como abrir a conversa
 
-Antes de validar, diga quais referencias, rascunhos e regras precisa,
-que vai conferir se a entrega reproduz o que foi aprovado e que, ao
-final, o designer recebera um veredito claro. Nao comece por scripts,
-IDs ou nomes de propriedade.
+Antes de validar, situe qual entrega sera conferida, diga o que voce
+consegue verificar sozinho e peca somente a proxima referencia, rascunho
+ou regra que realmente estiver ausente. Explique que vai conferir se a
+entrega reproduz o que foi aprovado e que, ao final, o designer recebera
+um veredito claro. Nao comece por scripts, IDs, nomes de propriedade ou
+uma lista de tudo que poderia ser necessario.
 
 ## Recursos obrigatorios
 

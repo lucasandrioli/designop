@@ -37,8 +37,10 @@ aprove escrita Figma daquele papel.
 ### 1. Analista da Etapa
 
 Selecione `Analista da Etapa` e envie `/consignado-analise` com pagina,
-clusters e casos. A abertura deve explicar o que precisa, o que fara, a
-entrega e a decisao seguinte. A entrega unica precisa conter:
+clusters e casos. A abertura deve parecer uma conversa: reaproveita o
+que ja foi informado, diz o que vai investigar sozinho, pede apenas a
+proxima informacao que falta e antecipa a proposta que voce recebera.
+A entrega unica precisa conter:
 
 - inventario e grafo dos prototipos;
 - matriz de fatos e diferencas sem regra marcadas `[CONFIRMAR]`;
@@ -60,8 +62,9 @@ incluindo arvore-alvo, mapa IDS, geometria, variaveis e excecoes.
 ### 2. Montador
 
 Clique em `Montar apos aprovacao`, confira o prompt `/consignado-montagem`
-e envie. Antes da escrita, o Montador precisa explicar o que vai montar e
-confirmar contrato, topologia, colecao e referencias.
+e envie. Antes da escrita, o Montador precisa retomar o que esta
+aprovado, conferir sozinho contrato, topologia, colecao e referencias e
+pedir apenas a pendencia que realmente impedir a montagem.
 
 Ele precisa entao:
 

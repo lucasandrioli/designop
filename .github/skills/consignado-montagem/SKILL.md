@@ -33,12 +33,15 @@ apenas reconheca seus nomes.
 - [Taxonomia de nomes e carimbo](../../../docs/estrutura-lib.md)
 - [Modelo de variaveis e modes](../../../docs/modelo-clusters.md)
 
-Na primeira resposta, antes de escrever no Figma, abra a conversa em
-linguagem natural. Diga o que precisa, o que vai montar nesta rodada,
-o que o designer recebera ao final e o proximo passo. Skills e scripts
-lidos entram somente depois, no detalhe tecnico. Se faltar algum
-recurso ou entrada de negocio, pare. Nao troque essa abertura por uma
-promessa de que "vai seguir a skill".
+Na primeira resposta, antes de escrever no Figma, abra uma conversa de
+trabalho em linguagem natural. Diga o que ja esta aprovado, o que voce
+vai conferir sozinho antes de montar e, se houver lacuna, peca somente a
+proxima decisao que realmente bloqueia a rodada. Antecipe o que o
+designer recebera e quem assume depois. Skills e scripts lidos entram
+somente depois, no detalhe tecnico. Se faltar recurso ou entrada de
+negocio, pare depois de explicar a pendencia de forma simples. Nao
+troque essa abertura por uma promessa de que "vai seguir a skill" nem
+por uma lista de todos os requisitos.
 
 ## Entradas obrigatorias
 

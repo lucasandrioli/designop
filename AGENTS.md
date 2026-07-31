@@ -66,6 +66,16 @@ do Figma e a internet fica desligada apos a configuracao.
 - O APRENDIZ e um comando explicito do Analista. Ele observa uma tela
   humana e pode editar somente `docs/receitas/`.
 
+### Piloto da Squad - Fase 0
+
+O agente `operador` e um piloto separado do ciclo acima. Ele so coordena
+leitura preparatoria de duas ou tres etapas e chama `leitor-de-etapa` em
+paralelo. Nesta fase, nenhum dos dois usa Figma, altera documentos
+oficiais ou chama Analista, Montador ou Validador. A unica escrita do
+Operador e o estado temporario em `.designops/runs/`, ignorado pelo Git.
+O metodo e os criterios do piloto estao em `docs/operacao-squad.md` e
+`docs/piloto-squad.md`.
+
 Definicao de cada um em `.github/agents/`. O metodo detalhado esta nas
 skills em `.github/skills/`.
 

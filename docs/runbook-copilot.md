@@ -1,4 +1,4 @@
-# Runbook: tres agentes no GitHub Copilot para VS Code
+# Runbook: agentes de execucao e piloto da squad no VS Code
 
 Este roteiro prova que o Copilot executa o papel selecionado, que a
 aprovacao humana acontece antes da escrita e que o Montador segue a
@@ -7,8 +7,10 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
 ## Antes de iniciar
 
 1. Abra este workspace no VS Code em modo confiavel.
-2. Em `Chat: Open Customizations`, confirme os tres agentes: Analista
-   da Etapa, Montador e Validador.
+2. Em `Chat: Open Customizations`, confirme os tres agentes de execucao:
+   Analista da Etapa, Montador e Validador. Para o piloto da Fase 0,
+   confirme tambem `operador`; `leitor-de-etapa` e interno e pode aparecer
+   somente em Chat Diagnostics ou dentro de uma rodada.
 3. Em `Chat Diagnostics`, corrija qualquer erro de agente ou skill.
 4. No VS Code, em `MCP: List Servers`, inicie e autentique `figma`.
    No GitHub Copilot App, abra o Figma Desktop com o MCP habilitado e
@@ -16,6 +18,26 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
    `figma` por SSE local. Em ambos, confirme que as ferramentas Figma
    aparecem.
 5. Mantenha a permissao do chat em `Ask`.
+
+## Piloto da Squad - Fase 0
+
+Este e um teste de coordenacao, nao uma etapa de montagem. Antes dele,
+confirme em Settings que `chat.customAgentInSubagent.enabled` esta ativo.
+
+1. Selecione `operador`.
+2. Envie: "Inicie uma rodada de leitura para as etapas Anuencia e
+   Simulacao. Nao altere Figma nem documentos oficiais. Quero apenas saber
+   o que ja esta pronto e o que precisa de contexto."
+3. Confirme que ele chama um `leitor-de-etapa` para cada etapa, em
+   paralelo, e que nenhum deles usa Figma ou edita `docs/`.
+4. Ao final, confirme que o Operador devolve uma unica caixa de decisoes
+   e cria somente `.designops/runs/<id>/estado.json`.
+5. Abra um chat novo com `operador` e peca o estado da ultima rodada.
+   Ele deve retomar esse arquivo, sem repetir a leitura concluida.
+
+Resultado reprovado: chamar Analista, Montador ou Validador; escrever em
+`docs/`; usar Figma; ou pedir que voce troque de agente para ler cada
+resultado. O roteiro completo esta em `docs/piloto-squad.md`.
 
 Use uma etapa real, dois clusters reais e um arquivo Figma descartavel.
 Se os manuais ainda nao existirem, comecar pelo contexto guiado e nao

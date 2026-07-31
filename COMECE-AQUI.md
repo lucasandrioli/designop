@@ -1,7 +1,9 @@
 # Comece aqui
 
-Este repo instala tres agentes que cuidam da parte repetitiva de manter
-uma biblioteca de etapas do consignado que se adapta por convenio.
+Este repo instala tres agentes de execucao que cuidam da parte repetitiva
+de manter uma biblioteca de etapas do consignado que se adapta por
+convenio. Tambem inclui um piloto opcional de Operador para organizar a
+leitura de varias etapas sem exigir troca manual de agente.
 
 Ele chega **vazio de conteudo e cheio de metodo**. Os manuais de
 convenio, os docs de etapa e o mapa de fluxo comecam em branco, so com
@@ -13,13 +15,17 @@ O repositorio chega vazio de regras de negocio de proposito. Os agentes
 trabalham somente com o que estiver documentado em `docs/` e marcado
 como verdadeiro pelo time responsavel.
 
-## Os tres agentes
+## Os agentes de trabalho
 
 | Comando | Nome | O que faz |
 | --- | --- | --- |
 | `/consignado-analise` | Analista da Etapa | Inventaria, compara e entrega uma unica proposta de arvore-alvo, IDS, variaveis e especializacoes. Somente leitura |
 | `/montador` | O Montador | Transforma a tela aprovada em template que se adapta por convenio |
 | `/validador` | O Revisor | Confere cada entrega: layout quebrado, texto cortado, conteudo faltando |
+
+O piloto opcional da Fase 0 adiciona o agente `operador`. Ele nao monta
+nem analisa telas: apenas organiza uma rodada de leitura para varias
+etapas e devolve uma resposta unica. Veja `docs/piloto-squad.md`.
 
 `/consignado-aprendizado` e um comando opcional do Analista. Ele observa
 uma referencia criada por pessoa designer e escreve somente em
@@ -45,8 +51,10 @@ Cada passo protege o seguinte. Nao pule.
 4. Atualize a lista de MCPs no cliente e confirme que `figma` aparece.
    No Copilot App, aceite a confianca do repositorio quando ele perguntar.
    Mantenha a permissao em `Ask` durante os testes.
-5. Confira os tres agentes: analista, montador e validador. Em Chat
-   Diagnostics, quando existir, nao pode haver erro de agente ou skill.
+5. Confira os tres agentes de execucao: analista, montador e validador.
+   Se for testar a Fase 0, confirme tambem `operador` e o leitor interno
+   `leitor-de-etapa` em Chat Diagnostics. Nao pode haver erro de agente
+   ou skill.
 6. Teste de vida: "liste as bibliotecas conectadas neste arquivo Figma",
    passando o link de um arquivo do consignado. Se responder, conectou.
 

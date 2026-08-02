@@ -15,6 +15,9 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
 4. No VS Code, em `MCP: List Servers`, inicie e autentique `figma`.
    Confirme que as ferramentas Figma aparecem.
 5. Mantenha a permissao do chat em `Ask`.
+6. Rode `node scripts/validateAnalysisGates.js`. O resultado precisa
+   confirmar os portoes de evidencia, IDS e limite de papel antes de
+   testar o Analista.
 
 ## Piloto da Squad - Fase 0
 
@@ -53,6 +56,19 @@ Resultado esperado: inventario com origem, acao, destino, tipo de caminho
 e fonte, incluindo bifurcacoes, ajuda opcional e reencontro. Se o MCP nao
 expor a reacao, ele registra `[VERIFICAR COM DESIGNER]` e pergunta sobre
 ela. Resultado reprovado: deduzir setas pela ordem visual dos frames.
+
+Antes de pedir aprovacao, o Analista precisa mostrar tres evidencias:
+screenshots das referencias, tabela de reacoes e bibliotecas IDS
+consultadas. `EXATO` so vale com key real, property ou variant e node de
+evidencia. Resultado reprovado: chamar item de IDS de "confirmado em
+rodada anterior", deixar o Montador descobrir a key ou pedir aprovacao
+com uma dessas leituras faltando.
+
+Asset proprietario obrigatorio ausente bloqueia a tela correspondente.
+Resultado reprovado: propor placeholder, frame local substituto ou
+montagem parcial dessa tela. Prazo, valor, parcela e outros dados que
+variam por proposta tambem nao podem virar valores fixos de mode por
+cluster.
 
 ## Teste de limite de papel
 

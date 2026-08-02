@@ -121,6 +121,13 @@ O Analista executa inventario, comparacao, generalizacao e
 especializacao na sequencia definida, mas nao constroi. O Montador nao
 decide regra de negocio; o Validador nao corrige nem promove.
 
+Proposta do Analista so fica pronta para aprovacao quando traz evidencia
+de leitura visual, reacoes e IDS. O Analista pode registrar rascunhos
+preexistentes como estado do arquivo, mas nao lhes atribui auditoria,
+equivalencia ou promocao: isso pertence ao Validador e, depois de um
+veredito apto, ao Montador. Asset proprietario obrigatorio ausente
+bloqueia a tela dependente sem placeholder local.
+
 ## Contexto guiado antes da analise
 
 Manual ausente nao deve obrigar o designer a preencher um formulario

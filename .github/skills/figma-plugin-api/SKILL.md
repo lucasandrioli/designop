@@ -58,6 +58,12 @@ falha silenciosa.
     valor é vazio. Se um bloco de texto pode ficar vazio, AGRUPE-O num
     frame próprio e binde a VISIBILIDADE DO FRAME (não só o texto) a
     um boolean. (Regra comprovada em teste interno.)
+    Ao criar um TEXT que recebera binding de conteudo, nao o deixe vazio
+    antes de medir a tela: carregue a fonte, aplique o valor inicial do
+    mode padrao, defina a largura com `resize()`, e so entao aplique
+    `textAutoResize = 'HEIGHT'` para calcular a altura. `resize()`
+    depois de `textAutoResize` redefine esse modo para `NONE` e deixa o
+    texto com altura de 1 px. So depois aplique o binding de conteudo.
 
 ## Texto e fontes
 
@@ -290,9 +296,16 @@ falha silenciosa.
     E `counterAxisSizingMode`) em frame auto layout novo, nunca confiar
     no default.
 
+45. **`resize()` fixa o eixo primario do frame auto layout.** Se um
+    container deve abracar os filhos, construa e anexe os filhos,
+    depois aplique `primaryAxisSizingMode = 'AUTO'` novamente. Definir
+    `AUTO` antes de `resize()` deixa o frame com a altura temporaria
+    usada na criacao, mesmo que os filhos crescam depois. Leia a altura
+    em chamada separada antes de concluir que a tela esta pronta.
+
 ## Descoberta (leitura)
 
-45. **`get_metadata` sem `nodeId` pode devolver só UMA página**, não o
+46. **`get_metadata` sem `nodeId` pode devolver só UMA página**, não o
     arquivo inteiro. Concluir "não existe" a partir daí é erro comum e
     caro: o validador quase reprovou um template por ausência quando
     ele estava na 2ª de 4 páginas. Para saber o que existe de fato,

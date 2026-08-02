@@ -21,8 +21,10 @@ do link do arquivo inteiro. O Montador confirma este pre-voo a partir da
 proposta aprovada; nao o refaz por intuicao.
 
 1. Leia a referencia e ao menos uma tela comparavel que ja use o IDS.
-   O objetivo e descobrir componentes reais em uso, nao reproduzir a
-   arvore de nenhuma delas.
+   Use `get_design_context` em uma referencia representativa para
+   reconhecer componentes, properties e papeis de interface. O objetivo
+   e descobrir componentes reais em uso, nao reproduzir a arvore de
+   nenhuma delas. Nome livre do frame nao define a tela da biblioteca.
 2. Liste bibliotecas conectadas de componentes, tokens, icones e
    ilustracoes. Quando a ferramenta de bibliotecas existir, use-a; caso
    contrario, consulte a Team Library pela Plugin API.
@@ -95,7 +97,9 @@ uma referencia.
 
 1. Trabalhe apenas em `_verificacao-<etapa>` e crie um objeto temporario
    com nome `_prova-<papel>`.
-2. Use somente a variavel semantica ja aprovada para a etapa. Nunca
+2. Use somente a variavel semantica ja aprovada para a tela da
+   biblioteca. Em collection por etapa ela segue `<tela>/<papel>`;
+   em collection compartilhada, `<etapa>/<tela>/<papel>`. Nunca
    reutilize `prop/*`, `teste-*` ou uma collection de laboratorio para
    provar uma regra de negocio.
 3. Exercite o mecanismo declarado. Para visibilidade de uma INSTANCE,
@@ -142,6 +146,17 @@ slot necessario.
    deterministico.
 8. Crie previews sem reactions em `_verificacao-<etapa>`; mode fica
    apenas no wrapper.
+
+### Rodape fixo em frame rolavel
+
+Em uma tela mobile cujo contrato declare rodape fixo, a raiz usa
+`overflowDirection = 'VERTICAL'` e `numberOfFixedChildren`. Essa
+propriedade pertence a raiz e fixa os ultimos filhos dela, na ordem da
+arvore. A API so aceita definir o numero depois que todos esses filhos
+ja foram anexados. Portanto: crie conteudo, progresso e CTA primeiro;
+so entao defina `numberOfFixedChildren = 2`. Nunca procure um booleano
+`fixed` no botao ou no progresso, pois essa propriedade nao existe no
+filho.
 
 ## 5. `auditarReconstrucao` (leitura)
 

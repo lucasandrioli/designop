@@ -130,10 +130,11 @@ nunca herda direito ao prefixo `tpl-*`.
 6. Importe instancias IDS pela key real. Ao chegar em `INSTANCE`, use
    somente property publica ou slot documentado. Nunca insira filho em
    instancia remota nem tente editar sua arvore interna.
-7. Crie somente variaveis previstas no schema aprovado. Cada nome
-   comeca com `<etapa>/` e descreve o papel da etapa. Nunca reutilize
-   `prop/*`, `teste-*`, `teste-props` ou variavel de outra etapa, mesmo
-   que ela tenha o mesmo tipo BOOLEAN ou o mesmo valor. Modes sao
+7. Crie somente variaveis previstas no schema aprovado. Em collection
+   por etapa, cada nome comeca com `<tela>/` e descreve o papel daquela
+   tela. Em collection compartilhada, use `<etapa>/<tela>/`. Nunca
+   reutilize `prop/*`, `teste-*`, `teste-props` ou variavel de outra
+   etapa, mesmo que ela tenha o mesmo tipo BOOLEAN ou o mesmo valor. Modes sao
    clusters que usam a etapa. Ausencia de etapa pertence somente ao
    mapa.
 8. Crie secao ou componente local somente se a excecao aprovada declarar

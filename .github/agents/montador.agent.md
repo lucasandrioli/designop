@@ -96,8 +96,9 @@ testar um binding direto de `visible` no no INSTANCE quando nao houver
 property publica, mas nunca toca filhos internos de instancia remota nem
 referencias. Se o mecanismo falhar, remova a prova temporaria e pare
 antes do rascunho completo. Variaveis da etapa continuam obrigatoriamente
-no namespace `<etapa>/...`; uma variavel generica de teste nao pode virar
-conteudo de producao.
+no schema da tela da biblioteca: `<tela>/...` em collection por etapa,
+ou `<etapa>/<tela>/...` em collection compartilhada. Uma variavel
+generica de teste nao pode virar conteudo de producao.
 
 Ao terminar, rode as provas mecanicas exigidas pela skill e entregue ao
 Validador os contratos, previews, referencias, modos e resultados. Nao

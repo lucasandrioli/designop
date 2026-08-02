@@ -5,9 +5,11 @@ skill e agente do projeto segue este modelo.
 
 ## Estrutura
 
-- A ETAPA e sempre o namespace logico: organiza pagina, referencias,
-  templates, mapa e nomes de variavel. O nome Figma sempre preserva
-  esse namespace, por exemplo `anuencia/orientacao/descricao`.
+- A ETAPA organiza pagina, referencias, templates e mapa. Dentro de
+  uma collection dedicada a ela, o conteudo se organiza pela tela da
+  biblioteca, por exemplo `orientacao/descricao`. Em collection
+  compartilhada por varias etapas, a etapa volta ao nome da variavel:
+  `anuencia/orientacao/descricao`.
 - A COLLECTION e uma decisao fisica de arquivo, registrada em
   `docs/topologia-biblioteca.md` antes do Montador escrever no Figma:
   pode ser uma collection unica, collections por etapa no mesmo
@@ -36,10 +38,15 @@ skill e agente do projeto segue este modelo.
 - Modalidade (primeira concessao vs refinanciamento) NUNCA e mode:
   e estrutura de template separada.
 - Texto identico em todos os clusters NAO vira variavel.
-- Nomes de variavel: etapa/grupo/nome-kebab (ex:
-  anuencia/orientacao/descricao,
-  simulacao/elegibilidade/mostra-oferta-adicional). O namespace da
-  etapa e sempre visivel, inclusive em arquivo ou collection dedicados.
+- Nomes de variavel seguem a tela da biblioteca, depois o papel:
+  `orientacao/descricao`, `tutorial-1/titulo` e
+  `direcionamento/titulo`. Quando varias etapas compartilham uma mesma
+  collection, use tambem o prefixo da etapa:
+  `anuencia/orientacao/descricao`. Nome de frame de referencia nunca
+  entra nessa convencao.
+- Nome de tela da biblioteca e curto, funcional e estavel. O Analista
+  o determina pelo mapa de reacoes, estrutura e `get_design_context`;
+  nao pelo nome livre que alguem deu ao frame.
 - Nomes de mode: nome funcional do cluster, sem repetir a etapa (ex:
   Gov SP, Cluster 4).
 - Todo texto bindado: fonte carregada antes do binding e textAutoResize

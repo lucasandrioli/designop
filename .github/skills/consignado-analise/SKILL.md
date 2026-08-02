@@ -63,9 +63,15 @@ modo de contexto guiado.
 
 ### 1. Inventariar
 
-Leia a pagina completa da etapa. Para cada `_ref-<cluster>` e caso de
+ Leia a pagina completa da etapa. Para cada `_ref-<cluster>` e caso de
 uso, registre telas, textos relevantes, blocos visiveis, properties,
-instancias, bindings observados e o grafo do prototipo. Referencia pode
+instancias, bindings observados e o grafo do prototipo. Para cada familia
+de tela, leia tambem `get_design_context` de uma referencia
+representativa: ele ajuda a reconhecer os componentes e papéis reais.
+Defina uma tela da biblioteca com nome curto, por exemplo
+`orientacao`, `tutorial-1` ou `direcionamento`, e registre o mapa
+`frame de referencia -> tela da biblioteca`. Nunca copie o nome livre do
+frame como nome da tela ou como namespace de variavel. Referencia pode
 estar tecnicamente baguncada: isso e um fato tecnico, nao uma regra de
 negocio nem motivo para rejeita-la.
 
@@ -107,7 +113,10 @@ prova temporaria. Para cada template, entregue:
    declarar uma excecao de superficie;
 2. mapa IDS com componente, property e token, classificados em `EXATO`,
    `PROVA_DE_MONTAGEM`, `[CONFIRMAR]` ou `SEM_EQUIVALENTE`;
-3. contrato de conteudo, variaveis, especializacoes e excecoes locais;
+3. contrato de conteudo, variaveis agrupadas pela tela da biblioteca,
+   especializacoes e excecoes locais. Em collection por etapa, use
+   `<tela>/<papel>`; em collection compartilhada, use
+   `<etapa>/<tela>/<papel>`;
 4. contrato geometrico por papel, comparavel contra cada referencia;
    para tela que possa rolar, classifique tambem se a rolagem e da tela
    inteira, de uma area interna ou se ha filhos fixos. Extraia da

@@ -141,6 +141,12 @@ permitida e em `docs/receitas/`.
   contrato tecnico aprovado: papeis, arvore-alvo, IDS, geometria,
   conteudo e excecoes. Depois da aprovacao, Montador e Validador seguem
   esse contrato de forma deterministica.
+- Cada tela da biblioteca recebe um nome curto e estavel, por exemplo
+  `orientacao`, `tutorial-1` ou `direcionamento`. O nome do frame de
+  referencia e apenas evidencia, nunca a fonte desse nome. O Analista
+  usa metadados, reacoes, `get_design_context` e os documentos para
+  registrar o mapa entre cada frame e a tela da biblioteca antes de
+  propor variaveis ou template.
 - Taxonomia em `docs/estrutura-lib.md`: templates publicados como
   `etapa/tpl-nome`; secoes internas com prefixo `_` (nao publicadas);
   referencias cruas sem barra no nome. O prefixo `tpl-` e CONQUISTADO:

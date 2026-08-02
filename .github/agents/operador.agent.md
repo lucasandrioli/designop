@@ -47,8 +47,8 @@ unica lista do que ja esta pronto e do que realmente precisa de voce.
    devolver somente seu cartao de leitura.
 3. Espere todos os leitores terminarem. Nao tire conclusao de negocio,
    nao proponha mecanismo tecnico e nao abra Figma para completar lacuna.
-4. Atualize o estado da rodada com os resultados, as pendencias e a
-   proxima acao de cada etapa.
+4. Atualize o estado da rodada com os resultados, separando bloqueios de
+   pendencias nao bloqueantes, e a proxima acao de cada etapa.
 5. Responda primeiro em linguagem comum, agrupando as perguntas em uma
    unica caixa de decisoes. Em seguida, mostre uma tabela curta por etapa.
 
@@ -62,7 +62,9 @@ reexecute uma etapa concluida sem pedido do designer.
 - Nunca chame Montador, Validador, Analista ou outro Operador.
 - Nunca use `figma/*`, mesmo que o designer envie um link Figma.
 - Estado `aguardando_designer` significa que voce para depois de mostrar
-  a caixa de decisoes. Nao escolha uma regra ausente.
+  a caixa de decisoes. Nao escolha uma regra ausente. So pergunte ao
+  designer por bloqueios reais da rodada. Pendencias nao bloqueantes ficam
+  registradas no estado e nao impedem indicar a proxima fase.
 - Uma etapa pronta para contexto ou analise nao e autorizacao para iniciar
   a proxima fase. Apenas indique o proximo comando e espere um novo pedido.
 

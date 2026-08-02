@@ -13,7 +13,7 @@ Este documento e a fonte unica da composicao para este escopo.
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | anuencia/orientacao | base da etapa | 1 | apos senha transacional | FAQ proprio do cluster | FAQ proprio do cluster |
 | 2 | anuencia/direcionamento | ponto de reencontro dos caminhos | 1 | seguir direto ou concluir tutorial | SouGov | Sou SP |
-| 3 | handoff/canal-externo-convenio | continuidade fora do app | 1 | saida do app para validacao externa | canal SouGov | canal Sou SP e um segundo canal externo [CONFIRMAR] |
+| 3 | handoff/canal-externo-convenio | continuidade fora do app | 1 | saida do app para validacao externa | canal SouGov | canal Sou SP e gov.br para prova de vida |
 | 4 | handoff/validacao-externa-convenio | continuidade fora do app | 1 | validacoes exigidas pelo convenio | 1 validacao externa (evidencia, nao template) | 2 validacoes externas (evidencia, nao template) |
 | 5 | handoff/retorno-ao-app | retorno ao app Itau | 1 | fim da validacao externa | sem diferenca registrada | sem diferenca registrada |
 | 6 | fronteira/retorno-carregando | fronteira de transicao | 1 | retorno ao app | sem diferenca registrada | sem diferenca registrada |
@@ -41,7 +41,7 @@ flowchart TD
     t4 -.-> b
     b --> x{Validacao externa conforme convenio}
     x -->|Cluster 4: SouGov, 1 validacao externa| r[Retorno ao app]
-    x -->|Gov SP: Sou SP, 2 validacoes externas; segundo canal externo [CONFIRMAR]| r
+    x -->|Gov SP: Sou SP e gov.br para prova de vida, 2 validacoes externas| r
     r --> c[Fronteira: retorno-carregando]
     c --> d[Fronteira: efetivacao]
 ```
@@ -52,7 +52,7 @@ flowchart TD
 | --- | --- | --- |
 | quantidade de validacoes externas no handoff | cluster-4, gov-sp | `docs/clusters/cluster-4.md#R1`, `docs/clusters/gov-sp.md#R1` |
 | canal externo utilizado | cluster-4, gov-sp | `docs/clusters/cluster-4.md#R2`, `docs/clusters/gov-sp.md#R2` |
-| segundo canal externo no gov-sp | gov-sp | [CONFIRMAR] |
+| segundo canal externo no gov-sp | gov-sp | `docs/clusters/gov-sp.md#R4` |
 
 Observacao:
 - diferencas registradas como regra de convenio;

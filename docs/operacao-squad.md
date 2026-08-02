@@ -40,6 +40,11 @@ Somente perguntas de negocio que impedem continuar. Exemplos:
 O designer nao revisa a busca de arquivos nem precisa trocar de agente
 para receber cada resposta.
 
+Um `[CONFIRMAR]` nao bloqueia por si so. O Leitor separa bloqueios de
+pendencias nao bloqueantes. Um detalhe de handoff externo, uma jornada
+futura ou outro ponto que nao muda a tela interna nem a composicao do
+recorte atual fica registrado para depois e a etapa continua para analise.
+
 ## Paralelismo e seguranca
 
 Leituras de etapas independentes podem acontecer em paralelo. Nenhum

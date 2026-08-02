@@ -7,7 +7,7 @@ justificam suas diferencas. Ele nao redefine a etapa.
 - Cluster: `cluster-4`
 - Mode no contexto da etapa: `Cluster 4`
 - Orgao/convenio: convenios distribuidos nacionalmente
-- Modalidades ativas: [CONFIRMAR]
+- Modalidades ativas: primeira concessao, refinanciamento e portabilidade de saldo
 - Mapa de fluxo: `docs/mapa-fluxo-anuencia-piloto.md`
 
 ## Jornada por etapa

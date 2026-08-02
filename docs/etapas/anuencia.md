@@ -58,5 +58,13 @@ Observacao:
 - A topologia de bifurcacao, reencontro e handoffs foi confirmada pelo designer nesta conversa.
 - As conexoes de prototipo nao foram expostas pelo MCP nesta rodada.
 
+## Comportamento de interface confirmado
+
+Nas telas `tutorial-1` a `tutorial-4`, a navegacao do tutorial fica
+ancorada no rodape mobile: indicador de progresso e acao de avancar ou
+de sair para o canal externo. O conteudo instrucional pode rolar sob essa
+area. No contrato tecnico, cada tela declara os nomes concretos desses
+filhos fixos, pois o CTA final tem nome diferente.
+
 ## Historico
 - 2026-07-30: rascunho inicial de contexto guiado da etapa anuencia.

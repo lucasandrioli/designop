@@ -26,6 +26,7 @@ Leia antes de qualquer chamada Figma:
 - [Catalogo da etapa](../../../docs/etapas/_template.md)
 - [Mapa de fluxo](../../../docs/mapa-fluxo-_template.md)
 - [Modelo de clusters](../../../docs/modelo-clusters.md)
+- [Viewport-base](../../../docs/viewport-base.md)
 
 Leia tambem o catalogo, o mapa e o manual real de cada cluster envolvido.
 Se faltar documento de negocio, nao use conversa ou tela como substituto:
@@ -94,15 +95,40 @@ modalidade continua estrutural.
 
 ### 4. Propor reconstrucao verificavel
 
-Use `inspecionarReferencia` e `resolverIDS` da skill
-`figma-reconstrucao`. Para cada template, entregue:
+Use `prepararReconstrucao`, `inspecionarReferencia` e `resolverIDS` da
+skill `figma-reconstrucao`. No papel do Analista, o pre-voo so inventaria
+links de frame, bibliotecas e candidatos: ele nunca escreve nem executa
+prova temporaria. Para cada template, entregue:
 
 1. arvore-alvo por papeis semanticos, sem copiar a arvore suja;
+   para superficie mobile, use automaticamente o viewport-base `360 x
+   800`. A referencia pode ter outro tamanho, mas isso nao gera pergunta
+   nem altera o padrao. Diferenca so vira pendencia quando o designer
+   declarar uma excecao de superficie;
 2. mapa IDS com componente, property e token, classificados em `EXATO`,
    `PROVA_DE_MONTAGEM`, `[CONFIRMAR]` ou `SEM_EQUIVALENTE`;
 3. contrato de conteudo, variaveis, especializacoes e excecoes locais;
 4. contrato geometrico por papel, comparavel contra cada referencia;
-5. itens que precisam de decisao humana antes da montagem e, quando
+   para tela que possa rolar, classifique tambem se a rolagem e da tela
+   inteira, de uma area interna ou se ha filhos fixos. Extraia da
+   referencia quando estiver evidente. Sem evidencia, marque
+   `[VERIFICAR COM DESIGNER]` e faca uma unica pergunta para a familia
+   de telas, nunca uma por botao. Excecao de leitura: em tutorial mobile,
+   `progresso` junto da acao de avancar ou sair e navegacao de rodape.
+   Proponha-os como filhos fixos, mantendo o conteudo instrucional rolavel;
+   nao trate esse par como CTA comum nem pergunte pela altura do viewport;
+5. contrato de interacao, somente para os comportamentos observados e
+   aprovados da tela: acoes, destinos e retornos. A referencia prova o
+   caminho entre telas. Gatilho, atraso, transicao, duracao e curva de
+   movimento so entram quando estiverem expostos na referencia ou forem
+   informados explicitamente pelo designer nesta conversa. Nesse caso,
+   registre os valores literais, inclusive os quatro pontos do Bezier;
+   nunca procure uma documentacao externa nem invente um preset. O
+   designer pode informar uma regra agrupada, por exemplo "CTAs
+   primarios do caminho X usam XPTO". O Analista cria um perfil de
+   movimento e enumera as acoes concretas cobertas por ele. Se o grupo
+   nao estiver claro, faz uma unica pergunta sobre o alcance;
+6. itens que precisam de decisao humana antes da montagem e, quando
    houver, a prova mecanica que o Montador devera executar.
 
 Uma `PROVA_DE_MONTAGEM` so e valida quando a divergencia que ela atende

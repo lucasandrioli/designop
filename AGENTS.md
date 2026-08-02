@@ -148,6 +148,12 @@ permitida e em `docs/receitas/`.
 
 ### Execucao
 
+- **Viewport-base:** toda tela mobile nasce em `360 x 800`, conforme
+  `docs/viewport-base.md`. O Analista e o Montador aplicam esse formato
+  automaticamente; nao perguntam pelo tamanho quando o recorte ja for
+  mobile. Referencia humana maior ou menor continua sendo evidencia,
+  nunca excecao por si so. So desktop, tablet ou uma excecao explicitamente
+  declarada pelo designer abre uma decisao de viewport.
 - Figma: toda escrita via `use_figma` exige a skill `figma-plugin-api`
   carregada antes.
 - Montagem tem tres estados obrigatorios: `ref-*` e fonte humana

@@ -12,6 +12,8 @@
  * B) GEOMETRIA: caixa relativa a raiz, padding e gap por papel.
  * C) IDS: instancia destacada, key/properties erradas e token/literal
  *    fora do mapa aprovado.
+ * D) VIEWPORT: superficie e dimensoes-base, quando declaradas.
+ * E) PROTOTIPO: direcao de rolagem e filhos fixos, quando declarados.
  *
  * A referencia pode ter nesting ruim, componentes destacados ou valores
  * manuais. Ela serve apenas para localizar os papeis e comparar a
@@ -21,6 +23,7 @@
  *
  * return await validateReconstructionContract('200:10', '100:10', {
  *   tolerance: 2,
+ *   viewport: { surface: 'mobile', width: 360, height: 800 },
  *   roles: [
  *     {
  *       id: 'orientacao',
@@ -39,6 +42,10 @@
  *       ids: { componentKey: '<key real>', properties: ['Label'] },
  *     },
  *   ],
+ *   prototype: {
+ *     overflowDirection: 'VERTICAL',
+ *     fixedChildren: ['rodape-fixo'],
+ *   },
  * }, { geometryCandidateId: '200:11' })
  *
  * @param {string} candidateId - COMPONENT ou COMPONENT_SET rascunho.
@@ -56,7 +63,12 @@
  *     layout?: {mode?: 'HORIZONTAL'|'VERTICAL', padding?: number[], gap?: number},
  *     ids?: {componentKey?: string, properties?: string[]},
  *     tokens?: Array<{field: string, variable?: string, literal?: unknown, approvedLiteral?: boolean}>
- *   }>
+ *   }>,
+ *   prototype?: {
+ *     overflowDirection?: 'NONE'|'HORIZONTAL'|'VERTICAL'|'HORIZONTAL_AND_VERTICAL',
+ *     fixedChildren?: string[]
+ *   },
+ *   viewport?: { surface?: string, width?: number, height?: number }
  * }} contract
  * @param {{geometryCandidateId?: string}} [opts] - preview resolvido no
  *   mode do cluster. A arvore e IDS continuam auditados no rascunho;
@@ -72,6 +84,8 @@ async function validateReconstructionContract(candidateId, referenceId, contract
     treeIssues: [],
     geometryIssues: [],
     idsIssues: [],
+    viewportIssues: [],
+    prototypeIssues: [],
     roleResults: [],
     passed: false,
   }
@@ -141,6 +155,63 @@ async function validateReconstructionContract(candidateId, referenceId, contract
 
   const variables = await figma.variables.getLocalVariablesAsync()
   const variableIdByName = new Map(variables.map((variable) => [variable.name, variable.id]))
+
+  if (contract.viewport) {
+    const viewport = contract.viewport
+    for (const field of ['width', 'height']) {
+      if (viewport[field] !== undefined && (!Number.isFinite(viewport[field]) || viewport[field] <= 0)) {
+        report.invalidContract.push({ reason: `viewport.${field} precisa ser numero maior que zero` })
+      } else if (Number.isFinite(viewport[field]) && !closeEnough(candidate[field], viewport[field])) {
+        report.viewportIssues.push({
+          id: candidate.id,
+          field,
+          expected: viewport[field],
+          actual: candidate[field],
+          tolerance: report.tolerance,
+          reason: 'viewport diverge do contrato',
+        })
+      }
+    }
+  }
+
+  if (contract.prototype) {
+    const prototype = contract.prototype
+    if (prototype.overflowDirection && candidate.overflowDirection !== prototype.overflowDirection) {
+      report.prototypeIssues.push({
+        id: candidate.id,
+        expected: prototype.overflowDirection,
+        actual: candidate.overflowDirection,
+        reason: 'comportamento de rolagem diverge do contrato',
+      })
+    }
+    if (prototype.fixedChildren !== undefined) {
+      if (!Array.isArray(prototype.fixedChildren) || prototype.fixedChildren.some((name) => typeof name !== 'string' || !name)) {
+        report.invalidContract.push({ reason: 'prototype.fixedChildren precisa ser uma lista de nomes unicos' })
+      } else if (new Set(prototype.fixedChildren).size !== prototype.fixedChildren.length) {
+        report.invalidContract.push({ reason: 'prototype.fixedChildren nao pode repetir nomes' })
+      } else {
+        const actualFixedChildren = prototype.fixedChildren.length === 0
+          ? []
+          : candidate.children.slice(-prototype.fixedChildren.length).map((node) => node.name)
+        if (candidate.numberOfFixedChildren !== prototype.fixedChildren.length) {
+          report.prototypeIssues.push({
+            id: candidate.id,
+            expected: prototype.fixedChildren.length,
+            actual: candidate.numberOfFixedChildren,
+            reason: 'quantidade de filhos fixos diverge do contrato',
+          })
+        }
+        if (!valuesEqual(actualFixedChildren, prototype.fixedChildren)) {
+          report.prototypeIssues.push({
+            id: candidate.id,
+            expected: prototype.fixedChildren,
+            actual: actualFixedChildren,
+            reason: 'ordem dos filhos fixos diverge do contrato',
+          })
+        }
+      }
+    }
+  }
 
   for (const role of contract.roles) {
     const result = { role: role?.id ?? '', targetId: null, referenceId: null, passed: false }
@@ -286,5 +357,7 @@ async function validateReconstructionContract(candidateId, referenceId, contract
     report.treeIssues.length === 0 &&
     report.geometryIssues.length === 0 &&
     report.idsIssues.length === 0
+    && report.viewportIssues.length === 0
+    && report.prototypeIssues.length === 0
   return report
 }

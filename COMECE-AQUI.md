@@ -40,29 +40,22 @@ Cada passo protege o seguinte. Nao pule.
 ### Passo 1 — Ambiente. ~1h
 
 1. Baixar este repo e abrir a pasta no cliente que voce vai usar.
-2. No **GitHub Copilot App**, o servidor ja esta declarado em
-   `.github/mcp.json`. Abra o Figma Desktop, entre em Dev Mode, habilite
-   o servidor MCP e mantenha o arquivo Figma aberto. O App o conecta por
-   SSE local em `http://127.0.0.1:3845/sse`, sem login OAuth.
-3. No **VS Code**, permanece a configuracao remota em `.vscode/mcp.json`.
+2. No **VS Code**, a configuracao remota esta em `.vscode/mcp.json`.
    Rode `MCP: List Servers`, inicie `figma` e autentique quando o navegador
    abrir. Em VS Code antigo que nao le o arquivo, use `MCP: Add Server` >
    HTTP > `https://mcp.figma.com/mcp` > id `figma`.
-4. Atualize a lista de MCPs no cliente e confirme que `figma` aparece.
-   No Copilot App, aceite a confianca do repositorio quando ele perguntar.
+3. Atualize a lista de MCPs no cliente e confirme que `figma` aparece.
    Mantenha a permissao em `Ask` durante os testes.
-5. Confira os tres agentes de execucao: analista, montador e validador.
+4. Confira os tres agentes de execucao: analista, montador e validador.
    Se for testar a Fase 0, confirme tambem `operador` e o leitor interno
    `leitor-de-etapa` em Chat Diagnostics. Nao pode haver erro de agente
    ou skill.
-6. Teste de vida: "liste as bibliotecas conectadas neste arquivo Figma",
+5. Teste de vida: "liste as bibliotecas conectadas neste arquivo Figma",
    passando o link de um arquivo do consignado. Se responder, conectou.
 
-Se travar no Copilot App: confirme que o Figma Desktop esta aberto, que
-o servidor MCP foi habilitado nele e que seu seat e Dev ou Full. O
-servidor desktop exige um plano pago. No VS Code, o servidor remoto
-aceita todos os seats e planos, mas exige HTTP e OAuth. Resolva isso
-antes de tudo.
+Se `figma` nao iniciar, confirme que o VS Code esta usando o workspace
+correto, autentique novamente no navegador e rode `MCP: List Servers`.
+Resolva isso antes de tudo.
 
 ### Passo 2 — Bateria de fumaca. ~3h
 

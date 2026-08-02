@@ -40,6 +40,11 @@ Em todo chat novo, recupere o catalogo, o mapa, os manuais e o contrato
 tecnico antes de pedir evidencia ao designer. Nao valide a partir de uma
 explicacao lembrada de outra conversa.
 
+Para superficie mobile, confira o viewport-base `360 x 800` informado no
+contrato. Nao trate uma referencia com altura diferente como lacuna de
+negocio e nao pergunte ao designer por isso; so uma excecao declarada muda
+essa medida.
+
 Valide o rascunho `_rascunho-*` sem corrigir, renomear, publicar ou
 alterar documentos. A resposta precisa dizer exatamente um resultado:
 `APTO PARA PROMOCAO` ou `REPROVADO`, seguido dos motivos.

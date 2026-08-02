@@ -34,9 +34,12 @@ apenas reconheca seus nomes.
 - [Validacao do contrato de conteudo](../../../scripts/validateContentContract.js)
 - [Validacao de comportamento por mode](../../../scripts/validateModeBehavior.js)
 - [Validacao do contrato de reconstrucao](../../../scripts/validateReconstructionContract.js)
+- [Validacao de interacao por contrato](../../../scripts/validateInteractionContract.js)
+- [Validacao de organizacao do canvas](../../../scripts/validateCanvasOrganization.js)
 - [Elegibilidade para promocao](../../../scripts/validatePromotion.js)
 - [Taxonomia de nomes e carimbo](../../../docs/estrutura-lib.md)
 - [Modelo de variaveis e modes](../../../docs/modelo-clusters.md)
+- [Viewport-base](../../../docs/viewport-base.md)
 
 Na primeira resposta, antes de escrever no Figma, abra uma conversa de
 trabalho em linguagem natural. Diga o que ja esta aprovado, o que voce
@@ -83,18 +86,21 @@ nunca herda direito ao prefixo `tpl-*`.
 
 ## Fase A: contrato visual antes da escrita
 
-1. Execute `inspecionarReferencia` somente para conferir a evidencia e
-   os papeis aprovados. Nao derive uma nova proposta nessa fase.
-2. Execute `resolverIDS` e confirme key, property publica, variant e
+1. Execute `prepararReconstrucao` para confirmar o frame exato, as
+   bibliotecas conectadas e a unidade de montagem. Nao derive uma nova
+   proposta nessa fase.
+2. Execute `inspecionarReferencia` somente para conferir a evidencia e
+   os papeis aprovados.
+3. Execute `resolverIDS` e confirme key, property publica, variant e
    capacidade de composicao de cada escolha aprovada. Nunca invente keys
    como `Label` ou sufixos `#...`.
-3. Pare se houver candidato `[CONFIRMAR]`, `SEM_EQUIVALENTE` sem excecao
+4. Pare se houver candidato `[CONFIRMAR]`, `SEM_EQUIVALENTE` sem excecao
    aprovada, token apenas parecido ou instancia IDS sem slot/property
    para a composicao declarada. `PROVA_DE_MONTAGEM` so pode continuar
    quando estiver nomeada e aprovada no contrato tecnico.
-4. Registre o contrato tecnico aprovado no catalogo da etapa antes da
+5. Registre o contrato tecnico aprovado no catalogo da etapa antes da
    primeira escrita no Figma. Ele nao recebe node IDs permanentes.
-5. Confirme que toda escrita de rascunho e preview ocorrera em
+6. Confirme que toda escrita de rascunho e preview ocorrera em
    `_verificacao-<etapa>`, fora da pagina de referencias e fora de
    `Fluxos`. Se o plano aponta para outro lugar, pare.
 
@@ -113,6 +119,14 @@ nunca herda direito ao prefixo `tpl-*`.
    nao valor para substituir.
 5. Execute `montarArvore`: crie o rascunho a partir da arvore-alvo com
    Auto Layout, sizing, padding, gap, ordem e sobreposicoes do contrato.
+   Para uma tela mobile sem excecao declarada, a raiz mede `360 x 800`.
+   Preserve tambem os papeis de layout especificos que o contrato
+   declarar. Nao presuma rodape fixo, totalizador ou qualquer outra
+   estrutura de uma etapa em telas que nao os declararam.
+   Quando o contrato declarar rolagem ou filhos fixos, aplique o
+   `overflowDirection` e mantenha os filhos fixos no fim da raiz, na
+   ordem aprovada. Nao tente marcar cada filho individualmente: no
+   Figma, a raiz define quantos filhos finais ficam fixos.
 6. Importe instancias IDS pela key real. Ao chegar em `INSTANCE`, use
    somente property publica ou slot documentado. Nunca insira filho em
    instancia remota nem tente editar sua arvore interna.
@@ -133,6 +147,12 @@ nunca herda direito ao prefixo `tpl-*`.
    aplique nele o mode do cluster. A instancia dentro do wrapper nao
    recebe override manual de conteudo. Preview nao recebe reaction nem
    faz parte de uma linha de fluxo.
+11. Crie reacoes de prototipo somente quando estiverem declaradas no
+   contrato de interacao aprovado. Cada acao aponta para o destino
+   aprovado e usa retorno quando a jornada precisar voltar a tela de
+   origem. Quando o contrato declarar movimento, aplique tambem o
+   gatilho, atraso, tipo de transicao, duracao e Bezier exatos. Nao
+   invente caminhos, tempos ou curvas para tornar a tela mais completa.
 
 ## Fase C: prova do rascunho
 

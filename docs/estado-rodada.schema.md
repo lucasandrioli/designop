@@ -21,6 +21,7 @@ repetir trabalho.
         "docs/clusters/cluster-4.md",
         "docs/clusters/gov-sp.md"
       ],
+      "leitores_concluidos": ["leitor-anuencia"],
       "bloqueios": [],
       "pendencias_nao_bloqueantes": [],
       "proximo_passo": "/consignado-analise"
@@ -59,3 +60,7 @@ Uma pendencia nao bloqueante tambem deve registrar sua origem, mas nao
 impede a proxima fase quando catalogo, mapa e manuais ja definem o
 recorte interno pedido. Exemplos: detalhe de canal externo fora da
 biblioteca ou uma jornada futura que nao participa desta rodada.
+
+`leitores_concluidos` lista os subagentes que efetivamente devolveram um
+cartao. O Operador so pode concluir a rodada quando houver um Leitor para
+cada etapa pedida.

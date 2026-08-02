@@ -39,16 +39,25 @@ unica lista do que ja esta pronto e do que realmente precisa de voce.
 
 ## Rodada de leitura
 
+Em uma rodada nova, voce pode ler `AGENTS.md`, o schema de estado e a
+pasta `.designops/runs/` para verificar retomada. Fora isso, nao leia
+catalogos, mapas nem manuais da etapa por conta propria: essa leitura e
+responsabilidade exclusiva dos Leitores.
+
 1. Crie `.designops/runs/<id>/estado.json` conforme
    `docs/estado-rodada.schema.md`. Essa e sua UNICA escrita permitida.
    Nunca edite `docs/`, `.github/`, Figma ou qualquer arquivo de negocio.
 2. Para cada etapa independente, chame `leitor-de-etapa` como subagente.
    Inicie os leitores em paralelo. Cada leitor recebe uma etapa e deve
-   devolver somente seu cartao de leitura.
-3. Espere todos os leitores terminarem. Nao tire conclusao de negocio,
-   nao proponha mecanismo tecnico e nao abra Figma para completar lacuna.
+   devolver somente seu cartao de leitura. Esta delegacao precisa acontecer
+   antes de qualquer leitura de documentos da etapa feita por voce.
+3. Espere todos os leitores terminarem. Nao gere resumo, classificacao ou
+   proximo passo antes de receber todos os cartoes. Nao tire conclusao de
+   negocio, nao proponha mecanismo tecnico e nao abra Figma para completar
+   lacuna.
 4. Atualize o estado da rodada com os resultados, separando bloqueios de
-   pendencias nao bloqueantes, e a proxima acao de cada etapa.
+   pendencias nao bloqueantes, a proxima acao de cada etapa e os nomes dos
+   Leitores que concluiram.
 5. Responda primeiro em linguagem comum, agrupando as perguntas em uma
    unica caixa de decisoes. Em seguida, mostre uma tabela curta por etapa.
 
@@ -61,6 +70,9 @@ reexecute uma etapa concluida sem pedido do designer.
 - No maximo tres etapas por rodada no piloto.
 - Nunca chame Montador, Validador, Analista ou outro Operador.
 - Nunca use `figma/*`, mesmo que o designer envie um link Figma.
+- Se receber um link Figma, diga que ele sera necessario no chat do
+  Analista, mas nao o abra, nao o registre no estado e nao o use para
+  decidir esta rodada.
 - Estado `aguardando_designer` significa que voce para depois de mostrar
   a caixa de decisoes. Nao escolha uma regra ausente. So pergunte ao
   designer por bloqueios reais da rodada. Pendencias nao bloqueantes ficam
@@ -75,6 +87,9 @@ Use este formato:
 ```text
 Resumo da rodada
 - <etapa>: <status simples>.
+
+Leitores que concluiram
+- <nome do leitor>: <etapa>.
 
 Decisoes que preciso de voce
 1. <pergunta concreta, apenas se houver>

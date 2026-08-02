@@ -20,14 +20,19 @@ prototipos.
 ## Inicio, meio e fim
 
 1. O designer seleciona `operador` e informa duas ou tres etapas.
-2. O Operador registra a rodada em `.designops/runs/`.
-3. O Operador chama um Leitor por etapa, em paralelo.
+2. O Operador registra a rodada em `.designops/runs/`, sem ler os
+   documentos das etapas por conta propria.
+3. O Operador chama um Leitor por etapa, em paralelo, antes de qualquer
+   classificacao.
 4. Os Leitores devolvem cartoes curtos, sem editar nada.
 5. O Operador consolida os cartoes em uma caixa de decisoes unica.
 6. A rodada termina em `concluida` ou `aguardando_designer`.
 
 O Operador nao inicia contexto ou analise automaticamente. A proxima fase
 sempre depende de um novo pedido do designer.
+
+O Operador mostra no fechamento quais Leitores devolveram cartao. Sem um
+Leitor concluido para cada etapa, a rodada nao esta concluida.
 
 ## O que o designer precisa revisar
 
@@ -50,6 +55,10 @@ recorte atual fica registrado para depois e a etapa continua para analise.
 Leituras de etapas independentes podem acontecer em paralelo. Nenhum
 agente escreve no Figma nesta fase. O unico arquivo criado e o estado
 temporario da rodada, ignorado pelo Git.
+
+Um link Figma enviado nesta fase fica fora da rodada: nao e aberto nem
+gravado no estado. O designer o envia novamente ao Analista no inicio da
+analise da etapa.
 
 Nao existe operacao continua em segundo plano. Cada rodada comeca por um
 pedido explicito do designer e termina com um resumo.

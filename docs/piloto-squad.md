@@ -22,11 +22,13 @@ esta pronto e o que precisa de contexto.
 
 3. Observe os dois subagentes. Eles devem ser leitores de etapa e podem
    aparecer em paralelo.
-4. Espere o resumo consolidado do Operador.
+4. Espere o resumo consolidado do Operador. Ele precisa listar os dois
+   Leitores que concluiram antes de classificar as etapas.
 
 ## Resultado esperado
 
 - existe uma pasta `.designops/runs/<id>/` com `estado.json`;
+- o estado lista um Leitor concluido para cada etapa pedida;
 - nenhum arquivo em `docs/` foi alterado;
 - nao houve chamada Figma;
 - Anuencia aparece `pronta_para_analise` quando catalogo, mapa e manuais
@@ -39,6 +41,9 @@ esta pronto e o que precisa de contexto.
 ## Resultado que reprova o piloto
 
 - o Operador chama Montador, Validador ou Analista;
+- o Operador le ou classifica documentos de uma etapa antes de chamar os
+  Leitores;
+- o resumo e entregue sem listar um Leitor concluido para cada etapa;
 - qualquer subagente edita arquivo ou usa Figma;
 - o Operador cria ou altera um manual oficial;
 - ele pede que o designer troque de agente para receber cada resultado;

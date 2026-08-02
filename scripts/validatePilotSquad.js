@@ -45,6 +45,10 @@ requireText(operatorPath, operator, 'user-invocable: true');
 requireText(operatorPath, operator, 'disable-model-invocation: true');
 requireText(operatorPath, operator, '  - agent');
 requireText(operatorPath, operator, '  - leitor-de-etapa');
+requireText(operatorPath, operator, 'essa leitura e\nresponsabilidade exclusiva dos Leitores');
+requireText(operatorPath, operator, 'antes de qualquer leitura de documentos da etapa feita por voce');
+requireText(operatorPath, operator, 'nao o registre no estado');
+requireText(operatorPath, operator, 'Leitores que concluiram');
 forbidText(operatorPath, operatorFrontmatter, 'figma/*');
 
 requireText(readerPath, reader, 'name: leitor-de-etapa');
@@ -74,6 +78,15 @@ requireText('.gitignore', gitignore, '!.designops/runs/.gitkeep');
   'docs/piloto-squad.md',
   '.designops/runs/.gitkeep'
 ].forEach(read);
+
+const squadOperation = read('docs/operacao-squad.md');
+requireText('docs/operacao-squad.md', squadOperation, 'sem ler os');
+requireText('docs/operacao-squad.md', squadOperation, 'documentos das etapas por conta propria');
+requireText('docs/operacao-squad.md', squadOperation, 'nao e aberto nem');
+requireText('docs/operacao-squad.md', squadOperation, 'gravado no estado');
+
+const squadPilot = read('docs/piloto-squad.md');
+requireText('docs/piloto-squad.md', squadPilot, 'Leitores que concluiram');
 
 if (failures.length > 0) {
   console.error('Fase 0 reprovada:');

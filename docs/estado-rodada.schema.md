@@ -21,7 +21,8 @@ repetir trabalho.
         "docs/clusters/cluster-4.md",
         "docs/clusters/gov-sp.md"
       ],
-      "pendencias": [],
+      "bloqueios": [],
+      "pendencias_nao_bloqueantes": [],
       "proximo_passo": "/consignado-analise"
     }
   ],
@@ -51,5 +52,10 @@ repetir trabalho.
 - `precisa_contexto`
 - `bloqueada`
 
-Uma pendencia deve dizer o que falta e em qual documento ou decisao ela
-precisa ser resolvida. Nao deve conter uma regra inventada.
+Um bloqueio deve dizer o que falta e em qual documento ou decisao ele
+precisa ser resolvido. Nao deve conter uma regra inventada.
+
+Uma pendencia nao bloqueante tambem deve registrar sua origem, mas nao
+impede a proxima fase quando catalogo, mapa e manuais ja definem o
+recorte interno pedido. Exemplos: detalhe de canal externo fora da
+biblioteca ou uma jornada futura que nao participa desta rodada.

@@ -7,7 +7,7 @@ justificam suas diferencas. Ele nao redefine a etapa.
 - Cluster: `gov-sp`
 - Mode no contexto da etapa: `Gov SP`
 - Orgao/convenio: Governo de Sao Paulo
-- Modalidades ativas: [CONFIRMAR]
+- Modalidades ativas: primeira concessao, refinanciamento e portabilidade de saldo
 - Mapa de fluxo: `docs/mapa-fluxo-anuencia-piloto.md`
 
 ## Jornada por etapa
@@ -35,6 +35,13 @@ justificam suas diferencas. Ele nao redefine a etapa.
 - Regra: a orientacao apresenta quatro itens de duvidas frequentes, com
   conteudo proprio deste convenio. Os itens nao sao iguais aos do
   cluster-4.
+- Origem: confirmado pelo designer nesta conversa
+- Status: ATIVA
+
+### R4. Segundo canal externo e prova de vida
+- Etapa: `anuencia`
+- Regra: depois da confirmacao no Sou SP, a pessoa conclui a prova de
+  vida no gov.br antes de retornar ao app Itau.
 - Origem: confirmado pelo designer nesta conversa
 - Status: ATIVA
 

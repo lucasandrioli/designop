@@ -75,6 +75,20 @@ frame como nome da tela ou como namespace de variavel. Referencia pode
 estar tecnicamente baguncada: isso e um fato tecnico, nao uma regra de
 negocio nem motivo para rejeita-la.
 
+Antes de declarar o inventario completo, produza estas tres evidencias
+de leitura para cada familia de tela proposta:
+
+1. screenshot de cada `_ref-<cluster>` ou dos frames pareados que cobrem
+   todos os blocos visiveis relevantes;
+2. tabela de reacoes, com origem, gatilho, destino e fonte, ou registro
+   explicito de que nenhuma reacao foi exposta pela leitura;
+3. `get_design_context` de referencia representativa por familia.
+
+Screenshot confirma a leitura visual, mas nao substitui fatos
+estruturais. Sem screenshot, a analise pode registrar inventario parcial,
+mas nao fecha contrato geometrico nem pede aprovacao de reconstrucao.
+Nao presuma uma reacao pela ordem dos frames ou pelo texto de um botao.
+
 ### 2. Comparar
 
 Pareie telas pelo caso de uso e posicao no fluxo. Registre fatos como
@@ -90,6 +104,18 @@ o designer confirma a regra de negocio e ela e registrada nos manuais;
 somente em uma analise posterior o mecanismo tecnico pode ser proposto.
 O mesmo papel nunca pode estar simultaneamente `[CONFIRMAR]` e
 `PROVA_DE_MONTAGEM`.
+
+Classifique tambem a fonte de cada texto variavel:
+
+- `CONTEUDO_POR_CLUSTER`: diferenca justificada por regra documentada e
+  representada por mode;
+- `DADO_TRANSACIONAL`: valor que muda por proposta, data, prazo, valor,
+  parcela ou estado da operacao. Nao recebe valor fixo em mode de cluster;
+  a origem do dado precisa estar documentada ou fica `[CONFIRMAR]`;
+- `CONTEUDO_FIXO`: igual para todos os clusters no recorte.
+
+Nao use uma diferenca momentanea de data ou prazo observada em referencia
+como justificativa para criar conteudo por cluster.
 
 ### 3. Generalizar e especializar
 
@@ -140,6 +166,36 @@ prova temporaria. Para cada template, entregue:
 6. itens que precisam de decisao humana antes da montagem e, quando
    houver, a prova mecanica que o Montador devera executar.
 
+Antes de classificar qualquer item como `EXATO`, leia as bibliotecas
+conectadas de componentes, tokens, icones e ilustracoes e pesquise o
+candidato por papel semantico. Um item `EXATO` sempre informa biblioteca,
+componente ou token, key real, property ou variant e node de evidencia.
+"Key confirmada em rodada anterior" nao e evidencia suficiente. Se a
+leitura de IDS ainda nao foi feita, continue investigando em vez de pedir
+uma decisao ao designer ou transferir a tarefa ao Montador.
+
+Para geometria, valor aproximado nao entra no contrato. Use numero medido
+ou declare `NAO_MEDIDO`; este ultimo impede aprovacao do contrato
+geometrico daquela tela. Valores com `~`, faixas estimadas ou suposicoes
+podem aparecer somente nas observacoes de inventario.
+
+Quando a referencia tiver rascunhos ou previews preexistentes, inventarie
+os como estado atual do arquivo. Nao os chame de auditados, prontos para
+promocao ou equivalentes a referencia sem um veredito atual do Validador.
+Promocao nao e decisao da proposta do Analista: so existe depois de
+`APTO PARA PROMOCAO` emitido pelo Validador.
+
+Se uma tela depender de asset proprietario obrigatorio que nao esteja
+disponivel na biblioteca, marque a tela `BLOQUEADA` e a retire do escopo
+aprovavel da rodada. Nunca proponha placeholder, frame local substituto,
+asset aproximado ou montagem parcial dessa tela. O restante independente
+da etapa pode seguir em proposta separada.
+
+Antes de perguntar sobre o comportamento de um item interativo, leia as
+reacoes do proprio item e o `get_design_context` do componente que o
+representa. Pergunte ao designer somente se ambos nao comprovarem o
+comportamento e se ele for necessario para o recorte atual.
+
 Uma `PROVA_DE_MONTAGEM` so e valida quando a divergencia que ela atende
 ja tiver regra de negocio documentada. Se o motivo ainda for
 `[CONFIRMAR]`, entregue apenas a lacuna de negocio e encerre esse item.
@@ -151,6 +207,11 @@ matriz de fatos, a selecao proposta no mapa, a arvore-alvo e o mapa IDS.
 Declare que a proposta ainda nao autoriza escrita. A aprovacao humana
 precisa cobrir, numa unica decisao, arvore-alvo, IDS, variaveis e
 excecoes.
+
+Antes do pedido de aprovacao, inclua uma secao curta `Evidencias de
+leitura` com: screenshots vistos, reacoes lidas e bibliotecas IDS
+consultadas. Se qualquer uma dessas tres evidencias faltar para uma tela,
+o resultado e `ANALISE INCOMPLETA`, sem pedido de aprovacao.
 
 ## Aprendizado opcional
 

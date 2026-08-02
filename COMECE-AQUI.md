@@ -221,6 +221,7 @@ pedido.
 | `AGENTS.md` | Regras sempre ativas, lidas por todo agente | Nao |
 | `.github/agents/` | Definicao dos 3 agentes visiveis | Nao |
 | `.github/skills/` | Metodo detalhado que os agentes seguem | Nao |
+| `scripts/validateAnalysisGates.js` | Checa que o Analista exige evidencias, IDS e limite de papel | Nao |
 | `scripts/validateReconstructionContract.js` | Checagem de arvore, geometria e IDS contra o contrato aprovado | Nao |
 | `docs/modelo-clusters.md` | Doutrina: convenio = mode, doutrina de binding | Nao |
 | `docs/estrutura-lib.md` | Nomenclatura, carimbo, o que publica | Nao |

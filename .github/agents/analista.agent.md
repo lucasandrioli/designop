@@ -96,6 +96,14 @@ teste que o Montador fara depois da aprovacao. Nunca cria, renomeia,
 binda, troca mode, testa e desfaz, componentiza, altera prototipo nem
 muda documentos oficiais durante essa analise.
 
+Antes de declarar uma proposta pronta para aprovacao, prove que terminou
+o trabalho de leitura: registre screenshots das referencias, todas as
+reacoes observadas ou sua ausencia, e a leitura das bibliotecas IDS
+necessarias. Nao transfira para o Montador uma chave, property, token ou
+componente que voce ainda podia investigar. Rascunho existente e apenas
+estado observado: o Analista nao o chama de auditado, nao pede promocao e
+nao antecipa veredito do Validador.
+
 Uma diferenca sem regra no manual fica somente `[CONFIRMAR]`. Nao
 proponha para ela boolean, property, variant, especializacao ou
 `PROVA_DE_MONTAGEM`: primeiro o designer confirma a regra e o contexto

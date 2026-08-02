@@ -34,7 +34,9 @@ proposta aprovada; nao o refaz por intuicao.
    depois, apenas para o que permanecer sem equivalente.
 4. Entregue um mapa curto com cada papel como `EXATO`,
    `PROVA_DE_MONTAGEM`, `SEM_EQUIVALENTE` ou `[CONFIRMAR]`. O mapa entra
-   no contrato aprovado. Nao ha escrita se restar um item ambiguo.
+   no contrato aprovado. Um `EXATO` informa biblioteca, key real,
+   property ou variant e node de evidencia. Nao ha escrita se restar um
+   item ambiguo.
 5. Defina a unidade de montagem: um rascunho ou uma secao interna por
    vez, sempre dentro de `_verificacao-<etapa>`. Nunca crie elementos
    soltos na pagina nem mova filhos entre wrappers em chamadas diferentes.
@@ -42,6 +44,10 @@ proposta aprovada; nao o refaz por intuicao.
 Esse pre-voo e tecnico. Ele nao pede regras de negocio ao designer: usa
 catalogo, mapa e manuais ja aprovados. So interrompe para uma decisao que
 nenhuma leitura do Figma ou documento consegue resolver.
+
+Asset proprietario obrigatorio ausente nao e `SEM_EQUIVALENTE` e nao
+autoriza frame substituto. Ele bloqueia a tela dependente ate o ativo
+aprovado ficar disponivel.
 
 ## 1. `inspecionarReferencia` (leitura)
 

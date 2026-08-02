@@ -44,6 +44,21 @@ Handoff e fronteira sao eventos de jornada, nao telas Figma. Quando uma
 reacao de prototipo nao estiver disponivel, o caminho correspondente fica
 `[VERIFICAR COM DESIGNER]`; ele nunca e inferido pela ordem dos frames.
 
+## Telas da biblioteca
+
+Uma tela da biblioteca tem nome curto, funcional e estavel. E o nome
+usado no mapa, no contrato de conteudo e no template, mesmo que o frame
+da referencia tenha sido nomeado de outro jeito.
+
+Antes de preencher esta tabela, o Analista le `get_metadata`, as
+reacoes do prototipo e `get_design_context` de pelo menos uma referencia
+por familia de tela. `get_design_context` ajuda a reconhecer os papéis
+e componentes usados; nao substitui mapa, manual ou revisao humana.
+
+| Tela da biblioteca | ID curto | Frames de referencia pareados | Evidencia usada | Status |
+| --- | --- | --- | --- | --- |
+| <ex: Orientacao> | `orientacao` | <frames encontrados> | <reacoes, contexto e estrutura> | [CONFIRMAR] |
+
 ## Escopo do contexto guiado
 
 No primeiro registro, o documento para aqui. Template, IDS, variaveis,
@@ -92,10 +107,11 @@ Para `binding: node`, `text` usa obrigatoriamente `campo: characters`
 e `visible` usa `campo: visible`. Para `component-property`, a property
 exposta precisa ser `TEXT` ou `BOOLEAN`, respectivamente.
 
-Toda `variavel` precisa comecar com `<etapa>/` e representar o papel de
-negocio daquela etapa. Nunca reutilize `prop/*`, `teste-*`, collection
-de laboratorio ou variavel de outra etapa so porque o tipo ou o valor
-coincide. Quando o binding direto no no ainda precisar ser exercitado
+Toda `variavel` precisa comecar com `<tela>/` quando a collection for da
+propria etapa, e representar o papel de negocio daquela tela. Em
+collection compartilhada, use `<etapa>/<tela>/`. Nunca reutilize
+`prop/*`, `teste-*`, collection de laboratorio ou variavel de outra
+etapa so porque o tipo ou o valor coincide. Quando o binding direto no no ainda precisar ser exercitado
 num arquivo real, registre `prova-de-montagem: true`; o Analista propoe,
 mas somente o Montador prova isso em `_verificacao-<etapa>`.
 
@@ -103,7 +119,8 @@ mas somente o Montador prova isso em `_verificacao-<etapa>`.
 collection: <nome da collection resolvida para esta etapa>
 papeis:
   - id: <titulo>
-    variavel: <etapa/grupo/nome-kebab>
+    tela: <id curto da tela da biblioteca>
+    variavel: <tela/papel-kebab>
     type: <text | visible>
     prova-de-montagem: <true | false>
     binding:

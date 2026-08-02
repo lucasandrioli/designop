@@ -5,7 +5,7 @@ justificam suas diferencas. Ele nao redefine a etapa.
 
 ## Identificacao
 - Cluster: `cluster-4`
-- Mode no contexto da etapa: [CONFIRMAR]
+- Mode no contexto da etapa: `Cluster 4`
 - Orgao/convenio: convenios distribuidos nacionalmente
 - Modalidades ativas: [CONFIRMAR]
 - Mapa de fluxo: `docs/mapa-fluxo-anuencia-piloto.md`
@@ -28,6 +28,13 @@ justificam suas diferencas. Ele nao redefine a etapa.
 - Etapa: `anuencia`
 - Regra: o caminho externo observado para o cluster-4 e SouGov.
 - Origem: informado pelo designer nesta conversa
+- Status: ATIVA
+
+### R3. Duvidas frequentes na orientacao
+- Etapa: `anuencia`
+- Regra: a orientacao apresenta quatro itens de duvidas frequentes, com
+  conteudo proprio deste convenio.
+- Origem: confirmado pelo designer nesta conversa
 - Status: ATIVA
 
 ## Regras que nao se aplicam aqui

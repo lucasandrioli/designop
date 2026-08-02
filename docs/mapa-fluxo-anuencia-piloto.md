@@ -11,28 +11,29 @@ Este documento e a fonte unica da composicao para este escopo.
 
 | # | Etapa / passo / fronteira | Caso de uso | Nivel | Gatilho | cluster-4 | gov-sp |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | anuencia/orientacao-confirmacao | base da etapa | 1 | apos senha transacional | sem diferenca registrada | sem diferenca registrada |
-| 2 | anuencia/direcionamento-canal-externo | ponto de reencontro dos caminhos | 1 | seguir direto ou concluir tutorial | sem diferenca registrada | sem diferenca registrada |
+| 1 | anuencia/orientacao | base da etapa | 1 | apos senha transacional | FAQ proprio do cluster | FAQ proprio do cluster |
+| 2 | anuencia/direcionamento | ponto de reencontro dos caminhos | 1 | seguir direto ou concluir tutorial | SouGov | Sou SP |
 | 3 | handoff/canal-externo-convenio | continuidade fora do app | 1 | saida do app para validacao externa | canal SouGov | canal Sou SP e um segundo canal externo [CONFIRMAR] |
 | 4 | handoff/validacao-externa-convenio | continuidade fora do app | 1 | validacoes exigidas pelo convenio | 1 validacao externa (evidencia, nao template) | 2 validacoes externas (evidencia, nao template) |
 | 5 | handoff/retorno-ao-app | retorno ao app Itau | 1 | fim da validacao externa | sem diferenca registrada | sem diferenca registrada |
 | 6 | fronteira/retorno-carregando | fronteira de transicao | 1 | retorno ao app | sem diferenca registrada | sem diferenca registrada |
 | 7 | fronteira/efetivacao | fronteira de transicao | 1 | continuidade apos carregamento | sem diferenca registrada | sem diferenca registrada |
-| 8 | anuencia/tutorial-passo-1 | caminho de ajuda opcional | 2 | \|Saiba o passo a passo\| | sem diferenca registrada | sem diferenca registrada |
-| 9 | anuencia/tutorial-passo-2 | caminho de ajuda opcional | 2 | \|Proximo passo\| | sem diferenca registrada | sem diferenca registrada |
-| 10 | anuencia/tutorial-passo-3 | caminho de ajuda opcional | 2 | \|Proximo passo\| | sem diferenca registrada | sem diferenca registrada |
-| 11 | anuencia/tutorial-passo-4 | caminho de ajuda opcional | 2 | \|Ir para confirmacao externa\| | sem diferenca registrada | sem diferenca registrada |
+| 8 | anuencia/tutorial-1 | caminho de ajuda opcional | 2 | \|Saiba o passo a passo\| | sem diferenca registrada | sem diferenca registrada |
+| 9 | anuencia/tutorial-2 | caminho de ajuda opcional | 2 | \|Proximo passo\| | sem diferenca registrada | sem diferenca registrada |
+| 10 | anuencia/tutorial-3 | caminho de ajuda opcional | 2 | \|Proximo passo\| | sem diferenca registrada | sem diferenca registrada |
+| 11 | anuencia/tutorial-4 | caminho de ajuda opcional | 2 | \|Ir para confirmacao externa\| | sem diferenca registrada | sem diferenca registrada |
 
 Fonte da topologia:
 - bifurcacao opcional, reencontro, handoff externo e retorno confirmados pelo designer nesta conversa;
-- nao inferido de conexoes de prototipo, pois o MCP nao expos essas reacoes na rodada.
+- reacoes entre orientacao, tutoriais e direcionamento confirmadas pelo MCP em 2026-08-02;
+- retorno ao app mantido como fronteira confirmada pelo designer.
 
 ## Grafo por convenio e caso de uso
 
 ### topologia compartilhada da etapa (confirmada pelo designer)
 ```mermaid
 flowchart TD
-    a[Anuencia: orientacao-confirmacao] -->|seguir direto| b[Direcionamento para canal externo]
+    a[Anuencia: orientacao] -->|seguir direto| b[Direcionamento para canal externo]
     a -.->|Saiba o passo a passo| t1([Tutorial 1])
     t1 -.-> t2([Tutorial 2])
     t2 -.-> t3([Tutorial 3])

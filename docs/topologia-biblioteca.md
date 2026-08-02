@@ -6,25 +6,38 @@ namespace logico, e cluster continua sendo o valor aplicado a ela.
 
 ## Decisao obrigatoria antes da montagem
 
-Status atual: `[DECIDIR]`.
+Status atual: `APROVADO PARA O ARQUIVO TESTE`.
 
 O Montador nao cria collection, variavel ou binding enquanto este
 documento estiver em `[DECIDIR]`. O Analista pode trabalhar normalmente,
 porque le a etapa e suas referencias, nao a topologia final.
 
-## Modelo logico que nunca muda
+Para o arquivo `TESTE`, a decisao aprovada e
+`arquivo-unico/collections-por-etapa`. Isso resolve a montagem atual,
+sem impedir que uma futura biblioteca adote `arquivo-por-etapa`.
 
-Toda variavel recebe o namespace visivel da etapa, mesmo se a collection
-ou o arquivo tambem ja a identificarem. Exemplo:
+## Convencao de nomes de variavel
+
+O primeiro grupo e sempre a tela da biblioteca. Quando a collection ja
+pertence a uma unica etapa, nao repita a etapa no nome da variavel:
+
+```text
+orientacao/descricao
+tutorial-1/titulo
+direcionamento/mensagem
+```
+
+Em collection compartilhada por varias etapas, acrescente a etapa antes
+da tela:
 
 ```text
 anuencia/orientacao/descricao
-anuencia/tutorial/passo-1/titulo
 simulacao/oferta/valor-liberado
 ```
 
-Assim, quem olha a tabela de variaveis sabe imediatamente a que etapa
-pertence cada grupo, em qualquer topologia.
+Nome de frame de referencia nao determina esse caminho. O Analista
+registra primeiro qual e a tela da biblioteca e o Montador usa esse
+nome aprovado para criar as variaveis.
 
 ## Opcoes suportadas
 
@@ -51,9 +64,27 @@ arquivos:
 collection:
   convencao: <Conteudo | Conteudo · <Etapa>>
 variaveis:
-  convencao: <etapa/grupo/nome>
+  convencao: <tela/papel ou etapa/tela/papel em collection compartilhada>
 decidido-por: <nome>
 data: <aaaa-mm-dd>
+```
+
+### Decisao atual: arquivo TESTE
+
+```yaml
+topologia: arquivo-unico/collections-por-etapa
+arquivos:
+  - etapa: anuencia
+    figma: HQ5cPT1kjWZQAXKE9Lvu0U
+collection:
+  nome: Conteudo · Anuencia
+  modos:
+    - Gov SP
+    - Cluster 4
+variaveis:
+  convencao: tela/papel
+decidido-por: designer
+data: 2026-08-02
 ```
 
 ## Regras de transicao

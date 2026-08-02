@@ -14,6 +14,33 @@ Use a rotina adequada ao papel atual. Analista apenas inspeciona e
 resolve IDS. Montador pode montar apenas depois da aprovacao. Validador
 apenas audita.
 
+## 0. `prepararReconstrucao` (leitura obrigatoria)
+
+Antes de qualquer escrita, trabalhe a partir do link do frame exato, nao
+do link do arquivo inteiro. O Montador confirma este pre-voo a partir da
+proposta aprovada; nao o refaz por intuicao.
+
+1. Leia a referencia e ao menos uma tela comparavel que ja use o IDS.
+   O objetivo e descobrir componentes reais em uso, nao reproduzir a
+   arvore de nenhuma delas.
+2. Liste bibliotecas conectadas de componentes, tokens, icones e
+   ilustracoes. Quando a ferramenta de bibliotecas existir, use-a; caso
+   contrario, consulte a Team Library pela Plugin API.
+3. Para cada papel de interface, resolva antes de escrever: componente,
+   `key`, variant, properties publicas, token e escopo aplicavel. Primeiro
+   procure a instancia ja usada em uma tela; busca de biblioteca vem
+   depois, apenas para o que permanecer sem equivalente.
+4. Entregue um mapa curto com cada papel como `EXATO`,
+   `PROVA_DE_MONTAGEM`, `SEM_EQUIVALENTE` ou `[CONFIRMAR]`. O mapa entra
+   no contrato aprovado. Nao ha escrita se restar um item ambiguo.
+5. Defina a unidade de montagem: um rascunho ou uma secao interna por
+   vez, sempre dentro de `_verificacao-<etapa>`. Nunca crie elementos
+   soltos na pagina nem mova filhos entre wrappers em chamadas diferentes.
+
+Esse pre-voo e tecnico. Ele nao pede regras de negocio ao designer: usa
+catalogo, mapa e manuais ja aprovados. So interrompe para uma decisao que
+nenhuma leitura do Figma ou documento consegue resolver.
+
 ## 1. `inspecionarReferencia` (leitura)
 
 Recebe um frame de referencia e extrai fatos, sem copiar sua arvore:
@@ -94,17 +121,26 @@ confira novamente as keys e properties do mapa IDS. Pare diante de
 `[CONFIRMAR]`, `SEM_EQUIVALENTE` sem excecao aprovada ou componente sem
 slot necessario.
 
-1. Trabalhe somente em `_verificacao-<etapa>`.
-2. Crie a arvore-alvo com containers locais, Auto Layout, sizing, gaps,
+1. Confirme que `prepararReconstrucao` foi concluido e que o mapa IDS da
+   proposta nao contem lacunas. Trabalhe somente em
+   `_verificacao-<etapa>`.
+2. Crie primeiro o wrapper do rascunho. Depois construa uma secao por
+   chamada, diretamente dentro dele. Nao construa secoes soltas para
+   reparentar depois.
+3. Crie a arvore-alvo com containers locais, Auto Layout, sizing, gaps,
    padding e sobreposicoes declarados no contrato.
-3. Importe componentes IDS pela key real e use somente properties
+4. Importe componentes IDS pela key real e use somente properties
    publicas. Nunca anexe filho dentro de instancia remota.
-4. Crie componente ou secao local somente quando a excecao aprovada
+5. Crie componente ou secao local somente quando a excecao aprovada
    declarar esse papel.
-5. Clone referencia somente quando o contrato aprovar um asset visual
+6. Clone referencia somente quando o contrato aprovar um asset visual
    especifico. Nunca clone a tela inteira como ponto de partida do
    template.
-6. Crie previews sem reactions em `_verificacao-<etapa>`; mode fica
+7. Depois de cada secao, faca uma leitura separada e screenshot do bloco
+   criado. Corrija somente o bloco com problema antes de iniciar o
+   seguinte. Screenshot e evidencia visual, nao substituto do contrato
+   deterministico.
+8. Crie previews sem reactions em `_verificacao-<etapa>`; mode fica
    apenas no wrapper.
 
 ## 5. `auditarReconstrucao` (leitura)

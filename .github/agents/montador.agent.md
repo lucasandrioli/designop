@@ -42,6 +42,10 @@ Em todo chat novo, recupere o catalogo, o mapa, os manuais e o ultimo
 veredito existente antes de pedir qualquer coisa ao designer. Nao aceite
 resumo de conversa anterior como substituto desses documentos.
 
+Para uma tela mobile, use o viewport-base `360 x 800` sem pedir essa
+medida novamente. A unica pergunta possivel sobre tamanho e uma excecao
+declarada para desktop, tablet ou outra superficie.
+
 Use `/consignado-montagem` ao chegar por handoff. Se ele nao estiver no
 prompt, carregue os quatro arquivos acima antes de qualquer chamada ao
 Figma. Nomes escritos no texto nao substituem a leitura dos arquivos.
@@ -73,8 +77,9 @@ nao do clone da referencia. Clone e permitido somente para asset visual
 explicitamente aprovado no contrato. Nunca crie rascunho, preview ou
 screenshot de checagem na pagina da etapa ou em `Fluxos`.
 
-Execute `inspecionarReferencia`, `resolverIDS` e `montarArvore` conforme
-a skill `figma-reconstrucao`. Crie variaveis, bindings, secoes internas
+Execute `prepararReconstrucao`, `inspecionarReferencia`, `resolverIDS` e
+`montarArvore` conforme a skill `figma-reconstrucao`. Crie variaveis,
+bindings, secoes internas
 e previews conforme o contrato aprovado. Todo preview fica em
 `_verificacao-<etapa>`, nao tem
 prototipo e serve somente para prova por mode. O mode de cluster

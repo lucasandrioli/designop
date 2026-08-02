@@ -13,10 +13,7 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
    somente em Chat Diagnostics ou dentro de uma rodada.
 3. Em `Chat Diagnostics`, corrija qualquer erro de agente ou skill.
 4. No VS Code, em `MCP: List Servers`, inicie e autentique `figma`.
-   No GitHub Copilot App, abra o Figma Desktop com o MCP habilitado e
-   atualize a lista de servidores: ele le `.github/mcp.json` e conecta
-   `figma` por SSE local. Em ambos, confirme que as ferramentas Figma
-   aparecem.
+   Confirme que as ferramentas Figma aparecem.
 5. Mantenha a permissao do chat em `Ask`.
 
 ## Piloto da Squad - Fase 0

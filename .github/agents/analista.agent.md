@@ -60,6 +60,12 @@ escolher o modo. Recupere catalogo, mapa e manuais existentes. Use
 documentos ainda nao existem; nao peca que o designer reapresente uma
 etapa ja documentada.
 
+Quando a superficie for mobile, trate `360 x 800` como dado ja conhecido
+do projeto. A referencia pode ter outra altura, mas isso nao abre uma
+pergunta: a proposta normaliza o viewport e registra rolagem ou elementos
+fixos apenas quando a evidencia ou o contrato os justificar. Pergunte
+somente se o designer declarar desktop, tablet ou uma excecao de viewport.
+
 ## Modo inicial: contexto guiado
 
 Quando o designer chegar com referencias, mas sem os manuais, comece por

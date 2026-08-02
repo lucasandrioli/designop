@@ -142,6 +142,13 @@ templates:
     componente: <etapa>/tpl-<nome>
     status: <APROVADO>
     tolerancia-px: 2
+    viewport:
+      superficie: mobile
+      largura: 360
+      altura: 800
+    prototipo:
+      overflow-direction: <NONE | HORIZONTAL | VERTICAL | HORIZONTAL_AND_VERTICAL>
+      filhos-fixos: [<nomes unicos, na ordem em que aparecem no final da tela>]
     referencias:
       - cluster: <cluster>
         papel-raiz: <tela>
@@ -199,6 +206,8 @@ Na chamada do script, `papel`, `alvo`, `referencia`, `pai`, `tipo`,
 `target`, `reference`, `parent`, `type`, `source` e `localException`.
 `nome` vira `nodeName`; `raiz: true` permanece `root: true`. Assim o
 catalogo continua legivel e o script recebe chaves estaveis.
+`viewport.superficie`, `viewport.largura` e `viewport.altura` viram
+`viewport.surface`, `viewport.width` e `viewport.height`.
 
 Arvore e IDS sao auditados uma vez no rascunho. Geometria e rodada uma
 vez por cluster, com `geometryCandidateId` apontando para a instancia no
@@ -206,6 +215,73 @@ preview daquele mode. Quando a referencia usa nome diferente para o
 mesmo papel, o Montador passa o seletor daquele cluster em
 `reference` ou `geometryTarget`, sem alterar a arvore-alvo aprovada.
 `literal-aprovado` vira `approvedLiteral` no script.
+
+Para `superficie: mobile`, o viewport-base global e obrigatoriamente
+`360 x 800`, conforme [Viewport-base](../viewport-base.md). O Analista
+preenche esses valores sem perguntar. Um tamanho diferente exige uma
+excecao explicita do designer no contrato tecnico.
+
+`prototipo` e opcional. Ele e usado somente quando a referencia ou o
+designer declarar comportamento de rolagem ou elementos fixos. Por
+exemplo, uma tela mobile pode declarar `overflow-direction: VERTICAL` e
+`filhos-fixos: [rodape-fixo]`. Isto nao transforma rodape fixo em regra
+geral: apenas torna verificavel a escolha daquela tela. O Montador
+traduz essas chaves para `prototype.overflowDirection` e
+`prototype.fixedChildren` no `validateReconstructionContract`.
+
+## Contrato de interacao aprovado
+
+Este contrato descreve somente o comportamento que a tela precisa ter
+no prototipo. A referencia normalmente prova origem e destino. Quando
+ela nao registrar movimento, o designer pode informar na conversa o
+gatilho, atraso, transicao, duracao e Bezier. Registre os valores
+literais recebidos, sem procurar documento remoto e sem substituir por
+um preset parecido.
+
+`duration` e medida em segundos no contrato do Plugin API. `timeout` do
+gatilho `AFTER_TIMEOUT` e medido em milissegundos. Deixe esses campos
+ausentes quando nao forem parte do comportamento aprovado.
+
+```yaml
+perfis-de-movimento:
+  - id: <saida-padrao>
+    gatilho:
+      tipo: <ON_CLICK | AFTER_TIMEOUT>
+      timeout: <milissegundos, somente AFTER_TIMEOUT>
+    transicao:
+      tipo: <DISSOLVE | SMART_ANIMATE | PUSH | ...>
+      duracao: <segundos>
+      easing:
+        tipo: <EASE_OUT | CUSTOM_CUBIC_BEZIER | ...>
+        bezier: { x1: <numero>, y1: <numero>, x2: <numero>, y2: <numero> }
+
+reacoes:
+  - no: <nome unico da acao ou frame>
+    esperado: <destination | back | any>
+    destino: <nome da tela de destino, quando houver>
+    perfil-de-movimento: <saida-padrao>
+  - no: <acao com movimento proprio>
+    esperado: <destination | back | any>
+    destino: <nome da tela de destino, quando houver>
+    gatilho: { tipo: <ON_CLICK | AFTER_TIMEOUT>, timeout: <milissegundos> }
+    transicao:
+      tipo: <DISSOLVE | SMART_ANIMATE | PUSH | ...>
+      duracao: <segundos>
+      easing:
+        tipo: <EASE_OUT | CUSTOM_CUBIC_BEZIER | ...>
+        bezier: { x1: <numero>, y1: <numero>, x2: <numero>, y2: <numero> }
+```
+
+Use um perfil para uma regra agrupada e cite o perfil em cada acao que
+ela cobre. Uma acao pode ter movimento proprio, mas nao pode combinar
+perfil e valores locais. O Montador traduz `perfis-de-movimento` para
+`motionProfiles` e `perfil-de-movimento` para `motionProfile` no
+`validateInteractionContract`. Para uma regra local, ele traduz `no`,
+`esperado`, `destino`, `gatilho.tipo`, `gatilho.timeout`,
+`transicao.tipo`, `transicao.duracao` e `transicao.easing.bezier` para
+`name`, `expected`, `destinationName`, `trigger.type`,
+`trigger.timeout`, `transition.type`, `transition.duration` e
+`transition.easing.cubicBezier`.
 
 ## Comportamento de campo e estado de UI (extraido dos agentes)
 

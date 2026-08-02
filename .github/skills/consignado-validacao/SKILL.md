@@ -42,8 +42,11 @@ Leia antes de qualquer chamada Figma:
 - [Validacao do contrato de conteudo](../../../scripts/validateContentContract.js)
 - [Validacao de comportamento por mode](../../../scripts/validateModeBehavior.js)
 - [Validacao do contrato de reconstrucao](../../../scripts/validateReconstructionContract.js)
+- [Validacao de interacao por contrato](../../../scripts/validateInteractionContract.js)
+- [Validacao de organizacao do canvas](../../../scripts/validateCanvasOrganization.js)
 - [Elegibilidade para promocao](../../../scripts/validatePromotion.js)
 - [Taxonomia de nomes e carimbo](../../../docs/estrutura-lib.md)
+- [Viewport-base](../../../docs/viewport-base.md)
 
 Os links fazem parte da execucao. Citar o nome de uma skill ou script
 na resposta nao prova que seu conteudo foi carregado.
@@ -229,6 +232,30 @@ ilustracao errada, contraste ou bloco visual ausente, que a matematica
 nao cobre. Screenshot nao e o unico criterio: o contrato deterministico
 continua sendo a base do veredito. Se a captura for bloqueada, registre
 `NAO VERIFICAVEL`; validacoes 1-3 nao liberam `tpl-*` sozinhas.
+
+### 4b. Interacoes declaradas no contrato
+
+Quando o contrato tecnico da tela declarar comportamento de interacao,
+rode `validateInteractionContract`. Para cada acao declarada, ele
+confere a existencia da reacao e, quando exigido, um destino ou retorno
+de navegacao. Quando o contrato nomear um destino, ele tambem confere
+que a acao chega naquela tela especifica, e nao apenas em algum lugar.
+Quando o contrato declarar movimento, ele confere tambem o tipo de
+gatilho, o atraso, a transicao, a duracao e os quatro pontos do Bezier.
+Esses valores so podem vir da referencia ou de uma informacao explicita
+do designer registrada na proposta aprovada.
+Papeis de layout, como rodape fixo ou totalizador, nao
+entram nesse script: sao validados por arvore, ordem e geometria no
+`validateReconstructionContract`, somente se o contrato os declarar.
+Quando o contrato declarar comportamento de rolagem, o mesmo script
+confere `overflowDirection`, quantidade e ordem dos filhos fixos da
+raiz. Sem essa declaracao, nao presume que uma tela deva ter rodape
+fixo.
+Para superficie mobile, ele tambem confere o viewport-base `360 x 800`,
+salvo excecao explicita no contrato tecnico.
+Para uma pagina que declarar suas regioes, rode tambem
+`validateCanvasOrganization`: ele confere sobreposicao entre secoes e,
+quando solicitado, entre masters locais.
 
 ### 5. Consistência mapa de fluxo <-> arquivo
 - Todo template-base ou especializado selecionado em docs/mapa-fluxo-*.md existe no arquivo da lib

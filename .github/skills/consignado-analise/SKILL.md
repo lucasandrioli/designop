@@ -136,6 +136,12 @@ instancia oculta na referencia e artefato tecnico, nao uma quinta opcao a
 confirmar. Registre o artefato no inventario e mantenha os quatro slots
 do contrato.
 
+O mesmo vale para fronteiras da jornada. Quando o mapa de fluxo declarar
+`retorno-carregando` ou `efetivacao` como fronteira, inventarie os frames
+como evidencia e mantenha-os fora dos templates da etapa. Eles nao sao
+uma tela nova a perguntar ao designer, mesmo que nao aparecam na tabela
+de telas da biblioteca.
+
 ### 2. Comparar
 
 Pareie telas pelo caso de uso e posicao no fluxo. Registre fatos como
@@ -226,6 +232,17 @@ verificavel. Para cada papel que tenha geometria relevante, registre
 medidas exatas da referencia ou `NAO_MEDIDO`; nao esconda a ausencia de
 medicao em texto descritivo.
 
+Valor aproximado, faixa ou contagem visual nao entra em arvore nem
+contrato: nao use `~`, `≈`, "aprox.", "2 linhas" ou `56–84px`. Quando a
+altura depender do texto, registre `HUG + textAutoResize=HEIGHT` e as
+medidas exatas observadas em cada mode, ou `NAO_MEDIDO`.
+
+Uma arvore compartilhada so pode servir a varias telas quando a proposta
+nomear a arvore e trouxer uma tabela que associe explicitamente cada
+template, por exemplo `tutorial-1` a `tutorial-4`, aos seus valores,
+filhos fixos e diferencas. "Mesma arvore" sem esse mapa nao fecha os
+quatro contratos.
+
 Antes de classificar qualquer item como `EXATO`, leia as bibliotecas
 conectadas de componentes, tokens, icones e ilustracoes e pesquise o
 candidato por papel semantico. Um item `EXATO` sempre informa biblioteca,
@@ -289,6 +306,10 @@ Se o catalogo vigente ja registra um asset como bloqueio, mantenha a tela
 `[CONFIRMAR]` nem pergunte se a regra ainda vale. So o designer pode
 informar uma mudanca de regra no contexto guiado.
 
+Acao sem reacao observada e um fato da referencia atual. Registre
+`SEM_REACAO_OBSERVADA` e nao abra `[VERIFICAR COM DESIGNER]` para voltar,
+fechar ou outro controle que nao seja necessario ao recorte aprovado.
+
 Antes de perguntar sobre o comportamento de um item interativo, leia as
 reacoes do proprio item e o `get_design_context` do componente que o
 representa. Pergunte ao designer somente se ambos nao comprovarem o
@@ -350,6 +371,12 @@ Artefato tecnico de referencia, por exemplo `flowStartingPoint` sem nome
 ou frame com nome livre, e registrado no inventario e nao vira pergunta
 ao designer nem condicao para aprovar templates. Referencias cruas nao
 sao normalizadas pelo Analista.
+
+Reacoes observadas pertencem ao contrato de interacao, nao ao template
+montado nesta rodada. O Montador constroi `_verificacao-<etapa>` e seus
+previews sem prototipo. A instancia do template so recebe reacoes em
+`Fluxos`, depois de pedido explicito do designer e de os templates
+envolvidos estarem aprovados.
 
 Antes do pedido de aprovacao, inclua uma secao curta `Evidencias de
 leitura` com: screenshots vistos, reacoes lidas e bibliotecas IDS

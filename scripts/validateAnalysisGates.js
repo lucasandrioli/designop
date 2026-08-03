@@ -33,6 +33,7 @@ requireText('.github/agents/analista.agent.md', analyst, 'Uma solicitacao `/cons
 requireText('.github/agents/analista.agent.md', analyst, '`get_libraries` apenas lista bibliotecas conectadas');
 requireText('.github/agents/analista.agent.md', analyst, 'Mesmo que um catalogo registre que um rascunho foi criado em rodada');
 requireText('.github/agents/analista.agent.md', analyst, 'Toda\nseta observada precisa mostrar node de origem');
+requireText('.github/agents/analista.agent.md', analyst, 'Ausencia atual de `_verificacao-<etapa>` significa apenas');
 requireText('.github/agents/analista.agent.md', analyst, 'Nao tente\ncarrega-las por `figma-get_figma_skill`');
 requireText('.github/agents/analista.agent.md', analyst, 'nao leia seus\nbindings, modes, previews ou layout');
 requireText('.github/agents/analista.agent.md', analyst, 'nao capture screenshot nem contexto dessa verificacao');
@@ -66,9 +67,15 @@ requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`papel`, `p
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`papel`, `biblioteca`, `componente\nou token`, `key inteira`');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'mantenha a tela\n`BLOQUEADA` nesta rodada');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Artefato tecnico de referencia, por exemplo `flowStartingPoint` sem nome');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`retorno-carregando` ou `efetivacao` como fronteira');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'nao use `~`, `≈`, "aprox.", "2 linhas" ou `56–84px`');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Uma arvore compartilhada so pode servir a varias telas');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`SEM_REACAO_OBSERVADA`');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'previews sem prototipo');
 requireText('docs/contrato-papeis.md', roles, 'Inventario nao e uma entrega separada do Analista');
 requireText('docs/contrato-papeis.md', roles, 'O Analista prova prototipos na referencia na rodada atual');
 requireText('docs/contrato-papeis.md', roles, 'Uma proposta para aprovacao precisa mostrar a bifurcacao completa');
+requireText('docs/contrato-papeis.md', roles, 'Fronteiras que o mapa ja definiu nao viram pergunta nova');
 
 requireText('.github/skills/figma-reconstrucao/SKILL.md', reconstruction, 'Asset proprietario obrigatorio ausente');
 requireText('docs/contrato-papeis.md', roles, 'evidencia\nde leitura visual, reacoes e IDS');

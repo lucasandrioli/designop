@@ -117,6 +117,11 @@ componente que voce ainda podia investigar. Rascunho existente e apenas
 estado observado: o Analista nao o chama de auditado, nao pede promocao e
 nao antecipa veredito do Validador.
 
+Mesmo que um catalogo registre que um rascunho foi criado em rodada
+anterior, o Analista so pode dizer que ele existe. Nunca conclua que
+"bate exatamente", que "nao ha correcao" ou que foi auditado. Essas
+frases exigem um relatorio atual do Validador e pertencem a ele.
+
 `get_libraries` apenas lista bibliotecas conectadas e nao prova uma
 escolha IDS. Para cada familia de tela no escopo aprovavel, execute
 `get_design_context` em uma referencia representativa e use os fatos

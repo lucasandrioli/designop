@@ -29,6 +29,8 @@ const roles = read('docs/contrato-papeis.md');
 
 requireText('.github/agents/analista.agent.md', analyst, 'screenshots das referencias');
 requireText('.github/agents/analista.agent.md', analyst, 'nao pede promocao');
+requireText('.github/agents/analista.agent.md', analyst, 'Uma solicitacao `/consignado-analise` ja pede a proposta completa');
+requireText('.github/agents/analista.agent.md', analyst, '`get_libraries` apenas lista bibliotecas conectadas');
 requireText('.github/agents/analista.agent.md', analyst, 'Nao tente\ncarrega-las por `figma-get_figma_skill`');
 requireText('.github/agents/analista.agent.md', analyst, 'nao leia seus\nbindings, modes, previews ou layout');
 requireText('.github/agents/analista.agent.md', analyst, 'nao capture screenshot nem contexto dessa verificacao');
@@ -48,6 +50,11 @@ requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'ANALISE PAR
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'findAll` nao inclui o proprio frame');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nao abrevie keys na proposta');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Escopo\naprovavel agora');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`get_libraries` so informa quais bibliotecas estao conectadas');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nao transforme nome de instancia, nome de variant ou lista de bibliotecas');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`PROPOSTA PARA APROVACAO`');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`ANALISE INCOMPLETA`');
+requireText('docs/contrato-papeis.md', roles, 'Inventario nao e uma entrega separada do Analista');
 
 requireText('.github/skills/figma-reconstrucao/SKILL.md', reconstruction, 'Asset proprietario obrigatorio ausente');
 requireText('docs/contrato-papeis.md', roles, 'evidencia\nde leitura visual, reacoes e IDS');

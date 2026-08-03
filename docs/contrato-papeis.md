@@ -128,6 +128,13 @@ equivalencia ou promocao: isso pertence ao Validador e, depois de um
 veredito apto, ao Montador. Asset proprietario obrigatorio ausente
 bloqueia a tela dependente sem placeholder local.
 
+Inventario nao e uma entrega separada do Analista. Quando recebe
+`/consignado-analise`, ele segue do inventario ate a proposta consolidada
+na mesma rodada. So pede aprovacao depois de entregar matriz, mecanismo,
+arvore-alvo, IDS e contratos do escopo aprovavel. Listar bibliotecas ou
+instancias pelo nome nao substitui a leitura de contexto necessaria para
+uma escolha IDS verificavel.
+
 O Analista usa referencias `ref-*`; `_verificacao-*` e territorio do
 Validador. Ele pode mencionar que um rascunho existe, mas nao inspeciona
 bindings, modes, previews ou layout para emitir uma conclusao. Manual

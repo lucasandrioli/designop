@@ -38,6 +38,11 @@ Leia seus arquivos locais. `figma-get_figma_skill` nao carrega skills do
 repositorio e uma falha dessa ferramenta nao e permissao para continuar
 sem a skill.
 
+O link da rodada aponta para a pagina da etapa e suas secoes `ref-*`.
+Quando um deep link recebido apontar para `_verificacao-*`, use no maximo
+metadados para localizar a pagina de referencias. Nao capture screenshot,
+design context nem qualquer dado estrutural do rascunho.
+
 ## Recuperar contexto no chat novo
 
 Antes de inventariar, procure os documentos da etapa que o designer
@@ -98,6 +103,11 @@ Screenshot confirma a leitura visual, mas nao substitui fatos
 estruturais. Sem screenshot, a analise pode registrar inventario parcial,
 mas nao fecha contrato geometrico nem pede aprovacao de reconstrucao.
 Nao presuma uma reacao pela ordem dos frames ou pelo texto de um botao.
+Ao varrer reacoes, leia cada frame de referencia como raiz e depois todos
+os descendentes: `findAll` nao inclui o proprio frame e pode omitir uma
+reacao ligada ao container inteiro. A tabela registra se o gatilho esta
+no frame-raiz ou em um filho. Siga as evidencias externas somente ate a
+fronteira declarada no mapa de fluxo.
 
 Documento aprovado resolve a regra de negocio antes de qualquer pergunta
 ao designer. Exemplo: se o manual determina quatro FAQs, uma quinta
@@ -190,6 +200,10 @@ componente ou token, key real, property ou variant e node de evidencia.
 leitura de IDS ainda nao foi feita, continue investigando em vez de pedir
 uma decisao ao designer ou transferir a tarefa ao Montador.
 
+Nao abrevie keys na proposta. Cada `EXATO` mostra a key inteira, a
+biblioteca, a property ou variant e o node de evidencia. A forma curta
+com reticencias nao e contrato verificavel.
+
 Para geometria, valor aproximado nao entra no contrato. Use numero medido
 ou declare `NAO_MEDIDO`; este ultimo impede aprovacao do contrato
 geometrico daquela tela. Valores com `~`, faixas estimadas ou suposicoes
@@ -218,6 +232,14 @@ de asset ou lacuna de negocio, nao faca pedido de aprovacao. Entregue
 `ANALISE PARCIAL`, registre os bloqueios e indique o proximo papel
 correto. Se houver rascunhos preexistentes a verificar, o proximo papel e
 o Validador, nao o Montador nem uma decisao de promocao.
+
+Quando parte da etapa estiver bloqueada, divida a entrega em `Escopo
+aprovavel agora` e `Escopo bloqueado`. Um pedido de aprovacao nomeia
+exatamente os templates do primeiro grupo e nunca inclui tela bloqueada.
+Cada tela da biblioteca e um template proprio quando tiver seu proprio
+grupo de conteudo, por exemplo `tutorial-1`, `tutorial-2`, `tutorial-3`,
+`tutorial-4` e `direcionamento`; nao chame essa lista de um unico
+template-base.
 
 Uma `PROVA_DE_MONTAGEM` so e valida quando a divergencia que ela atende
 ja tiver regra de negocio documentada. Se o motivo ainda for

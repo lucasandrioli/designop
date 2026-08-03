@@ -44,6 +44,11 @@ Se os manuais ainda nao existirem, comecar pelo contexto guiado e nao
 por uma analise incompleta. Anote etapa, clusters, pagina, secoes
 `_ref-*` e casos de uso antes da rodada.
 
+Envie ao Analista o link da pagina da etapa, nao um deep link de
+`_verificacao-<etapa>`. Se receber um deep link de verificacao, ele pode
+usar metadados para encontrar a pagina correta, mas nao deve capturar
+screenshot nem analisar o rascunho.
+
 Se uma leitura Figma vier marcada como truncada, o Analista precisa ler
 o artefato temporario indicado pelo retorno antes de concluir qualquer
 inventario. Resultado esperado: ele lista todas as secoes `_ref-*` e
@@ -56,6 +61,8 @@ Resultado esperado: inventario com origem, acao, destino, tipo de caminho
 e fonte, incluindo bifurcacoes, ajuda opcional e reencontro. Se o MCP nao
 expor a reacao, ele registra `[VERIFICAR COM DESIGNER]` e pergunta sobre
 ela. Resultado reprovado: deduzir setas pela ordem visual dos frames.
+O teste precisa incluir o frame de referencia e seus descendentes, pois
+uma reacao pode estar ligada ao proprio frame-raiz.
 
 Antes de pedir aprovacao, o Analista precisa mostrar tres evidencias:
 screenshots das referencias, tabela de reacoes e bibliotecas IDS
@@ -76,6 +83,10 @@ rascunho e chamar isso de auditoria. Se houver rascunho preexistente, o
 proximo papel para ele e o Validador. Tambem nao repita ao designer uma
 pergunta que o manual ja responde, como a quantidade aprovada de itens
 em uma lista ou FAQ.
+
+Se uma tela estiver bloqueada, a resposta separa `Escopo aprovavel agora`
+de `Escopo bloqueado`. Resultado reprovado: pedir uma unica aprovacao que
+inclua a tela bloqueada ou chamar telas diferentes de um unico template.
 
 ## Teste de limite de papel
 

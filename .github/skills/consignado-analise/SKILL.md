@@ -99,6 +99,12 @@ previews ou `tpl-*` existentes. A saida React/Tailwind de
 `get_design_context` nao e codigo deste projeto: use apenas os fatos de
 componente, properties, tokens e assets que ela expuser.
 
+`get_libraries` so informa quais bibliotecas estao conectadas. Ele nao
+substitui `get_design_context`, nao resolve properties publicas e nao
+permite chamar uma instancia de `EXATO`. Antes de encerrar a leitura,
+execute `get_design_context` em ao menos uma referencia de cada familia
+no escopo aprovavel. Registre o node de evidencia de cada consulta.
+
 Screenshot confirma a leitura visual, mas nao substitui fatos
 estruturais. Sem screenshot, a analise pode registrar inventario parcial,
 mas nao fecha contrato geometrico nem pede aprovacao de reconstrucao.
@@ -204,6 +210,13 @@ Nao abrevie keys na proposta. Cada `EXATO` mostra a key inteira, a
 biblioteca, a property ou variant e o node de evidencia. A forma curta
 com reticencias nao e contrato verificavel.
 
+Nao transforme nome de instancia, nome de variant ou lista de bibliotecas
+em mapa IDS. Quando a leitura ainda nao revelar a key inteira ou a
+property publica necessaria, continue a investigacao no Figma. Se a
+ferramenta falhar ou a evidencia continuar indisponivel, use
+`PROVA_DE_MONTAGEM`, `SEM_EQUIVALENTE` ou `[CONFIRMAR]` conforme a causa,
+mas nunca `EXATO`.
+
 Para geometria, valor aproximado nao entra no contrato. Use numero medido
 ou declare `NAO_MEDIDO`; este ultimo impede aprovacao do contrato
 geometrico daquela tela. Valores com `~`, faixas estimadas ou suposicoes
@@ -252,6 +265,24 @@ matriz de fatos, a selecao proposta no mapa, a arvore-alvo e o mapa IDS.
 Declare que a proposta ainda nao autoriza escrita. A aprovacao humana
 precisa cobrir, numa unica decisao, arvore-alvo, IDS, variaveis e
 excecoes.
+
+O pedido `/consignado-analise` cobre esta sequencia inteira. Inventario e
+evidencias intermediarias nao sao checkpoint e nao exigem nova permissao
+do designer para continuar. Nao responda "se quiser, eu formato a
+aprovacao na proxima mensagem": siga sozinho ate uma das duas saidas
+abaixo.
+
+1. `PROPOSTA PARA APROVACAO`: todos os itens do escopo aprovavel tem
+   matriz, classificacao, arvore-alvo, mapa IDS, contrato de conteudo,
+   geometria e interacao, alem das evidencias exigidas;
+2. `ANALISE INCOMPLETA`: falta uma evidencia que o agente ainda pode ou
+   deve investigar. Diga qual leitura falta, continue-a imediatamente se
+   nao depender do designer e so pergunte quando houver uma lacuna de
+   negocio ou acesso que o designer precise resolver.
+
+Na primeira saida, o pedido de aprovacao nomeia os templates exatos. Na
+segunda, nao existe pedido de aprovacao e o proximo passo nao e o
+Montador.
 
 Antes do pedido de aprovacao, inclua uma secao curta `Evidencias de
 leitura` com: screenshots vistos, reacoes lidas e bibliotecas IDS

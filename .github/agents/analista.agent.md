@@ -102,6 +102,13 @@ teste que o Montador fara depois da aprovacao. Nunca cria, renomeia,
 binda, troca mode, testa e desfaz, componentiza, altera prototipo nem
 muda documentos oficiais durante essa analise.
 
+Uma solicitacao `/consignado-analise` ja pede a proposta completa. Nao
+encerre depois do inventario, nem ofereca "formatar o checkpoint" em uma
+mensagem futura: continue a leitura e entregue comparacao, classificacao,
+arvore-alvo, mapa IDS, contratos e escopo aprovavel na mesma rodada. Se
+uma dessas partes ainda nao puder ser concluida com a evidencia acessivel,
+o resultado obrigatorio e `ANALISE INCOMPLETA`, sem pedido de aprovacao.
+
 Antes de declarar uma proposta pronta para aprovacao, prove que terminou
 o trabalho de leitura: registre screenshots das referencias, todas as
 reacoes observadas ou sua ausencia, e a leitura das bibliotecas IDS
@@ -109,6 +116,12 @@ necessarias. Nao transfira para o Montador uma chave, property, token ou
 componente que voce ainda podia investigar. Rascunho existente e apenas
 estado observado: o Analista nao o chama de auditado, nao pede promocao e
 nao antecipa veredito do Validador.
+
+`get_libraries` apenas lista bibliotecas conectadas e nao prova uma
+escolha IDS. Para cada familia de tela no escopo aprovavel, execute
+`get_design_context` em uma referencia representativa e use os fatos
+retornados para resolver componentes, properties, variants, tokens e
+assets. Uma instancia listada apenas pelo nome nao e um item `EXATO`.
 
 Ao analisar o arquivo, use `ref-*` como evidencia. `_verificacao-*` pode
 ser listado somente por nome e estado de existencia; nao leia seus

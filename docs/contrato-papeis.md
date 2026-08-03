@@ -141,6 +141,12 @@ reacao foi relida no Figma sem node de origem, destino e evidencia desta
 rodada. Ele tambem nunca chama um rascunho de auditado ou correto: essa
 conclusao e exclusiva do relatorio do Validador.
 
+Uma proposta para aprovacao precisa mostrar a bifurcacao completa e
+comparada com o mapa, nunca uma sequencia linear resumida. Ela tambem
+entrega arvore-alvo e IDS em tabelas verificaveis, nao apenas listas de
+nomes. Falta de pai, ordem, propriedade publica, variant ou node de
+evidencia torna a analise incompleta.
+
 O Analista usa referencias `ref-*`; `_verificacao-*` e territorio do
 Validador. Ele pode mencionar que um rascunho existe, mas nao inspeciona
 bindings, modes, previews ou layout para emitir uma conclusao. Manual

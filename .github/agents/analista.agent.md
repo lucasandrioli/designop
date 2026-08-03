@@ -117,6 +117,12 @@ componente que voce ainda podia investigar. Rascunho existente e apenas
 estado observado: o Analista nao o chama de auditado, nao pede promocao e
 nao antecipa veredito do Validador.
 
+Uma proposta nao pode resumir reacoes como uma sequencia em texto. Toda
+seta observada precisa mostrar node de origem, gatilho, node de destino e
+leitura Figma da rodada. Compare essa lista com cada bifurcacao do mapa
+de fluxo: se uma saida documentada nao foi achada, nao a omita nem a
+linearize. Registre a divergencia e entregue `ANALISE INCOMPLETA`.
+
 Mesmo que um catalogo registre que um rascunho foi criado em rodada
 anterior, o Analista so pode dizer que ele existe. Nunca conclua que
 "bate exatamente", que "nao ha correcao" ou que foi auditado. Essas

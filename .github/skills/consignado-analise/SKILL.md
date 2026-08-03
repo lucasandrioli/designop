@@ -122,6 +122,14 @@ destino e a leitura Figma desta rodada. Se essa leitura falhar, cite o
 mapa apenas como `topologia documentada`, marque a reacao
 `NAO VERIFICADA NESTA RODADA` e nao diga que o MCP a confirmou agora.
 
+Antes de fechar a tabela, confronte as setas encontradas com todas as
+saidas e reencontros descritos no mapa de fluxo. Uma bifurcacao prevista,
+como `orientacao -> direcionamento` e `orientacao -> tutorial-1`, precisa
+aparecer como duas linhas distintas. Ausencia de uma seta no retorno MCP
+nao permite transformar a bifurcacao em caminho linear: e
+`ANALISE INCOMPLETA` ate a leitura ser refeita ou a divergencia ser
+explicada pelo designer.
+
 Documento aprovado resolve a regra de negocio antes de qualquer pergunta
 ao designer. Exemplo: se o manual determina quatro FAQs, uma quinta
 instancia oculta na referencia e artefato tecnico, nao uma quinta opcao a
@@ -211,6 +219,13 @@ prova temporaria. Para cada template, entregue:
 6. itens que precisam de decisao humana antes da montagem e, quando
    houver, a prova mecanica que o Montador devera executar.
 
+Apresente a arvore-alvo em tabela, uma por template, com as colunas
+`papel`, `pai`, `ordem`, `tipo de no`, `sizing`, `limites ou auto-layout`
+e `rolagem ou posicao fixa`. Uma lista curta de papeis nao e arvore-alvo
+verificavel. Para cada papel que tenha geometria relevante, registre
+medidas exatas da referencia ou `NAO_MEDIDO`; nao esconda a ausencia de
+medicao em texto descritivo.
+
 Antes de classificar qualquer item como `EXATO`, leia as bibliotecas
 conectadas de componentes, tokens, icones e ilustracoes e pesquise o
 candidato por papel semantico. Um item `EXATO` sempre informa biblioteca,
@@ -222,6 +237,11 @@ uma decisao ao designer ou transferir a tarefa ao Montador.
 Nao abrevie keys na proposta. Cada `EXATO` mostra a key inteira, a
 biblioteca, a property ou variant e o node de evidencia. A forma curta
 com reticencias nao e contrato verificavel.
+
+O mapa IDS precisa ser uma tabela com `papel`, `biblioteca`, `componente
+ou token`, `key inteira`, `property ou variant`, `node de evidencia` e
+`status`. Uma key sem biblioteca, property ou variant nao pode ser
+classificada como `EXATO`.
 
 Nao transforme nome de instancia, nome de variant ou lista de bibliotecas
 em mapa IDS. Quando a leitura ainda nao revelar a key inteira ou a
@@ -263,6 +283,11 @@ O inverso tambem vale: se a referencia usa texto ou um componente IDS e
 nenhum documento exige asset proprietario, trate aquilo como a evidencia
 vigente. Nao abra uma pendencia apenas porque um asset poderia existir no
 futuro.
+
+Se o catalogo vigente ja registra um asset como bloqueio, mantenha a tela
+`BLOQUEADA` nesta rodada. Nao transforme esse bloqueio documentado em
+`[CONFIRMAR]` nem pergunte se a regra ainda vale. So o designer pode
+informar uma mudanca de regra no contexto guiado.
 
 Antes de perguntar sobre o comportamento de um item interativo, leia as
 reacoes do proprio item e o `get_design_context` do componente que o
@@ -320,6 +345,11 @@ conteudo incompleto e obrigam `ANALISE INCOMPLETA`. Continue a leitura
 das referencias antes de pedir aprovacao. Um item bloqueado pode ficar
 fora do escopo aprovavel, mas nao pode ser usado para chamar a proposta
 inteira de completa.
+
+Artefato tecnico de referencia, por exemplo `flowStartingPoint` sem nome
+ou frame com nome livre, e registrado no inventario e nao vira pergunta
+ao designer nem condicao para aprovar templates. Referencias cruas nao
+sao normalizadas pelo Analista.
 
 Antes do pedido de aprovacao, inclua uma secao curta `Evidencias de
 leitura` com: screenshots vistos, reacoes lidas e bibliotecas IDS

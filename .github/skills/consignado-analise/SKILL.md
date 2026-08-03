@@ -109,11 +109,22 @@ Screenshot confirma a leitura visual, mas nao substitui fatos
 estruturais. Sem screenshot, a analise pode registrar inventario parcial,
 mas nao fecha contrato geometrico nem pede aprovacao de reconstrucao.
 Nao presuma uma reacao pela ordem dos frames ou pelo texto de um botao.
-Ao varrer reacoes, leia cada frame de referencia como raiz e depois todos
-os descendentes: `findAll` nao inclui o proprio frame e pode omitir uma
-reacao ligada ao container inteiro. A tabela registra se o gatilho esta
-no frame-raiz ou em um filho. Siga as evidencias externas somente ate a
-fronteira declarada no mapa de fluxo.
+Para cada secao `_ref-*`, a varredura de reacoes e obrigatoriamente feita
+com o corpo atual de `scripts/collectPrototypeReactions.js`, colado em uma
+chamada de leitura `use_figma` e finalizado por
+`return await collectPrototypeReactions('<node-id-da-pagina>',
+'<node-id-da-secao>')`. Faca uma chamada por secao: isso inclui a raiz e
+todos os descendentes sem depender de uma lista manual de frames e evita
+truncar a leitura da pagina inteira.
+
+Registre no manifesto a cobertura devolvida pelo coletor: secao, node ID,
+quantidade de nodes inspecionados e quantidade de nodes com reacao. Sem
+`COBERTA` para cada secao `_ref-*`, a leitura de topologia esta incompleta.
+Se a saida de uma secao for grande demais, nao conclua nem pule evidencias:
+repita a chamada somente para essa secao e recupere o artefato temporario
+indicado pelo cliente. A tabela registra se o gatilho esta no frame-raiz ou
+em um filho. Siga as evidencias externas somente ate a fronteira declarada
+no mapa de fluxo.
 
 O mapa de fluxo e historico aprovado e ajuda a orientar a leitura, mas
 nao substitui a verificacao da rodada. Para declarar uma reacao como

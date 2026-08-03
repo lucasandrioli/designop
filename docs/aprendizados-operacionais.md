@@ -21,7 +21,7 @@ de cluster depois de explicacao e aprovacao humana.
 | --- | --- | --- | --- | --- | --- |
 | L-001 | Inventariar todas as secoes `ref-*` antes de concluir a leitura. | GENERICO | leitura completa da pagina | CONSOLIDADO | consignado-contexto, consignado-analise |
 | L-002 | Leitura truncada exige recuperar o artefato indicado ou encerrar como nao verificavel. | GENERICO | comportamento da ferramenta | CONSOLIDADO | analista, runbook |
-| L-003 | Reacoes sao lidas no frame raiz e nos descendentes, com origem, gatilho, destino e fonte. | GENERICO | Plugin API e referencias | CONSOLIDADO | consignado-analise, validateAnalysisManifest |
+| L-003 | Reacoes sao lidas por varredura programatica da raiz e dos descendentes de cada secao `ref-*`, com origem, gatilho, destino, fonte e cobertura registrada. | GENERICO | Plugin API e referencias | CONSOLIDADO | collectPrototypeReactions, consignado-analise, validateAnalysisManifest |
 | L-004 | Ordem visual dos frames nao prova navegacao. | GENERICO | regra de evidencia | CONSOLIDADO | consignado-contexto, consignado-analise |
 | L-005 | `get_design_context` revela fatos tecnicos; ele nao cria regra de negocio. | GENERICO | contrato de papeis | CONSOLIDADO | consignado-analise |
 | L-006 | Biblioteca conectada nao prova escolha IDS. `EXATO` exige key, property ou variant e evidencia. | GENERICO | Plugin API e contrato IDS | CONSOLIDADO | consignado-analise, consignado-validacao |

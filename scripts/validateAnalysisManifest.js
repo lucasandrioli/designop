@@ -18,17 +18,41 @@ try {
 }
 
 const failures = [];
-const required = ['schemaVersion', 'id', 'etapa', 'status', 'fontes', 'inventario', 'reacoes', 'diferencas', 'lacunas'];
+const required = ['schemaVersion', 'id', 'etapa', 'status', 'fontes', 'inventario', 'coberturaReacoes', 'reacoes', 'diferencas', 'lacunas'];
 for (const field of required) if (!(field in manifest)) failures.push(`campo ausente: ${field}`);
 
 if (manifest.schemaVersion !== 1) failures.push('schemaVersion precisa ser 1');
 if (!['PRECISA_CONTEXTO', 'ANALISE_INCOMPLETA', 'PROPOSTA_PARA_APROVACAO'].includes(manifest.status)) failures.push('status invalido');
 if (!manifest.fontes?.figma?.pagina) failures.push('fonte Figma ausente');
+if (!Array.isArray(manifest.fontes?.figma?.secoesReferencia) || manifest.fontes.figma.secoesReferencia.length === 0) {
+  failures.push('secoes de referencia do Figma ausentes');
+}
 if (!Array.isArray(manifest.fontes?.documentos?.manuais)) failures.push('lista de manuais ausente');
 
 for (const [index, item] of (manifest.inventario ?? []).entries()) {
   if (!item.tela || !item.cluster || !item.frame?.nome || !item.frame?.nodeId) failures.push(`inventario[${index}] sem tela, cluster ou frame de evidencia`);
   if (!item.evidencia?.screenshot || !item.evidencia?.designContext) failures.push(`inventario[${index}] sem screenshot ou designContext`);
+}
+
+const secoesReferencia = manifest.fontes?.figma?.secoesReferencia ?? [];
+const coberturas = manifest.coberturaReacoes ?? [];
+for (const [index, coverage] of coberturas.entries()) {
+  if (!coverage.secao || !coverage.nodeId || !Number.isInteger(coverage.nodesInspecionados) || coverage.nodesInspecionados < 1) {
+    failures.push(`coberturaReacoes[${index}] sem secao ou contagem valida`);
+  }
+  if (!Number.isInteger(coverage.nodesComReacao) || coverage.nodesComReacao < 0 || coverage.nodesComReacao > coverage.nodesInspecionados) {
+    failures.push(`coberturaReacoes[${index}] com contagem de reacoes invalida`);
+  }
+  if (coverage.coletor !== 'scripts/collectPrototypeReactions.js') {
+    failures.push(`coberturaReacoes[${index}] nao usou o coletor oficial`);
+  }
+  if (!['COBERTA', 'FALHOU'].includes(coverage.status)) failures.push(`coberturaReacoes[${index}] com status invalido`);
+}
+
+for (const section of secoesReferencia) {
+  const coverage = coberturas.find((item) => item.nodeId === section.nodeId);
+  if (!coverage) failures.push(`secao de referencia sem varredura: ${section.nome}`);
+  else if (coverage.status !== 'COBERTA') failures.push(`varredura de reacoes falhou: ${section.nome}`);
 }
 
 for (const [index, reaction] of (manifest.reacoes ?? []).entries()) {
@@ -48,6 +72,7 @@ for (const [index, gap] of (manifest.lacunas ?? []).entries()) {
 
 if (manifest.status === 'PROPOSTA_PARA_APROVACAO') {
   if ((manifest.inventario ?? []).length === 0) failures.push('proposta sem inventario');
+  if (coberturas.length !== secoesReferencia.length) failures.push('proposta sem cobertura de todas as secoes de referencia');
   if ((manifest.lacunas ?? []).some((gap) => gap.bloqueante)) failures.push('proposta possui lacuna bloqueante');
 }
 

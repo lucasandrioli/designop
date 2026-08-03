@@ -135,6 +135,12 @@ arvore-alvo, IDS e contratos do escopo aprovavel. Listar bibliotecas ou
 instancias pelo nome nao substitui a leitura de contexto necessaria para
 uma escolha IDS verificavel.
 
+O Analista prova prototipos na referencia na rodada atual. O mapa de
+fluxo documenta a topologia aprovada, mas nao autoriza dizer que uma
+reacao foi relida no Figma sem node de origem, destino e evidencia desta
+rodada. Ele tambem nunca chama um rascunho de auditado ou correto: essa
+conclusao e exclusiva do relatorio do Validador.
+
 O Analista usa referencias `ref-*`; `_verificacao-*` e territorio do
 Validador. Ele pode mencionar que um rascunho existe, mas nao inspeciona
 bindings, modes, previews ou layout para emitir uma conclusao. Manual

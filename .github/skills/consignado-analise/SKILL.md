@@ -115,6 +115,13 @@ reacao ligada ao container inteiro. A tabela registra se o gatilho esta
 no frame-raiz ou em um filho. Siga as evidencias externas somente ate a
 fronteira declarada no mapa de fluxo.
 
+O mapa de fluxo e historico aprovado e ajuda a orientar a leitura, mas
+nao substitui a verificacao da rodada. Para declarar uma reacao como
+"lida no Figma", a tabela precisa registrar o node da origem, o node do
+destino e a leitura Figma desta rodada. Se essa leitura falhar, cite o
+mapa apenas como `topologia documentada`, marque a reacao
+`NAO VERIFICADA NESTA RODADA` e nao diga que o MCP a confirmou agora.
+
 Documento aprovado resolve a regra de negocio antes de qualquer pergunta
 ao designer. Exemplo: se o manual determina quatro FAQs, uma quinta
 instancia oculta na referencia e artefato tecnico, nao uma quinta opcao a
@@ -148,6 +155,12 @@ Classifique tambem a fonte de cada texto variavel:
 
 Nao use uma diferenca momentanea de data ou prazo observada em referencia
 como justificativa para criar conteudo por cluster.
+
+Data, prazo, valor, parcela ou estado especifico observado em tela deve
+comecar classificado como `DADO_TRANSACIONAL`, mesmo quando a redacao
+muda entre clusters. A pergunta permitida e somente qual e a origem
+desse dado quando ela nao estiver documentada. Nunca pergunte se uma data
+ou prazo especifico deveria virar texto fixo por cluster.
 
 ### 3. Generalizar e especializar
 
@@ -222,6 +235,12 @@ ou declare `NAO_MEDIDO`; este ultimo impede aprovacao do contrato
 geometrico daquela tela. Valores com `~`, faixas estimadas ou suposicoes
 podem aparecer somente nas observacoes de inventario.
 
+Quando o mapa IDS indicar um token de cor, espacamento, raio ou tipografia
+como `EXATO`, leia tambem `get_variable_defs` ou a fonte equivalente que
+exponha nome, key e scope do token. Valor CSS ou hexadecimal visto no
+design context nao basta para um token `EXATO`; sem essa evidencia,
+classifique o token como `PROVA_DE_MONTAGEM` ou `SEM_EQUIVALENTE`.
+
 Quando a referencia tiver rascunhos ou previews preexistentes, inventarie
 os somente por nome e existencia. Nao leia bindings, modes, layout,
 previews ou screenshots deles e nao use-os como evidencias. Nao os chame
@@ -229,11 +248,21 @@ de auditados, prontos para promocao ou equivalentes a referencia sem um
 veredito atual do Validador. Promocao nao e decisao da proposta do
 Analista: so existe depois de `APTO PARA PROMOCAO` emitido pelo Validador.
 
+Um registro historico de montagem, uma data no catalogo ou o nome de um
+rascunho nao muda essa regra. O Analista nao pode inferir que nao existe
+correcao pendente, nem reutilizar conclusao de validacao que nao esteja
+no relatorio atual do Validador.
+
 Se uma tela depender de asset proprietario obrigatorio que nao esteja
 disponivel na biblioteca, marque a tela `BLOQUEADA` e a retire do escopo
 aprovavel da rodada. Nunca proponha placeholder, frame local substituto,
 asset aproximado ou montagem parcial dessa tela. O restante independente
 da etapa pode seguir em proposta separada.
+
+O inverso tambem vale: se a referencia usa texto ou um componente IDS e
+nenhum documento exige asset proprietario, trate aquilo como a evidencia
+vigente. Nao abra uma pendencia apenas porque um asset poderia existir no
+futuro.
 
 Antes de perguntar sobre o comportamento de um item interativo, leia as
 reacoes do proprio item e o `get_design_context` do componente que o
@@ -283,6 +312,14 @@ abaixo.
 Na primeira saida, o pedido de aprovacao nomeia os templates exatos. Na
 segunda, nao existe pedido de aprovacao e o proximo passo nao e o
 Montador.
+
+Cada variavel `CONTEUDO_POR_CLUSTER` da proposta precisa trazer o valor
+literal de todos os modes do recorte. Marcadores como "varia", "idem",
+"a confirmar pela referencia" ou campo vazio tornam o contrato de
+conteudo incompleto e obrigam `ANALISE INCOMPLETA`. Continue a leitura
+das referencias antes de pedir aprovacao. Um item bloqueado pode ficar
+fora do escopo aprovavel, mas nao pode ser usado para chamar a proposta
+inteira de completa.
 
 Antes do pedido de aprovacao, inclua uma secao curta `Evidencias de
 leitura` com: screenshots vistos, reacoes lidas e bibliotecas IDS

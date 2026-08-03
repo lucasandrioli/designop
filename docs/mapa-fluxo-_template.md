@@ -19,6 +19,11 @@ No contexto guiado, preencha `presente`, `ausente`, `sem diferenca
 registrada` ou `[CONFIRMAR]`. A escolha de template ainda nao existe
 nesta fase.
 
+Cada tela interna atravessada por uma reacao observada recebe linha e no
+proprio. Nao agrupe uma sequencia real sob um nome de familia antes da
+analise. Handoff externo descreve a saida e o retorno da jornada, nunca
+uma tela da etapa ou um candidato a template.
+
 | # | Elemento | Tipo | Caso de uso | Nivel | Gatilho | <convenio A> | <convenio B> |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | <etapa/tela> | etapa ou tela | <caminho feliz> | 1 | n/a | presente | presente |

@@ -126,6 +126,17 @@ como fato. Pergunte ao designer sobre aquele caminho e use a fonte
 `[VERIFICAR COM DESIGNER]` no inventario e no mapa. Handoff e fronteira
 sao eventos da jornada, nao telas que o agente possa inventar no Figma.
 
+Cada frame interno atravessado por uma reacao observada permanece um
+passo proprio no inventario e no mapa de contexto. Nao resuma uma
+sequencia de telas como uma familia generica, mesmo que elas parecam
+reutilizaveis. Descobrir se varias telas viram um unico template e
+trabalho posterior de `/consignado-analise`.
+
+Tela ou evidencia fora do produto e um handoff da jornada. Registre o
+canal, a quantidade de passos externos e o retorno, quando observados,
+mas nunca de a essa evidencia uma identidade de tela da etapa, template
+ou componente da biblioteca.
+
 ### 2. Capturar o que so o designer sabe
 
 Conduza uma pergunta de cada vez. Prioridade:
@@ -141,6 +152,13 @@ suposicao baseada no nome de tela, no texto ou no numero de passos.
 Nunca use `ambas` como modalidade: liste cada modalidade conhecida. Quando
 a mesma etapa for chamada mais de uma vez na jornada, registre cada chamada
 e seu gatilho no mapa, sem duplicar a definicao da etapa.
+
+Antes de pedir aprovacao, confira todas as diferencas factuais entre
+clusters que afetam caminho, canal, quantidade de passos, entrada ou
+retorno. Para cada uma, capture a regra dita pelo designer ou marque
+explicitamente `[CONFIRMAR]`. A diferenca visual pode permanecer como
+fato observado, mas nao pode ser promovida a regra no manual por conta
+propria.
 
 ### 3. Mostrar rascunho para aprovacao
 
@@ -160,7 +178,8 @@ Entendi assim:
 
 Depois, liste apenas os fatos relevantes que vieram do Figma e as
 lacunas `[CONFIRMAR]`. Termine perguntando se o texto representa o que o
-designer quis dizer. Nao mostre mecanismo tecnico nesta fase.
+designer quis dizer. Nao mostre mecanismo tecnico, caminho de arquivo,
+node ID ou nome interno de frame nesta fase.
 
 ### 4. Registrar somente apos aprovacao
 
@@ -173,12 +192,14 @@ APROVO o contexto e o texto dos manuais da etapa <etapa>.
 Depois dela, crie ou atualize somente:
 
 1. `docs/etapas/<etapa>.md`, com objetivo, limite e regras
-   compartilhadas que o designer aprovou;
+   compartilhadas que o designer aprovou, inventario das telas internas
+   observadas e handoffs externos separados;
 2. `docs/clusters/<cluster>.md`, com modalidades ativas, presenca da
    etapa e regras locais aprovadas. Nao transcreva interface;
 3. `docs/mapa-fluxo-<escopo>.md`, com chamadas, caminhos, handoffs,
    fronteiras e presencas da etapa, apontando regras pelo identificador
-   do manual.
+   do manual. Preserve cada passo interno observado e nao condense uma
+   cadeia antes da analise.
 
 O registro de contexto pode conter apenas: objetivo, limite, regras
 compartilhadas, chamadas conhecidas da etapa, regras locais, inventario,

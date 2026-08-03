@@ -44,20 +44,32 @@ Handoff e fronteira sao eventos de jornada, nao telas Figma. Quando uma
 reacao de prototipo nao estiver disponivel, o caminho correspondente fica
 `[VERIFICAR COM DESIGNER]`; ele nunca e inferido pela ordem dos frames.
 
-## Telas da biblioteca
+## Telas internas observadas
 
-Uma tela da biblioteca tem nome curto, funcional e estavel. E o nome
-usado no mapa, no contrato de conteudo e no template, mesmo que o frame
-da referencia tenha sido nomeado de outro jeito.
+No contexto guiado, esta tabela apenas registra cada tela interna que a
+referencia e o prototipo mostraram. O nome e curto, funcional e estavel,
+mas ainda nao decide se uma ou mais telas serao um template. Essa decisao
+pertence a `/consignado-analise`.
 
 Antes de preencher esta tabela, o Analista le `get_metadata`, as
 reacoes do prototipo e `get_design_context` de pelo menos uma referencia
 por familia de tela. `get_design_context` ajuda a reconhecer os papéis
 e componentes usados; nao substitui mapa, manual ou revisao humana.
 
-| Tela da biblioteca | ID curto | Frames de referencia pareados | Evidencia usada | Status |
+| Tela interna observada | ID curto | Frames de referencia pareados | Evidencia usada | Status |
 | --- | --- | --- | --- | --- |
 | <nome funcional> | `<id-curto>` | <frames encontrados> | <reacoes, contexto e estrutura> | [CONFIRMAR] |
+
+## Handoffs e evidencias externas
+
+Use esta secao somente quando a jornada sai do produto para uma
+validacao, canal ou ambiente externo. Essas evidencias ajudam a provar a
+topologia, mas nao sao telas internas, templates ou componentes da
+biblioteca.
+
+| Handoff | Evidencia observada | Papel na jornada | Status |
+| --- | --- | --- | --- |
+| <nome funcional> | <frames ou canal externo> | <saida, retorno ou ambos> | [CONFIRMAR] |
 
 ## Escopo do contexto guiado
 

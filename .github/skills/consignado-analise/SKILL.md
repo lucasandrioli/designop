@@ -105,6 +105,17 @@ permite chamar uma instancia de `EXATO`. Antes de encerrar a leitura,
 execute `get_design_context` em ao menos uma referencia de cada familia
 no escopo aprovavel. Registre o node de evidencia de cada consulta.
 
+Descubra cada biblioteca a partir da fonte que a referencia ja usa. Para
+uma instancia remota, recupere `mainComponent.key` e pesquise uma vez o
+nome exato do componente para obter a `libraryKey`. Registre o conjunto
+de bibliotecas confirmadas da rodada, que pode conter uma fonte para
+componentes, outra para icones e outra para ilustracoes. Nas buscas posteriores, use
+`includeLibraryKeys` apenas com a `libraryKey` confirmada para a fonte
+investigada. `get_libraries` e ultimo recurso: somente sem instancia
+remota ou candidato semantico suficiente. Se precisar usa-lo, leia
+somente `libraries_added_to_file` e ignore
+`libraries_available_to_add`.
+
 Screenshot confirma a leitura visual, mas nao substitui fatos
 estruturais. Sem screenshot, a analise pode registrar inventario parcial,
 mas nao fecha contrato geometrico nem pede aprovacao de reconstrucao.
@@ -253,9 +264,15 @@ nomear a arvore e trouxer uma tabela que associe explicitamente cada
 template aos seus valores, filhos fixos e diferencas. "Mesma arvore" sem esse mapa nao fecha os
 quatro contratos.
 
-Antes de classificar qualquer item como `EXATO`, leia as bibliotecas
-conectadas de componentes, tokens, icones e ilustracoes e pesquise o
-candidato por papel semantico. Um item `EXATO` sempre informa biblioteca,
+Antes de classificar qualquer item como `EXATO`, comece pelas instancias
+remotas observadas na referencia. Para cada fonte IDS, obtenha a
+`mainComponent.key`, descubra a `libraryKey` em uma busca exata e limite
+as pesquisas seguintes com `includeLibraryKeys`. Uma fonte pode apontar
+para uma biblioteca diferente de outra: componentes, tokens, icones e
+ilustracoes nao precisam compartilhar a mesma `libraryKey`. So sem
+instancia ou candidato semantico suficiente use `get_libraries` como
+ultimo recurso, filtrando `libraries_added_to_file` e ignorando
+`libraries_available_to_add`. Um item `EXATO` sempre informa biblioteca,
 componente ou token, key real, property ou variant e node de evidencia.
 "Key confirmada em rodada anterior" nao e evidencia suficiente. Se a
 leitura de IDS ainda nao foi feita, continue investigando em vez de pedir

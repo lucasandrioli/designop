@@ -86,8 +86,10 @@ nunca herda direito ao prefixo `tpl-*`.
 
 ## Fase A: contrato visual antes da escrita
 
-1. Execute `prepararReconstrucao` para confirmar o frame exato, as
-   bibliotecas conectadas e a unidade de montagem. Nao derive uma nova
+1. Execute `prepararReconstrucao` para confirmar o frame exato, o
+   conjunto de bibliotecas IDS ja confirmado na proposta e a unidade de
+   montagem. Reutilize as `libraryKey` aprovadas nas buscas com
+   `includeLibraryKeys`; nao chame `get_libraries` nem derive uma nova
    proposta nessa fase.
 2. Execute `inspecionarReferencia` somente para conferir a evidencia e
    os papeis aprovados.

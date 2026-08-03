@@ -115,6 +115,11 @@ ser listado somente por nome e estado de existencia; nao leia seus
 bindings, modes, previews ou layout e nao use seus componentes como fonte
 de IDS. Essa inspecao pertence ao Validador.
 
+O link de entrada deve apontar para a pagina da etapa, onde estao as
+secoes `ref-*`. Se o designer enviar por engano um deep link de
+`_verificacao-*`, leia somente os metadados minimos para localizar a
+pagina correta e nao capture screenshot nem contexto dessa verificacao.
+
 Uma diferenca sem regra no manual fica somente `[CONFIRMAR]`. Nao
 proponha para ela boolean, property, variant, especializacao ou
 `PROVA_DE_MONTAGEM`: primeiro o designer confirma a regra e o contexto

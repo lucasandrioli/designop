@@ -31,6 +31,7 @@ requireText('.github/agents/analista.agent.md', analyst, 'screenshots das refere
 requireText('.github/agents/analista.agent.md', analyst, 'nao pede promocao');
 requireText('.github/agents/analista.agent.md', analyst, 'Nao tente\ncarrega-las por `figma-get_figma_skill`');
 requireText('.github/agents/analista.agent.md', analyst, 'nao leia seus\nbindings, modes, previews ou layout');
+requireText('.github/agents/analista.agent.md', analyst, 'nao capture screenshot nem contexto dessa verificacao');
 
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'tabela de reacoes');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'CONTEUDO_POR_CLUSTER');
@@ -44,6 +45,9 @@ requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'uma quinta\
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nao leia bindings, modes, layout,');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'previews ou screenshots deles');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'ANALISE PARCIAL');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'findAll` nao inclui o proprio frame');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nao abrevie keys na proposta');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Escopo\naprovavel agora');
 
 requireText('.github/skills/figma-reconstrucao/SKILL.md', reconstruction, 'Asset proprietario obrigatorio ausente');
 requireText('docs/contrato-papeis.md', roles, 'evidencia\nde leitura visual, reacoes e IDS');

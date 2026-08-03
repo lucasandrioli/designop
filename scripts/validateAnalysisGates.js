@@ -36,9 +36,10 @@ const manifestSchema = read('docs/analise-rodada.schema.json');
 
 [
   'tabela de reacoes',
+  'scripts/collectPrototypeReactions.js',
   'origem, gatilho, destino e fonte',
   'Nao presuma uma reacao pela ordem dos frames',
-  'findAll` nao inclui o proprio frame',
+  'todos os descendentes sem depender',
   'fato tecnico, nao uma regra de\nnegocio',
   'CONTEUDO_POR_CLUSTER',
   'DADO_TRANSACIONAL',

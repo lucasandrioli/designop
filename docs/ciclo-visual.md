@@ -5,12 +5,12 @@ trabalha, o que muda na tela que o designer enxerga?
 
 ## Antes dos agentes
 
-O designer cria a pagina da etapa, por exemplo `Anuencia`, com duas
+O designer cria a pagina da etapa, por exemplo `<Etapa>`, com duas
 coisas apenas:
 
 ```text
-_ref-gov-sp       referencias e prototipo do Gov SP
-_ref-cluster-4    referencias e prototipo do Cluster 4
+_ref-<cluster-a>  referencias e prototipo do Cluster A
+_ref-<cluster-b>  referencias e prototipo do Cluster B
 _templates        vazia no inicio
 ```
 
@@ -35,8 +35,8 @@ depois de uma tela humana. Ele nao cria objeto no Figma.
 
 | Onde | O que pode existir | O que nao pode existir |
 | --- | --- | --- |
-| `Anuencia` | referencias cruas, prototipos de referencia, `_templates` aprovados | rascunhos, previews, screenshots de teste, fluxo duplicado |
-| `_verificacao-anuencia` | `_rascunho-*` e previews por cluster, sem conexoes | referencia crua, template aprovado, jornada de apresentacao |
+| `<Etapa>` | referencias cruas, prototipos de referencia, `_templates` aprovados | rascunhos, previews, screenshots de teste, fluxo duplicado |
+| `_verificacao-<etapa>` | `_rascunho-*` e previews por cluster, sem conexoes | referencia crua, template aprovado, jornada de apresentacao |
 | `Fluxos` | jornada completa com instancias de `tpl-*` aprovados | rascunho, preview, referencia crua, evidencia externa |
 
 ## Quando usar Fluxos
@@ -44,8 +44,7 @@ depois de uma tela humana. Ele nao cria objeto no Figma.
 Nao use `Fluxos` para testar uma etapa isolada. O seu prototipo de
 referencia ja faz isso.
 
-Use `Fluxos` somente quando quiser mostrar uma jornada maior, por
-exemplo `Simulacao -> Formalizacao -> Anuencia -> Efetivacao`, e todas
-as telas dessa jornada ja tiverem templates aprovados. A montagem e um
+Use `Fluxos` somente quando quiser mostrar uma jornada maior, com todas
+as telas dessa jornada ja tendo templates aprovados. A montagem e um
 pedido separado ao Montador: ela nao acontece durante a criacao de uma
 etapa.

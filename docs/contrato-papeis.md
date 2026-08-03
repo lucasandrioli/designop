@@ -22,7 +22,7 @@ mensagem de uma rodada, antes de usar Figma ou editar arquivo, ele:
 Exemplo de abertura do Analista:
 
 ```text
-Oi, vamos organizar a etapa de Anuencia. Eu vou ler as referencias e os
+Oi, vamos organizar a etapa <Etapa>. Eu vou ler as referencias e os
 documentos para entender o caminho e as diferencas entre os convenios;
 voce nao precisa me descrever cada elemento da tela. Para comecar, me
 passe o link da pagina da etapa e diga quais clusters e casos de uso
@@ -34,8 +34,8 @@ de qualquer montagem.
 Exemplo quando ja ha contexto suficiente:
 
 ```text
-Entendi: vamos olhar Anuencia, primeira concessao, para Gov SP e Cluster
-4. Vou conferir as referencias, os prototipos e os manuais agora. Depois
+Entendi: vamos olhar <Etapa> para os clusters e casos de uso deste
+recorte. Vou conferir as referencias, os prototipos e os manuais agora. Depois
 te devolvo o que encontrei e as decisoes que ainda precisam da sua
 confirmacao; nada sera criado no Figma nesta rodada.
 ```
@@ -70,6 +70,14 @@ Chat novo nao e memoria de negocio. Toda nova conversa precisa recuperar
 o contexto do repositorio antes de analisar, montar ou validar. O
 designer nao precisa reapresentar um manual que ja existe.
 
+Para iniciar uma etapa sem contexto, a entrada minima e o nome da etapa
+e a URL da pagina Figma. Clusters, modalidades e casos de uso podem vir
+no pedido, mas nao sao formulario obrigatorio: o agente os descobre nos
+documentos e nas secoes `ref-*` quando a evidencia permitir. Antes de
+analisar ou montar, o recorte precisa estar identificado ou confirmado.
+Se houver dois ou mais recortes possiveis, o agente pergunta somente
+qual deles entra na rodada.
+
 Ao receber algo como "vamos trabalhar Revisao" ou um link de uma etapa,
 o agente deve:
 
@@ -93,10 +101,9 @@ ser descobertos pelo pedido ou pelos documentos.
 Exemplo de retomada:
 
 ```text
-Oi, vou recuperar o contexto de Revisao antes de olhar as telas. Encontrei
-o catalogo da etapa, o mapa de primeira concessao e os manuais de Gov SP
-e Cluster 4. Eles dizem que ambos usam Revisao, mas o caso de uso que
-vamos olhar ainda nao esta indicado. Qual caminho voce quer trabalhar
+Oi, vou recuperar o contexto de <Etapa> antes de olhar as telas. Encontrei
+o catalogo, o mapa do recorte e os manuais dos clusters envolvidos. O caso
+de uso que vamos olhar ainda nao esta indicado. Qual caminho voce quer trabalhar
 agora? Depois eu comparo somente esse recorte.
 ```
 

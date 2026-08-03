@@ -26,7 +26,7 @@
  *   viewport: { surface: 'mobile', width: 360, height: 800 },
  *   roles: [
  *     {
- *       id: 'orientacao',
+ *       id: 'tela-principal',
  *       target: { root: true },
  *       reference: { root: true },
  *       type: 'COMPONENT',
@@ -37,7 +37,7 @@
  *       id: 'acao-primaria',
  *       target: { nodeName: 'Acao primaria' },
  *       reference: { nodeName: 'CTA principal' },
- *       parent: 'orientacao', order: 2, type: 'INSTANCE',
+ *       parent: 'tela-principal', order: 2, type: 'INSTANCE',
  *       source: 'ids-instance',
  *       ids: { componentKey: '<key real>', properties: ['Label'] },
  *     },

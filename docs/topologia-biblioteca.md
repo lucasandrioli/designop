@@ -6,15 +6,11 @@ namespace logico, e cluster continua sendo o valor aplicado a ela.
 
 ## Decisao obrigatoria antes da montagem
 
-Status atual: `APROVADO PARA O ARQUIVO TESTE`.
+Status atual: `[DECIDIR]`.
 
 O Montador nao cria collection, variavel ou binding enquanto este
 documento estiver em `[DECIDIR]`. O Analista pode trabalhar normalmente,
 porque le a etapa e suas referencias, nao a topologia final.
-
-Para o arquivo `TESTE`, a decisao aprovada e
-`arquivo-unico/collections-por-etapa`. Isso resolve a montagem atual,
-sem impedir que uma futura biblioteca adote `arquivo-por-etapa`.
 
 ## Convencao de nomes de variavel
 
@@ -22,17 +18,14 @@ O primeiro grupo e sempre a tela da biblioteca. Quando a collection ja
 pertence a uma unica etapa, nao repita a etapa no nome da variavel:
 
 ```text
-orientacao/descricao
-tutorial-1/titulo
-direcionamento/mensagem
+<tela>/<papel>
 ```
 
 Em collection compartilhada por varias etapas, acrescente a etapa antes
 da tela:
 
 ```text
-anuencia/orientacao/descricao
-simulacao/oferta/valor-liberado
+<etapa>/<tela>/<papel>
 ```
 
 Nome de frame de referencia nao determina esse caminho. O Analista
@@ -44,7 +37,7 @@ nome aprovado para criar as variaveis.
 | Topologia | Arquivos | Collections | Modes |
 | --- | --- | --- | --- |
 | `arquivo-unico/collection-unica` | Uma biblioteca com varias paginas de etapa | Uma collection, por exemplo `Conteudo` | Todos os clusters da biblioteca; a ausencia da etapa fica no mapa |
-| `arquivo-unico/collections-por-etapa` | Uma biblioteca com varias paginas de etapa | Uma collection por etapa, por exemplo `Conteudo · Anuencia` | Somente os clusters que usam aquela etapa |
+| `arquivo-unico/collections-por-etapa` | Uma biblioteca com varias paginas de etapa | Uma collection por etapa, por exemplo `Conteudo · <Etapa>` | Somente os clusters que usam aquela etapa |
 | `arquivo-por-etapa` | Um arquivo de biblioteca para cada etapa | `Conteudo` local de cada arquivo | Somente os clusters que usam aquela etapa |
 
 Em qualquer opcao, um mode nunca carrega o nome da etapa. Nenhum
@@ -67,24 +60,6 @@ variaveis:
   convencao: <tela/papel ou etapa/tela/papel em collection compartilhada>
 decidido-por: <nome>
 data: <aaaa-mm-dd>
-```
-
-### Decisao atual: arquivo TESTE
-
-```yaml
-topologia: arquivo-unico/collections-por-etapa
-arquivos:
-  - etapa: anuencia
-    figma: HQ5cPT1kjWZQAXKE9Lvu0U
-collection:
-  nome: Conteudo · Anuencia
-  modos:
-    - Gov SP
-    - Cluster 4
-variaveis:
-  convencao: tela/papel
-decidido-por: designer
-data: 2026-08-02
 ```
 
 ## Regras de transicao

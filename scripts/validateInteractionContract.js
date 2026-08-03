@@ -2,7 +2,7 @@
  * validateInteractionContract
  *
  * Confere somente as acoes de prototipo declaradas pelo contrato de uma
- * tela. Nao conhece rodape, totalizador, modalidade ou etapa: estrutura e
+ * tela. Nao conhece elementos de layout, modalidade ou etapa: estrutura e
  * geometria pertencem a validateReconstructionContract.
  *
  * Uso via use_figma:
@@ -19,8 +19,8 @@
  *     },
  *   },
  *   reactions: [
- *     { name: 'valor-solicitado', expected: 'destination', destinationName: 'editar-valor', motionProfile: 'saida-padrao' },
- *     { name: 'manter-seguro', expected: 'back' },
+ *     { name: 'acao-editar', expected: 'destination', destinationName: 'tela-edicao', motionProfile: 'saida-padrao' },
+ *     { name: 'acao-voltar', expected: 'back' },
  *     {
  *       name: 'carregando',
  *       expected: 'destination',

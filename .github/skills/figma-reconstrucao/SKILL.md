@@ -61,7 +61,7 @@ Recebe um frame de referencia e extrai fatos, sem copiar sua arvore:
 - componentes locais, valores manuais e assets visuais.
 
 Rotule cada bloco por papel semantico, por exemplo `cabecalho`,
-`orientacao`, `acao-primaria` e `rodape`. O papel precisa ser unico no
+`conteudo-principal`, `acao-primaria` e `rodape`. O papel precisa ser unico no
 template proposto. A arvore observada nao vira arvore-alvo por inercia.
 
 ## 2. `resolverIDS` (leitura)

@@ -10,7 +10,7 @@ Figma resolvida pela topologia; ordem, presenca e template selecionado
 vivem no mapa de fluxo.
 
 ## Identificacao
-- Nome da etapa: `<slug, ex: anuencia>`
+- Nome da etapa: `<slug-da-etapa>`
 - Objetivo: <capacidade entregue ao cliente>
 - Modalidades aplicaveis: <lista explicita ou [CONFIRMAR]>
 - Pagina Figma: `<nome da pagina da etapa>`
@@ -57,7 +57,7 @@ e componentes usados; nao substitui mapa, manual ou revisao humana.
 
 | Tela da biblioteca | ID curto | Frames de referencia pareados | Evidencia usada | Status |
 | --- | --- | --- | --- | --- |
-| <ex: Orientacao> | `orientacao` | <frames encontrados> | <reacoes, contexto e estrutura> | [CONFIRMAR] |
+| <nome funcional> | `<id-curto>` | <frames encontrados> | <reacoes, contexto e estrutura> | [CONFIRMAR] |
 
 ## Escopo do contexto guiado
 
@@ -155,7 +155,7 @@ nao molde de camadas.
 
 ```yaml
 templates:
-  - id: <orientacao-externa>
+  - id: <tela-ou-papel>
     componente: <etapa>/tpl-<nome>
     status: <APROVADO>
     tolerancia-px: 2

@@ -7,15 +7,15 @@ skill e agente do projeto segue este modelo.
 
 - A ETAPA organiza pagina, referencias, templates e mapa. Dentro de
   uma collection dedicada a ela, o conteudo se organiza pela tela da
-  biblioteca, por exemplo `orientacao/descricao`. Em collection
-  compartilhada por varias etapas, a etapa volta ao nome da variavel:
-  `anuencia/orientacao/descricao`.
+  biblioteca, por exemplo `<tela>/<papel>`. Em collection compartilhada
+  por varias etapas, a etapa volta ao nome da variavel:
+  `<etapa>/<tela>/<papel>`.
 - A COLLECTION e uma decisao fisica de arquivo, registrada em
   `docs/topologia-biblioteca.md` antes do Montador escrever no Figma:
   pode ser uma collection unica, collections por etapa no mesmo
   arquivo, ou uma collection local em cada arquivo de etapa.
 - Em qualquer topologia, CADA MODE E UM CLUSTER que realmente usa a
-  etapa. Exemplo: `Gov SP`, `Cluster 4`. A ausencia da etapa nao cria
+  etapa. A ausencia da etapa nao cria
   mode nem boolean: vive no mapa de fluxo.
 - Cada variavel e uma linha da tabela; cada celula e o valor daquele
   cluster naquela etapa. A etapa e definida UMA vez, com templates-base
@@ -39,16 +39,14 @@ skill e agente do projeto segue este modelo.
   e estrutura de template separada.
 - Texto identico em todos os clusters NAO vira variavel.
 - Nomes de variavel seguem a tela da biblioteca, depois o papel:
-  `orientacao/descricao`, `tutorial-1/titulo` e
-  `direcionamento/titulo`. Quando varias etapas compartilham uma mesma
+  `<tela>/<papel>`. Quando varias etapas compartilham uma mesma
   collection, use tambem o prefixo da etapa:
-  `anuencia/orientacao/descricao`. Nome de frame de referencia nunca
+  `<etapa>/<tela>/<papel>`. Nome de frame de referencia nunca
   entra nessa convencao.
 - Nome de tela da biblioteca e curto, funcional e estavel. O Analista
   o determina pelo mapa de reacoes, estrutura e `get_design_context`;
   nao pelo nome livre que alguem deu ao frame.
-- Nomes de mode: nome funcional do cluster, sem repetir a etapa (ex:
-  Gov SP, Cluster 4).
+- Nomes de mode: nome funcional do cluster, sem repetir a etapa.
 - Todo texto bindado: fonte carregada antes do binding e textAutoResize
   HEIGHT ou WIDTH_AND_HEIGHT.
 - Template-mestre nao pina mode de cluster. Durante a validacao, o
@@ -106,15 +104,14 @@ previstas em `docs/topologia-biblioteca.md` ou negocie o tier adequado.
 1. CLUSTER: conteudo por orgao. Mecanismo: variaveis com modes.
 2. MODALIDADE: primeira concessao vs refinanciamento. Mecanismo:
    templates estruturalmente separados. Nunca mode, nunca boolean.
-3. COMPOSICAO DE FLUXO: etapas que existem num cluster e nao noutro
-   (ex: consentimento so no cluster 4; anuencia externa so em 4 e 2.1).
+3. COMPOSICAO DE FLUXO: etapas que existem num cluster e nao noutro.
    Mecanismo: todos os templates de etapa existem na lib; um MAPA DE
    FLUXO POR CLUSTER (tabela markdown versionada em docs/, gerada pelo
    Analista) define a
    sequencia. Mode controla conteudo; mapa controla sequencia.
-4. ESTADO DE UI: variacao por acao do usuario dentro da tela (oferta
-   adicionada/removida, efetivacao aguardando anuencia/confirmada,
-   item de resumo aberto/fechado). Mecanismo: variants ou properties
+4. ESTADO DE UI: variacao por acao do usuario dentro da tela (item
+   adicionado/removido, estado aguardando/concluido, item de resumo
+   aberto/fechado). Mecanismo: variants ou properties
    do componente/template. NUNCA modes. Estado de UI em mode de
    cluster e defeito de arquitetura.
 5. ESPECIALIZACAO ESTRUTURAL: diferenca de uma etapa que nao cabe em
@@ -131,19 +128,11 @@ cluster (`nao`, `padrao` ou `especializacao:<id>`)
 ## Logica condicional explicita
 
 Regras de estado que cruzam selecao e conteudo DEVEM ser escritas como
-tabela de decisao no repo antes da construcao. Exemplo normativo, o
-totalizador da simulacao (variant property Selecao):
-
-| Selecao | Label | Valor |
-| --- | --- | --- |
-| ambos | Juros nessa condicao | taxa com desconto + original tachada |
-| so-portabilidade | Juros reduzidos pela portabilidade | idem |
-| so-seguro | Juros reduzidos pelo seguro | idem |
-| nenhum | Juros | taxa cheia, sem tachado |
-
-Textos de cada variant podem adicionalmente ser bindados em variaveis
-de cluster (cruzamento eixo 1 x eixo 4). Agentes nao inferem essas
-regras: elas vem da tabela.
+tabela de decisao no repo antes da construcao. A tabela declara os
+estados, os papeis afetados e o resultado esperado. Textos de cada
+variant podem adicionalmente ser bindados em variaveis de cluster
+(cruzamento eixo 1 x eixo 4). Agentes nao inferem essas regras: elas
+vem da tabela da etapa.
 
 ## Prototipo como fonte do mapa
 

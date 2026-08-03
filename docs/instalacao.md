@@ -40,21 +40,21 @@ inventada.
 
 ## Pagina Figma da etapa
 
-Exemplo para `Anuencia`:
+Exemplo para `<Etapa>`:
 
 ```text
-Anuencia
-  _ref-c1-mg
+<Etapa>
+  _ref-<cluster-a>
     Caso feliz: telas conectadas
     Excecao: telas conectadas
-  _ref-c4-federais
+  _ref-<cluster-b>
     Caso feliz: telas conectadas
     Excecao: telas conectadas
   _templates
     resultados aprovados pelo Montador
 
-_verificacao-anuencia
-  _rascunho-anuencia-<tela>
+_verificacao-<etapa>
+  _rascunho-<etapa>-<tela>
   preview-<cluster>-<template>
 
 Fluxos (somente quando solicitado depois da aprovacao)
@@ -63,7 +63,7 @@ Fluxos (somente quando solicitado depois da aprovacao)
 
 As referencias permanecem cruas e intactas. Os prototipos dentro da
 pagina descrevem a navegacao interna da etapa e sao a fonte do mapa.
-`_verificacao-anuencia` e uma pagina temporaria do Montador: guarda
+`_verificacao-<etapa>` e uma pagina temporaria do Montador: guarda
 rascunhos e previews sem conexoes, nunca referencias ou templates
 aprovados. A pagina `Fluxos` so e criada ou atualizada depois de um
 pedido explicito, com instancias de templates ja aprovados.

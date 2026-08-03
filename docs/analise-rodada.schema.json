@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Manifesto temporario de analise de etapa",
+  "type": "object",
+  "required": ["schemaVersion", "id", "etapa", "status", "fontes", "inventario", "reacoes", "diferencas", "lacunas"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "etapa": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["PRECISA_CONTEXTO", "ANALISE_INCOMPLETA", "PROPOSTA_PARA_APROVACAO"] },
+    "fontes": {
+      "type": "object",
+      "required": ["figma", "documentos"],
+      "properties": {
+        "figma": { "type": "object", "required": ["pagina"], "properties": { "pagina": { "type": "string", "minLength": 1 } } },
+        "documentos": { "type": "object", "required": ["catalogo", "mapa", "manuais"], "properties": { "catalogo": { "type": ["string", "null"] }, "mapa": { "type": ["string", "null"] }, "manuais": { "type": "array", "items": { "type": "string" } } } }
+      }
+    },
+    "inventario": { "type": "array", "items": { "type": "object", "required": ["tela", "cluster", "frame", "evidencia"], "properties": { "tela": { "type": "string" }, "cluster": { "type": "string" }, "frame": { "type": "object", "required": ["nome", "nodeId"], "properties": { "nome": { "type": "string" }, "nodeId": { "type": "string" } } }, "evidencia": { "type": "object", "required": ["screenshot", "designContext"], "properties": { "screenshot": { "type": "string" }, "designContext": { "type": "string" } } } } } },
+    "reacoes": { "type": "array", "items": { "type": "object", "required": ["origem", "acao", "tipo", "fonte", "status"], "properties": { "origem": { "type": "string" }, "acao": { "type": "string" }, "destino": { "type": ["string", "null"] }, "tipo": { "enum": ["PRINCIPAL", "OPCIONAL", "RETORNO", "EXCECAO", "REENCONTRO"] }, "fonte": { "enum": ["FIGMA", "DESIGNER", "NAO_EXPOSTA"] }, "status": { "enum": ["OBSERVADA", "SEM_REACAO_OBSERVADA", "NAO_VERIFICADA_NESTA_RODADA"] } } } },
+    "diferencas": { "type": "array", "items": { "type": "object", "required": ["tela", "tipo", "clusters", "regraDocumentada", "confirmar"], "properties": { "tela": { "type": "string" }, "tipo": { "type": "string" }, "clusters": { "type": "array", "items": { "type": "string" } }, "regraDocumentada": { "type": ["string", "null"] }, "confirmar": { "type": "boolean" } } } },
+    "lacunas": { "type": "array", "items": { "type": "object", "required": ["id", "bloqueante", "motivo"], "properties": { "id": { "type": "string" }, "bloqueante": { "type": "boolean" }, "motivo": { "type": "string" } } } }
+  }
+}

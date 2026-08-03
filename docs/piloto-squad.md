@@ -15,7 +15,7 @@
 2. Envie:
 
 ```text
-Inicie uma rodada de leitura para as etapas Anuencia e Simulacao.
+Inicie uma rodada de leitura para as etapas <etapa-a> e <etapa-b>.
 Nao altere Figma nem documentos oficiais. Quero apenas saber o que ja
 esta pronto e o que precisa de contexto.
 ```
@@ -31,9 +31,9 @@ esta pronto e o que precisa de contexto.
 - o estado lista um Leitor concluido para cada etapa pedida;
 - nenhum arquivo em `docs/` foi alterado;
 - nao houve chamada Figma;
-- Anuencia aparece `pronta_para_analise` quando catalogo, mapa e manuais
+- uma etapa aparece `pronta_para_analise` quando catalogo, mapa e manuais
   forem localizados, mesmo que mantenha uma pendencia nao bloqueante;
-- Simulacao aparece `precisa_contexto` se ainda nao houver documentos;
+- outra etapa aparece `precisa_contexto` se ainda nao houver documentos;
 - as perguntas, quando existirem, aparecem juntas na caixa de decisoes;
 - em novo chat, o Operador consegue informar o estado da rodada mais
   recente sem repetir a leitura concluida.

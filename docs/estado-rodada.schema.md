@@ -8,20 +8,20 @@ repetir trabalho.
 ```json
 {
   "versao": 1,
-  "id": "2026-07-30-leitura-etapas",
+  "id": "<data>-leitura-etapas",
   "tipo": "leitura_preparo",
   "status": "em_andamento",
   "etapas": [
     {
-      "nome": "anuencia",
+      "nome": "<etapa-a>",
       "status": "pronta_para_analise",
-      "catalogo": "docs/etapas/anuencia.md",
-      "mapas": ["docs/mapa-fluxo-anuencia-piloto.md"],
+      "catalogo": "docs/etapas/<etapa-a>.md",
+      "mapas": ["docs/mapa-fluxo-<escopo>.md"],
       "manuais": [
-        "docs/clusters/cluster-4.md",
-        "docs/clusters/gov-sp.md"
+        "docs/clusters/<cluster-a>.md",
+        "docs/clusters/<cluster-b>.md"
       ],
-      "leitores_concluidos": ["leitor-anuencia"],
+      "leitores_concluidos": ["leitor-<etapa-a>"],
       "bloqueios": [],
       "pendencias_nao_bloqueantes": [],
       "proximo_passo": "/consignado-analise"

@@ -18,7 +18,7 @@ com assistentes de IA cuidando da parte repetitiva."
 | Modes | Versao do convenio | O seletor que troca a tela inteira de um convenio para outro |
 | validateLayout | Checagem de quebra | Verificacao automatica de texto cortado e elementos sobrepostos, sem precisar olhar |
 | Desdobramento (nivel 2) | Tela de apoio | Tela opcional que abre de dentro de outra (detalhe, saiba mais) |
-| Ramo de excecao | Caminho de excecao | O que acontece quando algo sai do padrao (ex: anuencia pendente) |
+| Ramo de excecao | Caminho de excecao | O que acontece quando algo sai do padrao |
 | Dossie de cluster | Manual do convenio | As regras de negocio de cada convenio, escritas |
 | Receitas (Bloco 3) | Caderno de padroes | Como o designer constroi, documentado para o assistente aprender |
 | Etapas macro | Jornada | consentimento -> simular e contratar -> revisar -> formalizar |

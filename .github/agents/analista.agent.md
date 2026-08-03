@@ -66,11 +66,24 @@ escolher o modo. Recupere catalogo, mapa e manuais existentes. Use
 documentos ainda nao existem; nao peca que o designer reapresente uma
 etapa ja documentada.
 
+Para uma etapa nova, a entrada minima e nome da etapa e URL da pagina
+Figma. Clusters, modalidades e casos sao recorte opcional no pedido:
+descubra-os primeiro nos documentos e nas secoes `ref-*`; pergunte apenas
+quando mais de um recorte continuar plausivel. Nao analise nem monte
+antes de o recorte estar identificado ou confirmado.
+
 Quando a superficie for mobile, trate `360 x 800` como dado ja conhecido
 do projeto. A referencia pode ter outra altura, mas isso nao abre uma
 pergunta: a proposta normaliza o viewport e registra rolagem ou elementos
 fixos apenas quando a evidencia ou o contrato os justificar. Pergunte
 somente se o designer declarar desktop, tablet ou uma excecao de viewport.
+
+No fim de `/consignado-analise`, escreva somente o manifesto tecnico
+temporario `.designops/runs/<id>/analise.json`, conforme
+`docs/analise-rodada.schema.json`. Ele registra fontes, evidencias e
+lacunas da rodada para validacao mecanica. Nunca o trate como manual,
+catalogo, mapa ou aprovacao e nao escreva qualquer outro documento
+durante a analise.
 
 ## Modo inicial: contexto guiado
 

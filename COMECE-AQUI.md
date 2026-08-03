@@ -82,25 +82,32 @@ O erro mais provavel aqui e achar que precisa documentar 5 convenios e
 
 Detalhe completo do que precisa existir: `docs/instalacao.md`.
 
-### Passo 4 — Preencher o conhecimento (so o humano faz)
+### Passo 4 — Capturar o conhecimento
 
-Copie os moldes e preencha, **so as regras que tocam a etapa
-escolhida** — nao o convenio inteiro:
+Inicie o `Analista da Etapa` com `/consignado-contexto`, o nome da etapa
+e a URL da pagina Figma. Nao preencha moldes antes da conversa.
 
-- `docs/clusters/_template.md` -> `docs/clusters/<convenio>.md`, um por convenio
-- `docs/etapas/_template.md` -> `docs/etapas/<etapa>.md`
-- `docs/mapa-fluxo-_template.md` -> `docs/mapa-fluxo-<escopo>.md`
+O agente le as referencias e pergunta somente o que tela e prototipo nao
+revelam: objetivo, limite da etapa e regra que explica diferencas reais.
+Clusters, modalidades e casos de uso podem ser informados desde o inicio,
+mas ele tenta descobri-los nas secoes e documentos antes de perguntar.
+
+Depois da sua aprovacao explicita do texto, ele cria somente os tres
+documentos minimos:
+
+- `docs/clusters/<convenio>.md`, um por convenio;
+- `docs/etapas/<etapa>.md`;
+- `docs/mapa-fluxo-<escopo>.md`.
 
 Nao precisa estar completo. Precisa estar HONESTO: `[CONFIRMAR]` no que
 ainda nao foi validado com produto e juridico e melhor que uma regra
-inventada que parece certa. Regra que nao esta escrita, o agente nao
-conhece — e ele vai perguntar, nao adivinhar.
+inventada que parece certa.
 
 ### Passo 5 — Preparar o Figma (so o designer faz)
 
 1. Criar o arquivo novo e limpo: "Consignado OP — Lib" (vazio).
 2. Adicionar nele as 4 bibliotecas do IDS (Assets > Libraries).
-3. Criar uma pagina por etapa. Exemplo: `Anuencia`. Nao crie nem peca
+3. Criar uma pagina por etapa. Exemplo: `<Etapa>`. Nao crie nem peca
    `Fluxos` nesta preparacao: ele e uma demonstracao posterior da
    jornada completa, nao a fonte do fluxo da etapa.
 4. Na pagina da etapa, criar uma secao interna por cluster. Cada secao

@@ -17,7 +17,7 @@
  *   roles: [
  *     {
  *       id: 'titulo',
- *       variable: 'orientacao/titulo',
+ *       variable: '<tela>/titulo',
  *       type: 'text',
  *       binding: {
  *         kind: 'component-property',
@@ -27,7 +27,7 @@
  *     },
  *     {
  *       id: 'cta',
- *       variable: 'orientacao/cta',
+ *       variable: '<tela>/cta',
  *       type: 'text',
  *       binding: {
  *         kind: 'node',

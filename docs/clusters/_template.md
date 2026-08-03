@@ -18,7 +18,7 @@ uso e template selecionado pertencem ao mapa de fluxo.
 
 | Etapa | Usa? | Regra local que explica | Documento da etapa |
 | --- | --- | --- | --- |
-| <ex: anuencia> | <sim ou nao> | <R1 ou n/a> | `docs/etapas/<etapa>.md` |
+| <etapa> | <sim ou nao> | <R1 ou n/a> | `docs/etapas/<etapa>.md` |
 
 ## Regras locais por etapa
 

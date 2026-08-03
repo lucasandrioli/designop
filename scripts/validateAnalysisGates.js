@@ -12,74 +12,55 @@ function read(relativePath) {
     failures.push(`Arquivo ausente: ${relativePath}`);
     return '';
   }
-
   return fs.readFileSync(absolutePath, 'utf8');
 }
 
 function requireText(file, content, expected) {
-  if (!content.includes(expected)) {
-    failures.push(`${file} precisa conter: ${expected}`);
-  }
+  if (!content.includes(expected)) failures.push(`${file} precisa conter: ${expected}`);
 }
 
 const analyst = read('.github/agents/analista.agent.md');
 const analysis = read('.github/skills/consignado-analise/SKILL.md');
 const reconstruction = read('.github/skills/figma-reconstrucao/SKILL.md');
 const roles = read('docs/contrato-papeis.md');
+const manifestSchema = read('docs/analise-rodada.schema.json');
 
-requireText('.github/agents/analista.agent.md', analyst, 'screenshots das referencias');
-requireText('.github/agents/analista.agent.md', analyst, 'nao pede promocao');
-requireText('.github/agents/analista.agent.md', analyst, 'Uma solicitacao `/consignado-analise` ja pede a proposta completa');
-requireText('.github/agents/analista.agent.md', analyst, '`get_libraries` apenas lista bibliotecas conectadas');
-requireText('.github/agents/analista.agent.md', analyst, 'Mesmo que um catalogo registre que um rascunho foi criado em rodada');
-requireText('.github/agents/analista.agent.md', analyst, 'Toda\nseta observada precisa mostrar node de origem');
-requireText('.github/agents/analista.agent.md', analyst, 'Ausencia atual de `_verificacao-<etapa>` significa apenas');
-requireText('.github/agents/analista.agent.md', analyst, 'Nao tente\ncarrega-las por `figma-get_figma_skill`');
-requireText('.github/agents/analista.agent.md', analyst, 'nao leia seus\nbindings, modes, previews ou layout');
-requireText('.github/agents/analista.agent.md', analyst, 'nao capture screenshot nem contexto dessa verificacao');
+[
+  'screenshots das referencias',
+  'nao pede promocao',
+  'Uma solicitacao `/consignado-analise` ja pede a proposta completa',
+  'Toda\nseta observada precisa mostrar node de origem',
+  'get_libraries` apenas lista bibliotecas conectadas',
+  '.designops/runs/<id>/analise.json',
+].forEach((text) => requireText('.github/agents/analista.agent.md', analyst, text));
 
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'tabela de reacoes');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'CONTEUDO_POR_CLUSTER');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'DADO_TRANSACIONAL');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'biblioteca,\ncomponente ou token, key real');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'valor aproximado nao entra no contrato');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nunca proponha placeholder');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'ANALISE INCOMPLETA');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'contexts representativos sao sempre frames `ref-*`');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'uma quinta\ninstancia oculta na referencia e artefato tecnico');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nao leia bindings, modes, layout,');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'previews ou screenshots deles');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'ANALISE PARCIAL');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'findAll` nao inclui o proprio frame');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nao abrevie keys na proposta');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Escopo\naprovavel agora');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`get_libraries` so informa quais bibliotecas estao conectadas');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nao transforme nome de instancia, nome de variant ou lista de bibliotecas');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`PROPOSTA PARA APROVACAO`');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`ANALISE INCOMPLETA`');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'NAO VERIFICADA NESTA RODADA');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'comecar classificado como `DADO_TRANSACIONAL`');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`get_variable_defs` ou a fonte equivalente');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Marcadores como "varia", "idem",');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'O inverso tambem vale: se a referencia usa texto ou um componente IDS');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'orientacao -> direcionamento` e `orientacao -> tutorial-1');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`papel`, `pai`, `ordem`, `tipo de no`, `sizing`');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`papel`, `biblioteca`, `componente\nou token`, `key inteira`');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'mantenha a tela\n`BLOQUEADA` nesta rodada');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Artefato tecnico de referencia, por exemplo `flowStartingPoint` sem nome');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`retorno-carregando` ou `efetivacao` como fronteira');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'nao use `~`, `≈`, "aprox.", "2 linhas" ou `56–84px`');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Uma arvore compartilhada so pode servir a varias telas');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, '`SEM_REACAO_OBSERVADA`');
-requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'previews sem prototipo');
-requireText('docs/contrato-papeis.md', roles, 'Inventario nao e uma entrega separada do Analista');
-requireText('docs/contrato-papeis.md', roles, 'O Analista prova prototipos na referencia na rodada atual');
-requireText('docs/contrato-papeis.md', roles, 'Uma proposta para aprovacao precisa mostrar a bifurcacao completa');
-requireText('docs/contrato-papeis.md', roles, 'Fronteiras que o mapa ja definiu nao viram pergunta nova');
+[
+  'tabela de reacoes',
+  'origem, gatilho, destino e fonte',
+  'Nao presuma uma reacao pela ordem dos frames',
+  'findAll` nao inclui o proprio frame',
+  'fato tecnico, nao uma regra de\nnegocio',
+  'CONTEUDO_POR_CLUSTER',
+  'DADO_TRANSACIONAL',
+  'biblioteca,\ncomponente ou token, key real',
+  'Nao abrevie keys na proposta',
+  'valor aproximado nao entra no contrato',
+  'Nunca proponha placeholder',
+  '`SEM_REACAO_OBSERVADA`',
+  '`PROPOSTA PARA APROVACAO`',
+  '`ANALISE INCOMPLETA`',
+  'Manifesto temporario da rodada',
+  'validateAnalysisManifest.js',
+].forEach((text) => requireText('.github/skills/consignado-analise/SKILL.md', analysis, text));
+
+[
+  'O Analista prova prototipos na referencia na rodada atual',
+  'Fronteiras que o mapa ja definiu nao viram pergunta nova',
+  'evidencia\nde leitura visual, reacoes e IDS',
+].forEach((text) => requireText('docs/contrato-papeis.md', roles, text));
 
 requireText('.github/skills/figma-reconstrucao/SKILL.md', reconstruction, 'Asset proprietario obrigatorio ausente');
-requireText('docs/contrato-papeis.md', roles, 'evidencia\nde leitura visual, reacoes e IDS');
-requireText('docs/contrato-papeis.md', roles, '`_verificacao-*` e territorio do\nValidador');
+requireText('docs/analise-rodada.schema.json', manifestSchema, 'PROPOSTA_PARA_APROVACAO');
 
 if (failures.length > 0) {
   console.error('Portoes da analise reprovados:');
@@ -87,4 +68,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log('Portoes da analise aprovados: evidencia, IDS e limites de papel estao exigidos.');
+console.log('Portoes da analise aprovados: evidencia, contratos e limites de papel estao exigidos.');

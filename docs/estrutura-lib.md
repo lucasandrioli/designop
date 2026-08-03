@@ -2,9 +2,8 @@
 
 ## Etapas da jornada (primeiro nivel de tudo)
 
-Exemplos: anuencia | consentimento | simular-e-contratar | revisar |
-formalizar. A lista real cresce pelo catalogo em `docs/etapas/`; uma
-etapa representa uma capacidade reutilizavel, nao um cluster.
+A lista real cresce pelo catalogo em `docs/etapas/`; uma etapa representa
+uma capacidade reutilizavel, nao um cluster.
 
 Cada etapa e definida UMA VEZ em docs/etapas/<etapa>.md: quais telas a
 compoem (principal, nivel 2 opcional, erro de regra de negocio, erro
@@ -18,16 +17,16 @@ aqui reflete em todo cluster que a usa, sem editar manual nenhum.
 
 | Objeto | Convencao | Exemplo | Publicado? |
 | --- | --- | --- | --- |
-| Template de tela (modalidade padrao) | etapa/tpl-nome | simular-e-contratar/tpl-simulacao | SIM |
-| Template de tela (outra modalidade) | etapa/modalidade/tpl-nome | simular-e-contratar/refin/tpl-simulacao | SIM |
-| Template especializado | etapa/tpl-nome-funcional | anuencia/tpl-confirmacao-com-matricula | SIM |
-| Secao interna | _secoes/nome | _secoes/acao-rodape | NAO (prefixo _ bloqueia publish) |
-| Frame de referencia cru | ref-nome-cluster (SEM barra) | ref-simulacao-c1-mg | n/a (nao e componente) |
-| Frame de referencia cru, outra modalidade | ref-nome-modalidade-cluster | ref-simulacao-refin-c1-mg | n/a |
-| Rascunho de montagem | _rascunho-etapa-nome | _rascunho-anuencia-orientacao | NAO (aguarda validacao) |
-| Preview de validacao | preview-cluster-template | preview-gov-sp-tpl-orientacao | NAO (temporario) |
-| Pagina temporaria de verificacao | _verificacao-etapa | _verificacao-anuencia | n/a |
-| Pagina da biblioteca | uma por etapa + Fluxos posterior | Anuencia | n/a |
+| Template de tela (modalidade padrao) | etapa/tpl-nome | `<etapa>/tpl-<tela>` | SIM |
+| Template de tela (outra modalidade) | etapa/modalidade/tpl-nome | `<etapa>/<modalidade>/tpl-<tela>` | SIM |
+| Template especializado | etapa/tpl-nome-funcional | `<etapa>/tpl-<funcao>` | SIM |
+| Secao interna | _secoes/nome | `_secoes/<papel>` | NAO (prefixo _ bloqueia publish) |
+| Frame de referencia cru | ref-nome-cluster (SEM barra) | `ref-<tela>-<cluster>` | n/a (nao e componente) |
+| Frame de referencia cru, outra modalidade | ref-nome-modalidade-cluster | `ref-<tela>-<modalidade>-<cluster>` | n/a |
+| Rascunho de montagem | _rascunho-etapa-nome | `_rascunho-<etapa>-<tela>` | NAO (aguarda validacao) |
+| Preview de validacao | preview-cluster-template | `preview-<cluster>-tpl-<tela>` | NAO (temporario) |
+| Pagina temporaria de verificacao | _verificacao-etapa | `_verificacao-<etapa>` | n/a |
+| Pagina da biblioteca | uma por etapa + Fluxos posterior | `<Etapa>` | n/a |
 
 Barra (/) em nome de COMPONENTE cria hierarquia no painel de assets e
 e a convencao correta. Barra em nome de FRAME de referencia quebra o
@@ -40,8 +39,8 @@ MODALIDADE multiplica TEMPLATE, nunca mode (ver
 docs/modelo-clusters.md). Por isso ela entra no NOME do componente, como
 nivel intermediario de hierarquia:
 
-    simular-e-contratar/tpl-simulacao          <- primeira concessao
-    simular-e-contratar/refin/tpl-simulacao    <- refinanciamento
+    <etapa>/tpl-<tela>                         <- modalidade padrao
+    <etapa>/<modalidade>/tpl-<tela>            <- outra modalidade
 
 A modalidade padrao (primeira concessao) NAO ganha segmento proprio —
 fica em dois niveis, como sempre foi. So as demais modalidades ganham o
@@ -51,7 +50,7 @@ desejado.
 
 Cluster NUNCA entra no nome do componente — cluster e mode. Uma
 especializacao estrutural recebe um nome funcional, como
-`anuencia/tpl-confirmacao-com-matricula`, e a selecao por cluster fica
+`<etapa>/tpl-<funcao>`, e a selecao por cluster fica
 somente no mapa de fluxo. Se voce escreveu o nome de um convenio num
 nome de template, algo esta errado no modelo.
 

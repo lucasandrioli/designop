@@ -357,8 +357,8 @@ regra ATIVA contra o mecanismo registrado depois da aprovacao:
   selecionado no mapa
 - regra com mecanismo "especializacao S" -> S existe no catalogo da
   etapa e o mapa seleciona o template correspondente para esse cluster
-Reprovacao cita a regra (ex: "R3 do c4 exige anuencia; o mapa nao tem
-a etapa"). Isto transforma validacao de "esta bonito?" em "esta
+Reprovacao cita a regra aplicavel (ex: "R3 do manual exige a etapa; o
+mapa nao a seleciona"). Isto transforma validacao de "esta bonito?" em "esta
 conforme?", que e a linguagem de auditoria.
 
 ## Teste de troca de modo (obrigatório para templates com variáveis)

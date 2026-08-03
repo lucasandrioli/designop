@@ -93,7 +93,10 @@ e escrita em `use_figma`, portanto `Ask` e a recusa semantica de
 scripts mutadores sao obrigatorios. Em `/consignado-contexto`, sua unica
 escrita adicional permitida e nos documentos oficiais aprovados pelo
 designer. O comando de Aprendiz nao muda essa regra: sua unica escrita
-permitida e em `docs/receitas/`.
+permitida e em `docs/receitas/`. Em `/consignado-analise`, ele pode
+registrar somente o manifesto temporario da rodada em
+`.designops/runs/<id>/analise.json`, ignorado pelo Git. Isso nao e
+documento de negocio nem autorizacao para editar Figma ou `docs/`.
 
 O Analista le somente referencias `ref-*` para fundamentar sua proposta.
 Ele pode listar a existencia de um rascunho em `_verificacao-<etapa>`,
@@ -148,7 +151,7 @@ nunca vira evidencia de uma nova analise.
   conteudo e excecoes. Depois da aprovacao, Montador e Validador seguem
   esse contrato de forma deterministica.
 - Cada tela da biblioteca recebe um nome curto e estavel, por exemplo
-  `orientacao`, `tutorial-1` ou `direcionamento`. O nome do frame de
+  `resumo`, `detalhe` ou `confirmacao`. O nome do frame de
   referencia e apenas evidencia, nunca a fonte desse nome. O Analista
   usa metadados, reacoes, `get_design_context` e os documentos para
   registrar o mapa entre cada frame e a tela da biblioteca antes de

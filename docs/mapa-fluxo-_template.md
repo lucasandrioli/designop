@@ -21,7 +21,7 @@ nesta fase.
 
 | # | Elemento | Tipo | Caso de uso | Nivel | Gatilho | <convenio A> | <convenio B> |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | <ex: anuencia/confirmacao> | etapa ou tela | <caminho feliz> | 1 | n/a | presente | presente |
+| 1 | <etapa/tela> | etapa ou tela | <caminho feliz> | 1 | n/a | presente | presente |
 | 2 | <ex: handoff/validacao-externa> | handoff | <caminho feliz> | 1 | <acao observada> | [CONFIRMAR] | [CONFIRMAR] |
 
 Nivel 1 = caminho principal. Nivel 2 = apoio ou caminho opcional aberto
@@ -37,7 +37,7 @@ catalogo. Handoff e fronteira nunca entram nesta tabela.
 
 | Tela da etapa | <convenio A> | <convenio B> | Fonte da decisao |
 | --- | --- | --- | --- |
-| <ex: anuencia/confirmacao> | padrao | especializacao:<id> | proposta aprovada |
+| <etapa/tela> | padrao | especializacao:<id> | proposta aprovada |
 
 ## Grafo por convenio e caso de uso
 

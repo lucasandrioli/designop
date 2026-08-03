@@ -25,8 +25,8 @@ Este e um teste de coordenacao, nao uma etapa de montagem. Antes dele,
 confirme em Settings que `chat.customAgentInSubagent.enabled` esta ativo.
 
 1. Selecione `operador`.
-2. Envie: "Inicie uma rodada de leitura para as etapas Anuencia e
-   Simulacao. Nao altere Figma nem documentos oficiais. Quero apenas saber
+2. Envie: "Inicie uma rodada de leitura para as etapas <etapa-a> e
+   <etapa-b>. Nao altere Figma nem documentos oficiais. Quero apenas saber
    o que ja esta pronto e o que precisa de contexto."
 3. Confirme que ele chama um `leitor-de-etapa` para cada etapa, em
    paralelo, e que nenhum deles usa Figma ou edita `docs/`.

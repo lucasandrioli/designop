@@ -23,6 +23,15 @@ catalogo, o mapa e os manuais da etapa citada. Se eles existirem, a
 rodada deve recuperar esse contexto e seguir no papel pedido. Contexto
 guiado e somente a porta para uma etapa ainda nao documentada.
 
+## Entrada de contexto zero
+
+A rodada nova comeca com nome da etapa e URL da pagina Figma. Clusters,
+modalidades e casos de uso podem ser informados pelo designer, mas sao
+opcionais no inicio: procure secoes `ref-*`, pontos de inicio e
+referencias antes de perguntar. Se houver mais de um recorte possivel e
+nenhum documento resolver a ambiguidade, peca uma unica confirmacao do
+designer. Nao avance para analise ou montagem sem recorte identificado.
+
 ## Limites do modo
 
 - Figma e somente leitura.

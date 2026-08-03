@@ -78,8 +78,8 @@ uso, registre telas, textos relevantes, blocos visiveis, properties,
 instancias, bindings observados e o grafo do prototipo. Para cada familia
 de tela, leia tambem `get_design_context` de uma referencia
 representativa: ele ajuda a reconhecer os componentes e papéis reais.
-Defina uma tela da biblioteca com nome curto, por exemplo
-`orientacao`, `tutorial-1` ou `direcionamento`, e registre o mapa
+Defina uma tela da biblioteca com nome curto, funcional e estavel, por
+exemplo `resumo`, `detalhe` ou `confirmacao`, e registre o mapa
 `frame de referencia -> tela da biblioteca`. Nunca copie o nome livre do
 frame como nome da tela ou como namespace de variavel. Referencia pode
 estar tecnicamente baguncada: isso e um fato tecnico, nao uma regra de
@@ -124,8 +124,9 @@ mapa apenas como `topologia documentada`, marque a reacao
 
 Antes de fechar a tabela, confronte as setas encontradas com todas as
 saidas e reencontros descritos no mapa de fluxo. Uma bifurcacao prevista,
-como `orientacao -> direcionamento` e `orientacao -> tutorial-1`, precisa
-aparecer como duas linhas distintas. Ausencia de uma seta no retorno MCP
+como `<tela-origem> -> <ramo-direto>` e
+`<tela-origem> -> <ramo-opcional>`, precisa aparecer como duas linhas
+distintas. Ausencia de uma seta no retorno MCP
 nao permite transformar a bifurcacao em caminho linear: e
 `ANALISE INCOMPLETA` ate a leitura ser refeita ou a divergencia ser
 explicada pelo designer.
@@ -137,7 +138,7 @@ confirmar. Registre o artefato no inventario e mantenha os quatro slots
 do contrato.
 
 O mesmo vale para fronteiras da jornada. Quando o mapa de fluxo declarar
-`retorno-carregando` ou `efetivacao` como fronteira, inventarie os frames
+uma tela ou evento como fronteira, inventarie os frames
 como evidencia e mantenha-os fora dos templates da etapa. Eles nao sao
 uma tela nova a perguntar ao designer, mesmo que nao aparecam na tabela
 de telas da biblioteca.
@@ -207,10 +208,9 @@ prova temporaria. Para cada template, entregue:
    inteira, de uma area interna ou se ha filhos fixos. Extraia da
    referencia quando estiver evidente. Sem evidencia, marque
    `[VERIFICAR COM DESIGNER]` e faca uma unica pergunta para a familia
-   de telas, nunca uma por botao. Excecao de leitura: em tutorial mobile,
-   `progresso` junto da acao de avancar ou sair e navegacao de rodape.
-   Proponha-os como filhos fixos, mantendo o conteudo instrucional rolavel;
-   nao trate esse par como CTA comum nem pergunte pela altura do viewport;
+   de telas, nunca uma por botao. Quando a referencia ou o contrato
+   declarar filhos fixos, registre-os como tal e mantenha somente a area
+   declarada como rolavel. Nao presuma rodape, progresso ou CTA fixos;
 5. contrato de interacao, somente para os comportamentos observados e
    aprovados da tela: acoes, destinos e retornos. A referencia prova o
    caminho entre telas. Gatilho, atraso, transicao, duracao e curva de
@@ -239,8 +239,7 @@ medidas exatas observadas em cada mode, ou `NAO_MEDIDO`.
 
 Uma arvore compartilhada so pode servir a varias telas quando a proposta
 nomear a arvore e trouxer uma tabela que associe explicitamente cada
-template, por exemplo `tutorial-1` a `tutorial-4`, aos seus valores,
-filhos fixos e diferencas. "Mesma arvore" sem esse mapa nao fecha os
+template aos seus valores, filhos fixos e diferencas. "Mesma arvore" sem esse mapa nao fecha os
 quatro contratos.
 
 Antes de classificar qualquer item como `EXATO`, leia as bibliotecas
@@ -325,9 +324,8 @@ Quando parte da etapa estiver bloqueada, divida a entrega em `Escopo
 aprovavel agora` e `Escopo bloqueado`. Um pedido de aprovacao nomeia
 exatamente os templates do primeiro grupo e nunca inclui tela bloqueada.
 Cada tela da biblioteca e um template proprio quando tiver seu proprio
-grupo de conteudo, por exemplo `tutorial-1`, `tutorial-2`, `tutorial-3`,
-`tutorial-4` e `direcionamento`; nao chame essa lista de um unico
-template-base.
+grupo de conteudo. Nao chame uma familia de telas independentes de um
+unico template-base.
 
 Uma `PROVA_DE_MONTAGEM` so e valida quando a divergencia que ela atende
 ja tiver regra de negocio documentada. Se o motivo ainda for
@@ -377,6 +375,15 @@ montado nesta rodada. O Montador constroi `_verificacao-<etapa>` e seus
 previews sem prototipo. A instancia do template so recebe reacoes em
 `Fluxos`, depois de pedido explicito do designer e de os templates
 envolvidos estarem aprovados.
+
+## Manifesto temporario da rodada
+
+Antes de encerrar, escreva `.designops/runs/<id>/analise.json` conforme
+`docs/analise-rodada.schema.json`. O manifesto inclui somente dados da
+rodada: etapa, fontes consultadas, inventario, reacoes, diferencas,
+lacunas e status. Ele nao registra regra nova, nao substitui documento
+oficial e nao autoriza montagem. Rode `validateAnalysisManifest.js` no
+manifesto antes de declarar `PROPOSTA PARA APROVACAO`.
 
 Antes do pedido de aprovacao, inclua uma secao curta `Evidencias de
 leitura` com: screenshots vistos, reacoes lidas e bibliotecas IDS

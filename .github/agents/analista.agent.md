@@ -139,6 +139,11 @@ ser listado somente por nome e estado de existencia; nao leia seus
 bindings, modes, previews ou layout e nao use seus componentes como fonte
 de IDS. Essa inspecao pertence ao Validador.
 
+Ausencia atual de `_verificacao-<etapa>` significa apenas que nao ha
+rascunho temporario para esta rodada. Nao pergunte ao designer onde foi
+parar um rascunho historico e nao condicione a montagem a essa resposta:
+depois da aprovacao, o Montador cria uma pagina nova de verificacao.
+
 O link de entrada deve apontar para a pagina da etapa, onde estao as
 secoes `ref-*`. Se o designer enviar por engano um deep link de
 `_verificacao-*`, leia somente os metadados minimos para localizar a

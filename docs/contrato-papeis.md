@@ -147,6 +147,12 @@ entrega arvore-alvo e IDS em tabelas verificaveis, nao apenas listas de
 nomes. Falta de pai, ordem, propriedade publica, variant ou node de
 evidencia torna a analise incompleta.
 
+Fronteiras que o mapa ja definiu nao viram pergunta nova so porque nao
+sao templates. Ausencia de pagina `_verificacao-<etapa>` tambem nao pede
+investigacao historica: ela sera criada pelo Montador na proxima rodada.
+Interacoes observadas ficam no contrato e no mapa; a verificacao e os
+templates permanecem sem prototipo ate `Fluxos` ser solicitado.
+
 O Analista usa referencias `ref-*`; `_verificacao-*` e territorio do
 Validador. Ele pode mencionar que um rascunho existe, mas nao inspeciona
 bindings, modes, previews ou layout para emitir uma conclusao. Manual

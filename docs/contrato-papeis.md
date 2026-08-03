@@ -192,6 +192,12 @@ Esse registro encerra o modo de contexto. A proxima rodada, agora em
 `/consignado-analise`, e somente leitura e usa esses documentos como a
 fonte oficial. Sem aprovacao, nada e escrito.
 
+Antes de pedir aprovacao, o Analista confronta cada diferenca observada
+entre convenios que altere caminho, canal, quantidade de passos, entrada
+ou retorno. Ela precisa ter regra dita pelo designer ou `[CONFIRMAR]`.
+O mapa preserva cada tela interna observada; evidencias externas sao
+registradas como handoffs, nunca como telas da biblioteca.
+
 O inventario do contexto so termina depois de procurar as reacoes de
 prototipo em cada referencia. Para cada acao navegavel, o Analista
 registra origem, acao, destino, tipo de caminho e fonte. Tela com mais de

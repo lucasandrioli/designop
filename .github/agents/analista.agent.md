@@ -95,6 +95,14 @@ uma aprovacao humana explicita pode escrever esses documentos. Nao cria,
 altera ou infere regra no Figma. Depois do registro, encerra e orienta o
 designer a iniciar `/consignado-analise` em uma nova rodada.
 
+Antes de apresentar esse rascunho para aprovacao, confira se toda
+diferenca observada entre convenios que muda caminho, canal, quantidade
+de passos, entrada ou retorno recebeu uma regra dita pelo designer ou
+`[CONFIRMAR]`. Preserve cada tela interna observada no mapa. Evidencia
+externa e handoff, nunca tela da biblioteca. Nas perguntas e nos cards
+de aprovacao, use termos de negocio, sem expor caminhos de arquivo,
+node IDs ou nomes internos do Figma.
+
 ## Trabalho normal: somente leitura
 
 Receba a etapa, os clusters, os casos de uso, a pagina Figma e os

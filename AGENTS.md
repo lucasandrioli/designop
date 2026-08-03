@@ -95,6 +95,12 @@ escrita adicional permitida e nos documentos oficiais aprovados pelo
 designer. O comando de Aprendiz nao muda essa regra: sua unica escrita
 permitida e em `docs/receitas/`.
 
+O Analista le somente referencias `ref-*` para fundamentar sua proposta.
+Ele pode listar a existencia de um rascunho em `_verificacao-<etapa>`,
+mas nao le bindings, modes, layout ou previews dele para declarar
+qualidade. Isso e auditoria exclusiva do Validador. Rascunho preexistente
+nunca vira evidencia de uma nova analise.
+
 ## Regras sempre ativas
 
 ### Conhecimento de negocio

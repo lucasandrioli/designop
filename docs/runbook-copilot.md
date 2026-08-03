@@ -70,6 +70,13 @@ montagem parcial dessa tela. Prazo, valor, parcela e outros dados que
 variam por proposta tambem nao podem virar valores fixos de mode por
 cluster.
 
+O Analista le referencias `ref-*`, nao rascunhos em `_verificacao-*`.
+Resultado reprovado: ele conferir bindings, modes, previews ou layout de
+rascunho e chamar isso de auditoria. Se houver rascunho preexistente, o
+proximo papel para ele e o Validador. Tambem nao repita ao designer uma
+pergunta que o manual ja responde, como a quantidade aprovada de itens
+em uma lista ou FAQ.
+
 ## Teste de limite de papel
 
 | Agente ativo | Pedido de controle | Resultado esperado |

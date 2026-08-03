@@ -33,6 +33,11 @@ Se faltar documento de negocio, nao use conversa ou tela como substituto:
 explique que a proxima rodada e `/consignado-contexto`. Se faltar apenas
 referencia, informe todos os bloqueios de uma vez.
 
+`figma-reconstrucao` e `figma-plugin-api` sao skills locais do workspace.
+Leia seus arquivos locais. `figma-get_figma_skill` nao carrega skills do
+repositorio e uma falha dessa ferramenta nao e permissao para continuar
+sem a skill.
+
 ## Recuperar contexto no chat novo
 
 Antes de inventariar, procure os documentos da etapa que o designer
@@ -84,10 +89,21 @@ de leitura para cada familia de tela proposta:
    explicito de que nenhuma reacao foi exposta pela leitura;
 3. `get_design_context` de referencia representativa por familia.
 
+Os contexts representativos sao sempre frames `ref-*`, nunca rascunhos,
+previews ou `tpl-*` existentes. A saida React/Tailwind de
+`get_design_context` nao e codigo deste projeto: use apenas os fatos de
+componente, properties, tokens e assets que ela expuser.
+
 Screenshot confirma a leitura visual, mas nao substitui fatos
 estruturais. Sem screenshot, a analise pode registrar inventario parcial,
 mas nao fecha contrato geometrico nem pede aprovacao de reconstrucao.
 Nao presuma uma reacao pela ordem dos frames ou pelo texto de um botao.
+
+Documento aprovado resolve a regra de negocio antes de qualquer pergunta
+ao designer. Exemplo: se o manual determina quatro FAQs, uma quinta
+instancia oculta na referencia e artefato tecnico, nao uma quinta opcao a
+confirmar. Registre o artefato no inventario e mantenha os quatro slots
+do contrato.
 
 ### 2. Comparar
 
@@ -180,10 +196,11 @@ geometrico daquela tela. Valores com `~`, faixas estimadas ou suposicoes
 podem aparecer somente nas observacoes de inventario.
 
 Quando a referencia tiver rascunhos ou previews preexistentes, inventarie
-os como estado atual do arquivo. Nao os chame de auditados, prontos para
-promocao ou equivalentes a referencia sem um veredito atual do Validador.
-Promocao nao e decisao da proposta do Analista: so existe depois de
-`APTO PARA PROMOCAO` emitido pelo Validador.
+os somente por nome e existencia. Nao leia bindings, modes, layout,
+previews ou screenshots deles e nao use-os como evidencias. Nao os chame
+de auditados, prontos para promocao ou equivalentes a referencia sem um
+veredito atual do Validador. Promocao nao e decisao da proposta do
+Analista: so existe depois de `APTO PARA PROMOCAO` emitido pelo Validador.
 
 Se uma tela depender de asset proprietario obrigatorio que nao esteja
 disponivel na biblioteca, marque a tela `BLOQUEADA` e a retire do escopo
@@ -195,6 +212,12 @@ Antes de perguntar sobre o comportamento de um item interativo, leia as
 reacoes do proprio item e o `get_design_context` do componente que o
 representa. Pergunte ao designer somente se ambos nao comprovarem o
 comportamento e se ele for necessario para o recorte atual.
+
+Ao finalizar, se nenhuma tela estiver pronta para montagem por bloqueio
+de asset ou lacuna de negocio, nao faca pedido de aprovacao. Entregue
+`ANALISE PARCIAL`, registre os bloqueios e indique o proximo papel
+correto. Se houver rascunhos preexistentes a verificar, o proximo papel e
+o Validador, nao o Montador nem uma decisao de promocao.
 
 Uma `PROVA_DE_MONTAGEM` so e valida quando a divergencia que ela atende
 ja tiver regra de negocio documentada. Se o motivo ainda for

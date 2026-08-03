@@ -29,6 +29,8 @@ const roles = read('docs/contrato-papeis.md');
 
 requireText('.github/agents/analista.agent.md', analyst, 'screenshots das referencias');
 requireText('.github/agents/analista.agent.md', analyst, 'nao pede promocao');
+requireText('.github/agents/analista.agent.md', analyst, 'Nao tente\ncarrega-las por `figma-get_figma_skill`');
+requireText('.github/agents/analista.agent.md', analyst, 'nao leia seus\nbindings, modes, previews ou layout');
 
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'tabela de reacoes');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'CONTEUDO_POR_CLUSTER');
@@ -37,9 +39,15 @@ requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'biblioteca,
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'valor aproximado nao entra no contrato');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nunca proponha placeholder');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'ANALISE INCOMPLETA');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'contexts representativos sao sempre frames `ref-*`');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'uma quinta\ninstancia oculta na referencia e artefato tecnico');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Nao leia bindings, modes, layout,');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'previews ou screenshots deles');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'ANALISE PARCIAL');
 
 requireText('.github/skills/figma-reconstrucao/SKILL.md', reconstruction, 'Asset proprietario obrigatorio ausente');
 requireText('docs/contrato-papeis.md', roles, 'evidencia\nde leitura visual, reacoes e IDS');
+requireText('docs/contrato-papeis.md', roles, '`_verificacao-*` e territorio do\nValidador');
 
 if (failures.length > 0) {
   console.error('Portoes da analise reprovados:');

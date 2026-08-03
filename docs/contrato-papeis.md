@@ -128,6 +128,13 @@ equivalencia ou promocao: isso pertence ao Validador e, depois de um
 veredito apto, ao Montador. Asset proprietario obrigatorio ausente
 bloqueia a tela dependente sem placeholder local.
 
+O Analista usa referencias `ref-*`; `_verificacao-*` e territorio do
+Validador. Ele pode mencionar que um rascunho existe, mas nao inspeciona
+bindings, modes, previews ou layout para emitir uma conclusao. Manual
+aprovado resolve quantidade e aplicacao de itens da interface: elemento
+oculto excedente na referencia e fato tecnico, nao pergunta repetida ao
+designer.
+
 ## Contexto guiado antes da analise
 
 Manual ausente nao deve obrigar o designer a preencher um formulario

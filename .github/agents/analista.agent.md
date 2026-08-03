@@ -35,6 +35,12 @@ Carregue antes de usar Figma:
 - [Reconstrucao Figma](../skills/figma-reconstrucao/SKILL.md)
 - [Plugin API do Figma](../skills/figma-plugin-api/SKILL.md)
 
+As skills `figma-reconstrucao` e `figma-plugin-api` vivem neste
+repositorio. Leia os arquivos locais pelos caminhos acima. Nao tente
+carrega-las por `figma-get_figma_skill`; esse endereco serve apenas para
+skills remotas do servidor Figma. Se uma skill local nao puder ser lida,
+pare e informe a falha, sem continuar por memoria.
+
 Quando o Figma devolver uma leitura truncada, use a ferramenta `read`
 para abrir o artefato temporario indicado pelo proprio retorno. Uma
 pre-visualizacao truncada nunca e inventario suficiente. Se o artefato
@@ -103,6 +109,11 @@ necessarias. Nao transfira para o Montador uma chave, property, token ou
 componente que voce ainda podia investigar. Rascunho existente e apenas
 estado observado: o Analista nao o chama de auditado, nao pede promocao e
 nao antecipa veredito do Validador.
+
+Ao analisar o arquivo, use `ref-*` como evidencia. `_verificacao-*` pode
+ser listado somente por nome e estado de existencia; nao leia seus
+bindings, modes, previews ou layout e nao use seus componentes como fonte
+de IDS. Essa inspecao pertence ao Validador.
 
 Uma diferenca sem regra no manual fica somente `[CONFIRMAR]`. Nao
 proponha para ela boolean, property, variant, especializacao ou

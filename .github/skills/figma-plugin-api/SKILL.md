@@ -206,6 +206,15 @@ falha silenciosa.
 27. **Guarde os component keys** num inventário. O índice do
     `search_design_system` demora minutos para popular após publish e
     não é confiável logo em seguida.
+27a. **Descoberta de biblioteca vem da instancia observada.** Recupere
+    `mainComponent.key` de uma instancia remota da referencia e pesquise
+    uma vez pelo nome exato do componente para obter sua `libraryKey`.
+    Depois, restrinja buscas relacionadas com `includeLibraryKeys`.
+    Componentes, tokens, icones e ilustracoes podem vir de bibliotecas
+    diferentes, portanto registre uma `libraryKey` por fonte confirmada.
+    `get_libraries` e ultimo recurso: se for inevitavel, leia somente
+    `libraries_added_to_file` e nunca explore
+    `libraries_available_to_add`.
 28. **`figma.createComponentFromNode(node)`** converte um frame pronto
     em componente, preservando estrutura e instâncias.
 29. **Binding no MASTER propaga para todas as instâncias.** Componentize

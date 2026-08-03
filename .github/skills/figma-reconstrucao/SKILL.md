@@ -25,19 +25,26 @@ proposta aprovada; nao o refaz por intuicao.
    reconhecer componentes, properties e papeis de interface. O objetivo
    e descobrir componentes reais em uso, nao reproduzir a arvore de
    nenhuma delas. Nome livre do frame nao define a tela da biblioteca.
-2. Liste bibliotecas conectadas de componentes, tokens, icones e
-   ilustracoes. Quando a ferramenta de bibliotecas existir, use-a; caso
-   contrario, consulte a Team Library pela Plugin API.
-3. Para cada papel de interface, resolva antes de escrever: componente,
+2. Comece por cada instancia IDS ja usada na referencia. Recupere sua
+   `mainComponent.key`, pesquise uma vez o nome exato do componente para
+   descobrir a `libraryKey` e registre a fonte. Pode haver varias fontes
+   confirmadas na rodada, como componentes, icones, tokens e ilustracoes.
+   Nas buscas seguintes, use `includeLibraryKeys` somente com a chave da
+   fonte pertinente. Nao chame `get_libraries` nesta etapa normal.
+3. So sem instancia remota ou candidato semantico suficiente use
+   `get_libraries` como ultimo recurso. Leia somente
+   `libraries_added_to_file`; ignore `libraries_available_to_add` e nao
+   percorra catalogos de bibliotecas disponiveis.
+4. Para cada papel de interface, resolva antes de escrever: componente,
    `key`, variant, properties publicas, token e escopo aplicavel. Primeiro
    procure a instancia ja usada em uma tela; busca de biblioteca vem
    depois, apenas para o que permanecer sem equivalente.
-4. Entregue um mapa curto com cada papel como `EXATO`,
+5. Entregue um mapa curto com cada papel como `EXATO`,
    `PROVA_DE_MONTAGEM`, `SEM_EQUIVALENTE` ou `[CONFIRMAR]`. O mapa entra
    no contrato aprovado. Um `EXATO` informa biblioteca, key real,
    property ou variant e node de evidencia. Nao ha escrita se restar um
    item ambiguo.
-5. Defina a unidade de montagem: um rascunho ou uma secao interna por
+6. Defina a unidade de montagem: um rascunho ou uma secao interna por
    vez, sempre dentro de `_verificacao-<etapa>`. Nunca crie elementos
    soltos na pagina nem mova filhos entre wrappers em chamadas diferentes.
 
@@ -66,10 +73,17 @@ template proposto. A arvore observada nao vira arvore-alvo por inercia.
 
 ## 2. `resolverIDS` (leitura)
 
-Para cada papel da arvore-alvo, consulte primeiro as bibliotecas
-conectadas e depois pesquise por funcao semantica nas bibliotecas de
-componentes, tokens, icones e ilustracoes. Nao percorra uma biblioteca
-inteira por tentativa e erro.
+Para cada papel da arvore-alvo, comece por uma instancia remota usada na
+referencia. Recupere `mainComponent.key`, pesquise uma vez o nome exato
+para obter sua `libraryKey` e restrinja as consultas seguintes com
+`includeLibraryKeys`. Construa um conjunto de bibliotecas confirmadas da
+rodada, pois componentes, tokens, icones e ilustracoes podem ter fontes
+diferentes. Nao percorra uma biblioteca inteira por tentativa e erro.
+
+`get_libraries` e ultimo recurso, somente quando a referencia nao tiver
+instancia remota nem candidato semantico suficiente. Mesmo nesse caso,
+consuma apenas `libraries_added_to_file` e descarte
+`libraries_available_to_add` sem pesquisar seu catalogo.
 
 Para um candidato, confira key real, properties publicas, variants e
 capacidade de composicao. Instancia remota e opaca: nao existe "colocar

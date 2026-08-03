@@ -34,6 +34,10 @@ const manifestSchema = read('docs/analise-rodada.schema.json');
   'Uma solicitacao `/consignado-analise` ja pede a proposta completa',
   'Toda\nseta observada precisa mostrar node de origem',
   'get_libraries` apenas lista bibliotecas conectadas',
+  'get_libraries` e ultimo recurso',
+  'libraries_added_to_file',
+  'libraries_available_to_add',
+  'includeLibraryKeys',
   '.designops/runs/<id>/analise.json',
 ].forEach((text) => requireText('.github/agents/analista.agent.md', analyst, text));
 
@@ -49,6 +53,9 @@ const manifestSchema = read('docs/analise-rodada.schema.json');
   'biblioteca,\ncomponente ou token, key real',
   'Nao abrevie keys na proposta',
   'valor aproximado nao entra no contrato',
+  'bibliotecas confirmadas',
+  'libraries_added_to_file',
+  'includeLibraryKeys',
   'Nunca proponha placeholder',
   '`SEM_REACAO_OBSERVADA`',
   '`PROPOSTA PARA APROVACAO`',

@@ -18,8 +18,14 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
 
 1. CONEXAO: MCP do Figma autentica no VS Code corporativo; seat e
    Dev/Full (View/Collab = 6 calls/mes, inviavel).
-2. BIBLIOTECAS: get_libraries lista as 4 libs do IDS (componentes,
-   tokens, icones, ilustras). Anotar as library keys.
+2. BIBLIOTECAS: em referencias que ja usam o IDS, recuperar a
+   `mainComponent.key` de uma instancia remota e pesquisar uma vez pelo
+   nome exato para obter a `libraryKey`. Anotar uma key por fonte real
+   usada, como componentes, tokens, icones e ilustracoes, e restringir
+   as buscas seguintes com `includeLibraryKeys`. So sem instancia ou
+   candidato suficiente chamar `get_libraries`; nesse caso, consumir
+   apenas `libraries_added_to_file`, nunca o catalogo
+   `libraries_available_to_add`.
 3. IMPORTACAO: importComponentByKeyAsync com a key de um botao real do
    IDS. Instanciar. Conferir remote=true.
 4. PROPERTIES: setProperties num componente complexo do IDS (item de

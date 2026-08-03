@@ -150,10 +150,21 @@ anterior, o Analista so pode dizer que ele existe. Nunca conclua que
 frases exigem um relatorio atual do Validador e pertencem a ele.
 
 `get_libraries` apenas lista bibliotecas conectadas e nao prova uma
-escolha IDS. Para cada familia de tela no escopo aprovavel, execute
+escolha IDS. A descoberta comeca pelas instancias que ja aparecem nas
+referencias: para cada familia de tela no escopo aprovavel, execute
 `get_design_context` em uma referencia representativa e use os fatos
 retornados para resolver componentes, properties, variants, tokens e
 assets. Uma instancia listada apenas pelo nome nao e um item `EXATO`.
+
+Para cada fonte IDS observada, obtenha a `mainComponent.key` e pesquise
+uma vez pelo nome exato do componente para identificar a `libraryKey`.
+Guarde as bibliotecas confirmadas da rodada, que podem ser varias, por
+exemplo componentes, icones, tokens e ilustracoes. Toda busca posterior
+daquela fonte usa `includeLibraryKeys` com somente a biblioteca
+confirmada. `get_libraries` e ultimo recurso, apenas quando nao houver
+instancia remota nem candidato semantico suficiente na referencia. Nesse
+caso, use somente `libraries_added_to_file` e ignore por completo
+`libraries_available_to_add`; nunca navegue pelo catalogo disponivel.
 
 Ao analisar o arquivo, use `ref-*` como evidencia. `_verificacao-*` pode
 ser listado somente por nome e estado de existencia; nao leia seus

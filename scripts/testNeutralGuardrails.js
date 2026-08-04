@@ -53,7 +53,7 @@ function createSquadFixture() {
 }
 function validManifest() {
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     id: 'rodada-neutra',
     etapa: 'etapa-exemplo',
     status: 'PROPOSTA_PARA_APROVACAO',
@@ -111,6 +111,21 @@ function validManifest() {
     }],
     diferencas: [],
     lacunas: [],
+    evidenciasEstruturais: [],
+  }
+}
+function validReferenceScope() {
+  return {
+    schemaVersion: 1,
+    id: 'referencias-neutras',
+    rodada: 'rodada-neutra',
+    figma: {
+      pageId: '1:1',
+      pageName: 'Pagina de referencia',
+      secoes: [{ nome: 'ref-modalidade-tela-ctx-a', sectionId: '1:2', contextoId: 'ctx-a' }],
+    },
+    ativosForaDoRecorte: 'IGNORAR',
+    ativosExistentes: { politica: 'EVIDENCIA_APENAS', adocaoAutomatica: false },
   }
 }
 function validContextDraft() {
@@ -151,8 +166,10 @@ function validContextDraft() {
 function validateManifest(manifest) {
   const fixture = temporaryDirectory('designops-manifest-')
   const file = path.join(fixture, 'analise.json')
+  const scopeFile = path.join(fixture, 'referencias.json')
   fs.writeFileSync(file, JSON.stringify(manifest, null, 2))
-  return runNode(path.join(root, 'scripts/validateAnalysisManifest.js'), [file])
+  fs.writeFileSync(scopeFile, JSON.stringify(validReferenceScope(), null, 2))
+  return runNode(path.join(root, 'scripts/validateAnalysisManifest.js'), [file, scopeFile])
 }
 function testFigmaApiContracts() {
   const screenSchema = JSON.parse(fs.readFileSync(path.join(root, 'docs/contratos/tela.schema.json'), 'utf8'))
@@ -228,14 +245,14 @@ function testManifestValidationWithoutTerminal() {
     {},
   )
   assert.strictEqual(
-    validateAnalysisManifestData(validManifest()).length,
+    validateAnalysisManifestData(validManifest(), validReferenceScope()).length,
     0,
     'Validador portatil precisa aprovar manifesto completo sem terminal',
   )
   const invalid = validManifest()
   invalid.fontes.figma.descoberta = null
   assert(
-    validateAnalysisManifestData(invalid).some((failure) => failure.includes('descoberta atual')),
+    validateAnalysisManifestData(invalid, validReferenceScope()).some((failure) => failure.includes('descoberta atual')),
     'Validador portatil precisa reprovar manifesto sem descoberta atual',
   )
 }
@@ -305,14 +322,14 @@ async function testManifestReconciliationWithoutTerminal() {
     figma,
     { validateAnalysisManifestData },
   )
-  const approved = await reconcileAnalysisManifestFigma(validManifest())
+  const approved = await reconcileAnalysisManifestFigma(validManifest(), validReferenceScope())
   assert.strictEqual(approved.passed, true, 'Reconciliacao MCP precisa aprovar manifesto que coincide com Figma atual')
 
   const stale = validManifest()
   stale.coberturaEstrutura[0].nodesInspecionados = 8
   stale.coberturaEstrutura[0].totalItens = 8
   stale.coberturaEstrutura[0].itensPorParte = [8]
-  const rejected = await reconcileAnalysisManifestFigma(stale)
+  const rejected = await reconcileAnalysisManifestFigma(stale, validReferenceScope())
   assert.strictEqual(rejected.passed, false, 'Reconciliacao MCP precisa reprovar manifesto reaproveitado com estrutura divergente')
   assert(rejected.failures.some((failure) => failure.includes('cobertura estrutural')), 'Reconciliacao precisa explicar a divergencia estrutural')
 }

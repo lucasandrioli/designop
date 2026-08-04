@@ -136,6 +136,12 @@ internas e nao publicadas. Referencia crua nao e componente.
 - Viewport mobile padrao: `360 x 800`, salvo excecao aprovada.
 - O Analista usa Figma somente para leitura e usa apenas `ref-*` como
   evidencia de nova analise. Rascunho nunca e evidencia analitica.
+- Em arquivo Figma real, o Analista fixa antes da coleta o recorte em
+  `.designops/runs/<rodada>/referencias.json`. Biblioteca, templates,
+  variaveis e componentes locais fora dele sao ignorados. Dentro dele sao
+  evidencia, nao autorizacao para adocao, movimentacao, edicao ou publicacao
+  automatica. Componente local com IDS descendente registra ambos como fatos
+  separados; apenas o IDS pode virar candidato independente no contrato.
 - Antes de qualquer coleta, o Analista redescobre a pagina e as Sections
   `ref-*` por `get_metadata` no arquivo atual. Node IDs de memoria, chat,
   manifesto ou rodada anterior nao podem ser reutilizados. Section exata

@@ -1,15 +1,16 @@
 /*
  * Reconciliacao operacional para executar DENTRO de use_figma, depois de
- * carregar validateAnalysisManifestCore.js e ler o analise.json recem-gravado.
+ * carregar validateReferenceScopeCore.js, validateAnalysisManifestCore.js e
+ * ler analise.json e referencias.json recem-gravados.
  *
  * Uso:
- * const report = await reconcileAnalysisManifestFigma(manifest);
+ * const report = await reconcileAnalysisManifestFigma(manifest, referenceScope);
  * return report;
  *
  * Nao altera o arquivo Figma. Ela compara o manifesto com a pagina e as
  * Sections que existem agora; nao e uma prova de ordem dos passos do chat.
  */
-async function reconcileAnalysisManifestFigma(manifest) {
+async function reconcileAnalysisManifestFigma(manifest, referenceScope) {
   const failures = [];
   if (typeof validateAnalysisManifestData !== 'function') {
     return {
@@ -19,7 +20,7 @@ async function reconcileAnalysisManifestFigma(manifest) {
     };
   }
 
-  failures.push(...validateAnalysisManifestData(manifest));
+  failures.push(...validateAnalysisManifestData(manifest, referenceScope));
   const pageId = manifest?.fontes?.figma?.descoberta?.paginaNodeId ?? manifest?.fontes?.figma?.pagina;
   const page = figma.root.children.find((candidate) => candidate.id === pageId);
   if (!page) {
@@ -58,6 +59,16 @@ async function reconcileAnalysisManifestFigma(manifest) {
     }
 
     const nodes = [section, ...section.findAll(() => true)];
+    const nodeById = new Map(nodes.map((node) => [node.id, node]));
+    const parentById = new Map(nodes.map((node) => [node.id, node.parent?.id ?? null]));
+    const isInside = (nodeId, ancestorId) => {
+      let current = parentById.get(nodeId);
+      while (current) {
+        if (current === ancestorId) return true;
+        current = parentById.get(current);
+      }
+      return false;
+    };
     const nodesWithReactions = nodes.filter((node) => 'reactions' in node && Array.isArray(node.reactions) && node.reactions.length > 0);
     const reactionCoverage = (manifest?.coberturaReacoes ?? []).find((coverage) => coverage.nodeId === section.id);
     const structureCoverage = (manifest?.coberturaEstrutura ?? []).find((coverage) => coverage.nodeId === section.id);
@@ -94,6 +105,39 @@ async function reconcileAnalysisManifestFigma(manifest) {
           if (!observed) failures.push('reacao atual ausente ou divergente no manifesto: ' + node.id);
         }
       }
+    }
+
+    const evidence = (manifest?.evidenciasEstruturais ?? []).filter((item) => item?.sectionId === section.id);
+    const evidenceByNodeId = new Map(evidence.map((item) => [item.nodeId, item]));
+    const remoteInstances = nodes.filter((node) => node.type === 'INSTANCE' && node.mainComponent?.remote === true);
+    const localExisting = nodes.filter((node) =>
+      (node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') ||
+      (node.type === 'INSTANCE' && node.mainComponent?.id && node.mainComponent?.remote !== true),
+    );
+    const detached = nodes.filter((node) => Boolean(node.detachedInfo));
+    for (const node of remoteInstances) {
+      const item = evidenceByNodeId.get(node.id);
+      if (!item || item.tipoEncontrado !== 'INSTANCIA_IDS') failures.push('instancia IDS atual sem evidencia estrutural: ' + node.id);
+      else if (!item.componentKey || item.componentKey !== node.mainComponent?.key) failures.push('instancia IDS com key divergente no manifesto: ' + node.id);
+    }
+    for (const node of localExisting) {
+      const nestedIds = remoteInstances.filter((instance) => isInside(instance.id, node.id));
+      const item = evidenceByNodeId.get(node.id);
+      const expectedKind = nestedIds.length > 0 ? 'COMPONENTE_LOCAL_COM_IDS' : 'COMPONENTE_LOCAL_EXISTENTE';
+      if (!item || item.tipoEncontrado !== expectedKind) failures.push('ativo local atual sem classificacao estrutural correta: ' + node.id);
+      if (expectedKind === 'COMPONENTE_LOCAL_COM_IDS' && item) {
+        const declared = new Map((item.instanciasIDSDescendentes ?? []).map((entry) => [entry.nodeId, entry.componentKey]));
+        for (const instance of nestedIds) {
+          if (declared.get(instance.id) !== instance.mainComponent?.key) failures.push('IDS descendente de componente local divergente: ' + instance.id);
+        }
+      }
+    }
+    for (const node of detached) {
+      const item = evidenceByNodeId.get(node.id);
+      if (!item || item.tipoEncontrado !== 'INSTANCIA_DESTACADA') failures.push('instancia destacada atual sem evidencia estrutural: ' + node.id);
+    }
+    for (const item of evidence) {
+      if (!nodeById.has(item.nodeId)) failures.push('evidencia estrutural nao existe na Section atual: ' + item.nodeId);
     }
 
     sections.push({

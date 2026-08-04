@@ -38,8 +38,15 @@ somente a lacuna bloqueante e informe a proposta que entregara antes de
 qualquer escrita. Sem manual ou regra necessaria, registre [CONFIRMAR]
 e pare se a lacuna for bloqueante.
 
-Leia a pagina inteira e somente referencias ref-<modalidade>-<tela>-
-<contexto-id>. Antes de concluir qualquer mapa, leia
+Antes da coleta, crie `.designops/runs/<id>/referencias.json` conforme
+`docs/contratos/referencias-rodada.schema.json`. Ele declara a pagina e as
+Sections `ref-*` que fazem parte da rodada. A pagina pode conter biblioteca,
+variaveis, templates antigos e componentes locais: fora desse recorte tudo
+e `IGNORAR`; dentro dele, ativo existente e `EVIDENCIA_APENAS` e nunca e
+autorizacao para editar, mover, publicar ou adotar automaticamente.
+
+Leia a pagina para descobrir o recorte e depois somente as Sections
+selecionadas em `referencias.json`. Antes de concluir qualquer mapa, leia
 `scripts/collectPrototypeReactions.js` e
 `scripts/collectReferenceStructure.js`; execute os dois em cada Section
 `ref-*`, incluindo todos os descendentes. Registre cobertura, contagens,
@@ -47,7 +54,13 @@ reacoes, destinos, arvore, Auto Layout, instancias, destacamentos,
 bindings e lacunas no manifesto temporario. Falha de varredura, Section
 sem cobertura, estrutura ausente ou destino nao exposto impedem proposta
 para aprovacao. Varra tambem screenshots e evidencia IDS. Rascunhos nao
-contam como evidencia.
+contam como evidencia. Registre cada ativo estrutural relevante em
+`evidenciasEstruturais` com `tipoEncontrado` e `decisao`. Componente local,
+template existente ou instancia destacada que ja estavam no arquivo so
+podem receber `EVIDENCIA_APENAS` ou `CONFIRMAR` nesta fase. Um componente
+local que contenha IDS deve ser `COMPONENTE_LOCAL_COM_IDS`, listar as
+instancias IDS descendentes com `nodeId` e `componentKey`, e cada IDS
+interno tambem deve receber seu proprio registro `INSTANCIA_IDS`.
 
 Antes de executar qualquer coletor, descubra novamente a pagina no
 arquivo atual com `figma-get_metadata` sem `nodeId`, e depois leia com
@@ -121,13 +134,15 @@ desses IDs para os node IDs reais.
 
 Componente local exige duas reutilizacoes previstas no contrato. Toda
 proposta separa fato, regra global, regra de convenio e [CONFIRMAR].
-Grave somente o manifesto temporario em `.designops/runs/<id>/analise.json`,
+Grave `referencias.json`, o manifesto temporario em
+`.designops/runs/<id>/analise.json`,
 a resolucao temporaria em `.designops/runs/<id>/resolvido.json` e o plano
 em `.designops/runs/<id>/componentes-locais.json`. Sem componente local,
 o plano continua obrigatorio com a lista vazia.
 
 Depois da ultima escrita de `analise.json`, leia o arquivo que acabou de
 escrever e valide-o sem terminal. Leia as versoes atuais de
+`scripts/validateReferenceScopeCore.js`,
 `scripts/validateAnalysisManifestCore.js` e
 `scripts/reconcileAnalysisManifestFigma.js`, carregue a skill oficial do
 Figma e cole os dois scripts com o objeto do manifesto em uma chamada
@@ -135,10 +150,10 @@ Figma e cole os dois scripts com o objeto do manifesto em uma chamada
 Sections que existem agora e precisa ser a ultima interacao Figma do turno.
 O core sozinho valida apenas a forma do objeto, portanto nao encerra a
 rodada. A chamada nao pode criar, editar ou remover nos no Figma. Depois
-das funcoes e do objeto `manifest`, a ultima instrucao e:
+das funcoes e dos objetos `manifest` e `referenceScope`, a ultima instrucao e:
 
 ```js
-return await reconcileAnalysisManifestFigma(manifest);
+return await reconcileAnalysisManifestFigma(manifest, referenceScope);
 ```
 
 So declare o manifesto validado quando a reconciliacao retornar

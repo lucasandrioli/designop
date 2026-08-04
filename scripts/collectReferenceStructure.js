@@ -25,7 +25,7 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
     throw new Error(`Section de referencia invalida: ${sectionId}`)
   }
 
-  const nodeSummary = (node, path, parentId) => {
+  const nodeSummary = (node, path, parentId, localComposition = null) => {
     const boundKeys = Object.keys(node.boundVariables ?? {})
     const unboundVisualFields = []
     const visualFields = ['fills', 'strokes', 'cornerRadius', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'itemSpacing']
@@ -50,6 +50,8 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
       mainComponentRemote: node.type === 'INSTANCE' ? node.mainComponent?.remote === true : false,
       detached: Boolean(node.detachedInfo),
       detachedInfo: node.detachedInfo ?? null,
+      localCompositionId: localComposition?.id ?? null,
+      localCompositionName: localComposition?.name ?? null,
     }
   }
 
@@ -57,10 +59,20 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
   const detachedInstances = []
   const remoteInstances = []
   const localComponents = []
+  const localComponentsWithIds = []
   const unboundVisualSignals = []
   const noAutoLayout = []
-  const visit = (node, path, parentId = null) => {
-    const summary = nodeSummary(node, path, parentId)
+  const visit = (node, path, parentId = null, inheritedLocalComposition = null) => {
+    const currentSummary = nodeSummary(node, path, parentId, inheritedLocalComposition)
+    const isLocalComposition =
+      ((node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') && node !== section) ||
+      (node.type === 'INSTANCE' && currentSummary.mainComponentId && !currentSummary.mainComponentRemote)
+    const localComposition = isLocalComposition
+      ? { id: currentSummary.id, name: currentSummary.name }
+      : inheritedLocalComposition
+    const summary = isLocalComposition
+      ? nodeSummary(node, path, parentId, inheritedLocalComposition)
+      : currentSummary
     nodes.push(summary)
     if (summary.detached) detachedInstances.push(summary)
     if (node.type === 'INSTANCE' && summary.mainComponentRemote) remoteInstances.push(summary)
@@ -74,11 +86,25 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
       if ((node.type === 'FRAME' || node.type === 'COMPONENT') && node.layoutMode === 'NONE' && visibleChildren.length >= 2) {
         noAutoLayout.push(summary)
       }
-      for (const child of node.children) visit(child, `${path}/${child.name}`, node.id)
+      // Instancias remotas sao opacas. So Slots nativos confirmados podem ser lidos abaixo delas.
+      const children = summary.mainComponentRemote
+        ? node.children.filter((child) => child.type === 'SLOT')
+        : node.children
+      for (const child of children) visit(child, `${path}/${child.name}`, node.id, localComposition)
     }
   }
 
   visit(section, section.name)
+  for (const local of localComponents) {
+    const descendants = remoteInstances.filter((instance) => instance.localCompositionId === local.id)
+    if (descendants.length > 0) {
+      localComponentsWithIds.push({
+        ...local,
+        classificacaoObservada: 'COMPONENTE_LOCAL_COM_IDS',
+        instanciasIDSDescendentes: descendants,
+      })
+    }
+  }
   const screenNames = Array.isArray(opts.screenNames) ? new Set(opts.screenNames) : null
   const requestedPart = Number.isInteger(opts.part) ? opts.part : 1
   const pageSize = Number.isInteger(opts.pageSize) ? Math.min(Math.max(opts.pageSize, 1), 20) : 20
@@ -102,8 +128,11 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
     boundVariableFields: summary.boundVariableFields,
     detached: summary.detached,
     detachedInfo: summary.detachedInfo,
-    mainComponentKey: summary.mainComponentKey,
-    mainComponentRemote: summary.mainComponentRemote,
+      mainComponentKey: summary.mainComponentKey,
+      mainComponentId: summary.mainComponentId,
+      mainComponentRemote: summary.mainComponentRemote,
+      localCompositionId: summary.localCompositionId,
+      localCompositionName: summary.localCompositionName,
   })
   const isScreen = (node) =>
     (node.type === 'FRAME' || node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') &&
@@ -136,6 +165,7 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
         detachedInstances: detachedInstances.length,
         remoteInstances: remoteInstances.length,
         localComponents: localComponents.length,
+        componentesLocaisComIDS: localComponentsWithIds.length,
         propriedadesVisuaisComValorSemBindingObservado: unboundVisualSignals.length,
         noAutoLayout: noAutoLayout.length,
       },
@@ -143,6 +173,7 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
         detachedInstances: inThisPart(detachedInstances),
         remoteInstances: inThisPart(remoteInstances),
         localComponents: inThisPart(localComponents),
+        componentesLocaisComIDS: inThisPart(localComponentsWithIds),
         propriedadesVisuaisComValorSemBindingObservado: inThisPart(unboundVisualSignals),
         noAutoLayout: inThisPart(noAutoLayout),
       },

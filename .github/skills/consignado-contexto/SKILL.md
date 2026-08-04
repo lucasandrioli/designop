@@ -30,6 +30,13 @@ recorte um a um: manual global, modalidade, etapa, mapa e cada
 Nao liste diretorios inteiros. Quando nenhum documento preenchido existir,
 isso e uma lacuna de contexto, nao autorizacao para inferir regra.
 
+Quando a pagina Figma real ja tiver biblioteca, componentes locais,
+templates ou variaveis, registre o recorte de referencias em
+`.designops/runs/<rodada>/referencias.json` antes de qualquer coleta.
+Leia somente as Sections `ref-*` selecionadas. O restante da pagina e
+ignorado nesta rodada e ativo existente dentro do recorte continua sendo
+somente evidencia, nao material aprovado para reutilizacao.
+
 Classifique cada frase do rascunho como `FATO OBSERVADO`, `REGRA
 DOCUMENTADA`, `REGRA CONFIRMADA` ou `[CONFIRMAR]`. Estrutura, reacao,
 sequencia, timeout e tela existente no Figma sao somente `FATO

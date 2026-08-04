@@ -68,7 +68,12 @@ direcionamento externo. Quantidade, canais e formato das acoes externas
 ficam no manual do contexto; evidencias externas nao viram templates
 internos.
 
-Em `/consignado-analise`, ele le somente referencias cruas, reacoes de
+Em `/consignado-analise`, ele primeiro fixa o recorte em
+`.designops/runs/<rodada>/referencias.json`: pagina e Sections `ref-*`
+selecionadas. Arquivos reais podem conter biblioteca, variaveis, templates
+e componentes locais. Fora do recorte eles sao ignorados; dentro dele sao
+evidencia, nunca permissao para adocao automatica. Ele le somente as
+referencias cruas selecionadas, reacoes de
 prototipo, documentos aprovados e evidencia IDS. Antes de propor mapa,
 varre programaticamente cada Section `ref-*` e todos os descendentes com
 `collectPrototypeReactions.js` e `collectReferenceStructure.js`. Grava
@@ -76,7 +81,10 @@ o manifesto e a resolucao temporaria de IDs em `.designops/runs/`, sem
 prender o documento oficial a IDs do Figma. Entrega uma unica proposta
 com inventario, prova de reacoes e estrutura, mapa de jornada, contrato
 de tela, mapa IDS, plano de variaveis e proposta de componentes locais.
-Rascunhos e previews nao sao evidencia analitica.
+Rascunhos e previews nao sao evidencia analitica. Se um componente local
+conter IDS, registra a composicao local e as instancias IDS descendentes
+separadamente. Isso prova a estrutura observada, mas nao promove a
+composicao local para reutilizacao.
 
 Antes da primeira coleta, o Analista redescobre a pagina e as Sections
 por `figma-get_metadata` no arquivo atual. IDs obtidos em conversa,
@@ -122,8 +130,9 @@ que fato Figma seja promovido como regra de negocio e bloqueia
 bloqueante. Somente depois disso a conversa pode pedir a aprovacao para
 escrever manuais, catalogo e mapa.
 
-Depois da ultima escrita do manifesto temporario, o Analista o relê e
-executa `validateAnalysisManifestCore.js` junto de
+Depois da ultima escrita do manifesto temporario, o Analista relê ele e
+`referencias.json`, e executa `validateReferenceScopeCore.js`,
+`validateAnalysisManifestCore.js` junto de
 `reconcileAnalysisManifestFigma.js` pelo MCP do Figma sem mutar o
 arquivo. A reconciliacao confronta as contagens, paginacao e reacoes
 observadas no manifesto com a pagina e as Sections que existem agora.

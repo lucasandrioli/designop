@@ -91,6 +91,22 @@ node IDs atuais de referencias, previews e Sections de jornada.
 O Validador reconstroi a evidencia no Figma e reprova quando a
 resolucao temporaria nao corresponde mais ao arquivo.
 
+## Recorte temporario de referencias
+
+Antes das coletas, o Analista cria
+`.designops/runs/<rodada>/referencias.json` conforme
+`referencias-rodada.schema.json`. Ele fixa a pagina e as Sections `ref-*`
+que sao evidencia da rodada. O arquivo pode conter componentes locais,
+variaveis, templates e biblioteca pre-existentes. Fora do recorte eles sao
+ignorados; dentro dele sao classificados como evidencia, nunca adotados de
+forma automatica.
+
+No manifesto, cada ativo relevante recebe `tipoEncontrado` e `decisao`.
+Uma composicao local com IDS interno registra a propria composicao e todas
+as instancias IDS descendentes com suas `componentKey`. Isso permite
+reconstruir a tela com IDS quando aplicavel sem tratar o componente local
+original como ativo aprovado.
+
 ## Evidencia MCP de Slots e tipografia
 
 Depois da escrita, o Montador e o Validador registram
@@ -133,6 +149,7 @@ rodadas anteriores nao sao entrada valida para coleta. O manifesto
 registra essa descoberta em `fontes.figma.descoberta`.
 
 Em operacao sem terminal, a verificacao final usa
+`scripts/validateReferenceScopeCore.js`,
 `scripts/validateAnalysisManifestCore.js` junto de
 `scripts/reconcileAnalysisManifestFigma.js`, colados com o objeto do
 manifesto em uma chamada MCP somente de leitura. A reconciliacao compara

@@ -62,13 +62,18 @@ retornar `passed: true`. `APROVADO_PARA_REGISTRO` exige registro da
 aprovacao humana e nenhuma afirmacao `[CONFIRMAR]` bloqueante. O adaptador
 Node e apoio local, nunca pre-requisito operacional.
 
-Em consignado-analise, use somente referencias cruas, documentos
+Em consignado-analise, crie primeiro o recorte temporario
+`.designops/runs/<rodada>/referencias.json` e use somente as referencias
+cruas selecionadas nele, documentos
 aprovados, reacoes observadas e evidencia IDS. Leia e execute
 `scripts/collectPrototypeReactions.js` e
 `scripts/collectReferenceStructure.js` para cada Section `ref-*` e seus
 descendentes antes de concluir o mapa. Grave somente manifesto e
 resolucao de IDs em `.designops/runs/`; documentos oficiais continuam
-logicos e nao recebem IDs permanentes. Rascunhos e previews nao sao
+logicos e nao recebem IDs permanentes. Ativos existentes fora do recorte
+sao ignorados. Dentro dele, componente local, template ou variavel
+existente e evidencia, nao ativo adotado. Componente local contendo IDS
+precisa registrar a composicao e cada IDS descendente. Rascunhos e previews nao sao
 evidencia. Produza uma unica proposta com cobertura de reacoes e
 estrutura, manual de contexto, mapa por modalidade, contrato de tela,
 mapa IDS, plano de variaveis e proposta de componentes locais.
@@ -98,7 +103,8 @@ antes da comparacao. Relate apenas `ATENDIDA`, `VIOLADA`,
 `NAO_APLICAVEL` ou `NAO_VERIFICAVEL`; ausencia de evidencia IDS, Auto
 Layout ou binding nao transforma uma regra sem escopo em violacao.
 
-Depois da ultima escrita do manifesto, releia-o e execute
+Depois da ultima escrita do manifesto, releia-o junto de `referencias.json`
+e execute `scripts/validateReferenceScopeCore.js`,
 `scripts/validateAnalysisManifestCore.js` junto de
 `scripts/reconcileAnalysisManifestFigma.js` em `use_figma` somente de
 leitura. A reconciliacao precisa ser a ultima interacao Figma do turno e

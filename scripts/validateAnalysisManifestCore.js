@@ -4,11 +4,11 @@
  * const failures = validateAnalysisManifestData(manifest);
  * return { passed: failures.length === 0, failures };
  */
-function validateAnalysisManifestData(manifest) {
+function validateAnalysisManifestData(manifest, referenceScope = null) {
   const failures = [];
-  const required = ['schemaVersion', 'id', 'etapa', 'status', 'fontes', 'inventario', 'execucoesColeta', 'coberturaReacoes', 'coberturaEstrutura', 'reacoes', 'diferencas', 'lacunas'];
+  const required = ['schemaVersion', 'id', 'etapa', 'status', 'fontes', 'inventario', 'execucoesColeta', 'coberturaReacoes', 'coberturaEstrutura', 'reacoes', 'diferencas', 'lacunas', 'evidenciasEstruturais'];
   for (const field of required) if (!(field in (manifest ?? {}))) failures.push('campo ausente: ' + field);
-  if (manifest?.schemaVersion !== 2) failures.push('schemaVersion precisa ser 2');
+  if (manifest?.schemaVersion !== 3) failures.push('schemaVersion precisa ser 3');
   if (!['PRECISA_CONTEXTO', 'ANALISE_INCOMPLETA', 'PROPOSTA_PARA_APROVACAO'].includes(manifest?.status)) failures.push('status invalido');
   if (!manifest?.fontes?.figma?.pagina) failures.push('fonte Figma ausente');
   if (manifest?.fontes?.figma?.descoberta?.metodo !== 'figma-get_metadata' || !manifest?.fontes?.figma?.descoberta?.paginaNodeId) {
@@ -51,8 +51,64 @@ function validateAnalysisManifestData(manifest) {
     if (referenceByNodeId.has(section?.nodeId)) failures.push('secoesReferencia possui nodeId duplicado: ' + section.nodeId);
     referenceByNodeId.set(section?.nodeId, section);
   }
+
+  if (!referenceScope) {
+    failures.push('recorte de referencias ausente; carregue referencias.json da rodada');
+  } else {
+    if (referenceScope.schemaVersion !== 1 || !referenceScope.id || !referenceScope.rodada) failures.push('recorte de referencias invalido');
+    if (!referenceScope?.figma?.pageId || !referenceScope?.figma?.pageName) failures.push('recorte de referencias sem pagina Figma');
+    if (referenceScope?.ativosForaDoRecorte !== 'IGNORAR') failures.push('recorte precisa ignorar ativos fora das Sections selecionadas');
+    if (referenceScope?.ativosExistentes?.politica !== 'EVIDENCIA_APENAS' || referenceScope?.ativosExistentes?.adocaoAutomatica !== false) {
+      failures.push('recorte precisa tratar ativos existentes como evidencia sem adocao automatica');
+    }
+    const scopedSections = referenceScope?.figma?.secoes ?? [];
+    if (!Array.isArray(scopedSections) || scopedSections.length === 0) failures.push('recorte de referencias sem Sections selecionadas');
+    const scopedById = new Map();
+    for (const [index, section] of scopedSections.entries()) {
+      if (!section?.nome || !section?.sectionId || !section?.contextoId) failures.push('recorte.figma.secoes[' + index + '] incompleta');
+      if (!String(section?.nome ?? '').startsWith('ref-')) failures.push('recorte.figma.secoes[' + index + '] precisa usar referencia ref-*');
+      if (scopedById.has(section?.sectionId)) failures.push('recorte possui Section duplicada: ' + section.sectionId);
+      scopedById.set(section?.sectionId, section);
+    }
+    if (referenceScope?.figma?.pageId !== manifest?.fontes?.figma?.descoberta?.paginaNodeId) failures.push('recorte aponta para pagina diferente da descoberta do manifesto');
+    if (scopedById.size !== referenceByNodeId.size) failures.push('recorte e manifesto possuem quantidade diferente de Sections');
+    for (const section of referenceSections) {
+      const scoped = scopedById.get(section.nodeId);
+      if (!scoped || scoped.nome !== section.nome || scoped.contextoId !== section.contextoId) failures.push('Section do manifesto nao corresponde ao recorte: ' + section.nodeId);
+    }
+  }
   for (const [index, item] of (manifest?.inventario ?? []).entries()) {
     if (!item.tela || !item.modalidade || !item.contextoId || !item.frame?.nome || !item.frame?.nodeId) failures.push('inventario[' + index + '] sem tela, modalidade, contextoId ou frame');
+  }
+
+  const observedKinds = new Set([
+    'INSTANCIA_IDS',
+    'COMPONENTE_LOCAL_EXISTENTE',
+    'COMPONENTE_LOCAL_COM_IDS',
+    'INSTANCIA_DESTACADA',
+    'LOCAL_LAYOUT',
+    'VALOR_MANUAL',
+    'BINDING_EXISTENTE',
+    'TEMPLATE_EXISTENTE',
+  ]);
+  const decisions = new Set(['EVIDENCIA_APENAS', 'CANDIDATO_IDS', 'CANDIDATO_COMPONENTE_LOCAL', 'LOCAL_LAYOUT', 'CONFIRMAR']);
+  const structuralEvidenceByNodeId = new Map();
+  if (!Array.isArray(manifest?.evidenciasEstruturais)) failures.push('evidenciasEstruturais precisa ser uma lista');
+  for (const [index, evidence] of (manifest?.evidenciasEstruturais ?? []).entries()) {
+    if (!evidence?.nodeId || !evidence?.sectionId || !evidence?.nome) failures.push('evidenciasEstruturais[' + index + '] sem nodeId, Section ou nome');
+    if (!observedKinds.has(evidence?.tipoEncontrado)) failures.push('evidenciasEstruturais[' + index + '] sem tipoEncontrado valido');
+    if (!decisions.has(evidence?.decisao)) failures.push('evidenciasEstruturais[' + index + '] sem decisao valida');
+    if (!referenceByNodeId.has(evidence?.sectionId)) failures.push('evidenciasEstruturais[' + index + '] aponta para Section fora do recorte');
+    if (structuralEvidenceByNodeId.has(evidence?.nodeId)) failures.push('evidenciasEstruturais possui nodeId duplicado: ' + evidence.nodeId);
+    structuralEvidenceByNodeId.set(evidence?.nodeId, evidence);
+    if (['COMPONENTE_LOCAL_EXISTENTE', 'COMPONENTE_LOCAL_COM_IDS', 'INSTANCIA_DESTACADA', 'TEMPLATE_EXISTENTE'].includes(evidence?.tipoEncontrado) && !['EVIDENCIA_APENAS', 'CONFIRMAR'].includes(evidence?.decisao)) {
+      failures.push('ativo pre-existente nao pode ser adotado automaticamente: ' + evidence.nodeId);
+    }
+    if (evidence?.tipoEncontrado === 'COMPONENTE_LOCAL_COM_IDS') {
+      if (!Array.isArray(evidence?.instanciasIDSDescendentes) || evidence.instanciasIDSDescendentes.length === 0 || evidence.instanciasIDSDescendentes.some((item) => !item?.nodeId || !item?.componentKey)) {
+        failures.push('componente local com IDS precisa registrar instancias IDS descendentes: ' + evidence.nodeId);
+      }
+    }
   }
 
   const coverageByNodeId = new Map();

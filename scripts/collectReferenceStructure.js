@@ -88,6 +88,9 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
   }
   const start = (requestedPart - 1) * pageSize
   const nodesThisPart = nodes.slice(start, start + pageSize)
+  const itemsPerPart = Array.from({ length: totalParts }, (_, index) =>
+    Math.max(0, Math.min(pageSize, nodes.length - index * pageSize)),
+  )
   const compact = (summary) => ({
     id: summary.id,
     name: summary.name,
@@ -118,6 +121,7 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
       pageSize,
       totalItens: nodes.length,
       itensNestaParte: nodesThisPart.length,
+      itensPorParte: itemsPerPart,
     },
     cobertura: {
       secao: section.name,
@@ -132,14 +136,14 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
         detachedInstances: detachedInstances.length,
         remoteInstances: remoteInstances.length,
         localComponents: localComponents.length,
-        camposVisuaisSemBindingObservado: unboundVisualSignals.length,
+        propriedadesVisuaisComValorSemBindingObservado: unboundVisualSignals.length,
         noAutoLayout: noAutoLayout.length,
       },
       nestaParte: {
         detachedInstances: inThisPart(detachedInstances),
         remoteInstances: inThisPart(remoteInstances),
         localComponents: inThisPart(localComponents),
-        camposVisuaisSemBindingObservado: inThisPart(unboundVisualSignals),
+        propriedadesVisuaisComValorSemBindingObservado: inThisPart(unboundVisualSignals),
         noAutoLayout: inThisPart(noAutoLayout),
       },
     },

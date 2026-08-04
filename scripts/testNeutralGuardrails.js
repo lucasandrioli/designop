@@ -79,6 +79,9 @@ function validManifest() {
       coletor: 'scripts/collectPrototypeReactions.js',
       status: 'COBERTA',
       totalPartes: 1,
+      pageSize: 10,
+      totalItens: 1,
+      itensPorParte: [1],
       partesLidas: [1],
     }],
     coberturaEstrutura: [{
@@ -88,6 +91,9 @@ function validManifest() {
       coletor: 'scripts/collectReferenceStructure.js',
       status: 'COBERTA',
       totalPartes: 1,
+      pageSize: 20,
+      totalItens: 3,
+      itensPorParte: [3],
       partesLidas: [1],
     }],
     reacoes: [{
@@ -132,6 +138,7 @@ function testFigmaApiContracts() {
   const structureSource = fs.readFileSync(path.join(root, 'scripts/collectReferenceStructure.js'), 'utf8')
   const reactionsSource = fs.readFileSync(path.join(root, 'scripts/collectPrototypeReactions.js'), 'utf8')
   assert(structureSource.includes('totalPartes'), 'Coletor estrutural precisa expor a quantidade total de partes')
+  assert(structureSource.includes('itensPorParte'), 'Coletor estrutural precisa expor a distribuicao da leitura')
   assert(reactionsSource.includes('totalParts'), 'Coletor de reacoes precisa paginar a leitura completa')
 
   const analysisSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-analise/SKILL.md'), 'utf8')
@@ -613,6 +620,9 @@ async function main() {
     manifest.coberturaEstrutura[0].totalPartes = 2
     manifest.coberturaEstrutura[0].partesLidas = [1]
     expectFailure(validateManifest(manifest), 'Manifesto com parte estrutural nao lida')
+    manifest = validManifest()
+    manifest.coberturaReacoes[0].itensPorParte = [2]
+    expectFailure(validateManifest(manifest), 'Manifesto com distribuicao de leitura invalida')
     expectSuccess(validateManifest(validManifest()), 'Manifesto completo')
 
     await testJourneyAndLocalComponents()

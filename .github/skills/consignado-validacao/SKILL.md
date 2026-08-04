@@ -28,7 +28,8 @@ resulta em `NAO VERIFICAVEL`.
 Execute todos os coletores por partes: leia `part: 1`, descubra
 `paginacao.totalPartes` e recupere cada parte ate completar a lista. O
 manifesto so prova cobertura se `partesLidas` contiver exatamente todas
-as partes de cada Section. Nunca aceite uma conclusao baseada em resumo
+as partes de cada Section. Registre tambem `pageSize`, `totalItens` e
+`itensPorParte` para provar o tamanho de cada leitura. Nunca aceite uma conclusao baseada em resumo
 ou em trecho truncado.
 
 Prove que IDS foi usado quando disponivel, componente local tem duas

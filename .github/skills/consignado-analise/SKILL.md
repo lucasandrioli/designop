@@ -35,15 +35,18 @@ Antes de cada `use_figma`, carregue tambem a skill oficial com
 local `figma-plugin-api` nao a substitui. Faca uma chamada por Section.
 Para cada coletor, comece na `part: 1`, leia `paginacao.totalPartes` e
 execute todas as partes restantes da mesma Section. Registre no
-manifesto `totalPartes` e a lista ordenada `partesLidas`; uma Section so
-recebe `COBERTA` quando as duas listas estao completas. Se a resposta for
+manifesto `totalPartes`, `pageSize`, `totalItens`, `itensPorParte` e a
+lista ordenada `partesLidas`; uma Section so recebe `COBERTA` quando
+todas as partes estao completas. No relatorio final, mostre esses mesmos
+numeros para cada coleta, para que a cobertura possa ser auditada. Se a resposta for
 salva em arquivo temporario pelo cliente, recupere a parte correspondente
 ou reduza `pageSize` e rode novamente aquela parte. Nunca complete uma
 lacuna por "padrao semelhante": marque a varredura como `FALHOU` e
 mantenha a lacuna bloqueante ate recuperar a evidencia.
 
 `boundVariableFields` vazio significa somente "nenhum binding observado
-nos campos lidos". Nao escreva "manual", "errado" ou "sem token" sem
+nos campos lidos". Uma propriedade visual com valor e sem binding
+observado tambem e apenas um fato bruto. Nao escreva "manual", "errado" ou "sem token" sem
 comparar o contrato aplicavel. O coletor apresenta sinais tecnicos; a
 classificacao pertence ao contrato e ao Validador.
 

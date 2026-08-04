@@ -40,6 +40,9 @@ async function collectPrototypeReactions(pageId, sectionId, opts = {}) {
   }
   const start = (requestedPart - 1) * pageSize
   const reactionsThisPart = withReactions.slice(start, start + pageSize)
+  const itemsPerPart = Array.from({ length: totalParts }, (_, index) =>
+    Math.max(0, Math.min(pageSize, withReactions.length - index * pageSize)),
+  )
 
   const nodeTarget = async (nodeId) => {
     if (!nodeId) return null
@@ -85,6 +88,7 @@ async function collectPrototypeReactions(pageId, sectionId, opts = {}) {
       pageSize,
       totalItens: withReactions.length,
       itensNestaParte: reactionsThisPart.length,
+      itensPorParte: itemsPerPart,
     },
     cobertura: {
       secao: section.name,

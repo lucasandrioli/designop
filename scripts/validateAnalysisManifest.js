@@ -25,6 +25,23 @@ const validatePagination = (coverage, label, index) => {
     failures.push(`${label}[${index}] sem partesLidas`);
     return;
   }
+  if (!Number.isInteger(coverage?.pageSize) || coverage.pageSize < 1) {
+    failures.push(`${label}[${index}] sem pageSize valido`);
+  }
+  if (!Number.isInteger(coverage?.totalItens) || coverage.totalItens < 0) {
+    failures.push(`${label}[${index}] sem totalItens valido`);
+  }
+  if (!Array.isArray(coverage?.itensPorParte)) {
+    failures.push(`${label}[${index}] sem itensPorParte`);
+  } else if (Number.isInteger(coverage?.pageSize) && Number.isInteger(coverage?.totalItens)) {
+    const expectedParts = Math.max(1, Math.ceil(coverage.totalItens / coverage.pageSize));
+    const expectedItems = Array.from({ length: expectedParts }, (_, part) =>
+      Math.max(0, Math.min(coverage.pageSize, coverage.totalItens - part * coverage.pageSize)),
+    );
+    if (coverage.totalPartes !== expectedParts || coverage.itensPorParte.length !== expectedItems.length || coverage.itensPorParte.some((value, part) => value !== expectedItems[part])) {
+      failures.push(`${label}[${index}] possui distribuicao de partes invalida`);
+    }
+  }
   const parts = [...new Set(coverage.partesLidas)];
   const expected = Array.from({ length: coverage.totalPartes }, (_, part) => part + 1);
   if (parts.length !== coverage.partesLidas.length || parts.length !== expected.length || parts.some((part, position) => part !== expected[position])) {

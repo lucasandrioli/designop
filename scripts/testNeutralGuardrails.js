@@ -163,6 +163,8 @@ function testFigmaApiContracts() {
   assert(analysisSkill.includes('validateAnalysisManifestCore.js'), 'Analista precisa validar o manifesto sem terminal')
   assert(analysisSkill.includes('reconcileAnalysisManifestFigma.js'), 'Analista precisa reconciliar o manifesto com Figma atual')
   assert(analysisSkill.includes('return await reconcileAnalysisManifestFigma(manifest);'), 'Analista precisa receber a chamada literal da reconciliacao MCP')
+  assert(analysisSkill.includes('nunca chame\n`skill://index.json`'), 'Analista nao pode procurar skills locais no MCP do Figma')
+  assert(analysisSkill.includes('.designops/runs/<outra-rodada>/'), 'Analista precisa isolar rodadas novas de artefatos anteriores')
 }
 function testManifestValidationWithoutTerminal() {
   const validateAnalysisManifestData = loadFigmaFunction(

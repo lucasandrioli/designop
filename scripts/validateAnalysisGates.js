@@ -18,6 +18,11 @@ requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'em cada Sec
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'resolvido.json');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'contrato de retorno');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'reencontro');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'As skills deste projeto vivem em `.github/skills/`');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'skill://index.json');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, '.designops/runs/<outra-rodada>/');
+requireText('.github/agents/analista.agent.md', analyst, 'pelo leitor local do projeto');
+requireText('.github/agents/analista.agent.md', analyst, 'Nao liste diretorios inteiros por padrao');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'So entao crie ou atualize');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'ACAO_NO_APP');
 requireText('docs/mapas/_template.md', mapTemplate, 'Origem da regra');

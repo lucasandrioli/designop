@@ -7,6 +7,18 @@ disable-model-invocation: true
 
 # Analise de etapa
 
+As skills deste projeto vivem em `.github/skills/` e sao lidas localmente.
+Nao tente descobri-las com `figma-get_figma_skill`: nunca chame
+`skill://index.json` e nunca use URI `skill://figma/...` para uma skill
+local. Pelo MCP, carregue apenas a skill oficial `figma-use` antes de cada
+`use_figma`.
+
+Em rodada nova, comece pelo escopo pedido, `AGENTS.md` e as skills
+necessarias. Leia somente documentos e scripts exigidos por esse escopo;
+nao liste diretorios inteiros por padrao. Laboratorio tecnico nao pede
+manual de negocio. Nao leia `.designops/runs/<outra-rodada>/`, a menos que
+o pedido diga expressamente para retomar ou comparar a rodada identificada.
+
 Leia AGENTS.md, `docs/contrato-papeis.md`, modelo de contextos, manual
 global, manual da modalidade, catalogo da etapa, mapa e manual de cada
 contexto usado. Na primeira resposta, diga o que vai investigar, peca
@@ -41,7 +53,7 @@ origens, destinos e raiz de validacao observados. A raiz escolhida deve
 conter a acao declarada. Nome vindo de memoria, de documento ou de plano
 nao substitui a evidencia Figma.
 
-Antes de cada `use_figma`, carregue tambem a skill oficial com
+Antes de cada `use_figma`, carregue somente a skill oficial com
 `figma-get_figma_skill` em `skill://figma/figma-use/SKILL.md`; a skill
 local `figma-plugin-api` nao a substitui. Cada chamada de coleta deve
 executar exatamente um coletor, uma Section e uma parte. Nao envolva

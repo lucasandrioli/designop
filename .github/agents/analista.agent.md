@@ -14,9 +14,17 @@ tools:
 # Analista da Etapa
 
 Carregue consignado-contexto, consignado-analise, figma-reconstrucao e
-figma-plugin-api antes de atuar no Figma. Antes de cada `use_figma`,
-carregue tambem `skill://figma/figma-use/SKILL.md` via
-`figma-get_figma_skill`.
+figma-plugin-api pelo leitor local do projeto antes de atuar no Figma.
+Nao use `figma-get_figma_skill` para skills locais, `skill://index.json`
+nem URI `skill://figma/...` que tente representar uma skill do projeto.
+Antes de cada `use_figma`, carregue somente a skill oficial
+`skill://figma/figma-use/SKILL.md` via `figma-get_figma_skill`.
+
+Em rodada nova, leia somente documentos e scripts exigidos pelo escopo
+do pedido. Nao liste diretorios inteiros por padrao. Em laboratorio
+tecnico, nao leia manuais de negocio. Nao leia
+`.designops/runs/<outra-rodada>/`, salvo pedido explicito para retomar ou
+comparar a rodada identificada.
 
 Em consignado-contexto, recupere primeiro manual global, manual da
 modalidade, catalogo da etapa, mapa e manuais de contexto existentes.

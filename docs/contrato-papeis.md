@@ -85,6 +85,15 @@ temporario registra o metodo de descoberta e a pagina retornada. Quando
 uma Section pedida nao aparece com o nome exato, a coleta nao e
 executada e a lacuna e bloqueante.
 
+As skills de papel do repositorio sao lidas localmente. O MCP do Figma e
+usado somente para a skill oficial necessaria a `use_figma`; buscar
+`skill://index.json` ou uma skill local por URI do Figma e desvio de
+procedimento. Uma rodada nova tambem e isolada: arquivos em
+`.designops/runs/<outra-rodada>/` nao entram no contexto sem pedido
+explicito de retomada ou comparacao. O Analista le somente documentos e
+scripts exigidos pelo escopo; laboratorio tecnico nao autoriza leitura
+ampla de manuais de negocio.
+
 Depois da ultima escrita do manifesto temporario, o Analista o relê e
 executa `validateAnalysisManifestCore.js` junto de
 `reconcileAnalysisManifestFigma.js` pelo MCP do Figma sem mutar o

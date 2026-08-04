@@ -125,6 +125,13 @@ internas e nao publicadas. Referencia crua nao e componente.
   `ref-*` por `get_metadata` no arquivo atual. Node IDs de memoria, chat,
   manifesto ou rodada anterior nao podem ser reutilizados. Section exata
   ausente bloqueia a coleta; nunca substitui-la por uma parecida.
+- `figma-get_figma_skill` serve somente para recursos oficiais do servidor
+  Figma. Skills do projeto em `.github/skills/` sao lidas localmente; o
+  Analista nunca consulta `skill://index.json` nem tenta carregar skill
+  local por URI `skill://figma/...`.
+- Em rodada nova, o Analista nao le `.designops/runs/<outra-rodada>/`.
+  Artefato de rodada anterior so pode ser lido quando o pedido disser
+  explicitamente para retomar ou comparar uma rodada identificada.
 - Toda escrita Figma via `use_figma` exige a skill `figma-plugin-api`.
 - Scripts em `scripts/` sao colados na Plugin API a partir da versao
   atual do arquivo. Eles nao executam por caminho dentro do Figma.

@@ -1,5 +1,11 @@
 # Modalidade: <nome-estavel>
 
+## Status da base
+
+- Aprovado por: <nome ou CONFIRMAR>
+- Atualizado em: <data>
+- Fonte inicial: <curadoria humana ou fonte documental aprovada>
+
 ## Proposito e limite
 
 - Proposito: <o que a modalidade representa no credito consignado>

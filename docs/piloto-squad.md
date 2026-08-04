@@ -31,9 +31,10 @@ esta pronto e o que precisa de contexto.
 - o estado lista um Leitor concluido para cada etapa pedida;
 - nenhum arquivo em `docs/` foi alterado;
 - nao houve chamada Figma;
-- uma etapa aparece `pronta_para_analise` quando catalogo, mapa e manuais
-  forem localizados, mesmo que mantenha uma pendencia nao bloqueante;
-- outra etapa aparece `precisa_contexto` se ainda nao houver documentos;
+- uma etapa aparece `pronta_para_analise` quando manuais-base e mapa da
+  rodada forem localizados, mesmo que mantenha uma pendencia nao bloqueante;
+- outra etapa aparece `precisa_contexto` se faltar regra para compor o mapa;
+- outra etapa aparece `precisa_curadoria` se faltar manual-base essencial;
 - as perguntas, quando existirem, aparecem juntas na caixa de decisoes;
 - em novo chat, o Operador consegue informar o estado da rodada mais
   recente sem repetir a leitura concluida.

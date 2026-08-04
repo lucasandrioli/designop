@@ -8,6 +8,7 @@ function requireText(file, value, expected) { if (!value.includes(expected)) fai
 const analyst = read('.github/agents/analista.agent.md');
 const analysis = read('.github/skills/consignado-analise/SKILL.md');
 const context = read('.github/skills/consignado-contexto/SKILL.md');
+const base = read('.github/skills/consignado-base/SKILL.md');
 const mapTemplate = read('docs/mapas/_template.md');
 const contextTemplate = read('docs/contextos/_template.md');
 ['referencias cruas', 'aprovacao humana explicita', 'Rascunhos e previews'].forEach((expected) => requireText('.github/agents/analista.agent.md', analyst, expected));
@@ -42,6 +43,11 @@ requireText('.github/skills/consignado-contexto/SKILL.md', context, '`FATO OBSER
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'Nao liste diretorios inteiros');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'contexto.json');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'validateContextDraftCore.js');
+requireText('.github/skills/consignado-contexto/SKILL.md', context, 'regra documentada nao e perguntada de novo');
+requireText('.github/skills/consignado-contexto/SKILL.md', context, 'nao altere manual global, modalidade');
+requireText('.github/skills/consignado-base/SKILL.md', base, 'sem Figma');
+requireText('.github/skills/consignado-base/SKILL.md', base, 'aprovacao humana explicita');
+requireText('.github/skills/consignado-base/SKILL.md', base, 'merge manual');
 requireText('.github/agents/analista.agent.md', analyst, 'contexto-rodada.schema.json');
 requireText('.github/agents/analista.agent.md', analyst, 'validateContextDraftCore.js');
 requireText('docs/mapas/_template.md', mapTemplate, 'Origem da regra');

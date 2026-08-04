@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
- * Testes de regressao do motor neutro. Cada fixture nasce em diretorio
- * temporario e e removida ao fim: nenhum cenario de negocio entra na master.
+ * Testes de regressao da base documental. Cada fixture nasce em diretorio
+ * temporario e e removida ao fim: nenhum estado de rodada entra na master.
  */
 const assert = require('assert')
 const childProcess = require('child_process')
@@ -50,6 +50,26 @@ function createSquadFixture() {
   copy('.vscode/settings.json', fixture)
   copy('.gitignore', fixture)
   return fixture
+}
+function writeValidBaselineFixture(fixture) {
+  const metadata = '# Documento\n\n## Status da base\n\n- Aprovado por: [CONFIRMAR]\n- Atualizado em: [CONFIRMAR]\n- Fonte inicial: Curadoria humana\n'
+  const required = [
+    'docs/manual-credito-consignado.md',
+    'docs/modalidades/pcon.md',
+    'docs/modalidades/refin.md',
+    'docs/modalidades/portabilidade.md',
+    'docs/etapas/consentimento.md',
+    'docs/etapas/simular-e-revisar.md',
+    'docs/etapas/formalizacao.md',
+    'docs/contextos/indice.md',
+  ]
+  fs.mkdirSync(path.join(fixture, 'docs'), { recursive: true })
+  fs.writeFileSync(path.join(fixture, 'docs/base-documental.md'), '# Governanca\n')
+  required.forEach((relative) => {
+    const file = path.join(fixture, relative)
+    fs.mkdirSync(path.dirname(file), { recursive: true })
+    fs.writeFileSync(file, metadata)
+  })
 }
 function validManifest() {
   return {
@@ -241,6 +261,13 @@ function testFigmaApiContracts() {
   assert(contextSkill.includes('Estrutura, reacao,\nsequencia, timeout e tela existente no Figma sao somente `FATO\nOBSERVADO`'), 'Skill de contexto precisa impedir que Figma vire regra de negocio')
   assert(contextSkill.includes('Nao liste diretorios inteiros'), 'Skill de contexto precisa bloquear descoberta ampla de documentos')
   assert(contextSkill.includes('validateContextDraftCore.js'), 'Skill de contexto precisa validar rascunho sem terminal')
+  assert(contextSkill.includes('regra documentada nao e perguntada de novo'), 'Contexto precisa reutilizar regra da base')
+  assert(contextSkill.includes('nao altere manual global, modalidade'), 'Contexto nao pode reescrever a base')
+
+  const baseSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-base/SKILL.md'), 'utf8')
+  assert(baseSkill.includes('sem Figma'), 'Curadoria da base nao pode abrir Figma')
+  assert(baseSkill.includes('aprovacao humana explicita'), 'Curadoria precisa de checkpoint humano')
+  assert(baseSkill.includes('merge manual'), 'Curadoria precisa exigir promocao manual')
 
   const contextCoreSource = fs.readFileSync(path.join(root, 'scripts/validateContextDraftCore.js'), 'utf8')
   assert(!contextCoreSource.includes("require('fs')"), 'Validador de contexto MCP nao pode depender de fs')
@@ -1084,10 +1111,19 @@ async function main() {
 
     fixture = temporaryDirectory('designops-baseline-')
     copy('scripts/validateBaselineClean.js', fixture)
-    fs.mkdirSync(path.join(fixture, 'docs'), { recursive: true })
-    fs.writeFileSync(path.join(fixture, 'docs/manual-credito-consignado.md'), '# Manual preenchido\n')
+    writeValidBaselineFixture(fixture)
     childProcess.execFileSync('git', ['init', '-q'], { cwd: fixture })
-    expectFailure(runNode(path.join(fixture, 'scripts/validateBaselineClean.js')), 'Manual global preenchido no baseline')
+    expectSuccess(runNode(path.join(fixture, 'scripts/validateBaselineClean.js')), 'Base documental valida')
+    fs.mkdirSync(path.join(fixture, 'docs/mapas'), { recursive: true })
+    fs.writeFileSync(path.join(fixture, 'docs/mapas/pcon.md'), '# Mapa concreto\n')
+    expectFailure(runNode(path.join(fixture, 'scripts/validateBaselineClean.js')), 'Mapa concreto no baseline')
+    fs.rmSync(path.join(fixture, 'docs/mapas/pcon.md'))
+    fs.mkdirSync(path.join(fixture, '.designops/runs/rodada-a'), { recursive: true })
+    fs.writeFileSync(path.join(fixture, '.designops/runs/rodada-a/analise.json'), '{}\n')
+    expectFailure(runNode(path.join(fixture, 'scripts/validateBaselineClean.js')), 'Estado de rodada no baseline')
+    fs.rmSync(path.join(fixture, '.designops/runs/rodada-a'), { recursive: true, force: true })
+    fs.writeFileSync(path.join(fixture, 'docs/modalidades/pcon.md'), '# PCon\n\n## Status da base\n\n- Aprovado por: [CONFIRMAR]\n- Atualizado em: [CONFIRMAR]\n')
+    expectFailure(runNode(path.join(fixture, 'scripts/validateBaselineClean.js')), 'Manual-base sem fonte')
 
     console.log('Testes de guardrails aprovados.')
   } finally {

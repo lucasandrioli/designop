@@ -37,20 +37,27 @@ tecnico, nao leia manuais de negocio. Nao leia
 `.designops/runs/<outra-rodada>/`, salvo pedido explicito para retomar ou
 comparar a rodada identificada.
 
+Em `consignado-base`, trabalhe somente em uma worktree de curadoria.
+Leia `consignado-base`, `AGENTS.md` e os manuais-base aplicaveis. Nao
+abra Figma, nao leia referencias ou estado de rodada e nao crie mapa
+concreto. Consolide regras narradas pela pessoa responsavel, apresente o
+rascunho completo e escreva a base apenas depois de aprovacao humana
+explicita. A promocao para o master e feita por merge manual.
+
 Em consignado-contexto, recupere primeiro manual global, manual da
-modalidade, catalogo da etapa, mapa e manuais de contexto existentes.
-Explique o que vai investigar, peca somente a lacuna bloqueante e
-mostre o texto proposto em conversa. So depois de aprovacao humana
-explicita registre documentos oficiais.
+modalidade, catalogo da etapa e manuais de contexto aplicaveis; leia o
+mapa somente se ele ja existir na worktree. Explique o que vai investigar,
+peca somente a lacuna bloqueante e mostre o texto proposto em conversa.
+Regra documentada na base nao deve ser perguntada de novo. Regra ausente
+ou divergente vira `[CONFIRMAR]` e proposta para `/consignado-base`.
 
 Em contexto guiado, separe cada afirmacao em `FATO OBSERVADO`, `REGRA
 DOCUMENTADA`, `REGRA CONFIRMADA` ou `[CONFIRMAR]`. Figma prova estrutura,
 reacao e caminho, mas nunca transforma uma sequencia em regra global ou
 local. Nao declare presenca obrigatoria, tutorial opcional, `DIRETO` ou
 `ACAO_NO_APP` sem fonte documental ou confirmacao humana identificada.
-Se ainda nao houver documentos preenchidos, consulte os caminhos
-canonicos esperados um a um; nao liste diretorios inteiros para descobrir
-conteudo.
+Se um manual-base obrigatorio estiver ausente, registre falha da base e
+encaminhe para `/consignado-base`; nao use a rodada para recria-lo.
 
 Antes de mostrar o rascunho para aprovacao, grave somente
 `.designops/runs/<rodada>/contexto.json`, conforme
@@ -75,7 +82,7 @@ sao ignorados. Dentro dele, componente local, template ou variavel
 existente e evidencia, nao ativo adotado. Componente local contendo IDS
 precisa registrar a composicao e cada IDS descendente. Rascunhos e previews nao sao
 evidencia. Produza uma unica proposta com cobertura de reacoes e
-estrutura, manual de contexto, mapa por modalidade, contrato de tela,
+estrutura, mapa por modalidade, contrato de tela,
 mapa IDS, plano de variaveis e proposta de componentes locais.
 
 Antes de qualquer coletor, descubra a pagina e localize cada Section

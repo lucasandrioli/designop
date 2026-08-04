@@ -1,8 +1,8 @@
 # Contrato de papeis e conversa
 
 Este documento define como os papeis conversam com o designer e como
-passam trabalho adiante. Ele vale mesmo quando uma rodada comeca sem
-nenhum documento preenchido.
+passam trabalho adiante. Uma rodada comeca com a base documental
+aprovada, mas sem estado ou evidencia de rodadas anteriores.
 
 ## Conversa guiada
 
@@ -27,13 +27,13 @@ Em uma conversa nova, o papel procura as camadas nesta ordem:
 1. manual global do credito consignado;
 2. manual da modalidade;
 3. catalogo da etapa;
-4. mapa da modalidade;
-5. manuais dos contextos citados pelo mapa;
+4. manuais dos contextos aplicaveis;
+5. mapa da modalidade, quando ja existir na worktree;
 6. manifesto temporario da rodada, quando existir.
 
-Se uma camada nao existir, o agente explica a lacuna e abre contexto
-guiado. Regra que nao estiver documentada ou confirmada vira
-`[CONFIRMAR]`; uma tela nunca e prova da origem de uma regra.
+Se um manual-base nao existir, o agente aponta falha da base e encaminha
+para `/consignado-base`. Regra que nao estiver documentada ou confirmada
+vira `[CONFIRMAR]`; uma tela nunca e prova da origem de uma regra.
 
 ## Operador
 
@@ -55,12 +55,18 @@ interpreta regras.
 
 ## Analista
 
-O Analista trabalha em dois momentos distintos.
+O Analista trabalha em tres momentos distintos.
+
+Em `/consignado-base`, ele atua em worktree dedicada de curadoria, sem
+Figma. Recebe explicacoes humanas, classifica regra como documentada,
+confirmada ou `[CONFIRMAR]`, apresenta o rascunho consolidado e so escreve
+manual, catalogo ou indice depois de aprovacao humana explicita. A pessoa
+responsavel revisa e faz o merge manual para o `master`.
 
 Em `/consignado-contexto`, ele conversa com o designer para separar
-fato observado de regra de negocio. Mostra o rascunho do manual global,
-manual da modalidade, catalogo de etapa, manual de contexto e mapa.
-So grava esses documentos depois de aprovacao humana explicita do texto.
+fato observado de regra de negocio. Le os manuais-base aplicaveis e nao
+pergunta novamente regra documentada. Mostra o rascunho do mapa e uma
+proposta de curadoria quando houver regra ausente ou divergente.
 Quando Formalizacao tiver confirmacao externa, registra no mapa somente a
 presenca, o roteiro de orientacao e o contrato de retorno ao app. O
 tutorial, quando existir, e opcional e reencontra o mesmo
@@ -127,8 +133,8 @@ com `validateContextDraftCore.js` pelo MCP em leitura. Cada afirmacao tem
 uma das quatro classificacoes e a fonte correspondente. A validacao impede
 que fato Figma seja promovido como regra de negocio e bloqueia
 `APROVADO_PARA_REGISTRO` sem aprovacao humana ou com `[CONFIRMAR]`
-bloqueante. Somente depois disso a conversa pode pedir a aprovacao para
-escrever manuais, catalogo e mapa.
+bloqueante. Somente depois disso a conversa pode pedir aprovacao para
+escrever o mapa da rodada ou propor uma curadoria de base.
 
 Depois da ultima escrita do manifesto temporario, o Analista relê ele e
 `referencias.json`, e executa `validateReferenceScopeCore.js`,

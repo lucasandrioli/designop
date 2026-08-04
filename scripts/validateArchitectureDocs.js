@@ -20,8 +20,11 @@ const modalityTemplate = read('docs/modalidades/_template.md');
 const mapTemplate = read('docs/mapas/_template.md');
 const contextTemplate = read('docs/contextos/_template.md');
 const globalTemplate = read('docs/manual-credito-consignado_template.md');
+const globalManual = read('docs/manual-credito-consignado.md');
+const baseGovernance = read('docs/base-documental.md');
 const roleContract = read('docs/contrato-papeis.md');
 const contextSkill = read('.github/skills/consignado-contexto/SKILL.md');
+const baseSkill = read('.github/skills/consignado-base/SKILL.md');
 const analysisSkill = read('.github/skills/consignado-analise/SKILL.md');
 const assemblySkill = read('.github/skills/consignado-montagem/SKILL.md');
 const validationSkill = read('.github/skills/consignado-validacao/SKILL.md');
@@ -56,6 +59,8 @@ requireText('docs/modelo-clusters.md', model, 'Collections estruturais do IDS');
 requireText('docs/modelo-clusters.md', model, 'Hierarquia documental');
 requireText('docs/modalidades/_template.md', modalityTemplate, 'Regras estruturais');
 requireText('docs/manual-credito-consignado_template.md', globalTemplate, 'Regras globais');
+requireText('docs/manual-credito-consignado.md', globalManual, 'Fonte inicial');
+requireText('docs/base-documental.md', baseGovernance, 'Mapas concretos permanecem');
 requireText('docs/mapas/_template.md', mapTemplate, 'Origem da regra');
 requireText('docs/mapas/_template.md', mapTemplate, 'Manual da modalidade');
 requireText('docs/mapas/_template.md', mapTemplate, 'Contrato de retorno');
@@ -98,8 +103,11 @@ requireText('scripts/validateContextDraftCore.js', contextDraftCore, 'nao pode t
 requireText('.github/skills/figma-referencias/SKILL.md', referenceSkill, 'validateInteractionContract');
 requireText('.github/skills/figma-referencias/SKILL.md', referenceSkill, 'nao podem revelar o defeito');
 requireText('docs/contrato-papeis.md', roleContract, 'Conversa guiada');
-['consignado-contexto', 'consignado-analise', 'consignado-montagem', 'consignado-validacao'].forEach((skill) => {
+requireText('.github/skills/consignado-base/SKILL.md', baseSkill, 'sem Figma');
+requireText('.github/skills/consignado-base/SKILL.md', baseSkill, 'merge manual');
+['consignado-base', 'consignado-contexto', 'consignado-analise', 'consignado-montagem', 'consignado-validacao'].forEach((skill) => {
   const content = {
+    'consignado-base': baseSkill,
     'consignado-contexto': contextSkill,
     'consignado-analise': analysisSkill,
     'consignado-montagem': assemblySkill,
@@ -113,8 +121,8 @@ if (fs.existsSync(path.join(root, 'docs/clusters/_template.md'))) failures.push(
 if (fs.existsSync(path.join(root, 'docs/mapa-fluxo-_template.md'))) failures.push('molde legado de mapa ainda existe');
 
 if (failures.length) {
-  console.error('Arquitetura neutra reprovada:');
+  console.error('Arquitetura documental reprovada:');
   failures.forEach((failure) => console.error('- ' + failure));
   process.exit(1);
 }
-console.log('Arquitetura neutra aprovada.');
+console.log('Arquitetura documental aprovada.');

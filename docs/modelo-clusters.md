@@ -2,6 +2,18 @@
 
 Esta e a doutrina normativa de variacao da biblioteca.
 
+## Base documental e rodadas
+
+O `master` contem os manuais-base aprovados de produto, modalidade,
+etapa e contexto. Eles registram fonte, aprovador, data e lacunas. Uma
+rodada nasce do `master` com esse conhecimento, mas sem referencias Figma,
+node IDs, manifestos, contratos ou mapa concreto.
+
+Mapas pertencem a worktrees de rodada porque unem as regras da base a
+referencias atuais e a caminhos observados. Regra ausente ou divergente
+na rodada permanece `[CONFIRMAR]` e vira proposta para `/consignado-base`;
+ela nao atualiza a base automaticamente.
+
 ## Eixos de variacao
 
 | Eixo | Mecanismo | Fonte de verdade |

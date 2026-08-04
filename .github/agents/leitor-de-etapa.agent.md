@@ -11,7 +11,7 @@ tools:
 
 # Leitor de etapa
 
-Leia catalogo, mapas e manuais de contexto que mencionem a etapa.
+Leia catalogo, manuais-base e mapas de rodada que mencionem a etapa.
 Informe disponibilidade, lacunas e documentos encontrados para o
 Operador. Nao leia Figma, nao infera regra, nao altere arquivos, nao
 chame outros agentes e nao avance a fase.
@@ -31,5 +31,5 @@ ENCONTREI:
 LACUNAS:
 - <itens ou nenhuma>
 PROXIMO PAPEL:
-- <consignado-contexto ou consignado-analise>
+- <consignado-base, consignado-contexto ou consignado-analise>
 ```

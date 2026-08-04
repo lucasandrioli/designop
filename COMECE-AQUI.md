@@ -1,14 +1,16 @@
 # Comece aqui
 
-Este repositorio distribui um metodo neutro para manter uma biblioteca
-Figma de credito consignado. Ele nao contem jornadas, modalidades ou
-contextos preenchidos no master.
+Este repositorio distribui uma base documental aprovada e um metodo para
+manter uma biblioteca Figma de credito consignado. O `master` contem
+conhecimento versionado, mas nao contem jornadas concretas, referencias,
+IDs, contratos de rodada ou mapas preenchidos.
 
 ## Papeis
 
 | Comando | Papel | Responsabilidade |
 | --- | --- | --- |
-| `/consignado-contexto` e `/consignado-analise` | Analista | Captura aprovada, analisa referencias e consolida contrato |
+| `/consignado-base` | Analista | Cura a base documental em worktree dedicada, sem Figma |
+| `/consignado-contexto` e `/consignado-analise` | Analista | Usa a base, analisa referencias e consolida proposta da rodada |
 | `/montador` | Montador | Cria componentes locais e templates aprovados |
 | `/validador` | Validador | Audita e emite veredito |
 | `operador` | Operador | Coordena leituras paralelas e estado temporario |
@@ -19,13 +21,16 @@ contextos preenchidos no master.
 
 1. Confirme que o MCP Figma esta conectado. Sem ele, trabalhe apenas nos
    documentos.
-2. Valide o master neutro com os scripts do repositorio.
-3. Crie uma worktree nova a partir do master. Ela nao recebe artefatos,
-   mapas, contextos ou evidencias de rodadas anteriores.
-4. Na worktree, adicione referencias reais e inicie os documentos nas
-   camadas corretas: produto, modalidade, etapa, contexto e mapa.
-5. Inicie o Analista em `/consignado-contexto`. Ele so registra
-   documentos oficiais depois de aprovacao humana explicita do texto.
+2. Valide a base documental do master com os scripts do repositorio.
+3. Quando for atualizar conhecimento, crie uma worktree de curadoria e
+   execute `/consignado-base`. O agente so escreve manuais-base depois de
+   aprovacao humana; a promocao ao master e manual.
+4. Para uma rodada, crie uma worktree nova a partir do master. Ela recebe
+   os manuais aprovados, mas nao recebe artefatos, mapas, referencias,
+   IDs ou evidencias de rodadas anteriores.
+5. Na worktree da rodada, adicione referencias reais e inicie
+   `/consignado-contexto` somente para lacunas, conflito ou proposta de
+   mapa. Ele nao reescreve os manuais-base.
 6. Execute `/consignado-analise`. O Analista entrega prova de reacoes
    e estrutura, mapa, contratos logicos, mapa IDS, plano de variaveis
    e proposta de componentes locais.
@@ -44,16 +49,16 @@ contextos preenchidos no master.
 11. Somente um veredito favoravel permite promover para
     `<modalidade>/<etapa>/tpl-<tela>`.
 
-## Documentos de uma worktree
+## Documentos da base e da worktree
 
-- `docs/manual-credito-consignado.md`: regras globais aprovadas.
-- `docs/modalidades/<modalidade>.md`: regras estruturais da modalidade.
-- `docs/etapas/<etapa>.md`: definicao canonica da capacidade.
-- `docs/contextos/<contexto-id>.md`: rotulo atual, origem, modalidades
-  ativas e regras locais por etapa.
+- `docs/manual-credito-consignado.md`: regras globais aprovadas da base.
+- `docs/modalidades/<modalidade>.md`: regras estruturais aprovadas da base.
+- `docs/etapas/<etapa>.md`: definicao canonica aprovada da base.
+- `docs/contextos/indice.md` e `docs/contextos/<contexto-id>.md`: clusters
+  conhecidos, rotulo atual, origem, modalidades ativas e regras locais.
 - `docs/mapas/<modalidade>.md`: etapa, tela, caso de uso, presenca por
-  contexto, reacao/caminho, template selecionado, mecanismo da
-  diferenca e origem da regra.
+  contexto, reacao/caminho, template selecionado, mecanismo da diferenca
+  e origem da regra. Existe somente na worktree da rodada.
 - `docs/contratos/`: contratos logicos de tela e jornada. Node IDs da
   rodada ficam em `.designops/runs/`, nunca nesses documentos.
 
@@ -73,7 +78,8 @@ descendentes herdarem. Collections estruturais do IDS podem coexistir.
 
 - Nao registrar regra de negocio sem aprovacao humana ou evidencia
   documental.
-- Nao criar documento preenchido de modalidade ou contexto no master.
+- Nao criar mapa concreto, referencia, contrato de rodada ou estado em
+  `.designops/runs/` no master.
 - Nao usar referencia como motivo de regra local.
 - Nao criar componente local sem duas reutilizacoes previstas no
   contrato aprovado.

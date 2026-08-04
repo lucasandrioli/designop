@@ -62,10 +62,10 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
    `tpl-*`.
 12. ESCALA: get_metadata numa pagina real do consignado (arquivos
     grandes); observar payload e rate limit.
-13. SKILLS: sem manuais, selecione Analista e dispare
-    `/consignado-contexto`; confirme que ele le o Figma sem escrever,
-    conversa sobre o que a tela nao prova e so registra catalogo,
-    manuais e mapa depois de aprovacao humana. Em seguida, dispare
+13. SKILLS: com a base documental aprovada, selecione Analista e dispare
+    `/consignado-contexto`; confirme que ele le os manuais antes de
+    perguntar regra, le o Figma sem escrever e registra somente mapa ou
+    proposta de curadoria depois de aprovacao humana. Em seguida, dispare
     `/consignado-analise` e confirme que ele le sem escrever e entrega
     uma proposta com arvore-alvo, mapa IDS e contrato geometrico. Em seguida selecione
     Montador, dispare `/consignado-montagem` e
@@ -77,7 +77,7 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
 14. RETOMADA: depois de registrar uma etapa, abra um chat novo e cite
     somente seu nome. O agente deve recuperar catalogo, mapa e manuais
     sozinho, resumir o que encontrou e pedir apenas o recorte que faltar.
-    Sem manual, deve apontar contexto guiado, nunca tratar conversa
+    Sem manual-base, deve apontar `/consignado-base`, nunca tratar conversa
     anterior como regra.
 15. INSTANCIAS E RODAPE: tentar somente `setProperties` numa instancia e
     confirmar que composicao extra entra como irma, nunca como filha da

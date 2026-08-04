@@ -1,18 +1,24 @@
 ---
 name: consignado-contexto
-description: Captura contexto de uma etapa e registra somente texto aprovado por humano em manuais, catalogos e mapas.
+description: Usa a base documental para capturar lacunas de uma rodada e propor mapa ou curadoria aprovada, sem reescrever manuais-base.
 user-invocable: true
 disable-model-invocation: true
 ---
 
 # Captura de contexto
 
-Use antes da analise quando faltarem documentos do recorte. Leia
-`docs/contrato-papeis.md`, os moldes de modalidade, etapa, mapa e
-contexto. Na primeira resposta, diga o que vai investigar, pergunte
-somente a primeira lacuna bloqueante e informe qual texto entregara ao
-fim do turno. Tela e prototipo revelam fluxo, nunca a origem de uma
-regra.
+Use antes da analise quando a rodada encontrar lacuna, conflito ou mapa
+ausente. Leia `docs/contrato-papeis.md`, `docs/base-documental.md`, o
+manual global, modalidade, etapa e os manuais de contexto aplicaveis.
+Na primeira resposta, diga o que vai investigar, pergunte somente a
+primeira lacuna bloqueante e informe qual texto entregara ao fim do turno.
+Tela e prototipo revelam fluxo, nunca a origem de uma regra.
+
+Manuais-base pertencem ao `master` e sao atualizados somente por
+`/consignado-base` em uma worktree de curadoria aprovada. Nesta skill,
+regra documentada nao e perguntada de novo. Regra ausente ou divergente
+permanece `[CONFIRMAR]` e gera proposta de curadoria, nunca edicao direta
+de manual, catalogo ou indice da base.
 
 ## Contexto guiado com referencias Figma
 
@@ -24,11 +30,12 @@ uma chamada subsequente somente de leitura, carregue a skill oficial
 `skill://figma/figma-use/SKILL.md`. Uma coleta continua atomica: um
 coletor, uma Section e uma parte por chamada; nao use lotes nem wrappers.
 
-Para localizar documentos existentes, leia os caminhos canonicos do
-recorte um a um: manual global, modalidade, etapa, mapa e cada
-`docs/contextos/<contexto-id>.md` informado ou descoberto nas referencias.
-Nao liste diretorios inteiros. Quando nenhum documento preenchido existir,
-isso e uma lacuna de contexto, nao autorizacao para inferir regra.
+Para localizar documentos, leia os caminhos canonicos do recorte um a um:
+manual global, modalidade, etapa, cada `docs/contextos/<contexto-id>.md`
+informado ou descoberto nas referencias e o mapa se ele ja existir. Nao
+liste diretorios inteiros. Nao liste diretorios inteiros por padrao.
+Manual-base ausente e falha da base, nao
+autorizacao para inferir regra nem para recriar o arquivo nesta rodada.
 
 Quando a pagina Figma real ja tiver biblioteca, componentes locais,
 templates ou variaveis, registre o recorte de referencias em
@@ -57,20 +64,20 @@ humana registrada e nenhuma lacuna `[CONFIRMAR]` bloqueante. O adaptador
 Node e opcional e nao participa da operacao no banco.
 
 Antes de perguntar, recupere manual global, manual da modalidade,
-catalogo da etapa, mapa e manuais de contexto que ja existirem.
-Descubra o que puder nas referencias e pergunte apenas objetivo,
-limite, modalidade, contexto-id, rotulo atual e regra que explica
-diferencas. Quando houver confirmacao externa dentro de Formalizacao,
+catalogo da etapa, manuais de contexto e mapa existente. Descubra o que
+puder nas referencias e pergunte apenas a regra ausente, conflituosa ou
+necessaria para compor o mapa. Quando houver confirmacao externa dentro de Formalizacao,
 pergunte se ela esta presente e qual e o contrato de retorno ao app:
 `DIRETO` ou `ACAO_NO_APP`. Pergunte tambem se a orientacao oferece
 tutorial opcional, que deve reencontrar o mesmo direcionamento externo
 do caminho direto. Nao pergunte quantidade de acoes externas
 para decidir a arquitetura: quantidade, canais e formato sao regra local
-do contexto. Mostre em conversa o rascunho do manual global, manual da
-modalidade, manual de contexto, catalogo e mapa.
+do contexto. Mostre em conversa o rascunho do mapa e, quando aplicavel,
+a proposta de atualizacao da base.
 
 Espere aprovacao humana explicita do texto. So entao crie ou atualize
-docs/manual-credito-consignado.md, docs/modalidades/<modalidade>.md,
-docs/contextos/<contexto-id>.md, docs/etapas/<etapa>.md e
-docs/mapas/<modalidade>.md. O que nao tiver origem aprovada recebe
-[CONFIRMAR].
+`docs/mapas/<modalidade>.md` na worktree da rodada. Quando houver regra
+nova aprovada, registre a proposta em `.designops/runs/<rodada>/` e
+encaminhe para `/consignado-base`; nao altere manual global, modalidade,
+etapa, contexto ou indice da base. O que nao tiver origem aprovada recebe
+`[CONFIRMAR]`.

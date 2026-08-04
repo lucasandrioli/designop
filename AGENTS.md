@@ -43,12 +43,12 @@ Figma como executada. Ele pode executar somente trabalho de texto.
   existe tambem o caminho de ajuda; o tutorial sempre reencontra o
   mesmo direcionamento externo. Ele nunca vira etapa canonica separada
   nem e deduzido pela quantidade de acoes externas.
-- O molde do Manual do Credito Consignado vive em
-  `docs/manual-credito-consignado_template.md`. Em uma rodada concreta,
-  o manual global registra regras globais; cada modalidade tem seu manual
-  estrutural em `docs/modalidades/<modalidade>.md`, cada etapa tem seu
-  catalogo em `docs/etapas/<etapa>.md`, e o mapa junta essas camadas em
-  `docs/mapas/<modalidade>.md`.
+- O `master` distribui uma base documental aprovada: manual global,
+  manuais de modalidade, catalogos de etapa e manuais de contexto. Os
+  moldes permanecem como referencia de estrutura. Uma rodada inicia sem
+  referencias, IDs, manifestos, contratos ou mapa concreto, mas le a base
+  antes de abrir uma lacuna. O mapa junta as camadas somente na worktree
+  da rodada, em `docs/mapas/<modalidade>.md`.
 - Modalidade muda estrutura: cada modalidade possui templates e uma
   collection de conteudo proprios. Modalidade nunca e mode.
 - Contexto e o identificador generico do mode. O mapa registra a
@@ -57,7 +57,8 @@ Figma como executada. Ele pode executar somente trabalho de texto.
 - Cada contexto possui um `contexto-id` estavel e um manual em
   `docs/contextos/<contexto-id>.md`. O manual registra rotulo atual,
   origem, modalidades ativas e regras locais por etapa. O rotulo pode
-  mudar sem alterar o identificador.
+  mudar sem alterar o identificador. `docs/contextos/indice.md` e o
+  catalogo dos contextos conhecidos pela base.
 - Referencias cruas e mapas podem carregar `contexto-id`. Asset
   publicado, componente local, variavel e caminho de variavel nao
   carregam rotulo nem identificador de contexto.
@@ -109,15 +110,19 @@ internas e nao publicadas. Referencia crua nao e componente.
 - O Operador coordena leituras paralelas e grava somente estado
   temporario em `.designops/runs/`. Ele nao escreve no Figma nem em
   documentos oficiais.
-- O Analista le referencias, reacoes e documentos, e consolida manual
-  de contexto, mapa, contrato de tela, mapa IDS, plano de variaveis e
-  proposta de componentes locais. Em `/consignado-contexto`, so grava
-  documentos apos aprovacao humana explicita do texto.
-- Antes de pedir essa aprovacao, o Analista grava e valida
+- O Analista usa `/consignado-base` somente em worktree de curadoria, sem
+  Figma, para consolidar ou atualizar os manuais-base depois de aprovacao
+  humana explicita. A promocao da curadoria para `master` e manual.
+- Em uma rodada, o Analista le referencias, reacoes e a base documental,
+  e consolida mapa, contrato de tela, mapa IDS, plano de variaveis e
+  proposta de componentes locais. `/consignado-contexto` nao altera os
+  manuais-base: regra ausente ou divergente vira proposta de curadoria e
+  `[CONFIRMAR]` ate ser aprovada e promovida.
+- Antes de pedir aprovacao para um mapa ou proposta, o Analista grava e valida
   `.designops/runs/<rodada>/contexto.json`. Cada afirmacao declara se e
   fato Figma, regra documentada, regra confirmada ou `[CONFIRMAR]`, com
-  a fonte correspondente. Rascunho sem essa prova nao pode virar manual,
-  catalogo ou mapa.
+  a fonte correspondente. Rascunho sem essa prova nao pode virar mapa ou
+  proposta de curadoria.
 - O contrato consolidado exige aprovacao humana antes de o Montador
   criar componentes locais ou templates.
 - O Montador escreve em serie: primeiro componentes locais aprovados,

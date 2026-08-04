@@ -32,11 +32,13 @@ Esse modo produz proposta, contrato e manifesto; coleta tecnica isolada
 somente devolve fatos tecnicos e a cobertura solicitada.
 
 Leia AGENTS.md, `docs/contrato-papeis.md`, modelo de contextos, manual
-global, manual da modalidade, catalogo da etapa, mapa e manual de cada
-contexto usado. Na primeira resposta, diga o que vai investigar, peca
-somente a lacuna bloqueante e informe a proposta que entregara antes de
-qualquer escrita. Sem manual ou regra necessaria, registre [CONFIRMAR]
-e pare se a lacuna for bloqueante.
+global, manual da modalidade, catalogo da etapa, manual de cada contexto
+usado e o mapa, se ele ja existir na worktree. Na primeira resposta, diga
+o que vai investigar, peca somente a lacuna bloqueante e informe a
+proposta que entregara antes de qualquer escrita. Regra documentada na
+base nao e perguntada novamente. Manual-base ausente, regra ausente ou
+divergente vira `[CONFIRMAR]`; encaminhe alteracao de manual para
+`/consignado-base` e pare se a lacuna for bloqueante.
 
 Antes da coleta, crie `.designops/runs/<id>/referencias.json` conforme
 `docs/contratos/referencias-rodada.schema.json`. Ele declara a pagina e as

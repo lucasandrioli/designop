@@ -123,23 +123,24 @@ aprove escrita Figma daquele papel.
 4. Repita com Montador ou Validador em outro chat novo. Eles precisam
    localizar proposta, contrato e veredito, quando existirem, antes de
    pedir qualquer coisa.
-5. Remova ou renomeie temporariamente um manual no worktree de teste.
+5. Remova ou renomeie temporariamente um manual-base no worktree de teste.
    Resultado esperado: o agente explica a ausencia e indica
-   `/consignado-contexto`; ele nao usa a conversa anterior como regra.
+   `/consignado-base`; ele nao usa a conversa anterior como regra.
 
 ## Cadeia manual
 
-### 1. Contexto guiado, quando ainda nao ha manual
+### 1. Contexto guiado, quando falta regra ou mapa
 
 Selecione `Analista da Etapa` e envie `/consignado-contexto` com a
 pagina e os contextos. Ele deve abrir uma conversa natural, percorrer as
 referencias sem pedir descricao de interface e perguntar apenas o que a
-tela nao revela. A entrega e um rascunho curto de catalogo, manuais e
-mapa, separado entre fatos observados e regras ditas pelo designer.
+tela nao revela. A entrega e um rascunho curto de mapa e, se necessario,
+proposta de curadoria, separado entre fatos observados e regras ditas pelo
+designer.
 
 Confirme que nada foi escrito antes da sua aprovacao. Depois da
-aprovacao explicita, confirme que ele alterou somente os documentos de
-etapa, contexto e mapa, nunca o Figma. Encerre essa rodada.
+aprovacao explicita, confirme que ele alterou somente o mapa da rodada,
+nunca o Figma nem os manuais-base. Encerre essa rodada.
 
 ### 2. Analista da Etapa
 

@@ -8,11 +8,18 @@ const tracked = childProcess.execFileSync('git', ['ls-files', '--cached', '--oth
   .filter(Boolean)
   .filter((file) => fs.existsSync(path.join(root, file)));
 const failures = [];
-const allowedTemplates = new Set([
+const allowedReferenceDocs = new Set([
   'docs/etapas/_template.md',
+  'docs/etapas/consentimento.md',
+  'docs/etapas/simular-e-revisar.md',
+  'docs/etapas/formalizacao.md',
   'docs/modalidades/_template.md',
+  'docs/modalidades/pcon.md',
+  'docs/modalidades/refin.md',
+  'docs/modalidades/portabilidade.md',
   'docs/mapas/_template.md',
   'docs/contextos/_template.md',
+  'docs/contextos/indice.md',
   'docs/contratos/_template.md',
   'docs/contratos/tela.schema.json',
   'docs/contratos/jornada.schema.json',
@@ -25,19 +32,45 @@ const allowedTemplates = new Set([
   'docs/receitas/_template.md',
   'docs/receitas/_comuns.md',
 ]);
+const requiredBaseDocs = [
+  'docs/base-documental.md',
+  'docs/manual-credito-consignado.md',
+  'docs/modalidades/pcon.md',
+  'docs/modalidades/refin.md',
+  'docs/modalidades/portabilidade.md',
+  'docs/etapas/consentimento.md',
+  'docs/etapas/simular-e-revisar.md',
+  'docs/etapas/formalizacao.md',
+  'docs/contextos/indice.md',
+];
+const isContextManual = (file) => /^docs\/contextos\/ctx-[a-z0-9-]+\.md$/.test(file);
+const isBaseManual = (file) => file === 'docs/manual-credito-consignado.md' ||
+  /^docs\/(modalidades|etapas)\/(pcon|refin|portabilidade|consentimento|simular-e-revisar|formalizacao)\.md$/.test(file) ||
+  file === 'docs/contextos/indice.md' || isContextManual(file);
+
 for (const file of tracked) {
   if (file.startsWith('laboratorio/')) failures.push('fixture rastreado: ' + file);
-  if (file.startsWith('docs/etapas/') || file.startsWith('docs/modalidades/') || file.startsWith('docs/mapas/') || file.startsWith('docs/contextos/') || file.startsWith('docs/contratos/')) {
-    if (!allowedTemplates.has(file)) failures.push('documento de negocio preenchido no baseline: ' + file);
+  if (file.startsWith('.designops/runs/') && file !== '.designops/runs/.gitkeep') failures.push('estado temporario de rodada no baseline: ' + file);
+  if (file.startsWith('docs/mapas/') && file !== 'docs/mapas/_template.md') {
+    failures.push('mapa concreto no baseline: ' + file);
   }
-  if (file === 'docs/manual-credito-consignado.md') failures.push('manual global preenchido no baseline: ' + file);
+  if (file.startsWith('docs/etapas/') || file.startsWith('docs/modalidades/') || file.startsWith('docs/contextos/') || file.startsWith('docs/contratos/')) {
+    if (!allowedReferenceDocs.has(file) && !isContextManual(file)) {
+      failures.push('documento fora da base aprovada: ' + file);
+    }
+  }
 }
-const forbidden = /\bpcon\b|refinanciamento|portabilidade|anu[eê]ncia|cluster-4|gov[ -]?sp|sougov|sou sp/iu;
-for (const relative of tracked) {
-  if (relative === 'scripts/validateBaselineClean.js') continue;
-  if (!['AGENTS.md', 'COMECE-AQUI.md', '.github/', 'docs/', 'scripts/'].some((prefix) => relative === prefix || relative.startsWith(prefix))) continue;
-  const absolute = path.join(root, relative);
-  if (fs.statSync(absolute).isFile() && forbidden.test(fs.readFileSync(absolute, 'utf8'))) failures.push('termo de modalidade ou fixture no baseline: ' + relative);
+for (const file of requiredBaseDocs) {
+  if (!tracked.includes(file)) failures.push('documento obrigatorio da base ausente: ' + file);
 }
-if (failures.length) { console.error('Baseline distribuivel reprovado:'); failures.forEach((failure) => console.error('- ' + failure)); process.exit(1); }
-console.log('Baseline distribuivel aprovado: motor neutro sem conteudo de modalidade.');
+for (const relative of tracked.filter(isBaseManual)) {
+  const content = fs.readFileSync(path.join(root, relative), 'utf8');
+  ['## Status da base', 'Aprovado por:', 'Atualizado em:', 'Fonte inicial:'].forEach((required) => {
+    if (!content.includes(required)) failures.push(relative + ' precisa declarar: ' + required);
+  });
+  if (/\b(?:fileKey|nodeId)\b|\b\d+:\d+\b|\bref-[a-z0-9-]+/i.test(content)) {
+    failures.push('evidencia Figma ou ID temporario no manual-base: ' + relative);
+  }
+}
+if (failures.length) { console.error('Baseline documental reprovado:'); failures.forEach((failure) => console.error('- ' + failure)); process.exit(1); }
+console.log('Baseline documental aprovado: conhecimento versionado sem mapas ou estado de rodada.');

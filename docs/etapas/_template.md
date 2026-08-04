@@ -1,5 +1,11 @@
 # Etapa: <nome-canonico>
 
+## Status da base
+
+- Aprovado por: <nome ou CONFIRMAR>
+- Atualizado em: <data>
+- Fonte inicial: <curadoria humana ou fonte documental aprovada>
+
 ## Proposito
 
 <capacidade reutilizavel da jornada>

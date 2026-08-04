@@ -1,5 +1,11 @@
 # Contexto: <contexto-id>
 
+## Status da base
+
+- Aprovado por: <nome ou CONFIRMAR>
+- Atualizado em: <data>
+- Fonte inicial: <curadoria humana ou fonte documental aprovada>
+
 ## Identificacao
 
 - Contexto-id: <identificador estavel>

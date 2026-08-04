@@ -1,21 +1,20 @@
 # Preparacao do ciclo
 
-O master distribui somente moldes neutros. Trabalho real acontece em
-uma worktree criada a partir do master validado.
+O master distribui manuais-base aprovados e moldes. Trabalho de jornada
+acontece em uma worktree criada a partir do master validado.
 
 ## Pre-requisitos da worktree
 
-1. Manual global do credito consignado aprovado.
-2. Catalogos das etapas usadas.
-3. Um mapa por modalidade em `docs/mapas/<modalidade>.md`.
-4. Um manual por contexto usado em `docs/contextos/<contexto-id>.md`.
-5. Referencias reais nomeadas como
+1. Leia o manual global, modalidade, etapa e contexto aplicaveis no master.
+2. Crie um mapa por modalidade em `docs/mapas/<modalidade>.md` na worktree.
+3. Confirme um manual por contexto usado em `docs/contextos/<contexto-id>.md`.
+4. Adicione referencias reais nomeadas como
    `ref-<modalidade>-<tela>-<contexto-id>`.
-6. Topologia aprovada e bibliotecas IDS conectadas.
+5. Confirme topologia aprovada e bibliotecas IDS conectadas.
 
-Uma worktree nova nao reutiliza documentos, referencias, contextos ou
-evidencias de rodadas anteriores. Ela inicia pelas referencias reais do
-recorte aprovado.
+Uma worktree nova reutiliza somente a base documental aprovada. Ela nao
+reutiliza mapas, referencias, node IDs, manifestos, contratos ou
+evidencias de rodadas anteriores.
 
 ## Pagina Figma
 

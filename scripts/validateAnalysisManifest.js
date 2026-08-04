@@ -12,6 +12,9 @@ for (const field of required) if (!(field in manifest)) failures.push('campo aus
 if (manifest.schemaVersion !== 2) failures.push('schemaVersion precisa ser 2');
 if (!['PRECISA_CONTEXTO', 'ANALISE_INCOMPLETA', 'PROPOSTA_PARA_APROVACAO'].includes(manifest.status)) failures.push('status invalido');
 if (!manifest.fontes?.figma?.pagina) failures.push('fonte Figma ausente');
+if (manifest.fontes?.figma?.descoberta?.metodo !== 'figma-get_metadata' || !manifest.fontes?.figma?.descoberta?.paginaNodeId) {
+  failures.push('descoberta atual das referencias via figma-get_metadata ausente');
+}
 if (!Array.isArray(manifest.fontes?.figma?.secoesReferencia) || manifest.fontes.figma.secoesReferencia.length === 0) failures.push('secoes de referencia ausentes');
 if (!Array.isArray(manifest.fontes?.documentos?.manuaisContexto)) failures.push('manuais de contexto ausentes');
 const referenceSections = manifest.fontes?.figma?.secoesReferencia ?? [];

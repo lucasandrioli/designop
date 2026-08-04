@@ -35,6 +35,12 @@ evidencia. Produza uma unica proposta com cobertura de reacoes e
 estrutura, manual de contexto, mapa por modalidade, contrato de tela,
 mapa IDS, plano de variaveis e proposta de componentes locais.
 
+Antes de qualquer coletor, descubra a pagina e localize cada Section
+pelo nome exato com `figma-get_metadata` no arquivo atual. Use apenas os
+node IDs retornados nessa descoberta da rodada, nunca IDs de memoria ou
+de conversa anterior. Section ausente e lacuna bloqueante; nao a
+substitua por uma referencia parecida.
+
 Uma coleta Figma equivale a um coletor, uma Section e uma parte. Nao
 combine Sections, coletores ou partes em wrapper unico. Registre cada
 execucao em `execucoesColeta` e so declare cobertura depois de executar

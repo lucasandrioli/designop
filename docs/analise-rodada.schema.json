@@ -14,9 +14,18 @@
       "properties": {
         "figma": {
           "type": "object",
-          "required": ["pagina", "secoesReferencia"],
+          "required": ["pagina", "descoberta", "secoesReferencia"],
           "properties": {
             "pagina": { "type": "string", "minLength": 1 },
+            "descoberta": {
+              "description": "Descoberta feita no inicio desta rodada pelo MCP, antes de qualquer coletor.",
+              "type": "object",
+              "required": ["metodo", "paginaNodeId"],
+              "properties": {
+                "metodo": { "const": "figma-get_metadata" },
+                "paginaNodeId": { "type": "string", "minLength": 1 }
+              }
+            },
             "secoesReferencia": {
               "type": "array",
               "minItems": 1,

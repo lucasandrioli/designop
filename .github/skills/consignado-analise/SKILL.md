@@ -25,6 +25,17 @@ sem cobertura, estrutura ausente ou destino nao exposto impedem proposta
 para aprovacao. Varra tambem screenshots e evidencia IDS. Rascunhos nao
 contam como evidencia.
 
+Antes de executar qualquer coletor, descubra novamente a pagina no
+arquivo atual com `figma-get_metadata` sem `nodeId`, e depois leia com
+`figma-get_metadata` a pagina retornada. Localize cada Section pelo nome
+exato nessa leitura. Use somente os `nodeId` devolvidos nessa descoberta
+da rodada. Nunca use IDs de memoria, de conversa, de relatorio anterior
+ou de uma rodada anterior. Se a Section exata nao existir, nao substitua
+por uma parecida: nao execute o coletor, registre a lacuna bloqueante e
+pare a analise. No manifesto, registre
+`fontes.figma.descoberta.metodo: "figma-get_metadata"` e o
+`paginaNodeId` retornado.
+
 Todo contrato de interacao deve nascer da saida do coletor: copie nomes,
 origens, destinos e raiz de validacao observados. A raiz escolhida deve
 conter a acao declarada. Nome vindo de memoria, de documento ou de plano

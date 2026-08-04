@@ -77,3 +77,8 @@ definir o escopo.
 O manifesto tambem lista cada coleta de forma unitaria: um coletor, uma
 Section e uma parte por execucao. Ele nao aceita uma chamada combinada
 que esconda quais partes foram realmente lidas.
+
+Antes dessas execucoes, o Analista descobre novamente a pagina e as
+Sections no arquivo atual por `figma-get_metadata`. IDs de conversas ou
+rodadas anteriores nao sao entrada valida para coleta. O manifesto
+registra essa descoberta em `fontes.figma.descoberta`.

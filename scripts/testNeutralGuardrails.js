@@ -60,6 +60,7 @@ function validManifest() {
     fontes: {
       figma: {
         pagina: '1:1',
+        descoberta: { metodo: 'figma-get_metadata', paginaNodeId: '1:1' },
         secoesReferencia: [{ nome: 'ref-modalidade-tela-ctx-a', nodeId: '1:2', contextoId: 'ctx-a' }],
       },
       documentos: { manualGlobal: null, mapa: null, manuaisContexto: [] },
@@ -149,6 +150,7 @@ function testFigmaApiContracts() {
   assert(analysisSkill.includes('figma-get_figma_skill'), 'Analista precisa carregar a skill oficial antes de use_figma')
   assert(analysisSkill.includes('partesLidas'), 'Analista precisa registrar que leu todas as partes')
   assert(analysisSkill.includes('um coletor, uma Section e uma parte'), 'Analista precisa impedir coleta combinada')
+  assert(analysisSkill.includes('Nunca use IDs de memoria'), 'Analista precisa redescobrir IDs no arquivo atual')
   assert(analysisSkill.includes('NAO_APLICAVEL'), 'Analista precisa distinguir regra sem escopo de violacao')
   assert(analysisSkill.includes('propriedadesVisuaisComValorSemBindingObservado'), 'Analista precisa preservar o nome do sinal estrutural retornado pelo coletor')
   assert(analysisSkill.includes('nunca o renomeie para\n`camposVisuaisSemBindingObservado`'), 'Analista precisa bloquear explicitamente o nome antigo do sinal estrutural')
@@ -613,6 +615,9 @@ async function main() {
     expectFailure(runNode(path.join(fixture, 'scripts/validatePilotSquad.js')), 'Leitor com Figma')
 
     let manifest = validManifest()
+    delete manifest.fontes.figma.descoberta
+    expectFailure(validateManifest(manifest), 'Manifesto sem descoberta atual de referencias')
+    manifest = validManifest()
     manifest.execucoesColeta = []
     expectFailure(validateManifest(manifest), 'Manifesto sem execucoes unitarias de coleta')
     manifest = validManifest()

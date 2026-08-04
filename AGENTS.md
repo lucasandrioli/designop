@@ -121,6 +121,10 @@ internas e nao publicadas. Referencia crua nao e componente.
 - Viewport mobile padrao: `360 x 800`, salvo excecao aprovada.
 - O Analista usa Figma somente para leitura e usa apenas `ref-*` como
   evidencia de nova analise. Rascunho nunca e evidencia analitica.
+- Antes de qualquer coleta, o Analista redescobre a pagina e as Sections
+  `ref-*` por `get_metadata` no arquivo atual. Node IDs de memoria, chat,
+  manifesto ou rodada anterior nao podem ser reutilizados. Section exata
+  ausente bloqueia a coleta; nunca substitui-la por uma parecida.
 - Toda escrita Figma via `use_figma` exige a skill `figma-plugin-api`.
 - Scripts em `scripts/` sao colados na Plugin API a partir da versao
   atual do arquivo. Eles nao executam por caminho dentro do Figma.

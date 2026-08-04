@@ -78,6 +78,13 @@ com inventario, prova de reacoes e estrutura, mapa de jornada, contrato
 de tela, mapa IDS, plano de variaveis e proposta de componentes locais.
 Rascunhos e previews nao sao evidencia analitica.
 
+Antes da primeira coleta, o Analista redescobre a pagina e as Sections
+por `figma-get_metadata` no arquivo atual. IDs obtidos em conversa,
+manifesto ou rodada anteriores nao podem ser reutilizados. O manifesto
+temporario registra o metodo de descoberta e a pagina retornada. Quando
+uma Section pedida nao aparece com o nome exato, a coleta nao e
+executada e a lacuna e bloqueante.
+
 Os coletores devolvem a leitura em partes numeradas. O Analista le todas
 as partes de cada Section e registra essa prova no manifesto, junto de
 `pageSize`, `totalItens` e `itensPorParte`. Uma tela ou um detalhe nao

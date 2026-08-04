@@ -30,7 +30,7 @@
  *    3. Auto layout precisa dos DOIS eixos de sizing definidos
  *       explicitamente, senão o frame trava em 100x100 (regra 44 de
  *       figma-plugin-api/SKILL.md).
- *    4. Cluster nunca entra no nome do componente (cluster é mode).
+ *    4. Contexto nunca entra no nome de asset publicado ou componente local.
  *    5. Todo template declara no carimbo se é padrão ou especialização.
  *
  * Uso via use_figma (a skill figma-use DEVE estar carregada):
@@ -47,10 +47,10 @@
  *   description?: boolean     // exige description não vazia (carimbo)
  * }>} expected - nós declarados como criados/mutados.
  * @param {object} [opts]
- * @param {string[]} [opts.clusterIds=[]] - ids de cluster (ex: ['c1-mg'])
- *   para a checagem 4. Sem isso ela é pulada.
+ * @param {string[]} [opts.contextIds=[]] - contexto-ids conhecidos para a
+ *   checagem 4. opts.clusterIds continua aceito apenas para compatibilidade.
  * @param {string} [opts.contentCollectionId] - collection que contém o
- *   conteúdo variável por cluster. Quando informada, o script exige ao menos
+ *   conteúdo variável por contexto. Quando informada, o script exige ao menos
  *   um binding real dessa collection e proíbe mode explícito no
  *   template-mestre. Use validateContentContract para conferir cada papel
  *   aprovado e sua variável específica.
@@ -70,7 +70,7 @@
  * }>}
  */
 async function validateCreation(expected, opts = {}) {
-  const clusterIds = opts.clusterIds ?? []
+  const contextIds = opts.contextIds ?? opts.clusterIds ?? []
   const contentCollectionId = opts.contentCollectionId
 
   const report = {
@@ -98,7 +98,7 @@ async function validateCreation(expected, opts = {}) {
 
   // O binding de conteúdo pode viver em property do componente ou da
   // instância. Tokens visuais aninhados do IDS não provam que o template
-  // troca conteúdo por cluster, portanto só contam aliases da collection
+  // troca conteúdo por contexto, portanto só contam aliases da collection
   // de conteúdo informada pelo Validador.
   const contentVariableIds = new Set()
   if (contentCollectionId) {
@@ -246,7 +246,7 @@ async function validateCreation(expected, opts = {}) {
           id: node.id,
           name: node.name,
           rule: 'tpl-conquistado',
-          detail: `nomeado tpl- mas é ${node.type}, não COMPONENT. Renomear para _rascunho-<etapa>-<nome> ou componentizar de verdade`,
+          detail: `nomeado tpl- mas é ${node.type}, não COMPONENT. Renomear para _rascunho-<modalidade>-<etapa>-<nome> ou componentizar de verdade`,
         })
       } else {
         const hasRequiredBinding = contentCollectionId
@@ -258,7 +258,7 @@ async function validateCreation(expected, opts = {}) {
             name: node.name,
             rule: 'tpl-conquistado',
             detail: contentCollectionId
-              ? 'nomeado tpl- mas não tem binding da collection de conteúdo: ainda não adapta por cluster'
+              ? 'nomeado tpl- mas não tem binding da collection de conteúdo: ainda não adapta por contexto'
               : 'nomeado tpl- mas não tem nenhum binding: ainda é rascunho de montagem',
           })
         }
@@ -305,15 +305,15 @@ async function validateCreation(expected, opts = {}) {
       }
     }
 
-    // 4. cluster não entra no nome do componente (cluster é mode)
+    // 4. contexto não entra no nome de componente publicado ou local
     if (node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') {
-      for (const cid of clusterIds) {
+      for (const cid of contextIds) {
         if (node.name.includes(cid)) {
           report.conventionViolations.push({
             id: node.id,
             name: node.name,
-            rule: 'cluster-e-mode',
-            detail: `nome contém o cluster "${cid}": cluster é mode, nunca entra no nome do componente`,
+            rule: 'contexto-fora-do-asset',
+            detail: `nome contém o contexto "${cid}": contexto só pode identificar referências e mapas`,
           })
         }
       }

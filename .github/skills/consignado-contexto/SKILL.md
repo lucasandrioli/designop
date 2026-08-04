@@ -1,222 +1,28 @@
 ---
 name: consignado-contexto
-description: Conduz a conversa inicial de uma etapa, transforma apenas afirmacoes aprovadas do designer em catalogo, manuais de convenio e mapa de fluxo, sem inferir regra pelas telas. Use antes de consignado-analise quando os documentos ainda nao existirem.
+description: Captura contexto de uma etapa e registra somente texto aprovado por humano em manuais, catalogos e mapas.
 user-invocable: true
 disable-model-invocation: true
 ---
 
-# Contexto guiado da etapa
+# Captura de contexto
 
-Use esta skill quando o designer tiver referencias no Figma, mas ainda
-nao tiver os documentos minimos da etapa e dos convenios. Ela reduz o
-trabalho de preparar manuais sem relaxar a regra de que documentos
-aprovados sao a verdade de negocio.
+Use antes da analise quando faltarem documentos do recorte. Leia
+`docs/contrato-papeis.md`, os moldes de modalidade, etapa, mapa e
+contexto. Na primeira resposta, diga o que vai investigar, pergunte
+somente a primeira lacuna bloqueante e informe qual texto entregara ao
+fim do turno. Tela e prototipo revelam fluxo, nunca a origem de uma
+regra.
 
-Esta nao e uma analise de template. Nao propoe variavel, property,
-variant, especializacao, arvore-alvo, componente IDS ou montagem.
-Tambem nao escolhe `padrao` ou `especializacao:<id>` no mapa: essa
-classificacao pertence a `/consignado-analise`, depois do contexto
-registrado e aprovado.
+Antes de perguntar, recupere manual global, manual da modalidade,
+catalogo da etapa, mapa e manuais de contexto que ja existirem.
+Descubra o que puder nas referencias e pergunte apenas objetivo,
+limite, modalidade, contexto-id, rotulo atual e regra que explica
+diferencas. Mostre em conversa o rascunho do manual global, manual da
+modalidade, manual de contexto, catalogo e mapa.
 
-Nao use esta skill apenas porque a conversa e nova. Primeiro procure o
-catalogo, o mapa e os manuais da etapa citada. Se eles existirem, a
-rodada deve recuperar esse contexto e seguir no papel pedido. Contexto
-guiado e somente a porta para uma etapa ainda nao documentada.
-
-## Entrada de contexto zero
-
-A rodada nova comeca com nome da etapa e URL da pagina Figma. Clusters,
-modalidades e casos de uso podem ser informados pelo designer, mas sao
-opcionais no inicio: procure secoes `ref-*`, pontos de inicio e
-referencias antes de perguntar. Se houver mais de um recorte possivel e
-nenhum documento resolver a ambiguidade, peca uma unica confirmacao do
-designer. Nao avance para analise ou montagem sem recorte identificado.
-
-## Limites do modo
-
-- Figma e somente leitura.
-- Prototipo e tela mostram fatos, nunca a razao de negocio.
-- O designer pode explicar em linguagem comum. Nao peca lista de textos,
-  propriedades, componentes ou node IDs.
-- O Analista devolve o rascunho primeiro na conversa. Sem aprovacao
-  explicita, nao edita arquivo algum.
-- Depois da aprovacao, pode escrever somente catalogo de etapa, manuais
-  de cluster e mapa de fluxo. Nao cria, edita ou renomeia nada no Figma.
-- Nao cria regra local de futuro, como "pode mudar depois". O manual
-  registra somente a verdade atual; o que nao se sabe fica `[CONFIRMAR]`.
-- Ao terminar o registro, encerra esta rodada. A analise comeca depois,
-  em `/consignado-analise`.
-
-## Como abrir a conversa
-
-Comece como uma conversa de trabalho. Use o que o designer ja forneceu,
-inclusive link e nomes de clusters. Diga que voce vai percorrer as
-referencias e que ele nao precisa descrever tela por tela.
-
-Peca somente a primeira informacao que a referencia nao pode revelar.
-Normalmente sera o nome e limite da etapa, a modalidade do caminho ou a
-regra que explica uma diferenca importante entre convenios. Uma boa
-abertura e:
-
-```text
-Oi, vamos registrar o contexto da etapa. Eu vou olhar as referencias e
-os prototipos para entender o caminho; voce nao precisa me explicar a
-interface. Para comecar, me conte em poucas palavras o que esta etapa
-resolve para a pessoa e em qual momento da jornada ela comeca e termina.
-Depois eu te devolvo um rascunho curto dos manuais para voce aprovar.
-```
-
-Se o contexto ja estiver na conversa, nao repita a pergunta. Diga o que
-entendeu e faca somente a proxima pergunta necessaria.
-
-## Sequencia
-
-### 1. Ler o que o Figma prova
-
-Antes de fazer qualquer pergunta de negocio, conclua o inventario da
-pagina. O criterio minimo e uma lista verificavel de todas as secoes
-`_ref-<cluster>` encontradas, com ao menos um caso de uso ou a ausencia
-dele para cada secao. Sem essa lista, o contexto ainda esta incompleto.
-
-#### Quando a leitura vier truncada
-
-Uma mensagem como `Output too large` ou `Saved to: <caminho>` nao e
-evidencia parcial utilizavel. Ela e um bloqueio de inventario.
-
-1. Use a ferramenta `read` para abrir o artefato salvo pelo retorno do
-   Figma e recuperar a estrutura completa da pagina.
-2. A partir da lista completa de secoes, leia cada `_ref-<cluster>` por
-   node ID e inventarie suas telas e reacoes.
-3. Se o artefato nao puder ser lido, faca uma chamada Figma de leitura
-   que enumere secoes pelo nome. Se essa chamada tambem nao estiver
-   disponivel, pare e informe `NAO VERIFICAVEL: nao foi possivel listar
-   todas as secoes da pagina`.
-
-Nunca conclua a pagina pela previa, nunca tente node IDs vizinhos e
-nunca afirme que uma secao nao existe sem ter enumerado a pagina
-completa. O parametro `m=dev` no link Figma nao invalida a leitura:
-ele apenas abre o mesmo arquivo em Dev Mode.
-
-Inventarie, sem interpretar regra:
-
-- secoes `_ref-<cluster>`;
-- telas por caso de uso;
-- conexoes do prototipo, incluindo idas a canais externos e retornos;
-- telas que parecem fronteira com outra etapa;
-- diferencas factuais entre os clusters.
-
-Rotule esse material como `Fato observado no Figma`.
-
-#### Cobertura obrigatoria da topologia
-
-Para cada tela de referencia com acao navegavel, registre pelo menos:
-
-| Origem | Acao observada | Destino | Tipo de caminho | Fonte |
-| --- | --- | --- | --- | --- |
-| <tela> | <texto ou nome da acao> | <tela, handoff ou [VERIFICAR COM DESIGNER]> | <principal, opcional, retorno ou excecao> | <prototipo ou designer> |
-
-Em telas com duas ou mais acoes, inventarie cada saida. Classifique o
-caminho direto, a ajuda opcional, o retorno e a excecao sem achatar tudo
-em uma sequencia linear. Registre tambem onde os caminhos se reencontram,
-quando houver.
-
-Se o MCP nao expuser uma reacao ou seu destino, nao desenhe essa seta
-como fato. Pergunte ao designer sobre aquele caminho e use a fonte
-`confirmado pelo designer nesta conversa`. Sem essa resposta, mantenha
-`[VERIFICAR COM DESIGNER]` no inventario e no mapa. Handoff e fronteira
-sao eventos da jornada, nao telas que o agente possa inventar no Figma.
-
-Cada frame interno atravessado por uma reacao observada permanece um
-passo proprio no inventario e no mapa de contexto. Nao resuma uma
-sequencia de telas como uma familia generica, mesmo que elas parecam
-reutilizaveis. Descobrir se varias telas viram um unico template e
-trabalho posterior de `/consignado-analise`.
-
-Tela ou evidencia fora do produto e um handoff da jornada. Registre o
-canal, a quantidade de passos externos e o retorno, quando observados,
-mas nunca de a essa evidencia uma identidade de tela da etapa, template
-ou componente da biblioteca.
-
-### 2. Capturar o que so o designer sabe
-
-Conduza uma pergunta de cada vez. Prioridade:
-
-1. etapa, objetivo, inicio e fim;
-2. modalidades explicitamente cobertas e caso de uso do fluxo;
-3. quais clusters participam;
-4. regra que explica cada diferenca relevante;
-5. origem conhecida da regra, quando houver.
-
-Quando o designer nao souber, use `[CONFIRMAR]`. Nao complete com uma
-suposicao baseada no nome de tela, no texto ou no numero de passos.
-Nunca use `ambas` como modalidade: liste cada modalidade conhecida. Quando
-a mesma etapa for chamada mais de uma vez na jornada, registre cada chamada
-e seu gatilho no mapa, sem duplicar a definicao da etapa.
-
-Antes de pedir aprovacao, confira todas as diferencas factuais entre
-clusters que afetam caminho, canal, quantidade de passos, entrada ou
-retorno. Para cada uma, capture a regra dita pelo designer ou marque
-explicitamente `[CONFIRMAR]`. A diferenca visual pode permanecer como
-fato observado, mas nao pode ser promovida a regra no manual por conta
-propria.
-
-### 3. Mostrar rascunho para aprovacao
-
-Antes de escrever, entregue um rascunho simples, em duas partes.
-
-Primeiro, use linguagem de negocio:
-
-```text
-Entendi assim:
-
-- Etapa: <nome e objetivo>.
-- Limite: <onde comeca e termina>.
-- Modalidades: <lista explicita ou [CONFIRMAR]>.
-- <cluster A>: <regra dita pelo designer>.
-- <cluster B>: <regra dita pelo designer>.
-```
-
-Depois, liste apenas os fatos relevantes que vieram do Figma e as
-lacunas `[CONFIRMAR]`. Termine perguntando se o texto representa o que o
-designer quis dizer. Nao mostre mecanismo tecnico, caminho de arquivo,
-node ID ou nome interno de frame nesta fase.
-
-### 4. Registrar somente apos aprovacao
-
-Aprovacao precisa ser clara, por exemplo:
-
-```text
-APROVO o contexto e o texto dos manuais da etapa <etapa>.
-```
-
-Depois dela, crie ou atualize somente:
-
-1. `docs/etapas/<etapa>.md`, com objetivo, limite e regras
-   compartilhadas que o designer aprovou, inventario das telas internas
-   observadas e handoffs externos separados;
-2. `docs/clusters/<cluster>.md`, com modalidades ativas, presenca da
-   etapa e regras locais aprovadas. Nao transcreva interface;
-3. `docs/mapa-fluxo-<escopo>.md`, com chamadas, caminhos, handoffs,
-   fronteiras e presencas da etapa, apontando regras pelo identificador
-   do manual. Preserve cada passo interno observado e nao condense uma
-   cadeia antes da analise.
-
-O registro de contexto pode conter apenas: objetivo, limite, regras
-compartilhadas, chamadas conhecidas da etapa, regras locais, inventario,
-topologia, handoffs e fronteiras. Nao inclua `tpl-*`, IDS, variaveis,
-properties, variants, especializacoes ou contrato tecnico.
-
-Regra aprovada pelo designer recebe `Origem: informado pelo designer
-nesta conversa`, exceto quando ele nomear explicitamente uma fonte como
-convenio, regulacao ou decisao de produto. Se a origem nao foi dada e a
-regra nao foi afirmada pelo designer, escreva `Origem: [CONFIRMAR]`, nao
-invente uma.
-Fato de prototipo pode registrar a fonte como `referencia Figma`, mas
-nunca como origem de negocio.
-
-## Fechamento
-
-Explique, sem jargao, quais documentos foram registrados e que eles
-agora sao a fonte oficial para a proxima rodada. Indique que o proximo
-comando e `/consignado-analise`, que vai comparar as referencias sem
-pedir novamente as regras ja documentadas.
+Espere aprovacao humana explicita do texto. So entao crie ou atualize
+docs/manual-credito-consignado.md, docs/modalidades/<modalidade>.md,
+docs/contextos/<contexto-id>.md, docs/etapas/<etapa>.md e
+docs/mapas/<modalidade>.md. O que nao tiver origem aprovada recebe
+[CONFIRMAR].

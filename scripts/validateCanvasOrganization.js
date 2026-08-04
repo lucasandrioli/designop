@@ -8,7 +8,7 @@
  * Uso via use_figma:
  *
  * return await validateCanvasOrganization('0:1', {
- *   regions: ['_ref-<cluster-a>', '_ref-<cluster-b>', '_componentes-locais'],
+ *   regions: ['_ref-<contexto-a>', '_ref-<contexto-b>', '_componentes-locais'],
  *   checkLocalComponentOverlap: true,
  * })
  */

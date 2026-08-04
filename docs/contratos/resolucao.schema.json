@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resolucao temporaria de contrato para node IDs Figma",
+  "type": "object",
+  "required": ["schemaVersion", "rodada", "telas", "jornadas"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
+    "telas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["contratoId", "referencias"],
+        "properties": {
+          "contratoId": { "type": "string", "minLength": 1 },
+          "referencias": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["contextoId", "sectionId", "frameId"],
+              "properties": {
+                "contextoId": { "type": "string", "pattern": "^ctx-[a-z0-9-]+$" },
+                "sectionId": { "type": "string", "minLength": 1 },
+                "frameId": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "jornadas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["contratoId", "contextoId", "sectionId", "modeId"],
+        "properties": {
+          "contratoId": { "type": "string", "minLength": 1 },
+          "contextoId": { "type": "string", "pattern": "^ctx-[a-z0-9-]+$" },
+          "sectionId": { "type": "string", "minLength": 1 },
+          "modeId": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -23,7 +23,7 @@
  *  6. TEXTO BINDADO VAZIO (aviso, não reprova sozinho): TEXT com
  *     boundVariables.characters preenchido mas characters === ''.
  *     Estrutural, não sabe SE é esperado (etapa que não existe nesse
- *     cluster tem valor vazio por design — ver skill
+ *     contexto tem valor vazio por design — ver skill
  *     consignado-validacao, seção 5, que cruza contra o mapa de
  *     fluxo). Aqui é só o sinal bruto: presença de texto bindado vazio,
  *     para o validador ou o revisor humano decidir se é esperado.

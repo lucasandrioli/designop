@@ -1,97 +1,57 @@
 #!/usr/bin/env node
-
 const fs = require('fs');
 const path = require('path');
-
 const root = path.resolve(__dirname, '..');
 const failures = [];
-
-function read(relativePath) {
-  const absolutePath = path.join(root, relativePath);
-  if (!fs.existsSync(absolutePath)) {
-    failures.push(`Arquivo ausente: ${relativePath}`);
+function read(file) { const absolute = path.join(root, file); if (!fs.existsSync(absolute)) { failures.push('Arquivo ausente: ' + file); return ''; } return fs.readFileSync(absolute, 'utf8'); }
+function requireText(file, value, expected) { if (!value.includes(expected)) failures.push(file + ' precisa conter: ' + expected); }
+function requirePattern(file, value, pattern, label) { if (!pattern.test(value)) failures.push(file + ' precisa conter: ' + label); }
+function frontmatter(file) {
+  const value = read(file);
+  const match = value.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) {
+    failures.push(file + ' sem frontmatter YAML');
     return '';
   }
-
-  return fs.readFileSync(absolutePath, 'utf8');
+  return match[1];
 }
-
-function requireText(file, content, expected) {
-  if (!content.includes(expected)) {
-    failures.push(`${file} precisa conter: ${expected}`);
+function escapeRegex(value) { return value.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'); }
+function requireYamlListEntry(file, yaml, field, value) {
+  const fieldMatch = yaml.match(new RegExp('^' + field + ':\\n((?:^[ \\t]+- .+\\n?)+)', 'm'));
+  if (!fieldMatch || !new RegExp('^[ \\t]+- ' + escapeRegex(value) + '$', 'm').test(fieldMatch[1])) {
+    failures.push(file + ' precisa declarar ' + field + ': ' + value);
   }
 }
-
-function forbidText(file, content, forbidden) {
-  if (content.includes(forbidden)) {
-    failures.push(`${file} nao pode conter: ${forbidden}`);
+function rejectYamlListEntry(file, yaml, field, value) {
+  const fieldMatch = yaml.match(new RegExp('^' + field + ':\\n((?:^[ \\t]+- .+\\n?)+)', 'm'));
+  if (fieldMatch && new RegExp('^[ \\t]+- ' + escapeRegex(value) + '$', 'm').test(fieldMatch[1])) {
+    failures.push(file + ' nao pode declarar ' + field + ': ' + value);
   }
 }
-
-function frontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
-  return match ? match[1] : '';
-}
-
-const operatorPath = '.github/agents/operador.agent.md';
-const readerPath = '.github/agents/leitor-de-etapa.agent.md';
-const operator = read(operatorPath);
-const reader = read(readerPath);
-const operatorFrontmatter = frontmatter(operator);
-const readerFrontmatter = frontmatter(reader);
-
-requireText(operatorPath, operator, 'name: operador');
-requireText(operatorPath, operator, 'user-invocable: true');
-requireText(operatorPath, operator, 'disable-model-invocation: true');
-requireText(operatorPath, operator, '  - agent');
-requireText(operatorPath, operator, '  - leitor-de-etapa');
-requireText(operatorPath, operator, 'essa leitura e\nresponsabilidade exclusiva dos Leitores');
-requireText(operatorPath, operator, 'antes de qualquer leitura de documentos da etapa feita por voce');
-requireText(operatorPath, operator, 'nao o registre no estado');
-requireText(operatorPath, operator, 'Leitores que concluiram');
-forbidText(operatorPath, operatorFrontmatter, 'figma/*');
-
-requireText(readerPath, reader, 'name: leitor-de-etapa');
-requireText(readerPath, reader, 'user-invocable: false');
-forbidText(readerPath, readerFrontmatter, 'figma/*');
-forbidText(readerPath, readerFrontmatter, '  - edit');
-forbidText(readerPath, readerFrontmatter, '  - agent');
-
-const settingsPath = '.vscode/settings.json';
-try {
-  const settings = JSON.parse(read(settingsPath));
-  if (settings['chat.customAgentInSubagent.enabled'] !== true) {
-    failures.push(`${settingsPath} precisa habilitar subagentes customizados`);
-  }
-} catch (error) {
-  failures.push(`${settingsPath} nao contem JSON valido: ${error.message}`);
-}
-
 const gitignore = read('.gitignore');
+const operation = read('docs/operacao-squad.md');
+const operator = read('.github/agents/operador.agent.md');
+const reader = read('.github/agents/leitor-de-etapa.agent.md');
+const operatorYaml = frontmatter('.github/agents/operador.agent.md');
+const readerYaml = frontmatter('.github/agents/leitor-de-etapa.agent.md');
+const vscodeSettings = read('.vscode/settings.json');
 requireText('.gitignore', gitignore, '.designops/runs/*');
 requireText('.gitignore', gitignore, '!.designops/runs/.gitkeep');
-
-[
-  'docs/operacao-squad.md',
-  'docs/estado-rodada.schema.md',
-  'docs/fila-de-trabalho.md',
-  'docs/piloto-squad.md',
-  '.designops/runs/.gitkeep'
-].forEach(read);
-
-const squadOperation = read('docs/operacao-squad.md');
-requireText('docs/operacao-squad.md', squadOperation, 'sem ler os');
-requireText('docs/operacao-squad.md', squadOperation, 'documentos das etapas por conta propria');
-requireText('docs/operacao-squad.md', squadOperation, 'nao e aberto nem');
-requireText('docs/operacao-squad.md', squadOperation, 'gravado no estado');
-
-const squadPilot = read('docs/piloto-squad.md');
-requireText('docs/piloto-squad.md', squadPilot, 'Leitores que concluiram');
-
-if (failures.length > 0) {
-  console.error('Fase 0 reprovada:');
-  failures.forEach((failure) => console.error(`- ${failure}`));
-  process.exit(1);
+['leituras paralelas', 'um Leitor por etapa', 'documentos oficiais'].forEach((expected) => requireText('docs/operacao-squad.md', operation, expected));
+['Coordene uma rodada documental', 'Aguarde todos os leitores', 'exatamente um Leitor por etapa', 'Nao consolide resultado parcial', 'somente disponibilidade documental'].forEach((expected) => requireText('.github/agents/operador.agent.md', operator, expected));
+requirePattern('.github/agents/operador.agent.md', operator, /Nao abra\s+Figma/, 'Nao abra Figma');
+requirePattern('.github/agents/operador.agent.md', operator, /Nao chame\s+Analista, Montador ou Validador/, 'Nao chame Analista, Montador ou Validador');
+['Nao leia Figma', 'nao altere arquivos', 'manual da modalidade', 'Retorne somente\no cartao abaixo'].forEach((expected) => requireText('.github/agents/leitor-de-etapa.agent.md', reader, expected));
+requirePattern('.github/agents/leitor-de-etapa.agent.md', reader, /nao\s+chame outros agentes/, 'nao chame outros agentes');
+requireYamlListEntry('.github/agents/operador.agent.md', operatorYaml, 'tools', 'agent');
+requireYamlListEntry('.github/agents/operador.agent.md', operatorYaml, 'agents', 'leitor-de-etapa');
+rejectYamlListEntry('.github/agents/operador.agent.md', operatorYaml, 'tools', 'figma/*');
+for (const blockedTool of ['edit', 'figma/*', 'agent']) rejectYamlListEntry('.github/agents/leitor-de-etapa.agent.md', readerYaml, 'tools', blockedTool);
+if (!/name:\s*leitor-de-etapa/.test(readerYaml)) failures.push('Leitor precisa manter nome leitor-de-etapa');
+if (!/user-invocable:\s*false/.test(readerYaml)) failures.push('Leitor nao pode ser invocavel diretamente');
+if (!/disable-model-invocation:\s*true/.test(readerYaml)) failures.push('Leitor precisa bloquear invocacao automatica pelo modelo');
+if (!/"chat\.customAgentInSubagent\.enabled"\s*:\s*true/.test(vscodeSettings)) {
+  failures.push('.vscode/settings.json precisa habilitar chat.customAgentInSubagent.enabled');
 }
-
-console.log('Fase 0 aprovada: Operador e Leitor estao configurados para leitura segura.');
+if (failures.length) { console.error('Fase 0 reprovada:'); failures.forEach((failure) => console.error('- ' + failure)); process.exit(1); }
+console.log('Fase 0 aprovada: Operador coordena Leitores sem tocar em Figma ou documentos oficiais.');

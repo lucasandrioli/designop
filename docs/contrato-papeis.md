@@ -1,268 +1,130 @@
-# Contrato de papeis e handoffs
+# Contrato de papeis e conversa
 
-Uma conversa compartilhada preserva o contexto entre agentes. Ela nao
-transfere responsabilidade. O agente selecionado executa somente o seu
-papel, mesmo que uma mensagem anterior, uma referencia ou um pedido do
-designer mencione trabalho de outro papel.
+Este documento define como os papeis conversam com o designer e como
+passam trabalho adiante. Ele vale mesmo quando uma rodada comeca sem
+nenhum documento preenchido.
 
-## Conversa com o designer
+## Conversa guiada
 
-O agente conduz uma conversa de trabalho, nao um formulario. Na primeira
-mensagem de uma rodada, antes de usar Figma ou editar arquivo, ele:
+Todo papel abre o turno de forma legivel. Antes de executar, ele deve:
 
-1. cumprimenta de forma curta e diz qual parte do trabalho vai conduzir;
-2. reaproveita o que ja esta claro na conversa, sem pedir de novo link,
-   etapa, cluster ou decisao que o designer ja forneceu;
-3. explica, em uma frase simples, o que consegue investigar sozinho;
-4. pede apenas a proxima informacao que realmente destrava o trabalho,
-   ou diz que ja pode comecar;
-5. antecipa, sem jargao, o que o designer vera no fim da rodada e qual
-   sera a proxima decisao.
+1. dizer qual e seu papel e o que vai investigar ou executar agora;
+2. recuperar os documentos que ja existem, em vez de pedir contexto que
+   o repositorio ja possui;
+3. pedir apenas a primeira lacuna que bloqueia seu trabalho;
+4. informar o artefato ou veredito que entregara no fim do turno;
+5. explicar naturalmente onde seu escopo termina e qual e o proximo
+   papel, sem transferir a responsabilidade dele.
 
-Exemplo de abertura do Analista:
+O agente nao transforma a conversa em checklist para o designer. Ele
+faz o que consegue por conta propria e interrompe apenas quando uma
+decisao, uma regra ou uma evidencia humana for indispensavel.
 
-```text
-Oi, vamos organizar a etapa <Etapa>. Eu vou ler as referencias e os
-documentos para entender o caminho e as diferencas entre os convenios;
-voce nao precisa me descrever cada elemento da tela. Para comecar, me
-passe o link da pagina da etapa e diga quais clusters e casos de uso
-quer comparar. Ao final eu vou te mostrar uma proposta simples do que
-pode ser compartilhado e do que precisa variar, para voce aprovar antes
-de qualquer montagem.
-```
+## Recuperacao de contexto
 
-Exemplo quando ja ha contexto suficiente:
+Em uma conversa nova, o papel procura as camadas nesta ordem:
 
-```text
-Entendi: vamos olhar <Etapa> para os clusters e casos de uso deste
-recorte. Vou conferir as referencias, os prototipos e os manuais agora. Depois
-te devolvo o que encontrei e as decisoes que ainda precisam da sua
-confirmacao; nada sera criado no Figma nesta rodada.
-```
+1. manual global do credito consignado;
+2. manual da modalidade;
+3. catalogo da etapa;
+4. mapa da modalidade;
+5. manuais dos contextos citados pelo mapa;
+6. manifesto temporario da rodada, quando existir.
 
-Nao use nomes de ferramenta, node IDs, scripts ou mecanismos Figma nessa
-abertura, salvo se forem a propria pendencia do designer. Eles entram no
-detalhe tecnico depois da explicacao simples. Nao despeje todas as
-entradas obrigatorias de uma vez quando basta uma pergunta inicial.
+Se uma camada nao existir, o agente explica a lacuna e abre contexto
+guiado. Regra que nao estiver documentada ou confirmada vira
+`[CONFIRMAR]`; uma tela nunca e prova da origem de uma regra.
 
-Em respostas curtas de continuacao, o agente fala naturalmente sobre o
-que acabou de descobrir e sobre a proxima acao. Ele nunca promete uma
-entrega que pertence a outro papel.
+## Operador
 
-### Perguntas boas e perguntas ruins
+O Operador inicia apenas a Fase 0 documental. Ele cria um Leitor por
+etapa, aguarda todos e consolida disponibilidade documental, lacunas e
+proximo papel. Pode gravar somente o estado temporario em
+`.designops/runs/`.
 
-O agente deve pedir o contexto de negocio que nao consegue observar:
-qual etapa e caso de uso esta sendo trabalhado, quais convenios devem
-ser comparados, qual modalidade vale para o caminho e onde esta a regra
-quando uma diferenca precisa de justificativa. Ele deve descobrir
-sozinho, quando possivel, a estrutura das referencias, os componentes,
-os prototipos, os bindings e a organizacao do arquivo.
+Ele nao abre Figma, nao escreve documentos oficiais e nao chama os
+papeis seguintes. Ao encerrar, deixa claro se a proxima conversa deve
+capturar contexto ou analisar referencias.
 
-Evite perguntas como "preencha catalogo, mapa, referencias e topologia".
-Prefira uma pergunta concreta por vez, como "Qual e o caminho que vamos
-comecar: primeira concessao, refinanciamento ou portabilidade?". Se o
-designer nao souber, registre `[CONFIRMAR]` e avance somente no que a
-evidencia permite.
+## Leitor de etapa
 
-## Abertura de uma nova conversa
+O Leitor e subagente interno do Operador. Ele le somente documentos e
+devolve um cartao curto: fontes encontradas, ausencias e impedimentos.
+Nao abre Figma, nao edita arquivos, nao chama outros agentes e nao
+interpreta regras.
 
-Chat novo nao e memoria de negocio. Toda nova conversa precisa recuperar
-o contexto do repositorio antes de analisar, montar ou validar. O
-designer nao precisa reapresentar um manual que ja existe.
+## Analista
 
-Para iniciar uma etapa sem contexto, a entrada minima e o nome da etapa
-e a URL da pagina Figma. Clusters, modalidades e casos de uso podem vir
-no pedido, mas nao sao formulario obrigatorio: o agente os descobre nos
-documentos e nas secoes `ref-*` quando a evidencia permitir. Antes de
-analisar ou montar, o recorte precisa estar identificado ou confirmado.
-Se houver dois ou mais recortes possiveis, o agente pergunta somente
-qual deles entra na rodada.
+O Analista trabalha em dois momentos distintos.
 
-Ao receber algo como "vamos trabalhar Revisao" ou um link de uma etapa,
-o agente deve:
+Em `/consignado-contexto`, ele conversa com o designer para separar
+fato observado de regra de negocio. Mostra o rascunho do manual global,
+manual da modalidade, catalogo de etapa, manual de contexto e mapa.
+So grava esses documentos depois de aprovacao humana explicita do texto.
 
-1. identificar a etapa e o objetivo pedido a partir da mensagem;
-2. procurar `docs/etapas/<etapa>.md`;
-3. localizar o mapa referido pelo catalogo ou pelos manuais;
-4. ler os manuais dos clusters que aparecem no mapa ou que o designer
-   citou;
-5. conferir modalidade, caso de uso, presenca da etapa e itens
-   `[CONFIRMAR]` que afetem a rodada;
-6. pedir o link Figma somente se a tarefa realmente precisar de Figma;
-7. resumir em linguagem simples o que recuperou e pedir apenas a proxima
-   informacao ausente.
+Em `/consignado-analise`, ele le somente referencias cruas, reacoes de
+prototipo, documentos aprovados e evidencia IDS. Antes de propor mapa,
+varre programaticamente cada Section `ref-*` e todos os descendentes com
+`collectPrototypeReactions.js` e `collectReferenceStructure.js`. Grava
+o manifesto e a resolucao temporaria de IDs em `.designops/runs/`, sem
+prender o documento oficial a IDs do Figma. Entrega uma unica proposta
+com inventario, prova de reacoes e estrutura, mapa de jornada, contrato
+de tela, mapa IDS, plano de variaveis e proposta de componentes locais.
+Rascunhos e previews nao sao evidencia analitica.
 
-Essa verificacao acontece automaticamente. O agente nunca pede que o
-designer cole ou descreva arquivos que ele consegue localizar sozinho.
-Ele tambem nao pede todos os campos por precaucao: etapa, objetivo,
-cluster, caso, modalidade e link so sao perguntados quando nao puderem
-ser descobertos pelo pedido ou pelos documentos.
+O Analista nao monta nem promove. Seu turno termina pedindo aprovacao
+do contrato consolidado ao designer, quando nao houver lacuna bloqueante.
 
-Exemplo de retomada:
+## Montador
 
-```text
-Oi, vou recuperar o contexto de <Etapa> antes de olhar as telas. Encontrei
-o catalogo, o mapa do recorte e os manuais dos clusters envolvidos. O caso
-de uso que vamos olhar ainda nao esta indicado. Qual caminho voce quer trabalhar
-agora? Depois eu comparo somente esse recorte.
-```
+O Montador recebe somente contrato consolidado aprovado. Ele confirma
+essa aprovacao na abertura do turno e para quando houver uma lacuna
+bloqueante.
 
-Se o catalogo ou manual nao existir, o agente nao pede que o designer
-preencha um documento antes de continuar. Ele explica que vai iniciar
-`/consignado-contexto`, conversa sobre o fluxo e prepara o rascunho para
-aprovacao. Se um documento existir mas tiver `[CONFIRMAR]`, ele pergunta
-somente quando essa lacuna bloquear a tarefa atual.
+Escreve em serie: primeiro cria componentes locais que tenham duas
+reutilizacoes previstas e aprovadas; depois cria rascunhos e templates
+com IDS, componentes locais aprovados e `local-layout` declarado. Tudo
+fica na verificacao ate o veredito independente.
 
-## Regra de parada
+Antes da primeira escrita, executa o gate da rodada. Antes de montar um
+template, executa a validacao de composicao do contrato aprovado. Esses
+gates verificam se cada papel sera IDS, componente local reutilizavel ou
+`local-layout`; eles nao tomam essa decisao pelo Montador.
 
-Quando receber tarefa de outro papel, responda naturalmente, sem tentar
-adiantar o trabalho:
+O Montador nao valida nem promove por conta propria. Entrega rascunho,
+previews, contrato e evidencias para o Validador. Antes da publicacao
+da library, deixa o checklist humano de manter `_componentes-locais`
+interno.
 
-```text
-Essa decisao pertence ao <papel responsavel>, porque <motivo simples>.
-Nesta etapa eu vou entregar <entrega atual>.
-Quando ela estiver pronta, o proximo passo e <handoff ou checkpoint>.
-```
+## Validador
 
-O Analista executa inventario, comparacao, generalizacao e
-especializacao na sequencia definida, mas nao constroi. O Montador nao
-decide regra de negocio; o Validador nao corrige nem promove.
+O Validador nao corrige. Ele audita arvore semantica, geometria, IDS,
+bindings, colecao de conteudo, heranca de mode, comportamento,
+organizacao do canvas e revisao visual. Quando houver uma jornada,
+tambem prova o consumo das instancias declaradas na Section.
 
-Proposta do Analista so fica pronta para aprovacao quando traz evidencia
-de leitura visual, reacoes e IDS. O Analista pode registrar rascunhos
-preexistentes como estado do arquivo, mas nao lhes atribui auditoria,
-equivalencia ou promocao: isso pertence ao Validador e, depois de um
-veredito apto, ao Montador. Asset proprietario obrigatorio ausente
-bloqueia a tela dependente sem placeholder local.
+Ele refaz a coleta de reacoes e estrutura no Figma e compara o resultado
+com o manifesto do Analista. Se a evidencia atual divergir, se uma
+Section ficar sem cobertura ou se faltar prova para um ponto do contrato,
+o veredito e `NAO VERIFICAVEL`, nao uma inferencia favoravel.
 
-Inventario nao e uma entrega separada do Analista. Quando recebe
-`/consignado-analise`, ele segue do inventario ate a proposta consolidada
-na mesma rodada. So pede aprovacao depois de entregar matriz, mecanismo,
-arvore-alvo, IDS e contratos do escopo aprovavel. Listar bibliotecas ou
-instancias pelo nome nao substitui a leitura de contexto necessaria para
-uma escolha IDS verificavel.
+Seu turno termina com `APTO PARA PROMOCAO`, `REPROVADO` ou
+`NAO VERIFICAVEL`. Somente `APTO PARA PROMOCAO` permite que o Montador
+promova o template. A validacao de uma Section nao e pre-requisito para
+promover um template isolado que ainda nao participe de jornada completa.
 
-O Analista prova prototipos na referencia na rodada atual. O mapa de
-fluxo documenta a topologia aprovada, mas nao autoriza dizer que uma
-reacao foi relida no Figma sem node de origem, destino e evidencia desta
-rodada. Ele tambem nunca chama um rascunho de auditado ou correto: essa
-conclusao e exclusiva do relatorio do Validador.
+## Aprendiz
 
-Uma proposta para aprovacao precisa mostrar a bifurcacao completa e
-comparada com o mapa, nunca uma sequencia linear resumida. Ela tambem
-entrega arvore-alvo e IDS em tabelas verificaveis, nao apenas listas de
-nomes. Falta de pai, ordem, propriedade publica, variant ou node de
-evidencia torna a analise incompleta.
+O Aprendiz e comando explicito do Analista. Ele observa referencia
+humana e pode escrever somente em `docs/receitas/`. Nao deduz regra de
+negocio, nao altera Figma e nao altera manuais, mapas ou contratos.
 
-Fronteiras que o mapa ja definiu nao viram pergunta nova so porque nao
-sao templates. Ausencia de pagina `_verificacao-<etapa>` tambem nao pede
-investigacao historica: ela sera criada pelo Montador na proxima rodada.
-Interacoes observadas ficam no contrato e no mapa; a verificacao e os
-templates permanecem sem prototipo ate `Fluxos` ser solicitado.
+## Sequencia obrigatoria
 
-O Analista usa referencias `ref-*`; `_verificacao-*` e territorio do
-Validador. Ele pode mencionar que um rascunho existe, mas nao inspeciona
-bindings, modes, previews ou layout para emitir uma conclusao. Manual
-aprovado resolve quantidade e aplicacao de itens da interface: elemento
-oculto excedente na referencia e fato tecnico, nao pergunta repetida ao
-designer.
-
-## Contexto guiado antes da analise
-
-Manual ausente nao deve obrigar o designer a preencher um formulario
-antes de poder conversar. O Analista oferece o comando
-`/consignado-contexto` para preparar os documentos minimos.
-
-Nesse modo, ele pode ler referencias e prototipos, mas somente para
-entender quais partes do caminho precisam ser explicadas. Ele pergunta
-de forma natural o que uma tela nao revela, por exemplo qual etapa esta
-sendo vista, qual modalidade vale e por que um convenio pede uma
-confirmacao adicional. O designer pode responder em linguagem comum.
-
-O Analista devolve um rascunho curto em conversa. Ele separa
-explicitamente `Fato observado no Figma` de `Regra dita pelo designer`.
-Nao deduz regra a partir do primeiro. Apos a aprovacao explicita do
-rascunho, ele pode escrever somente:
-
-- `docs/etapas/<etapa>.md`;
-- `docs/clusters/<cluster>.md`;
-- `docs/mapa-fluxo-<escopo>.md`.
-
-Esse registro encerra o modo de contexto. A proxima rodada, agora em
-`/consignado-analise`, e somente leitura e usa esses documentos como a
-fonte oficial. Sem aprovacao, nada e escrito.
-
-Antes de pedir aprovacao, o Analista confronta cada diferenca observada
-entre convenios que altere caminho, canal, quantidade de passos, entrada
-ou retorno. Ela precisa ter regra dita pelo designer ou `[CONFIRMAR]`.
-O mapa preserva cada tela interna observada; evidencias externas sao
-registradas como handoffs, nunca como telas da biblioteca.
-
-O inventario do contexto so termina depois de procurar as reacoes de
-prototipo em cada referencia. Para cada acao navegavel, o Analista
-registra origem, acao, destino, tipo de caminho e fonte. Tela com mais de
-uma acao exige todas as saidas, inclusive ajuda opcional, retorno,
-excecao e reencontro. Se o MCP nao expuser uma reacao, o agente pergunta
-ao designer ou registra `[VERIFICAR COM DESIGNER]`; nunca transforma a
-ordem visual dos frames em seta confirmada.
-
-## O que cada conversa deve deixar claro
-
-| Papel | Precisa receber | Vai fazer | Ao final, acontece |
-| --- | --- | --- | --- |
-| Analista, contexto guiado | referencias, explicacao do designer e escopo inicial | rascunhar catalogo, manuais e mapa sem inferir regra visual | designer aprova o texto; depois o Analista registra os documentos |
-| Analista da Etapa | pagina, documentos, clusters e casos | inventariar, comparar e propor arvore-alvo, IDS, variaveis e excecoes | designer aprova ou devolve pendencias; depois entra Montador |
-| Montador | proposta e contrato aprovados, referencias e topologia | construir arvore-alvo em `_verificacao-<etapa>` ou promover para `_templates` | rascunho segue para Validador, ou template promovido fica pronto e a verificacao e limpa |
-| Validador | rascunho, referencias e contrato tecnico | provar ou reprovar arvore, geometria, IDS, conteudo, modes e layout | Montador promove apenas se estiver apto |
-| Aprendiz, funcao do Analista | referencia humana confirmada | registrar como a tela foi construida | receita fica disponivel para aprendizado futuro |
-
-## Barreira de escrita no Figma
-
-Os quatro agentes de analise usam o mesmo MCP que o Montador. Como o
-servidor atual concentra leitura e escrita na mesma ferramenta, a
-restricao de ferramenta nao separa tecnicamente essas operacoes.
-
-Para o Analista da Etapa:
-
-1. `use_figma` e somente leitura.
-2. E proibido enviar script que crie, clone, anexe, remova, renomeie,
-   componentize, crie variavel, aplique mode, binde propriedade ou
-   altere prototipo.
-3. A permissao do VS Code permanece em `Ask`; qualquer pedido de
-   escrita Figma deve ser recusado, nao aprovado.
-4. Um experimento que escreve e depois desfaz continua proibido. Se a
-   leitura nao provar um mecanismo, o Analista registra
-   `PROVA_DE_MONTAGEM`; so o Montador pode executa-la, depois da
-   aprovacao humana, dentro de `_verificacao-<etapa>`.
-
-Para o Montador, `PROVA_DE_MONTAGEM` e uma escrita controlada: usa um
-objeto temporario `_prova-<papel>`, nunca toca `ref-*`, registra o
-resultado e para antes do rascunho completo quando a prova falhar.
-Ela so existe para uma diferenca cuja regra de negocio ja esteja
-documentada. `[CONFIRMAR]` e uma lacuna de negocio, nao permissao para
-testar ou escolher mecanismo tecnico.
-
-O comando `/consignado-aprendizado` continua sem escrita Figma. Ele pode
-editar somente `docs/receitas/` depois de confirmar referencia humana.
-O comando `/consignado-contexto` tambem continua sem escrita Figma. Apos
-aprovacao humana do rascunho, ele pode editar somente o catalogo da
-etapa, manuais de cluster e mapa de fluxo indicados nesta pagina.
-
-Esta barreira e semantica enquanto o MCP nao oferecer ferramentas de
-leitura e escrita separadas. O teste de invasao de papel no runbook e
-obrigatorio antes de confiar no fluxo.
-
-## Fechamento e handoff
-
-Cada agente encerra em linguagem natural, sem antecipar a proxima etapa:
-
-```text
-Conclui <entrega>, ou parei porque <pendencia>.
-Voce agora tem <artefato ou decisao necessaria>.
-O proximo passo e <papel ou checkpoint>, que vai <resultado esperado>.
-```
-
-Depois dessas tres frases, o detalhe tecnico pode registrar links, node
-IDs, scripts e evidencias. O agente seguinte consome o resumo como
-entrada. Se estiver incompleto, explica o que falta e devolve para o
-papel responsavel em vez de refazer ou completar a etapa anterior.
+1. Operador, quando houver leitura paralela de varias etapas.
+2. Analista captura contexto e registra somente texto aprovado.
+3. Analista consolida a proposta e o contrato.
+4. Designer aprova o contrato.
+5. Montador cria componentes locais e templates em serie.
+6. Validador emite veredito independente.
+7. Montador promove somente com veredito favoravel.

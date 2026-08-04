@@ -45,11 +45,13 @@
  *   prototype: {
  *     overflowDirection: 'VERTICAL',
  *     fixedChildren: ['rodape-fixo'],
+ *     fixedBottomTolerance: 2,
+ *     fixedNoOverlap: true,
  *   },
  * }, { geometryCandidateId: '200:11' })
  *
  * @param {string} candidateId - COMPONENT ou COMPONENT_SET rascunho.
- * @param {string} referenceId - frame cru do mesmo caso e cluster.
+ * @param {string} referenceId - frame cru do mesmo caso e contexto.
  * @param {{
  *   tolerance?: number,
  *   roles: Array<{
@@ -59,6 +61,7 @@
  *     parent?: string, order?: number, type?: string,
  *     source?: 'ids-instance'|'local-layout'|'local-component'|'text'|'asset',
  *     localException?: boolean,
+ *     localComponent?: {reuseEvidencePassed?: boolean},
  *     overlay?: boolean,
  *     layout?: {mode?: 'HORIZONTAL'|'VERTICAL', padding?: number[], gap?: number},
  *     ids?: {componentKey?: string, properties?: string[]},
@@ -66,12 +69,14 @@
  *   }>,
  *   prototype?: {
  *     overflowDirection?: 'NONE'|'HORIZONTAL'|'VERTICAL'|'HORIZONTAL_AND_VERTICAL',
- *     fixedChildren?: string[]
+ *     fixedChildren?: string[],
+ *     fixedBottomTolerance?: number,
+ *     fixedNoOverlap?: boolean
  *   },
  *   viewport?: { surface?: string, width?: number, height?: number }
  * }} contract
  * @param {{geometryCandidateId?: string}} [opts] - preview resolvido no
- *   mode do cluster. A arvore e IDS continuam auditados no rascunho;
+ *   mode do contexto. A arvore e IDS continuam auditados no rascunho;
  *   a geometria e medida neste preview. Sem ele, mede o rascunho.
  */
 async function validateReconstructionContract(candidateId, referenceId, contract, opts = {}) {
@@ -152,6 +157,12 @@ async function validateReconstructionContract(candidateId, referenceId, contract
     return { x: box.x - rootBox.x, y: box.y - rootBox.y, width: box.width, height: box.height }
   }
   const valuesEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+  const overlapArea = (a, b) => {
+    if (!a || !b) return 0
+    const x = Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x)
+    const y = Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y)
+    return x > report.tolerance && y > report.tolerance ? x * y : 0
+  }
 
   const variables = await figma.variables.getLocalVariablesAsync()
   const variableIdByName = new Map(variables.map((variable) => [variable.name, variable.id]))
@@ -209,6 +220,56 @@ async function validateReconstructionContract(candidateId, referenceId, contract
             reason: 'ordem dos filhos fixos diverge do contrato',
           })
         }
+        if (prototype.fixedChildren.length > 0) {
+          if (candidate.overflowDirection !== 'VERTICAL') {
+            report.prototypeIssues.push({
+              id: candidate.id,
+              actual: candidate.overflowDirection ?? null,
+              reason: 'rodape fixo exige overflowDirection VERTICAL na raiz mobile',
+            })
+          }
+          const fixedNodes = candidate.children.slice(-prototype.fixedChildren.length)
+          const rootBox = candidate.absoluteBoundingBox
+          const finalFixed = fixedNodes[fixedNodes.length - 1]
+          const finalBox = finalFixed?.absoluteBoundingBox
+          const bottomTolerance = Number.isFinite(prototype.fixedBottomTolerance)
+            ? prototype.fixedBottomTolerance
+            : report.tolerance
+          if (!rootBox || !finalBox) {
+            report.prototypeIssues.push({ id: candidate.id, reason: 'nao foi possivel medir rodape fixo' })
+          } else if (Math.abs((finalBox.y + finalBox.height) - (rootBox.y + rootBox.height)) > bottomTolerance) {
+            report.prototypeIssues.push({
+              id: finalFixed.id,
+              expectedBottom: rootBox.y + rootBox.height,
+              actualBottom: finalBox.y + finalBox.height,
+              tolerance: bottomTolerance,
+              reason: 'ultimo filho fixo nao esta ancorado no limite inferior da tela',
+            })
+          }
+          for (let index = 1; index < fixedNodes.length; index += 1) {
+            const previous = fixedNodes[index - 1].absoluteBoundingBox
+            const current = fixedNodes[index].absoluteBoundingBox
+            if (previous && current && current.y + report.tolerance < previous.y) {
+              report.prototypeIssues.push({ id: fixedNodes[index].id, reason: 'ordem vertical dos filhos fixos diverge da arvore' })
+            }
+          }
+          if (prototype.fixedNoOverlap !== false) {
+            const scrollingNodes = candidate.children.slice(0, candidate.children.length - fixedNodes.length)
+            for (const fixed of fixedNodes) {
+              for (const scrolling of scrollingNodes) {
+                const area = overlapArea(fixed.absoluteBoundingBox, scrolling.absoluteBoundingBox)
+                if (area > 0) {
+                  report.prototypeIssues.push({
+                    fixedId: fixed.id,
+                    scrollingId: scrolling.id,
+                    areaPx: Math.round(area),
+                    reason: 'rodape fixo sobrepoe conteudo sem excecao declarada',
+                  })
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -248,8 +309,8 @@ async function validateReconstructionContract(candidateId, referenceId, contract
     if (role.source === 'ids-instance' && target.type !== 'INSTANCE') {
       report.idsIssues.push({ role: role.id, id: target.id, reason: 'papel IDS precisa ser INSTANCE' })
     }
-    if (role.source === 'local-component' && !role.localException) {
-      report.idsIssues.push({ role: role.id, id: target.id, reason: 'componente local sem excecao aprovada' })
+    if (role.source === 'local-component' && role.localComponent?.reuseEvidencePassed !== true) {
+      report.idsIssues.push({ role: role.id, id: target.id, reason: 'componente local sem evidencia aprovada de reutilizacao' })
     }
     if (role.source !== 'local-component' && target.id !== candidate.id && target.type === 'COMPONENT' && !role.localException) {
       report.idsIssues.push({ role: role.id, id: target.id, reason: 'componente local nao declarado no contrato' })

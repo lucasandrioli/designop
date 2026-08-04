@@ -32,6 +32,8 @@
  *         easing: { type: 'CUSTOM_CUBIC_BEZIER', cubicBezier: { x1: 0.2, y1: 0, x2: 0, y2: 1 } },
  *       },
  *     },
+ *     { name: 'acao-ver-pdf', expected: 'url', url: 'https://exemplo.test/arquivo.pdf' },
+ *     { name: 'fechar-sheet', expected: 'close' },
  *     { name: 'acao-opcional', optional: true, expected: 'destination' },
  *   ],
  * })
@@ -52,8 +54,9 @@
  *   reactions?: Array<{
  *     name: string,
  *     optional?: boolean,
- *     expected?: 'destination'|'back'|'any',
+ *     expected?: 'destination'|'url'|'back'|'close'|'any',
  *     destinationName?: string,
+ *     url?: string,
  *     motionProfile?: string,
  *     trigger?: { type: string, timeout?: number },
  *     transition?: {
@@ -90,8 +93,8 @@ async function validateInteractionContract(rootNodeId, contract = {}) {
       continue
     }
     const expected = rule.expected ?? 'any'
-    if (!['destination', 'back', 'any'].includes(expected)) {
-      report.contractIssues.push({ name: rule.name, reason: 'expected precisa ser destination, back ou any' })
+    if (!['destination', 'url', 'back', 'close', 'any'].includes(expected)) {
+      report.contractIssues.push({ name: rule.name, reason: 'expected precisa ser destination, url, back, close ou any' })
       continue
     }
     const profile = rule.motionProfile ? contract.motionProfiles?.[rule.motionProfile] : null
@@ -206,11 +209,32 @@ async function validateInteractionContract(rootNodeId, contract = {}) {
         })
       }
     }
+    if (expected === 'url') {
+      const urls = []
+      for (const reaction of contractReactions) {
+        for (const action of reaction.actions ?? []) {
+          if (action.type === 'URL' || action.url) urls.push(action.url ?? null)
+        }
+      }
+      if (urls.length === 0) {
+        report.reactionIssues.push({ name: rule.name, reason: 'acao sem URL externa' })
+      } else if (urls.some((url) => typeof url !== 'string' || !/^https:\/\//i.test(url))) {
+        report.reactionIssues.push({ name: rule.name, actualUrls: urls, reason: 'acao URL precisa usar HTTPS' })
+      } else if (rule.url && !urls.includes(rule.url)) {
+        report.reactionIssues.push({ name: rule.name, expectedUrl: rule.url, actualUrls: urls, reason: 'URL diverge do contrato' })
+      }
+    }
     if (expected === 'back') {
       const hasBack = contractReactions.some((reaction) =>
         (reaction.actions ?? []).some((action) => action.type === 'BACK'),
       )
       if (!hasBack) report.reactionIssues.push({ name: rule.name, reason: 'acao sem retorno de prototipo' })
+    }
+    if (expected === 'close') {
+      const hasClose = contractReactions.some((reaction) =>
+        (reaction.actions ?? []).some((action) => action.type === 'CLOSE'),
+      )
+      if (!hasClose) report.reactionIssues.push({ name: rule.name, reason: 'acao sem fechamento de prototipo' })
     }
   }
 

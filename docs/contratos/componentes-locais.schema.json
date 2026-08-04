@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Plano aprovado de componentes locais",
+  "type": "object",
+  "required": ["schemaVersion", "id", "contextosConhecidos", "componentes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "contextosConhecidos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "rotulo"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^ctx-[a-z0-9-]+$" },
+          "rotulo": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "componentes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "aprovado", "reutilizacoes"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "aprovado": { "const": true },
+          "reutilizacoes": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["modalidade", "etapa", "tela", "casoUso"],
+              "properties": {
+                "modalidade": { "type": "string", "minLength": 1 },
+                "etapa": { "type": "string", "minLength": 1 },
+                "tela": { "type": "string", "minLength": 1 },
+                "casoUso": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

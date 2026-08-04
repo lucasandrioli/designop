@@ -16,10 +16,10 @@ repetir trabalho.
       "nome": "<etapa-a>",
       "status": "pronta_para_analise",
       "catalogo": "docs/etapas/<etapa-a>.md",
-      "mapas": ["docs/mapa-fluxo-<escopo>.md"],
+      "mapas": ["docs/mapas/<modalidade>.md"],
       "manuais": [
-        "docs/clusters/<cluster-a>.md",
-        "docs/clusters/<cluster-b>.md"
+        "docs/contextos/<contexto-a>.md",
+        "docs/contextos/<contexto-b>.md"
       ],
       "leitores_concluidos": ["leitor-<etapa-a>"],
       "bloqueios": [],

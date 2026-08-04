@@ -54,7 +54,7 @@ falha silenciosa.
     ainda tem altura de uma linha (não zero) e o auto layout ainda
     conta esse nó como visível, aplicando `itemSpacing` ao redor dele
     normalmente. Bindar só o `characters` de um texto que pode ficar
-    vazio por cluster/condição deixa espaço morto na tela quando o
+    vazio por contexto/condição deixa espaço morto na tela quando o
     valor é vazio. Se um bloco de texto pode ficar vazio, AGRUPE-O num
     frame próprio e binde a VISIBILIDADE DO FRAME (não só o texto) a
     um boolean. (Regra comprovada em teste interno.)
@@ -72,7 +72,7 @@ falha silenciosa.
     `await figma.loadFontAsync(node.fontName)`
 13. **Texto que recebe variável DEVE ter `textAutoResize` = `HEIGHT` ou
     `WIDTH_AND_HEIGHT`.** Com `NONE` ou `TRUNCATION`, o conteúdo maior
-    de outro cluster é cortado e o corte fica geometricamente
+    de outro contexto é cortado e o corte fica geometricamente
     INDETECTÁVEL.
 14. **Camadas de TEXT renomeiam-se para o conteúdo.** Nunca localize um
     texto por nome de camada. Use node ID, conteúdo atual, ou (melhor)
@@ -116,7 +116,7 @@ falha silenciosa.
     em `ref-*` nem no papel do Analista.
 18. **Modes:** `node.setExplicitVariableModeForCollection(collection,
     modeId)` aplica um mode a uma subárvore. É como uma tela troca de
-    cluster. O mode propaga por toda a hierarquia: pinar UMA VEZ num
+    contexto. O mode propaga por toda a hierarquia: pinar UMA VEZ num
     ancestral comum (ex: o frame de topo de uma página de fluxo) basta
     para que TODAS as telas/etapas instanciadas dentro dele herdem o
     mesmo mode — não é preciso pinar tela por tela.
@@ -126,8 +126,8 @@ falha silenciosa.
     ponto de partida de template. Se um asset visual aprovado precisar
     ser clonado, varra o clone e limpe o mode explicito da collection de
     conteudo no clone e em todos os descendentes. Um mode herdado deixa
-    o template preso no cluster de origem. Master de template nunca
-    pina mode de cluster; somente wrapper de preview ou frame de Fluxos
+    o template preso no contexto de origem. Master de template nunca
+    pina mode de contexto; somente wrapper de preview ou frame de Fluxos
     pode pinar.
 19. **Variável de biblioteca remota:**
     `await figma.variables.importVariableByKeyAsync(key)`. Funciona em
@@ -278,11 +278,11 @@ falha silenciosa.
     - Nós dentro de INSTANCE (validam-se no master)
     - Nós de arte vetorial (filhos só de shapes): sobreposição ali é
       intencional (ícones, ilustrações)
-42. **Valide em TODOS os modes.** Texto que cabe num cluster estoura em
+42. **Valide em TODOS os modes.** Texto que cabe num contexto estoura em
     outro. Aplicar mode e medir devem ser chamadas separadas (regra 4).
     Texto BINDADO mas com valor VAZIO num mode não é erro de layout em
     si (ver validateLayout.js, check emptyBoundText) — é sintoma de
-    template usado fora do cluster a que pertence; cruzar contra o mapa
+    template usado fora do contexto a que pertence; cruzar contra o mapa
     de fluxo antes de reportar como bug.
 
 ## Descrição de componente
@@ -332,7 +332,7 @@ falha silenciosa.
     qual dos dois você procurou.
 47. **Token visual do IDS não prova binding de conteúdo.** Um template
     pode conter fonte ou cor bindada dentro de uma instancia remota e
-    ainda nao trocar texto por cluster. Ao validar `tpl-`, confira alias
+    ainda nao trocar texto por contexto. Ao validar `tpl-`, confira alias
     da collection de conteudo em `componentPropertyDefinitions`,
     `instance.componentProperties` ou fallback local. Ignore tokens
     internos do IDS como prova de conteudo variavel.

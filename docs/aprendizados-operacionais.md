@@ -13,7 +13,7 @@ cenario isolado em regra da biblioteca.
   Nunca entra em agente, skill ou script operacional.
 
 Uma diferenca visual nunca vira regra de negocio. Ela so entra em manual
-de cluster depois de explicacao e aprovacao humana.
+de contexto depois de explicacao e aprovacao humana.
 
 ## Registro
 
@@ -29,7 +29,7 @@ de cluster depois de explicacao e aprovacao humana.
 | L-008 | Referencia crua define resultado visivel e comportamento, nao a arvore interna. | GENERICO | contrato de reconstrucao | CONSOLIDADO | figma-reconstrucao, validateReconstructionContract |
 | L-009 | Contrato geometrico usa medida exata, `HUG` ou `NAO_MEDIDO`, nunca aproximacao. | GENERICO | regra de validacao | CONSOLIDADO | consignado-analise, consignado-validacao |
 | L-010 | Analista le referencias; Montador escreve rascunhos; Validador audita; `Fluxos` e posterior. | GENERICO | contrato de papeis | CONSOLIDADO | AGENTS, agentes |
-| L-011 | Dados que mudam por proposta sao transacionais e nao viram valor fixo de mode. | GENERICO | modelo de clusters | CONSOLIDADO | consignado-analise, validateContentContract |
+| L-011 | Dados que mudam por proposta sao transacionais e nao viram valor fixo de mode. | GENERICO | modelo de contextos | CONSOLIDADO | consignado-analise, validateContentContract |
 | L-012 | Contexto preserva cada passo interno observado; reuso e template so sao decididos na analise posterior. | GENERICO | regra de evidencia | CONSOLIDADO | consignado-contexto, mapa de fluxo |
 | L-013 | Diferenca entre convenios recebe regra do designer ou `[CONFIRMAR]`; evidencia externa e handoff, nao tela da biblioteca. | GENERICO | regra de negocio e topologia | CONSOLIDADO | consignado-contexto, contrato de papeis |
 | L-014 | Descoberta IDS parte de instancias nas referencias; cada fonte confirmada restringe buscas pela sua library key, sem varrer catalogos disponiveis. | GENERICO | uso MCP e eficiencia de contexto | CONSOLIDADO | consignado-analise, figma-reconstrucao, runbook-banco |

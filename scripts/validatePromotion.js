@@ -14,14 +14,17 @@
  *   evidence: {
  *     creationPassed: true,
  *     contentContractPassed: true,
+ *     compositionContractPassed: true,
  *     modeBehaviorPassed: true,
  *     reconstructionContractPassed: true,
  *     layoutPassed: true,
  *     visualReviewPassed: true,
+ *     roundPassed: true,
+ *     validatorVerdict: 'APTO PARA PROMOCAO',
  *   },
  * })
  *
- * Os cinco campos de evidence vem dos relatorios reais desta conversa.
+ * Os campos de evidence vem dos relatorios reais desta conversa.
  * Passar `true` sem ter rodado a prova e quebra de processo, nao uma
  * forma de contornar o portao.
  */
@@ -54,7 +57,7 @@ async function validatePromotion(candidateId, opts = {}) {
   if (!candidate.name.startsWith('_rascunho-')) {
     report.conventionIssues.push({
       id: candidate.id,
-      reason: 'promocao so aceita objeto nomeado _rascunho-<etapa>-<nome>',
+      reason: 'promocao so aceita objeto nomeado _rascunho-<modalidade>-<etapa>-<nome>',
     })
   }
 
@@ -157,10 +160,12 @@ async function validatePromotion(candidateId, opts = {}) {
   const requiredEvidence = [
     'creationPassed',
     'contentContractPassed',
+    'compositionContractPassed',
     'modeBehaviorPassed',
     'reconstructionContractPassed',
     'layoutPassed',
     'visualReviewPassed',
+    'roundPassed',
   ]
   for (const key of requiredEvidence) {
     if (opts.evidence?.[key] !== true) {
@@ -169,6 +174,12 @@ async function validatePromotion(candidateId, opts = {}) {
         reason: 'evidencia ausente ou reprovada pelo Validador',
       })
     }
+  }
+  if (opts.evidence?.validatorVerdict !== 'APTO PARA PROMOCAO') {
+    report.evidenceIssues.push({
+      key: 'validatorVerdict',
+      reason: 'promocao exige veredito APTO PARA PROMOCAO do Validador',
+    })
   }
 
   report.passed =

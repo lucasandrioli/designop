@@ -1,0 +1,54 @@
+# Contratos executaveis
+
+Os documentos oficiais usam nomes logicos estaveis. Node IDs pertencem
+somente a `.designops/runs/<rodada>/resolvido.json` e nunca a este
+contrato, ao mapa ou aos manuais.
+
+## Contrato de tela
+
+Crie `docs/contratos/<modalidade>-<etapa>-<tela>.json` conforme
+`tela.schema.json`.
+
+Ele declara:
+
+- viewport, rolagem e filhos fixos;
+- papeis semanticos e sua origem (`IDS`, `COMPONENTE_LOCAL` ou
+  `LOCAL_LAYOUT`);
+- bindings de conteudo esperados;
+- interacoes `ON_CLICK` ou `AFTER_TIMEOUT`, com destino `NODE`, `URL`,
+  `BACK` ou `CLOSE`;
+- evidencia aprovada para componentes locais.
+
+Um contrato de tela descreve a arvore-alvo. Ele nao copia a arvore da
+referencia e nao recebe `contexto-id` no nome de template, variavel ou
+componente.
+
+## Contrato de jornada
+
+Crie `docs/contratos/<modalidade>-jornada.json` conforme
+`jornada.schema.json`.
+
+Ele declara a collection de conteudo, os contexts/modes e, para cada
+contexto, quais telas estao presentes ou ausentes. Ausencia e uma
+selecao `presente: false`, sem template escondido por variavel.
+
+## Plano de componentes locais
+
+Crie `.designops/runs/<rodada>/componentes-locais.json` conforme
+`componentes-locais.schema.json`, mesmo quando a lista `componentes` estiver
+vazia. Ele e a decisao explicita da rodada: documenta quais componentes
+locais foram aprovados, suas duas reutilizacoes previstas e os contextos
+conhecidos que nao podem aparecer em nomes ou carimbos.
+
+Um papel com origem `COMPONENTE_LOCAL` no contrato de tela precisa apontar
+para um `componentId` presente nesse plano. Sem plano aprovado, a composicao
+fica como `LOCAL_LAYOUT`.
+
+## Resolucao temporaria
+
+O Analista grava `.designops/runs/<rodada>/resolvido.json` conforme
+`resolucao.schema.json`. O arquivo associa os IDs logicos aprovados aos
+node IDs atuais de referencias, previews e Sections de jornada.
+
+O Validador reconstroi a evidencia no Figma e reprova quando a
+resolucao temporaria nao corresponde mais ao arquivo.

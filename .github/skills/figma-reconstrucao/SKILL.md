@@ -14,6 +14,19 @@ Use a rotina adequada ao papel atual. Analista apenas inspeciona e
 resolve IDS. Montador pode montar apenas depois da aprovacao. Validador
 apenas audita.
 
+## Contratos e evidencias
+
+O contrato de tela define viewport, rolagem, rodape fixo, papeis,
+origens de composicao e interacoes. O contrato de jornada define
+collection, mode de contexto, presenca e ausencia de templates. Ambos
+usam IDs logicos. Node IDs do arquivo ficam apenas em
+`.designops/runs/<rodada>/resolvido.json`.
+
+O Analista coleta estrutura e reacoes antes de propor o contrato. O
+Montador roda `validateRound.js` e `validateCompositionContract.js`
+antes de escrever. O Validador repete as coletas e devolve
+`NAO VERIFICAVEL` se o Figma divergir da evidencia do Analista.
+
 ## 0. `prepararReconstrucao` (leitura obrigatoria)
 
 Antes de qualquer escrita, trabalhe a partir do link do frame exato, nao
@@ -106,7 +119,7 @@ qual papel sera provado, qual mecanismo sera exercitado e qual resultado
 e esperado. `PROVA_DE_MONTAGEM` nao e uma regra de negocio em aberto:
 depois da aprovacao humana, ela pertence exclusivamente ao Montador.
 Ela exige que a divergencia correspondente ja esteja justificada no
-manual do cluster. Um papel marcado `[CONFIRMAR]` nao pode receber
+manual do contexto. Um papel marcado `[CONFIRMAR]` nao pode receber
 `PROVA_DE_MONTAGEM` no mesmo contrato.
 
 ## 3. `provarMecanismo` (escrita exclusiva do Montador)

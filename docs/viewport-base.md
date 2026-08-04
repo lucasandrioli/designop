@@ -4,7 +4,7 @@
 
 Todo template mobile deste projeto nasce no viewport-base de `360 x 800`.
 Ele e a medida comum para referencia normalizada, rascunho, preview e
-validacao. Nao e uma regra de negocio nem uma propriedade de cluster.
+validacao. Nao e uma regra de negocio nem uma propriedade de contexto.
 
 ## Comportamento esperado
 

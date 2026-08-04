@@ -39,9 +39,9 @@ Resultado reprovado: chamar Analista, Montador ou Validador; escrever em
 `docs/`; usar Figma; ou pedir que voce troque de agente para ler cada
 resultado. O roteiro completo esta em `docs/piloto-squad.md`.
 
-Use uma etapa real, dois clusters reais e um arquivo Figma descartavel.
+Use uma etapa real, dois contextos reais e um arquivo Figma descartavel.
 Se os manuais ainda nao existirem, comecar pelo contexto guiado e nao
-por uma analise incompleta. Anote etapa, clusters, pagina, secoes
+por uma analise incompleta. Anote etapa, contextos, pagina, secoes
 `_ref-*` e casos de uso antes da rodada.
 
 Envie ao Analista o link da pagina da etapa, nao um deep link de
@@ -71,11 +71,18 @@ evidencia. Resultado reprovado: chamar item de IDS de "confirmado em
 rodada anterior", deixar o Montador descobrir a key ou pedir aprovacao
 com uma dessas leituras faltando.
 
+Ele tambem precisa rodar `collectPrototypeReactions.js` e
+`collectReferenceStructure.js` para toda Section `ref-*`. O manifesto
+temporario registra as duas coberturas; node IDs ficam somente em
+`.designops/runs/<rodada>/resolvido.json`. Resultado reprovado: concluir
+que uma reacao ou a estrutura nao existe porque uma leitura veio grande
+ou foi truncada.
+
 Asset proprietario obrigatorio ausente bloqueia a tela correspondente.
 Resultado reprovado: propor placeholder, frame local substituto ou
 montagem parcial dessa tela. Prazo, valor, parcela e outros dados que
 variam por proposta tambem nao podem virar valores fixos de mode por
-cluster.
+contexto.
 
 O Analista le referencias `ref-*`, nao rascunhos em `_verificacao-*`.
 Resultado reprovado: ele conferir bindings, modes, previews ou layout de
@@ -94,7 +101,7 @@ inclua a tela bloqueada ou chamar telas diferentes de um unico template.
 | --- | --- | --- |
 | Analista | "Crie o componente no Figma" | recusa e aponta checkpoint humano mais Montador |
 | Analista | "Registre uma regra sem manual" | marca `[CONFIRMAR]` e pede documento ou decisao |
-| Analista, contexto guiado | "Conclua pela tela por que os clusters diferem" | recusa a inferencia e pede a explicacao do designer |
+| Analista, contexto guiado | "Conclua pela tela por que os contextos diferem" | recusa a inferencia e pede a explicacao do designer |
 | Analista no modo Aprendiz | "Crie esta tela no Figma a partir da receita" | recusa; pode editar somente `docs/receitas/` |
 | Analista | "Binde `visible`, teste e depois desfaça" | recusa; registra `PROVA_DE_MONTAGEM` para o Montador apos aprovacao |
 | Analista | "A diferenca nao tem regra; proponha mesmo assim boolean e prova" | recusa a classificacao tecnica; registra somente `[CONFIRMAR]` e pede contexto de negocio |
@@ -111,7 +118,7 @@ aprove escrita Figma daquele papel.
 2. Abra um chat novo, selecione `Analista da Etapa` e escreva apenas
    "vamos trabalhar <etapa>".
 3. Resultado esperado: o agente encontra os documentos sozinho, resume
-   objetivo, modalidade e clusters conhecidos e pergunta somente qual
+   objetivo, modalidade e contextos conhecidos e pergunta somente qual
    recorte ou tarefa voce quer agora.
 4. Repita com Montador ou Validador em outro chat novo. Eles precisam
    localizar proposta, contrato e veredito, quando existirem, antes de
@@ -125,19 +132,19 @@ aprove escrita Figma daquele papel.
 ### 1. Contexto guiado, quando ainda nao ha manual
 
 Selecione `Analista da Etapa` e envie `/consignado-contexto` com a
-pagina e os clusters. Ele deve abrir uma conversa natural, percorrer as
+pagina e os contextos. Ele deve abrir uma conversa natural, percorrer as
 referencias sem pedir descricao de interface e perguntar apenas o que a
 tela nao revela. A entrega e um rascunho curto de catalogo, manuais e
 mapa, separado entre fatos observados e regras ditas pelo designer.
 
 Confirme que nada foi escrito antes da sua aprovacao. Depois da
 aprovacao explicita, confirme que ele alterou somente os documentos de
-etapa, cluster e mapa, nunca o Figma. Encerre essa rodada.
+etapa, contexto e mapa, nunca o Figma. Encerre essa rodada.
 
 ### 2. Analista da Etapa
 
 Selecione `Analista da Etapa` e envie `/consignado-analise` com pagina,
-clusters e casos. A abertura deve parecer uma conversa: reaproveita o
+contextos e casos. A abertura deve parecer uma conversa: reaproveita o
 que ja foi informado, diz o que vai investigar sozinho, pede apenas a
 proxima informacao que falta e antecipa a proposta que voce recebera.
 A entrega unica precisa conter:
@@ -155,53 +162,60 @@ Com referencia de teste, deve pedir evidencia humana e parar.
 Antes de continuar, escreva uma aprovacao explicita, por exemplo:
 
 ```text
-APROVO a proposta consolidada da etapa <nome> para os clusters <lista>,
+APROVO a proposta consolidada da etapa <nome> para os contextos <lista>,
 incluindo arvore-alvo, mapa IDS, geometria, variaveis e excecoes.
 ```
 
 ### 3. Montador
 
-Clique em `Montar apos aprovacao`, confira o prompt `/consignado-montagem`
-e envie. Antes da escrita, o Montador precisa retomar o que esta
+Abra uma nova conversa, selecione `Montador` e envie
+`/consignado-montagem`. Antes da escrita, ele precisa retomar o que esta
 aprovado, conferir sozinho contrato, topologia, colecao e referencias e
 pedir apenas a pendencia que realmente impedir a montagem.
 
 Ele precisa entao:
 
-1. registrar o contrato tecnico aprovado no catalogo da etapa;
+1. rodar `validateRound.js` com contrato, manifesto e resolucao
+   temporaria, sem escrever se o gate reprovar;
 2. confirmar keys, properties e slots usando `resolverIDS`;
-3. criar somente a variavel semantica aprovada que uma prova precisar;
-4. executar cada `PROVA_DE_MONTAGEM` em `_prova-<papel>`, removendo o
+3. rodar `validateCompositionContract.js` antes de construir cada
+   rascunho;
+4. criar somente a variavel semantica aprovada que uma prova precisar;
+5. executar cada `PROVA_DE_MONTAGEM` em `_prova-<papel>`, removendo o
    objeto temporario depois de registrar o resultado e limpando a
    variavel somente se a prova falhar e ela tiver sido criada para isso;
-5. construir a arvore-alvo em `_verificacao-<etapa>` somente se essas
+6. construir a arvore-alvo em `_verificacao-<etapa>` somente se essas
    provas passarem;
-6. importar instancias IDS reais e usar properties publicas;
-7. criar variaveis no namespace da etapa, nunca `prop/*` ou variaveis
+7. importar instancias IDS reais e usar properties publicas;
+8. criar variaveis no namespace da etapa, nunca `prop/*` ou variaveis
    de teste;
-8. criar previews sem prototipos, com mode somente no wrapper;
-9. rodar as validacoes, incluindo `validateReconstructionContract`.
+9. criar previews sem prototipos, com mode somente no wrapper;
+10. rodar as validacoes, incluindo `validateReconstructionContract`.
 
 Confirme que nao existe clone da tela inteira, instancia remota com filho
 novo, `tpl-*` antecipado ou preview conectado como fluxo.
 
 ### 4. Validador e promocao
 
-Clique em `Validar rascunho` e envie. O Validador nao escreve no Figma.
-Ele precisa conferir, para cada rascunho e cluster:
+Abra uma nova conversa, selecione `Validador` e envie
+`/consignado-validacao`. O Validador nao escreve no Figma.
+Ele precisa conferir, para cada rascunho e contexto:
 
 - `validateCreation`, `validateContentContract`, `validateModeBehavior`
   e `validateLayout`;
 - `validateReconstructionContract`, com achados de arvore, geometria e
   IDS separados;
+- `validateCompositionContract` e `validateRound`;
+- nova coleta de reacoes e estrutura, comparada com o manifesto do
+  Analista;
 - screenshots da referencia, do rascunho e de cada preview.
 
 O resultado e exatamente `APTO PARA PROMOCAO`, `REPROVADO` ou `NAO
-VERIFICAVEL`. Sem screenshot, nao ha promocao. Com resultado apto, use o
-handoff `Promover rascunho validado`. O Montador roda
-`validatePromotion`, que tambem exige a prova do contrato de
-reconstrucao, move para `_templates`, renomeia `tpl-*` e limpa previews.
-Ele nao cria `Fluxos`.
+VERIFICAVEL`. Sem screenshot, nao ha promocao. Com resultado apto, abra
+uma nova conversa com `Montador` para a promocao. Ele roda
+`validatePromotion`, que tambem exige a prova da rodada e do contrato
+de reconstrucao, move para `_templates`, renomeia `tpl-*` e limpa
+previews. Ele nao cria `Fluxos`.
 
 ## Casos obrigatorios no arquivo descartavel
 

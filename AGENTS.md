@@ -1,214 +1,133 @@
-# Regras sempre ativas — DesignOps consignado
+# Regras sempre ativas - DesignOps consignado
 
 Este e o documento canonico de regras deste repositorio. Vale para
-qualquer agente, em qualquer ferramenta (Codex, Copilot, Claude Code).
-Se outra instrucao contradisser esta, esta vence.
+qualquer agente e ferramenta. Se outra instrucao contradisser esta,
+esta vence.
 
 Comece por `COMECE-AQUI.md` se voce nao conhece o projeto.
 
 ## O que e este projeto
 
-Uma biblioteca Figma de templates de telas do credito consignado
-(orgaos publicos), que se adapta por convenio, mantida com ajuda de
-agentes. Consolida telas hoje espalhadas em 7+ arquivos.
-
-E uma ferramenta de design para design: DesignOps interno. O produto
-final sao bibliotecas, templates e variaveis no Figma, consumidos por
-designers.
+Uma biblioteca Figma de templates de telas do credito consignado para
+orgaos publicos, mantida com ajuda de agentes. E uma ferramenta interna
+de DesignOps: o produto final sao bibliotecas, templates e variaveis
+consumidos por designers.
 
 FORA DE ESCOPO: geracao de codigo de producao, handoff para
-desenvolvimento, Code Connect, export para devs. Nao sugira nem derive
-para essas frentes; se o usuario pedir, confirme que e uma mudanca
-consciente de escopo antes.
+desenvolvimento, Code Connect e export para devs.
 
-## Onde este agente esta rodando (leia antes de planejar)
+## Limite do ambiente
 
-O trabalho deste projeto se divide em dois tipos, e nem todo ambiente
-faz os dois.
+Trabalho de Figma exige MCP conectado. Sem `use_figma` e `get_metadata`,
+o agente nao compara telas, monta templates nem declara uma validacao
+Figma como executada. Ele pode executar somente trabalho de texto.
 
-**Trabalho de Figma** (comparar telas, montar template, validar):
-exige o MCP do Figma conectado. Se voce nao tem as ferramentas
-`use_figma` / `get_metadata` disponiveis, voce NAO consegue fazer este
-tipo de trabalho. Nao simule, nao descreva o que faria como se tivesse
-feito, nao invente node ID. Diga que o ambiente nao tem Figma e ofereca
-o trabalho de texto.
+## Modelo canonico
 
-**Trabalho de texto** (escrever manual de convenio, doc de etapa, mapa
-de fluxo, revisar doutrina, mexer nas skills e nos agentes): funciona
-em qualquer ambiente, sem Figma.
+- As etapas canonicas sao `consentimento`, `simular-e-revisar` e
+  `formalizacao`. Etapa e capacidade reutilizavel, definida uma vez em
+  `docs/etapas/<etapa>.md`.
+- Uma composicao adicional ou externa pode existir dentro de
+  Formalizacao quando o contrato aprovado a exigir. Ela nao cria etapa
+  independente sem duas ocorrencias reais em etapas distintas e nova
+  aprovacao humana.
+- O molde do Manual do Credito Consignado vive em
+  `docs/manual-credito-consignado_template.md`. Em uma rodada concreta,
+  o manual global registra regras globais; cada modalidade tem seu manual
+  estrutural em `docs/modalidades/<modalidade>.md`, cada etapa tem seu
+  catalogo em `docs/etapas/<etapa>.md`, e o mapa junta essas camadas em
+  `docs/mapas/<modalidade>.md`.
+- Modalidade muda estrutura: cada modalidade possui templates e uma
+  collection de conteudo proprios. Modalidade nunca e mode.
+- Contexto e o identificador generico do mode. O mapa registra a
+  presenca de etapas por contexto; ausencia nunca vira boolean de
+  variavel.
+- Cada contexto possui um `contexto-id` estavel e um manual em
+  `docs/contextos/<contexto-id>.md`. O manual registra rotulo atual,
+  origem, modalidades ativas e regras locais por etapa. O rotulo pode
+  mudar sem alterar o identificador.
+- Referencias cruas e mapas podem carregar `contexto-id`. Asset
+  publicado, componente local, variavel e caminho de variavel nao
+  carregam rotulo nem identificador de contexto.
+- Regra ausente e `[CONFIRMAR]`; nunca inferir regra a partir da tela.
+- Contratos logicos de tela e jornada vivem em `docs/contratos/`. Node
+  IDs atuais vivem somente em `.designops/runs/<rodada>/resolvido.json`.
 
-No Codex em nuvem so o segundo tipo funciona: o container nao tem o MCP
-do Figma e a internet fica desligada apos a configuracao.
+## Taxonomia Figma
 
-## Divisao de trabalho
+| Objeto | Convencao |
+| --- | --- |
+| Template publicado | `<modalidade>/<etapa>/tpl-<tela>` |
+| Rascunho | `_rascunho-<modalidade>-<etapa>-<tela>` |
+| Referencia crua | `ref-<modalidade>-<tela>-<contexto-id>` |
+| Componente local interno | `_componentes-locais/<dominio>/<nome>` |
+| Collection de conteudo | `Conteudo - <Modalidade>` |
+| Variavel de conteudo | `<etapa>/<tela>/<papel>` |
 
-- O DESIGNER trabalha uma ETAPA por vez. Na pagina da etapa, constroi
-  referencias cruas em uma secao por cluster e liga todas as telas de
-  cada caso de uso por prototipo.
-- O ANALISTA DA ETAPA tem dois modos explicitos. Em
-  `/consignado-contexto`, conduz a conversa inicial e registra manuais
-  somente depois da aprovacao humana do texto. Em
-  `/consignado-analise`, le a pagina completa, inventaria, compara,
-  generaliza e classifica em uma unica proposta. Ele tambem propoe a
-  arvore-alvo, o mapa IDS e o contrato geometrico. Essa analise e
-  somente leitura.
-- O designer APROVA a proposta consolidada. Checkpoint obrigatorio,
-  nunca pulado.
-- O agente MONTADOR cria variaveis, bindings e rascunhos somente na
-  pagina temporaria `_verificacao-<etapa>`. Os previews tambem vivem
-  ali, sem prototipo. A pagina da etapa recebe apenas referencias e,
-  depois da aprovacao, `tpl-*`. `Fluxos` nao faz parte da montagem
-  padrao. Ele so e montado por pedido explicito, apos os templates
-  envolvidos estarem aprovados.
-- O agente VALIDADOR roda em todo rascunho: prova arvore-alvo,
-  geometria, IDS, conteudo, modes, layout e revisao visual, mas nao
-  corrige nem promove.
-- O APRENDIZ e um comando explicito do Analista. Ele observa uma tela
-  humana e pode editar somente `docs/receitas/`.
+`tpl-` e conquistado: somente COMPONENT ou COMPONENT_SET, com binding
+real, carimbo e veredito favoravel do Validador. Secoes com `_` sao
+internas e nao publicadas. Referencia crua nao e componente.
 
-### Piloto da Squad - Fase 0
+## Componentes e variaveis
 
-O agente `operador` e um piloto separado do ciclo acima. Ele so coordena
-leitura preparatoria de duas ou tres etapas e chama `leitor-de-etapa` em
-paralelo. Nesta fase, nenhum dos dois usa Figma, altera documentos
-oficiais ou chama Analista, Montador ou Validador. A unica escrita do
-Operador e o estado temporario em `.designops/runs/`, ignorado pelo Git.
-O metodo e os criterios do piloto estao em `docs/operacao-squad.md` e
-`docs/piloto-squad.md`.
+- IDS e fonte unica de componentes sempre que cobrir a composicao.
+- Um componente local so pode ser criado quando o contrato aprovado
+  comprovar reutilizacao da mesma composicao em pelo menos duas telas
+  ou casos de uso. Sem essa evidencia, a composicao fica como
+  `local-layout` no template.
+- Uma Section de jornada usa uma unica collection de conteudo da
+  modalidade. Collections estruturais do IDS podem coexistir.
+- O mode de contexto e aplicado uma unica vez na Section. Templates e
+  descendentes herdam o mode e nao podem fixa-lo explicitamente.
 
-Definicao de cada um em `.github/agents/`. O metodo detalhado esta nas
-skills em `.github/skills/`.
+## Squad e checkpoints humanos
 
-### Limite de papel e conversa compartilhada
+- O Operador coordena leituras paralelas e grava somente estado
+  temporario em `.designops/runs/`. Ele nao escreve no Figma nem em
+  documentos oficiais.
+- O Analista le referencias, reacoes e documentos, e consolida manual
+  de contexto, mapa, contrato de tela, mapa IDS, plano de variaveis e
+  proposta de componentes locais. Em `/consignado-contexto`, so grava
+  documentos apos aprovacao humana explicita do texto.
+- O contrato consolidado exige aprovacao humana antes de o Montador
+  criar componentes locais ou templates.
+- O Montador escreve em serie: primeiro componentes locais aprovados,
+  depois templates. Rascunhos e previews ficam em
+  `_verificacao-<etapa>`; clone nao inicia montagem.
+- O Validador audita sem corrigir arvore, geometria, IDS, conteudo,
+  modes, comportamento e revisao visual. Promocao so ocorre depois de
+  veredito favoravel.
+- O Aprendiz e comando explicito do Analista e escreve somente em
+  `docs/receitas/`.
+- A skill `figma-referencias` prepara evidencia apenas por pedido
+  explicito. Ela nao participa da montagem nem cria asset publicavel.
 
-Trocar de agente no Copilot nao limpa o historico nem concede as
-responsabilidades do agente anterior ou seguinte. Chat novo tambem nao
-preserva contexto de negocio: todo agente recupera catalogo, mapa e
-manuais antes de agir, seguindo `docs/contrato-papeis.md`. Ele procura o
-que ja existe sozinho e pergunta somente o que ainda falta. Tarefa fora
-do papel para, sem tentativa parcial, mas a explicacao continua natural
-para o designer.
-O Analista usa Figma somente para leitura. O MCP atual mistura leitura
-e escrita em `use_figma`, portanto `Ask` e a recusa semantica de
-scripts mutadores sao obrigatorios. Em `/consignado-contexto`, sua unica
-escrita adicional permitida e nos documentos oficiais aprovados pelo
-designer. O comando de Aprendiz nao muda essa regra: sua unica escrita
-permitida e em `docs/receitas/`. Em `/consignado-analise`, ele pode
-registrar somente o manifesto temporario da rodada em
-`.designops/runs/<id>/analise.json`, ignorado pelo Git. Isso nao e
-documento de negocio nem autorizacao para editar Figma ou `docs/`.
+## Regras de execucao
 
-O Analista le somente referencias `ref-*` para fundamentar sua proposta.
-Ele pode listar a existencia de um rascunho em `_verificacao-<etapa>`,
-mas nao le bindings, modes, layout ou previews dele para declarar
-qualidade. Isso e auditoria exclusiva do Validador. Rascunho preexistente
-nunca vira evidencia de uma nova analise.
+- Viewport mobile padrao: `360 x 800`, salvo excecao aprovada.
+- O Analista usa Figma somente para leitura e usa apenas `ref-*` como
+  evidencia de nova analise. Rascunho nunca e evidencia analitica.
+- Toda escrita Figma via `use_figma` exige a skill `figma-plugin-api`.
+- Scripts em `scripts/` sao colados na Plugin API a partir da versao
+  atual do arquivo. Eles nao executam por caminho dentro do Figma.
+- Nenhuma tela e entregue sem validacao completa.
+- Skill orienta a sequencia; contratos e validadores decidem se uma
+  proposta, montagem ou promocao pode seguir.
 
-## Regras sempre ativas
+## Comunicacao
 
-### Conhecimento de negocio
-
-- Antes de construir ou validar um cluster, LEIA
-  `docs/clusters/<cluster>.md` (o manual do convenio): e la que estao as
-  REGRAS e o PORQUE de cada divergencia. Regra que nao esta escrita, o
-  agente nao conhece: nunca infira a razao de uma divergencia, pergunte
-  ou marque `[CONFIRMAR]`.
-
-- A unica fonte de conhecimento de negocio depois da captura e `docs/`:
-  catalogo da etapa, manual do cluster e mapa de fluxo. Se
-  `docs/clusters/<cluster>.md` nao existir, o manual NAO EXISTE:
-  `/consignado-analise` para e aponta `/consignado-contexto`. Nunca use
-  arquivos de exemplo, conversas anteriores ou telas semelhantes como
-  substitutos de uma regra documentada.
-
-- A excecao controlada e `/consignado-contexto`: nele, o Analista pode
-  ouvir uma explicacao do designer e mostrar um rascunho em conversa.
-  So apos aprovacao explicita do texto ele registra os documentos. Tela
-  e prototipo continuam sendo evidencia de fluxo, nunca origem de uma
-  regra. O Analista nao pode transformar uma diferenca visual em regra
-  durante essa captura.
-
-### Modelo
-
-- Clusters variam por VARIAVEIS (modes); modalidades variam por
-  ESTRUTURA (templates separados). Nao misturar. O modelo completo esta
-  em `docs/modelo-clusters.md` e e NORMATIVO.
-- Uma ETAPA representa uma capacidade reutilizavel do produto. Ela e
-  definida uma unica vez em `docs/etapas/<etapa>.md`. O cluster so
-  declara que a usa na jornada e documenta regras que justificam
-  especializacoes locais. Nunca duplicar a definicao da etapa em um
-  manual de cluster.
-- Especializacao e uma decisao documentada, nao uma camada solta no
-  Figma. Toda diferenca precisa ter mecanismo verificavel: variavel,
-  property, variant, mapa de fluxo ou template estrutural especializado.
-  Template especializado recebe nome funcional, nunca nome de cluster.
-- Composicao de fluxo (etapa existe ou nao num convenio) vive no mapa
-  de fluxo, nunca em variavel booleana.
-- IDS e fonte unica de componentes: nunca recriar o que existe la.
-- Referencia define aparencia e comportamento, nao a arvore interna que
-  o Montador precisa preservar. O Analista traduz a referencia em um
-  contrato tecnico aprovado: papeis, arvore-alvo, IDS, geometria,
-  conteudo e excecoes. Depois da aprovacao, Montador e Validador seguem
-  esse contrato de forma deterministica.
-- Cada tela da biblioteca recebe um nome curto e estavel, por exemplo
-  `resumo`, `detalhe` ou `confirmacao`. O nome do frame de
-  referencia e apenas evidencia, nunca a fonte desse nome. O Analista
-  usa metadados, reacoes, `get_design_context` e os documentos para
-  registrar o mapa entre cada frame e a tela da biblioteca antes de
-  propor variaveis ou template.
-- Taxonomia em `docs/estrutura-lib.md`: templates publicados como
-  `etapa/tpl-nome`; secoes internas com prefixo `_` (nao publicadas);
-  referencias cruas sem barra no nome. O prefixo `tpl-` e CONQUISTADO:
-  so depois de ser COMPONENT, ter binding e ter carimbo.
-
-### Execucao
-
-- **Viewport-base:** toda tela mobile nasce em `360 x 800`, conforme
-  `docs/viewport-base.md`. O Analista e o Montador aplicam esse formato
-  automaticamente; nao perguntam pelo tamanho quando o recorte ja for
-  mobile. Referencia humana maior ou menor continua sendo evidencia,
-  nunca excecao por si so. So desktop, tablet ou uma excecao explicitamente
-  declarada pelo designer abre uma decisao de viewport.
-- Figma: toda escrita via `use_figma` exige a skill `figma-plugin-api`
-  carregada antes.
-- Montagem tem tres estados obrigatorios: `ref-*` e fonte humana
-  intocavel; `_rascunho-*` construido a partir da arvore-alvo; so a
-  promocao aprovada pode criar `etapa/tpl-*`. Clone so e permitido para
-  asset visual explicitamente aprovado, nunca para iniciar a tela.
-- Rascunhos e previews nunca ficam na pagina da etapa nem em `Fluxos`.
-  Preview e prova temporaria, nao uma segunda versao da jornada. Depois
-  da promocao, o Montador remove os previews daquela rodada e preserva
-  a evidencia no relatorio de validacao.
-- Os scripts em `scripts/` NAO rodam pelo caminho. Nao ha `require` nem
-  acesso a disco dentro da Plugin API: leia o arquivo, cole o corpo da
-  funcao dentro do script do `use_figma` e chame no fim. Sempre a versao
-  atual do arquivo, nunca reescrita de memoria.
-- Nenhuma tela e entregue sem validacao (skill `consignado-validacao`).
-
-### Comunicacao
-
-- Portugues brasileiro, tom direto, sem jargao corporativo.
-- Nunca usar travessao (em dash) em textos gerados.
-- Relatorio sempre em duas partes: primeiro o resumo em linguagem de
-  negocio, depois o detalhe tecnico como apoio. O designer le a
-  primeira parte.
-- Incerteza vira `[VERIFICAR COM DESIGNER]` ou `[CONFIRMAR]`, nunca uma
-  conclusao mais forte do que a evidencia sustenta.
+- Portugues brasileiro, tom direto e sem travessao.
+- Relatorios: resumo de negocio primeiro, detalhe tecnico depois.
+- Incerteza vira `[VERIFICAR COM DESIGNER]` ou `[CONFIRMAR]`.
 
 ## Mapa do repositorio
 
 | Onde | O que e |
 | --- | --- |
-| `COMECE-AQUI.md` | Ponto de entrada. Ordem de instalacao e ciclo de trabalho |
-| `AGENTS.md` | Este arquivo. Regras sempre ativas |
-| `.github/agents/` | Definicao dos 3 agentes visiveis |
-| `.github/skills/` | Metodo detalhado que os agentes seguem |
-| `docs/` | Doutrina + moldes `_template.md` a preencher |
-| `scripts/` | Validacao de arvore, geometria, IDS, conteudo e layout |
-
-## Sincronizacao
-
-`.github/copilot-instructions.md` aponta para este arquivo, porque o
-Copilot carrega aquele caminho automaticamente. Mudou regra aqui, nao
-precisa mexer la — mas se voce ADICIONAR uma regra critica de
-seguranca, confira se aquele arquivo continua apontando para ca.
+| `COMECE-AQUI.md` | Entrada e ciclo de trabalho |
+| `AGENTS.md` | Regras sempre ativas |
+| `.github/agents/` | Papeis dos agentes |
+| `.github/skills/` | Metodo detalhado |
+| `docs/` | Doutrina e moldes neutros |
+| `docs/contratos/` | Schemas e moldes de contratos executaveis |
+| `scripts/` | Validacoes reutilizaveis |

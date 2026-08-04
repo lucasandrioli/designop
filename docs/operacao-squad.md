@@ -1,64 +1,25 @@
 # Operacao da Squad - Fase 0
 
-## Objetivo desta fase
+## Objetivo
 
-Provar que o designer pode iniciar uma rodada com varias etapas e receber
-uma resposta unica, sem alternar entre agentes. Nesta fase a squad apenas
-le os documentos existentes no repositorio.
+O Operador coordena leituras paralelas de duas ou tres etapas e entrega
+um resumo unico. Nesta fase a squad so le documentos ja existentes.
 
-Ela nao altera Figma, documentos oficiais, templates, variaveis ou
-prototipos.
+## Limites
 
-## Quem participa
+O Operador coordena leitores em paralelo e grava apenas o estado
+temporario em `.designops/runs/`. Nem Operador nem Leitor escrevem no
+Figma ou em documentos oficiais. Eles nao iniciam Analista, Montador ou
+Validador automaticamente.
 
-| Papel | Visivel para o designer | Faz nesta fase |
-| --- | --- | --- |
-| Operador | sim | cria a rodada, chama leitores, agrupa resultado e perguntas |
-| Leitor de etapa | nao | encontra catalogo, mapa, manuais e lacunas de uma etapa |
-| Analista, Montador e Validador | nao participam | permanecem para as fases ja existentes do metodo |
+## Fluxo
 
-## Inicio, meio e fim
+1. O designer informa as etapas ao Operador.
+2. O Operador abre a rodada e chama um Leitor por etapa.
+3. Cada Leitor recupera manual global, manual da modalidade, catalogo,
+   mapa e manuais de contexto aplicaveis.
+4. O Operador consolida disponibilidade, lacunas e proximo papel.
+5. A rodada termina em `concluida` ou `aguardando_designer`.
 
-1. O designer seleciona `operador` e informa duas ou tres etapas.
-2. O Operador registra a rodada em `.designops/runs/`, sem ler os
-   documentos das etapas por conta propria.
-3. O Operador chama um Leitor por etapa, em paralelo, antes de qualquer
-   classificacao.
-4. Os Leitores devolvem cartoes curtos, sem editar nada.
-5. O Operador consolida os cartoes em uma caixa de decisoes unica.
-6. A rodada termina em `concluida` ou `aguardando_designer`.
-
-O Operador nao inicia contexto ou analise automaticamente. A proxima fase
-sempre depende de um novo pedido do designer.
-
-O Operador mostra no fechamento quais Leitores devolveram cartao. Sem um
-Leitor concluido para cada etapa, a rodada nao esta concluida.
-
-## O que o designer precisa revisar
-
-Somente perguntas de negocio que impedem continuar. Exemplos:
-
-- qual cluster usa uma etapa ainda sem manual;
-- qual mapa vale para uma modalidade;
-- qual item marcado `[CONFIRMAR]` precisa ser definido antes da analise.
-
-O designer nao revisa a busca de arquivos nem precisa trocar de agente
-para receber cada resposta.
-
-Um `[CONFIRMAR]` nao bloqueia por si so. O Leitor separa bloqueios de
-pendencias nao bloqueantes. Um detalhe de handoff externo, uma jornada
-futura ou outro ponto que nao muda a tela interna nem a composicao do
-recorte atual fica registrado para depois e a etapa continua para analise.
-
-## Paralelismo e seguranca
-
-Leituras de etapas independentes podem acontecer em paralelo. Nenhum
-agente escreve no Figma nesta fase. O unico arquivo criado e o estado
-temporario da rodada, ignorado pelo Git.
-
-Um link Figma enviado nesta fase fica fora da rodada: nao e aberto nem
-gravado no estado. O designer o envia novamente ao Analista no inicio da
-analise da etapa.
-
-Nao existe operacao continua em segundo plano. Cada rodada comeca por um
-pedido explicito do designer e termina com um resumo.
+Um link Figma fica fora da Fase 0. O designer o fornece novamente ao
+Analista quando iniciar a analise.

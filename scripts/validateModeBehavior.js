@@ -4,10 +4,10 @@
  * Prova o COMPORTAMENTO de previews já construídos. Não valida a estrutura do
  * template nem descobre quais conteúdos devem variar: recebe apenas os
  * papéis já aprovados no contrato da etapa e compara o resultado efetivo do
- * preview com sua referência crua por cluster.
+ * preview com sua referência crua por contexto.
  *
  * Antes de chamar, cole também validateLayout e passe a função por opts. O
- * layout é avaliado no preview já resolvido no mode daquele cluster.
+ * layout é avaliado no preview já resolvido no mode daquele contexto.
  *
  * A única exceção de override é a renomeação direta da instância de preview:
  * `{ id: instance.id, overriddenFields: ['name'] }`. O repositório permite
@@ -18,7 +18,7 @@
  *
  * return await validateModeBehavior([
  *   {
- *     cluster: 'cluster-exemplo',
+ *     contexto: 'contexto-exemplo',
  *     wrapperId: '10:1',
  *     modeId: '10:0',
  *     instanceId: '10:2',
@@ -43,7 +43,7 @@
  * versionada, prefira nodeName único em cada preview e referência.
  *
  * @param {Array<{
- *   cluster: string,
+ *   contexto: string,
  *   wrapperId: string,
  *   modeId: string,
  *   instanceId: string,
@@ -63,14 +63,14 @@
  *   validateLayout?: (nodeId: string) => Promise<{passed: boolean}>
  * }} opts
  * @returns {Promise<{
- *   invalidPreviews: Array<{cluster?: string, reason: string}>,
+ *   invalidPreviews: Array<{contexto?: string, reason: string}>,
  *   previewResults: Array<object>,
  *   passed: boolean
  * }>}
  */
 async function validateModeBehavior(previews, opts = {}) {
   if (!Array.isArray(previews) || previews.length === 0) {
-    throw new Error('previews precisa conter ao menos uma prova por cluster')
+    throw new Error('previews precisa conter ao menos uma prova por contexto')
   }
   if (typeof opts.contentCollectionId !== 'string' || !opts.contentCollectionId) {
     throw new Error('opts.contentCollectionId é obrigatório')
@@ -122,9 +122,9 @@ async function validateModeBehavior(previews, opts = {}) {
   }
 
   for (const preview of previews) {
-    const cluster = preview?.cluster
+    const contexto = preview?.contexto
     const result = {
-      cluster: cluster ?? '',
+      contexto: contexto ?? '',
       wrapperMode: null,
       modeIssues: [],
       descendantModeIssues: [],
@@ -137,9 +137,9 @@ async function validateModeBehavior(previews, opts = {}) {
       passed: false,
     }
 
-    if (!cluster || !preview.wrapperId || !preview.modeId || !preview.instanceId || !preview.templateId ||
+    if (!contexto || !preview.wrapperId || !preview.modeId || !preview.instanceId || !preview.templateId ||
         !preview.referenceId || !preview.layoutRootId || !Array.isArray(preview.roles)) {
-      invalidPreviews.push({ cluster, reason: 'preview sem campos obrigatórios' })
+      invalidPreviews.push({ contexto, reason: 'preview sem campos obrigatórios' })
       previewResults.push(result)
       continue
     }
@@ -149,7 +149,7 @@ async function validateModeBehavior(previews, opts = {}) {
     const reference = await figma.getNodeByIdAsync(preview.referenceId)
     const layoutRoot = await figma.getNodeByIdAsync(preview.layoutRootId)
     if (!wrapper || !instance || !reference || !layoutRoot) {
-      invalidPreviews.push({ cluster, reason: 'wrapper, instância, referência ou raiz de layout não encontrada' })
+      invalidPreviews.push({ contexto, reason: 'wrapper, instância, referência ou raiz de layout não encontrada' })
       previewResults.push(result)
       continue
     }
@@ -170,7 +170,7 @@ async function validateModeBehavior(previews, opts = {}) {
         id: wrapper.id,
         expectedModeId: preview.modeId,
         actualModeId: result.wrapperMode,
-        reason: 'mode do cluster não está aplicado no wrapper de preview',
+        reason: 'mode do contexto não está aplicado no wrapper de preview',
       })
     }
     for (const candidate of wrapperNodes) {
@@ -263,7 +263,7 @@ async function validateModeBehavior(previews, opts = {}) {
           ...roleResult,
           previewValue: previewValue.value,
           referenceValue: referenceValue.value,
-          reason: 'conteúdo efetivo do preview diverge da referência do cluster',
+          reason: 'conteúdo efetivo do preview diverge da referência do contexto',
         })
       } else {
         result.roleResults.push({ ...roleResult, status: 'passed', value: previewValue.value })

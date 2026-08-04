@@ -37,7 +37,7 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
 6. REACTIONS: setReactionsAsync numa instancia de botao do IDS; extrair
    de volta e ler o rotulo interno.
 7. MODES: criar collection de teste com 2 modes; conferir limite de
-   modes do plano da org (5 clusters exigem 5+; Enterprise = 40).
+   modes do plano da org (5 contextos exigem 5+; Enterprise = 40).
 8. RECONSTRUCAO: em um frame descartavel, testar
    `validateReconstructionContract` com uma instancia IDS correta e
    depois com um componente destacado, uma ordem de filhos errada e uma
@@ -65,7 +65,7 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
     Montador, dispare `/consignado-montagem` e
     confirme que a primeira resposta retoma o que ja esta aprovado,
     explica o que ele vai conferir sozinho e pede somente a pendencia
-    real, sem escrita no Figma. No handoff de validacao, confira
+    real, sem escrita no Figma. Na conversa de validacao, confira
     `/consignado-validacao` e confirme que os links para scripts e
     Plugin API e Reconstrucao Figma foram carregados antes da validacao.
 14. RETOMADA: depois de registrar uma etapa, abra um chat novo e cite

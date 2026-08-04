@@ -1,214 +1,91 @@
-# Modelo de dados: clusters como modes
+# Modelo de dados: contextos como modes
 
-Arquitetura central da biblioteca de templates do consignado. Toda
-skill e agente do projeto segue este modelo.
+Esta e a doutrina normativa de variacao da biblioteca.
 
-## Estrutura
+## Eixos de variacao
 
-- A ETAPA organiza pagina, referencias, templates e mapa. Dentro de
-  uma collection dedicada a ela, o conteudo se organiza pela tela da
-  biblioteca, por exemplo `<tela>/<papel>`. Em collection compartilhada
-  por varias etapas, a etapa volta ao nome da variavel:
-  `<etapa>/<tela>/<papel>`.
-- A COLLECTION e uma decisao fisica de arquivo, registrada em
-  `docs/topologia-biblioteca.md` antes do Montador escrever no Figma:
-  pode ser uma collection unica, collections por etapa no mesmo
-  arquivo, ou uma collection local em cada arquivo de etapa.
-- Em qualquer topologia, CADA MODE E UM CLUSTER que realmente usa a
-  etapa. A ausencia da etapa nao cria
-  mode nem boolean: vive no mapa de fluxo.
-- Cada variavel e uma linha da tabela; cada celula e o valor daquele
-  cluster naquela etapa. A etapa e definida UMA vez, com templates-base
-  e bindings. Trocar o mode da instancia troca o conteudo do cluster.
-  Um template especializado so existe quando a estrutura nao cabe no
-  template-base.
-
-## Mapeamento dos tipos de variacao
-
-| Variacao entre clusters | Tipo | Binding |
+| Eixo | Mecanismo | Fonte de verdade |
 | --- | --- | --- |
-| Texto diferente | string | characters do TEXT |
-| Elemento aparece/some | boolean | visible do no |
-| Valor, limite, prazo | number | characters via formatacao, ou props numericas |
-| Componente aberto/fechado (variant) | string | variant property (TESTAR via API; fallback: boolean em secao expandida) |
-| Property de componente divergente | qualquer | BINDING NA PROPERTY: setProperties com VariableAlias (TEXT e BOOLEAN aceitam variavel direto) |
+| Modalidade | Templates separados e collection propria | Mapa da modalidade e Figma |
+| Contexto | Modes da collection de conteudo | Manual de contexto e Figma |
+| Composicao da jornada | Presenca e caminho no mapa | `docs/mapas/<modalidade>.md` |
+| Estado de UI | Properties ou variants | Contrato da tela |
+| Diferenca estrutural | Template funcional especializado | Contrato e mapa |
 
-## Regras
+Etapa e uma capacidade reutilizavel definida uma vez. Modalidade nunca
+e mode. Ausencia de etapa nunca vira boolean de variavel.
 
-- Modalidade (primeira concessao vs refinanciamento) NUNCA e mode:
-  e estrutura de template separada.
-- Texto identico em todos os clusters NAO vira variavel.
-- Nomes de variavel seguem a tela da biblioteca, depois o papel:
-  `<tela>/<papel>`. Quando varias etapas compartilham uma mesma
-  collection, use tambem o prefixo da etapa:
-  `<etapa>/<tela>/<papel>`. Nome de frame de referencia nunca
-  entra nessa convencao.
-- Nome de tela da biblioteca e curto, funcional e estavel. O Analista
-  o determina pelo mapa de reacoes, estrutura e `get_design_context`;
-  nao pelo nome livre que alguem deu ao frame.
-- Nomes de mode: nome funcional do cluster, sem repetir a etapa.
-- Todo texto bindado: fonte carregada antes do binding e textAutoResize
-  HEIGHT ou WIDTH_AND_HEIGHT.
-- Template-mestre nao pina mode de cluster. Durante a validacao, o
-  mode explicito fica somente no wrapper de preview da pagina
-  `_verificacao-<etapa>`. Depois da promocao, uma jornada montada em
-  `Fluxos` tambem pode pinar o mode no seu frame de topo. O template
-  nasce da arvore-alvo aprovada, nao de clone de referencia.
-- Validacao obrigatoria EM CADA MODE (validateLayout por mode via
-  setExplicitVariableModeForCollection): texto que cabe num cluster
-  pode estourar em outro.
+## Hierarquia documental
 
-## Contrato de conteudo e prova de comportamento
+Cada decisao de negocio deve aparecer em uma camada somente:
 
-Cada etapa aprovada declara em `docs/etapas/<etapa>.md` somente os
-papeis de conteudo que devem variar por cluster. Cada papel aponta para
-uma variavel da collection, seu tipo e seu mecanismo de binding. `text`
-exige variavel Figma `STRING`; `visible` exige `BOOLEAN`. Exemplo de
-papel: `titulo`, `descricao`, `cta` ou `mostrar-aviso`. O Validador nao
-deduz esses papeis observando a tela: se nao constarem no contrato, a
-ausencia e `[CONFIRMAR]`, nao um erro inventado.
+| Camada | Documento | Responsabilidade |
+| --- | --- | --- |
+| Produto | `docs/manual-credito-consignado.md` | regras que valem para todo credito consignado |
+| Modalidade | `docs/modalidades/<modalidade>.md` | estrutura, restricoes e eventos da modalidade |
+| Etapa | `docs/etapas/<etapa>.md` | capacidade reutilizavel, telas e contratos comuns |
+| Contexto | `docs/contextos/<contexto-id>.md` | excecoes e regras locais aprovadas |
+| Jornada | `docs/mapas/<modalidade>.md` | composicao concreta de etapas, telas e caminhos |
 
-A prova tem duas camadas independentes:
+O mapa referencia as quatro camadas anteriores. Ele nao duplica suas
+regras: apenas registra onde cada regra se aplica na jornada.
 
-1. **Contrato de conteudo:** `validateContentContract` verifica, papel
-   por papel, se o alvo declarado esta ligado a variavel declarada. Um
-   token de cor, tipografia ou espacamento vindo do IDS nunca satisfaz
-   essa prova.
-2. **Comportamento por mode:** `validateModeBehavior` recebe previews
-   ja construidos e a lista completa de papeis `{ id, type }` do
-   contrato.
-   Confirma o mode somente no wrapper, reprova o mesmo mode em qualquer
-   descendente, reprova override manual na instancia, exige todos e
-   somente os papeis aprovados, compara cada valor efetivo com a
-   referencia do cluster e chama `validateLayout` dentro do wrapper. A
-   estrutura do template continua sendo responsabilidade de
-   `validateCreation`.
+Os contratos logicos de tela e jornada ficam em `docs/contratos/`. Eles
+descrevem a estrutura verificavel sem repetir regra de negocio nem
+registrar IDs permanentes do Figma.
 
-O schema aprovado define os papeis; o mapa define quais clusters usam
-o template; as referencias cruas definem o resultado esperado. Nenhuma
-dessas tres verdades e substituida por booleano ou por inspecao visual.
+## Contextos
 
-## Limite de plano (checar no banco)
+Contexto e o identificador generico de um mode. Cada contexto recebe um
+`contexto-id` estavel, como `ctx-05`, e possui manual correspondente em
+`docs/contextos/<contexto-id>.md`.
 
-O limite de modes por collection depende do plano Figma da organizacao.
-Antes de dimensionar a biblioteca, confirme o tier e teste criar,
-publicar e consumir a quantidade real de modes necessaria. Uma chamada
-da Plugin API que cria modes sem erro nao prova que a UI, a publicacao e
-o consumo da biblioteca aceitarao a mesma quantidade.
+O manual e a unica fonte de regras locais. Ele pode registrar um rotulo
+de negocio mutavel, mas este rotulo nao entra em asset publicado,
+componente local, template, collection, variavel ou caminho de
+variavel. Referencias cruas e mapas usam o `contexto-id` para manter
+rastreabilidade mesmo que o rotulo mude.
 
-Se o limite nao comportar todos os clusters, use uma das topologias
-previstas em `docs/topologia-biblioteca.md` ou negocie o tier adequado.
+## Collections e variaveis
 
-## Os cinco eixos de variacao (normativos)
+Cada modalidade recebe uma collection de conteudo:
 
-1. CLUSTER: conteudo por orgao. Mecanismo: variaveis com modes.
-2. MODALIDADE: primeira concessao vs refinanciamento. Mecanismo:
-   templates estruturalmente separados. Nunca mode, nunca boolean.
-3. COMPOSICAO DE FLUXO: etapas que existem num cluster e nao noutro.
-   Mecanismo: todos os templates de etapa existem na lib; um MAPA DE
-   FLUXO POR CLUSTER (tabela markdown versionada em docs/, gerada pelo
-   Analista) define a
-   sequencia. Mode controla conteudo; mapa controla sequencia.
-4. ESTADO DE UI: variacao por acao do usuario dentro da tela (item
-   adicionado/removido, estado aguardando/concluido, item de resumo
-   aberto/fechado). Mecanismo: variants ou properties
-   do componente/template. NUNCA modes. Estado de UI em mode de
-   cluster e defeito de arquitetura.
-5. ESPECIALIZACAO ESTRUTURAL: diferenca de uma etapa que nao cabe em
-   conteudo, property, variant ou composicao. Mecanismo: template
-   especializado com nome funcional, registrado no catalogo da etapa e
-   selecionado no mapa de fluxo. Nunca nomear o template com o cluster.
+```text
+Conteudo - <Modalidade>
+```
 
-## Mapa de fluxo: colunas obrigatorias
+Dentro dela, todo caminho segue:
 
-etapa/tela | caso de uso | nivel de navegacao (1 = obrigatoria no
-fluxo; 2 = opcional, alcancavel do nivel 1) | gatilho | selecao por
-cluster (`nao`, `padrao` ou `especializacao:<id>`)
+```text
+<etapa>/<tela>/<papel>
+```
 
-## Logica condicional explicita
+O caminho nunca inclui modalidade, rotulo ou identificador de contexto.
+Uma Section de jornada aplica um mode de conteudo uma unica vez e seus
+templates descendentes herdam esse mode. Collections estruturais do IDS,
+como cor, espacamento e tipografia, podem coexistir nessa Section.
 
-Regras de estado que cruzam selecao e conteudo DEVEM ser escritas como
-tabela de decisao no repo antes da construcao. A tabela declara os
-estados, os papeis afetados e o resultado esperado. Textos de cada
-variant podem adicionalmente ser bindados em variaveis de cluster
-(cruzamento eixo 1 x eixo 4). Agentes nao inferem essas regras: elas
-vem da tabela da etapa.
+## Selecionar o mecanismo correto
 
-## Prototipo como fonte do mapa
+| Diferenca observada | Mecanismo |
+| --- | --- |
+| Texto ou visibilidade por contexto | Variavel de conteudo e mode |
+| Estado acionado pela pessoa usuaria | Property ou variant |
+| Etapa ou tela presente em um caminho | Mapa da jornada |
+| Estrutura reutilizavel em duas ou mais ocorrencias aprovadas | Componente local interno |
+| Estrutura de uma unica ocorrencia | `local-layout` no template |
+| Estrutura que difere entre modalidades | Template separado por modalidade |
 
-Quando as telas de referencia estao conectadas por prototipo na pagina
-da etapa, o mapa de fluxo e DERIVADO do grafo de navegacao pelo Analista,
-nao escrito a mao:
-- telas = nos; reactions NAVIGATE = arestas; flowStartingPoints
-  nomeados = casos de uso
-- caminho principal = cadeia a partir do starting point; tela com ida
-  e volta ao no de origem = desdobramento (nivel 2)
-- `setReactionsAsync` e `flowStartingPoints` sao os mecanismos usados
-  para leitura e escrita desse grafo. Confirme-os na bateria de fumaca
-  do ambiente antes da primeira montagem.
-O mapa versionado no repo continua sendo a documentacao oficial; o
-prototipo e a fonte de onde ele e gerado e contra a qual e conferido.
+IDS e a fonte unica para componentes existentes. Um componente local
+exige evidencia contratual aprovada de reutilizacao em pelo menos duas
+telas ou casos de uso antes de ser criado.
 
-## Governanca do mapa e da collection
+## Contrato de conteudo
 
-- O catalogo da etapa e a fonte unica da CAPACIDADE: casos de uso,
-  templates-base, secoes compartilhadas e especializacoes aprovadas.
-- O mapa de fluxo e a fonte unica de COMPOSICAO e SELECAO: quais
-  etapas existem, em que ordem, em quais clusters e se usam padrao ou
-  especializacao. Muda por PR no repo.
-- A collection resolvida pela topologia e a fonte unica de CONTEUDO (o
-  que cada tela mostra por cluster). Muda pela tabela de variaveis no
-  Figma.
-- Topologia fisica e pre-requisito do Montador, nao da analise. Com
-  `docs/topologia-biblioteca.md` em `[DECIDIR]`, o Analista entrega
-  proposta normalmente e o Montador para antes de
-  escrever.
-- NUNCA duplicar composicao como boolean de variavel (ex:
-  fluxo/tem-consentimento). Verdade duplicada diverge.
-- Populacao: o Analista gera inventario, grafo, pareamento, catalogo e
-  classificacao em uma unica proposta. O designer aprova antes de
-  qualquer escrita.
-- Onboarding de cluster novo: (1) jornada no manual, (2) coluna no
-  mapa, (3) mode na collection resolvida para cada etapa usada, (4)
-  referencias nas paginas dessas etapas. Nada de duplicar etapa para
-  dentro do cluster.
+Cada papel variavel do contrato declara variavel, tipo e alvo de
+binding. `text` exige STRING; `visible` exige BOOLEAN. Tokens
+estruturais do IDS nao satisfazem a prova de conteudo.
 
-## Prova do fluxo designer no centro
-
-O ciclo obrigatorio e: referencias cruas por cluster, comparacao,
-schema aprovado, montagem do template e equivalencia por mode. As
-referencias permanecem como contrato de validacao. A primeira execucao
-no ambiente do banco registra essa evidencia no runbook da rodada.
-
-## Listas com quantidade ou forma variavel por cluster
-
-- QUANTIDADE: slots + booleans. O template nasce com os slots do maior
-  caso atual; cada slot tem mostrar (boolean) e conteudo (strings) por
-  mode. O teto NAO e premissa: o Revisor alerta quando um convenio
-  ocupa o ultimo slot, e adicionar slot e operacao de rotina do
-  Montador (edicao de master, propaga a todos).
-- NATUREZA: secao polimorfica. Quando a mesma informacao aparece em
-  formas diferentes por convenio (lista num, stepper noutro), as
-  formas coexistem no template, cada uma com boolean de visibilidade
-  por mode. Exatamente uma forma visivel por mode (o Revisor valida
-  a exclusividade).
-- ORDEM: fixa entre convenios, por principio de consistencia de
-  produto (decisao do designer). Booleans nao reordenam; ordem
-  divergente seria VARIA_ESTRUTURA e exigiria justificativa no manual
-  do convenio.
-- Alem disso: divergencia mais profunda que quantidade+forma =
-  ESPECIALIZACAO ESTRUTURAL. Ela exige template funcional separado,
-  registro no catalogo da etapa e selecao explicita no mapa.
-
-## Doutrina de binding
-
-1. PROPERTY PRIMEIRO: se o componente expoe property (TEXT/BOOLEAN),
-   binde a variavel de cluster NA PROPERTY via setProperties +
-   createVariableAlias. E a API publica do componente: sobrevive a
-   refatoracao interna do IDS e respeita o contrato do design system.
-2. NO INTERNO como fallback: override em no interno (setBoundVariable
-   no texto) apenas quando o componente NAO expoe property para aquele
-   conteudo. Registrar no carimbo como binding de fallback, pois quebra
-   se o IDS refatorar a estrutura interna.
-3. setProperties aceita lote (10+ properties numa chamada): o Montador
-   dirige componentes densos em uma operacao.
+O Validador confere separadamente o contrato de conteudo, a heranca de
+mode, a ausencia de mode explicito em descendentes, a geometria e a
+equivalencia visual com a referencia do contexto.

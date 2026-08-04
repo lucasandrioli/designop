@@ -33,13 +33,42 @@ async function collectPrototypeReactions(pageId, sectionId) {
     (node) => 'reactions' in node && Array.isArray(node.reactions) && node.reactions.length > 0,
   );
 
-  const actionSummary = (action) => ({
-    type: action.type,
-    navigation: action.navigation ?? null,
-    destinationId: action.destinationId ?? null,
-    destination: action.destinationId ? nodesById.get(action.destinationId) ?? null : null,
-    transition: action.transition ?? null,
-  });
+  const nodeTarget = async (nodeId) => {
+    if (!nodeId) return null
+    const local = nodesById.get(nodeId)
+    if (local) return { ...local, scope: 'SECTION' }
+    const node = await figma.getNodeByIdAsync(nodeId)
+    return node
+      ? { id: node.id, name: node.name, path: null, scope: 'FORA_DA_SECTION' }
+      : { id: nodeId, name: null, path: null, scope: 'NAO_RESOLVIDO' }
+  }
+  const actionSummary = async (action) => {
+    const actionType = action.type ?? null
+    if (actionType === 'NODE' || action.destinationId) {
+      const nodeId = action.destinationId ?? null
+      return {
+        actionType,
+        navigation: action.navigation ?? null,
+        target: { kind: 'NODE', node: await nodeTarget(nodeId) },
+        transition: action.transition ?? null,
+      }
+    }
+    if (actionType === 'URL' || action.url) {
+      return {
+        actionType,
+        navigation: action.navigation ?? null,
+        target: { kind: 'URL', url: action.url ?? null },
+        transition: action.transition ?? null,
+      }
+    }
+    if (actionType === 'BACK') {
+      return { actionType, navigation: action.navigation ?? null, target: { kind: 'BACK' }, transition: action.transition ?? null }
+    }
+    if (actionType === 'CLOSE') {
+      return { actionType, navigation: action.navigation ?? null, target: { kind: 'CLOSE' }, transition: action.transition ?? null }
+    }
+    return { actionType, navigation: action.navigation ?? null, target: { kind: 'UNKNOWN' }, transition: action.transition ?? null }
+  }
 
   return {
     cobertura: {
@@ -48,13 +77,14 @@ async function collectPrototypeReactions(pageId, sectionId) {
       nodesInspecionados: allNodes.length,
       nodesComReacao: withReactions.length,
       coletor: 'scripts/collectPrototypeReactions.js',
+      status: 'COBERTA',
     },
-    reacoes: withReactions.map((node) => ({
+    reacoes: await Promise.all(withReactions.map(async (node) => ({
       origem: nodesById.get(node.id),
-      reactions: node.reactions.map((reaction) => ({
+      reactions: await Promise.all(node.reactions.map(async (reaction) => ({
         gatilho: reaction.trigger,
-        acoes: reaction.actions.map(actionSummary),
-      })),
-    })),
+        acoes: await Promise.all((reaction.actions ?? []).map(actionSummary)),
+      }))),
+    }))),
   };
 }

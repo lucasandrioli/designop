@@ -9,8 +9,8 @@ O designer cria a pagina da etapa, por exemplo `<Etapa>`, com duas
 coisas apenas:
 
 ```text
-_ref-<cluster-a>  referencias e prototipo do Cluster A
-_ref-<cluster-b>  referencias e prototipo do Cluster B
+_ref-<contexto-a>  referencias e prototipo do Contexto A
+_ref-<contexto-b>  referencias e prototipo do Contexto B
 _templates        vazia no inicio
 ```
 
@@ -24,7 +24,7 @@ externos daquela etapa.
 | --- | --- | --- | --- |
 | 1 | Analista da Etapa | inventaria, compara e propoe a parte compartilhada, especializacoes, arvore-alvo, IDS e geometria | nada novo |
 | 2 | Designer | aprova ou pede ajuste na proposta unica | nada novo |
-| 3 | Montador | registra o contrato aprovado, constroi a arvore-alvo e troca os modes para conferir os clusters | so a pagina `_verificacao-<etapa>` ganha rascunhos e previews |
+| 3 | Montador | registra o contrato aprovado, constroi a arvore-alvo e troca os modes para conferir os contextos | so a pagina `_verificacao-<etapa>` ganha rascunhos e previews |
 | 4 | Validador | prova contrato, geometria, IDS e resultado visivel contra as referencias | nada novo |
 | 5 | Montador | promove o que passou | o componente sai do rascunho e entra em `_templates`; previews da rodada sao removidos |
 
@@ -36,7 +36,7 @@ depois de uma tela humana. Ele nao cria objeto no Figma.
 | Onde | O que pode existir | O que nao pode existir |
 | --- | --- | --- |
 | `<Etapa>` | referencias cruas, prototipos de referencia, `_templates` aprovados | rascunhos, previews, screenshots de teste, fluxo duplicado |
-| `_verificacao-<etapa>` | `_rascunho-*` e previews por cluster, sem conexoes | referencia crua, template aprovado, jornada de apresentacao |
+| `_verificacao-<etapa>` | `_rascunho-*` e previews por contexto, sem conexoes | referencia crua, template aprovado, jornada de apresentacao |
 | `Fluxos` | jornada completa com instancias de `tpl-*` aprovados | rascunho, preview, referencia crua, evidencia externa |
 
 ## Quando usar Fluxos

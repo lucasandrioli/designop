@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Contrato logico de tela",
+  "type": "object",
+  "required": ["schemaVersion", "id", "modalidade", "etapa", "tela", "viewport", "prototype", "roles", "interacoes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "modalidade": { "type": "string", "minLength": 1 },
+    "etapa": { "type": "string", "minLength": 1 },
+    "tela": { "type": "string", "minLength": 1 },
+    "viewport": {
+      "type": "object",
+      "required": ["surface", "width", "height"],
+      "properties": {
+        "surface": { "type": "string", "minLength": 1 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "prototype": {
+      "type": "object",
+      "required": ["overflowDirection", "fixedChildren"],
+      "properties": {
+        "overflowDirection": { "enum": ["NONE", "HORIZONTAL", "VERTICAL", "HORIZONTAL_AND_VERTICAL"] },
+        "fixedChildren": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "fixedBottomTolerance": { "type": "number", "minimum": 0 }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "source"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "source": { "enum": ["IDS", "COMPONENTE_LOCAL", "LOCAL_LAYOUT", "TEXTO", "ASSET"] },
+          "parent": { "type": ["string", "null"] },
+          "order": { "type": "integer", "minimum": 0 },
+          "contentRole": { "type": ["string", "null"] },
+          "variable": { "type": ["string", "null"] },
+          "componentId": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "interacoes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "origem", "gatilho", "destino"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "origem": { "type": "string", "minLength": 1 },
+          "gatilho": { "enum": ["ON_CLICK", "AFTER_TIMEOUT"] },
+          "timeout": { "type": "number", "minimum": 0 },
+          "destino": {
+            "type": "object",
+            "required": ["tipo"],
+            "properties": {
+              "tipo": { "enum": ["NODE", "URL", "BACK", "CLOSE"] },
+              "tela": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        }
+      }
+    },
+    "componentesLocais": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "aprovado", "reutilizacoes"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "aprovado": { "type": "boolean" },
+          "reutilizacoes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["modalidade", "etapa", "tela", "casoUso"],
+              "properties": {
+                "modalidade": { "type": "string", "minLength": 1 },
+                "etapa": { "type": "string", "minLength": 1 },
+                "tela": { "type": "string", "minLength": 1 },
+                "casoUso": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

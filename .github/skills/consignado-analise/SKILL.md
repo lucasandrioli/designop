@@ -25,6 +25,11 @@ sem cobertura, estrutura ausente ou destino nao exposto impedem proposta
 para aprovacao. Varra tambem screenshots e evidencia IDS. Rascunhos nao
 contam como evidencia.
 
+Todo contrato de interacao deve nascer da saida do coletor: copie nomes,
+origens, destinos e raiz de validacao observados. A raiz escolhida deve
+conter a acao declarada. Nome vindo de memoria, de documento ou de plano
+nao substitui a evidencia Figma.
+
 Faca uma chamada por Section para evitar truncamento. Se a resposta for
 salva em arquivo temporario pelo cliente, leia o arquivo por trechos ou
 pesquise os pontos necessarios antes de seguir. Nunca conclua que uma

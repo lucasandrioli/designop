@@ -100,11 +100,24 @@ async function validatePromotion(candidateId, opts = {}) {
     return ids
   }
 
+  // Component property definitions vivem no set para componentes variantes.
+  // A leitura direta no filho variante causa erro na Plugin API.
+  const componentPropertyDefinitionsOf = (node) => {
+    if (node?.type === 'COMPONENT_SET') return node.componentPropertyDefinitions
+    if (node?.type === 'COMPONENT' && node.parent?.type !== 'COMPONENT_SET') {
+      return node.componentPropertyDefinitions
+    }
+    if (node?.type === 'COMPONENT' && node.parent?.type === 'COMPONENT_SET') {
+      return node.parent.componentPropertyDefinitions
+    }
+    return null
+  }
+
   const hasContentAlias = (node) => {
     const candidates = [
       node.boundVariables,
       node.componentProperties,
-      node.componentPropertyDefinitions,
+      componentPropertyDefinitionsOf(node),
     ]
     return candidates.some((value) =>
       [...aliasesIn(value)].some((id) => contentVariableIds.has(id)),

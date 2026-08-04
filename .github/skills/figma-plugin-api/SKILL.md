@@ -18,6 +18,10 @@ falha silenciosa.
 
 1. **Scripts falham atomicamente.** Se um script dá erro no meio, NADA
    foi aplicado. Não re-tente às cegas: corrija a causa.
+1a. **Confirme o arquivo antes de diagnosticar permissao.** Antes de
+   classificar uma mensagem de acesso como problema de permissao, compare a
+   `fileKey` usada com a chave completa da URL registrada na rodada. Uma
+   chave incorreta pode devolver erro de acesso ou de arquivo inexistente.
 2. **O contexto de página reseta a cada chamada.** Todo script começa
    na primeira página do arquivo. Use
    `await figma.setCurrentPageAsync(page)` no máximo UMA vez por
@@ -154,6 +158,13 @@ falha silenciosa.
     scope certo, reporte "fora da escala" e ofereça o token mais próximo
     dentro do scope válido — como sugestão a confirmar, nunca como troca
     automática. (Regra comprovada em teste interno.)
+19c. **`figma.teamLibrary` enumera somente collections e variaveis.**
+    `getAvailableLibraryComponentsAsync` nao existe. Para componentes,
+    descubra uma key por instancia observada ou por
+    `search_design_system` restrito a uma `libraryKey` confirmada. Para
+    tokens remotos, use `teamLibrary` conforme 19a. Nunca misture os dois
+    caminhos nem conclua que nao ha componentes porque a TeamLibrary nao os
+    lista.
 
 ## Component properties
 
@@ -197,15 +208,37 @@ falha silenciosa.
     (`setExplicitVariableModeForCollection`) que resolva `visible` como
     `true`, edite, depois `clearExplicitVariableModeForCollection`.
     (Regra comprovada em teste interno.)
+25a. **Instancia e opaca para composicao.** Nunca use `appendChild`,
+    `insertChild` ou reparent para colocar qualquer no dentro de uma
+    `INSTANCE`, remota ou local. Use apenas `setProperties` e properties
+    publicas. Conteudo adicional fica como irmao da instancia dentro de um
+    frame local. Se a property ou slot publico nao existir, interrompa como
+    `SEM_EQUIVALENTE` ou leve a necessidade de componente local ao contrato.
+25b. **Leia properties no no certo.**
+    `componentPropertyDefinitions` e valido no `COMPONENT_SET` ou em um
+    `COMPONENT` que nao seja variante. Se um COMPONENT tiver pai
+    `COMPONENT_SET`, ele e variante: leia as definitions no pai. Em uma
+    instancia consumida, leia `instance.componentProperties` para saber as
+    properties aplicaveis. Acesso direto na variante falha a chamada inteira.
 
 ## Componentes e biblioteca
 
-26. **Consumo de componente publicado:**
-    `await figma.importComponentByKeyAsync(key)` /
-    `importComponentSetByKeyAsync(key)`. Confira `remote === true`.
-27. **Guarde os component keys** num inventário. O índice do
-    `search_design_system` demora minutos para popular após publish e
-    não é confiável logo em seguida.
+26. **Consumo de componente publicado exige preflight.** A busca retorna
+    `assetType`; use `importComponentByKeyAsync(key)` somente para
+    `COMPONENT` e `importComponentSetByKeyAsync(key)` somente para
+    `COMPONENT_SET`. Antes de montar, cole e execute
+    `scripts/inspectRemoteComponent.js` com a key, assetType e libraryKey
+    resolvidos. A `libraryKey` e obrigatoria, mesmo em arquivo com varias
+    bibliotecas: ela prova de onde veio a escolha. O script importa, confere
+    `remote === true` e devolve as
+    properties publicas sem alterar o canvas. Se a importacao falhar, a key
+    esta indisponivel ou stale: registre `SEM_EQUIVALENTE`, nao use fallback
+    silencioso.
+27. **Keys sao evidencias de rodada, nao constantes do motor.** Guarde
+    component keys resolvidas em `.designops/runs/<rodada>/`, junto da
+    biblioteca e do `assetType`. Resolva de novo em arquivo novo. O indice do
+    `search_design_system` pode atrasar apos publish; uma key nunca deve ser
+    chutada ou reaproveitada sem preflight.
 27a. **Descoberta de biblioteca vem da instancia observada.** Recupere
     `mainComponent.key` de uma instancia remota da referencia e pesquise
     uma vez pelo nome exato do componente para obter sua `libraryKey`.
@@ -259,6 +292,14 @@ falha silenciosa.
                   resetVideoPosition: false }],
     }])
     ```
+36a. **Rolagem e rodape fixo pertencem ao frame raiz.** Os unicos valores
+    validos de `overflowDirection` sao `NONE`, `HORIZONTAL`, `VERTICAL` e
+    `BOTH`. Para um rodape fixo, anexe primeiro todo conteudo rolavel, depois
+    os filhos fixos como ULTIMOS filhos da raiz, e so entao defina
+    `root.numberOfFixedChildren = quantidade`. Nao existe booleano
+    `fixedWhenScrolling` no filho. Antes de concluir, confira overflow,
+    quantidade, ordem dos ultimos filhos e limite inferior por
+    `absoluteBoundingBox`.
 37. **`page.flowStartingPoints`** define os pontos de partida nomeados.
     Cada um é um caso de uso.
 

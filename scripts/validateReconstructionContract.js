@@ -68,7 +68,7 @@
  *     tokens?: Array<{field: string, variable?: string, literal?: unknown, approvedLiteral?: boolean}>
  *   }>,
  *   prototype?: {
- *     overflowDirection?: 'NONE'|'HORIZONTAL'|'VERTICAL'|'HORIZONTAL_AND_VERTICAL',
+ *     overflowDirection?: 'NONE'|'HORIZONTAL'|'VERTICAL'|'BOTH',
  *     fixedChildren?: string[],
  *     fixedBottomTolerance?: number,
  *     fixedNoOverlap?: boolean

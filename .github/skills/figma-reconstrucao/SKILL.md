@@ -110,6 +110,11 @@ um texto dentro" se o componente nao expuser slot ou property. Classifique:
   composicao ainda nao comprovada;
 - `SEM_EQUIVALENTE`: nenhum componente ou token IDS atende ao papel.
 
+Antes de classificar um componente como `EXATO`, execute
+`scripts/inspectRemoteComponent.js` com a key, `assetType` e `libraryKey`
+da rodada. Os tres campos sao obrigatorios. A prova confirma a importacao no arquivo atual e as properties
+publicas sem depender de key antiga ou leitura direta de variante.
+
 `SEM_EQUIVALENTE` vira uma excecao local proposta, nunca um componente
 inventado. Token com o mesmo numero em escopo diferente nao e exato.
 

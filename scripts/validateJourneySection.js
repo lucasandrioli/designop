@@ -77,13 +77,25 @@ async function validateJourneySection(sectionId, opts = {}) {
     }
     for (const child of Object.values(value)) collectAliases(child, ids)
   }
+  // A Plugin API so permite ler definitions no COMPONENT_SET ou em um
+  // COMPONENT que nao seja variante. Ler no filho de um set lancaria erro.
+  const componentPropertyDefinitionsOf = (node) => {
+    if (node?.type === 'COMPONENT_SET') return node.componentPropertyDefinitions
+    if (node?.type === 'COMPONENT' && node.parent?.type !== 'COMPONENT_SET') {
+      return node.componentPropertyDefinitions
+    }
+    if (node?.type === 'COMPONENT' && node.parent?.type === 'COMPONENT_SET') {
+      return node.parent.componentPropertyDefinitions
+    }
+    return null
+  }
   const variableCollectionById = new Map()
   const resolveAliases = async (nodesToInspect) => {
     const aliases = new Set()
     for (const node of nodesToInspect.filter(Boolean)) {
       collectAliases(node.boundVariables, aliases)
       collectAliases(node.componentProperties, aliases)
-      collectAliases(node.componentPropertyDefinitions, aliases)
+      collectAliases(componentPropertyDefinitionsOf(node), aliases)
     }
     for (const variableId of aliases) {
       if (variableCollectionById.has(variableId)) continue

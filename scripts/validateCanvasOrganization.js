@@ -50,7 +50,15 @@ async function validateCanvasOrganization(pageId, contract = {}) {
     }
   }
   if (contract.checkLocalComponentOverlap === true) {
-    const components = page.children.filter((node) => node.type === 'COMPONENT')
+    const componentAreas = page.children.filter(
+      (node) => node.type === 'SECTION' && node.name.startsWith('_componentes-locais'),
+    )
+    const components = [
+      ...page.children.filter((node) => node.type === 'COMPONENT'),
+      ...componentAreas.flatMap((area) => area.findAll((node) =>
+        node.type === 'COMPONENT' && node.parent?.type !== 'COMPONENT_SET',
+      )),
+    ]
     for (let i = 0; i < components.length; i += 1) {
       for (let j = i + 1; j < components.length; j += 1) {
         const a = components[i].absoluteBoundingBox

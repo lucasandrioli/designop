@@ -100,6 +100,20 @@ async function validateContentContract(templateId, contract) {
     return result
   }
 
+  // Variantes nao expõem definitions no filho COMPONENT. A API exige que a
+  // leitura ocorra no COMPONENT_SET pai; componentes independentes continuam
+  // expondo as definitions no proprio no.
+  const componentPropertyDefinitionsOf = (node) => {
+    if (node?.type === 'COMPONENT_SET') return node.componentPropertyDefinitions
+    if (node?.type === 'COMPONENT' && node.parent?.type !== 'COMPONENT_SET') {
+      return node.componentPropertyDefinitions
+    }
+    if (node?.type === 'COMPONENT' && node.parent?.type === 'COMPONENT_SET') {
+      return node.parent.componentPropertyDefinitions
+    }
+    return null
+  }
+
   const resolveTarget = async (target) => {
     if (!target || typeof target !== 'object') return { error: 'binding.target ausente' }
     if (target.scope === 'template') {
@@ -136,8 +150,9 @@ async function validateContentContract(templateId, contract) {
     }
     const entries = []
     if (node.componentProperties) entries.push(...Object.entries(node.componentProperties))
-    if (node.componentPropertyDefinitions) {
-      entries.push(...Object.entries(node.componentPropertyDefinitions))
+    const definitions = componentPropertyDefinitionsOf(node)
+    if (definitions) {
+      entries.push(...Object.entries(definitions))
     }
     const matches = entries.filter(([key]) => key === property || key.split('#')[0] === property)
     if (matches.length === 0) {

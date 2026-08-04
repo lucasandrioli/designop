@@ -104,7 +104,61 @@ function validateManifest(manifest) {
   fs.writeFileSync(file, JSON.stringify(manifest, null, 2))
   return runNode(path.join(root, 'scripts/validateAnalysisManifest.js'), [file])
 }
-function createJourneyFigma({ aliases = [], includeInstance = true } = {}) {
+function testFigmaApiContracts() {
+  const screenSchema = JSON.parse(fs.readFileSync(path.join(root, 'docs/contratos/tela.schema.json'), 'utf8'))
+  const overflowValues = screenSchema.properties.prototype.properties.overflowDirection.enum
+  assert(overflowValues.includes('BOTH'), 'Contrato de tela precisa aceitar BOTH, enum real da Plugin API')
+  assert(!overflowValues.includes('HORIZONTAL_AND_VERTICAL'), 'Contrato de tela nao pode aceitar enum inexistente')
+
+  for (const relative of [
+    'scripts/validateCreation.js',
+    'scripts/validateContentContract.js',
+    'scripts/validateJourneySection.js',
+    'scripts/validatePromotion.js',
+  ]) {
+    const source = fs.readFileSync(path.join(root, relative), 'utf8')
+    assert(source.includes('componentPropertyDefinitionsOf'), relative + ' precisa proteger leitura de variante')
+  }
+
+  const inspectSource = fs.readFileSync(path.join(root, 'scripts/inspectRemoteComponent.js'), 'utf8')
+  assert(inspectSource.includes('importComponentByKeyAsync'), 'Preflight precisa importar COMPONENT pela API correta')
+  assert(inspectSource.includes('importComponentSetByKeyAsync'), 'Preflight precisa importar COMPONENT_SET pela API correta')
+  assert(inspectSource.includes('component.parent?.type === \'COMPONENT_SET\''), 'Preflight precisa ler definitions no set pai da variante')
+}
+async function testRemoteComponentPreflight() {
+  let componentImports = 0
+  let setImports = 0
+  const createInstance = () => ({
+    componentProperties: { 'Titulo#1:2': { type: 'TEXT', value: 'Exemplo' } },
+    remove: () => {},
+  })
+  const component = {
+    remote: true,
+    name: 'Botao',
+    parent: null,
+    componentPropertyDefinitions: { 'Titulo#1:2': { type: 'TEXT', defaultValue: 'Continuar' } },
+    createInstance,
+  }
+  const componentSet = {
+    remote: true,
+    name: 'Item',
+    componentPropertyDefinitions: { 'Titulo#1:2': { type: 'TEXT', defaultValue: 'Titulo' } },
+    defaultVariant: { createInstance },
+  }
+  const inspectRemoteComponent = loadFigmaFunction('scripts/inspectRemoteComponent.js', 'inspectRemoteComponent', {
+    importComponentByKeyAsync: async () => { componentImports += 1; return component },
+    importComponentSetByKeyAsync: async () => { setImports += 1; return componentSet },
+  })
+  let report = await inspectRemoteComponent({ key: 'component-key', assetType: 'component', libraryKey: 'library-a' })
+  assert.strictEqual(report.passed, true, 'Preflight de COMPONENT deveria aprovar candidato remoto')
+  assert.strictEqual(componentImports, 1, 'Preflight de COMPONENT deve usar importComponentByKeyAsync')
+  report = await inspectRemoteComponent({ key: 'component-key', assetType: 'component' })
+  assert.strictEqual(report.passed, false, 'Preflight sem biblioteca de origem deveria reprovar')
+  report = await inspectRemoteComponent({ key: 'set-key', assetType: 'component_set', libraryKey: 'library-a' })
+  assert.strictEqual(report.passed, true, 'Preflight de COMPONENT_SET deveria aprovar candidato remoto')
+  assert.strictEqual(setImports, 1, 'Preflight de COMPONENT_SET deve usar importComponentSetByKeyAsync')
+}
+function createJourneyFigma({ aliases = [], includeInstance = true, variant = false } = {}) {
   const contentVariable = { id: 'content-variable', variableCollectionId: 'content-collection' }
   const otherVariable = { id: 'other-variable', variableCollectionId: 'other-content-collection' }
   const idsVariable = { id: 'ids-variable', variableCollectionId: 'ids-structural-collection' }
@@ -112,6 +166,13 @@ function createJourneyFigma({ aliases = [], includeInstance = true } = {}) {
     id: 'template-id',
     type: 'COMPONENT',
     boundVariables: { aliases: aliases.map((id) => ({ type: 'VARIABLE_ALIAS', id })) },
+  }
+  if (variant) {
+    const componentSet = { id: 'set-id', type: 'COMPONENT_SET', componentPropertyDefinitions: {} }
+    mainComponent.parent = componentSet
+    Object.defineProperty(mainComponent, 'componentPropertyDefinitions', {
+      get: () => { throw new Error('variante nao pode expor definitions diretamente') },
+    })
   }
   const instance = {
     id: 'instance-id',
@@ -177,6 +238,11 @@ async function testJourneyAndLocalComponents() {
   validateJourneySection = loadFigmaFunction('scripts/validateJourneySection.js', 'validateJourneySection', figma)
   report = await validateJourneySection('section-id', journeyContract())
   assert.strictEqual(report.passed, true, 'Section valida com IDS estrutural deveria aprovar')
+
+  figma = createJourneyFigma({ aliases: ['content-variable'], variant: true })
+  validateJourneySection = loadFigmaFunction('scripts/validateJourneySection.js', 'validateJourneySection', figma)
+  report = await validateJourneySection('section-id', journeyContract())
+  assert.strictEqual(report.passed, true, 'Section com variante deve ler definitions no COMPONENT_SET pai')
 
   const selectionWithAbsent = journeyContract()
   selectionWithAbsent.selection.absentTemplateIds = ['template-id']
@@ -278,6 +344,11 @@ async function testInteractionCompositionAndReconstruction() {
     roles: [{ id: 'acao', source: 'IDS', target: { nodeName: 'acao-principal' }, componentKey: 'ids-key' }],
   })
   assert.strictEqual(report.passed, true, 'Instancia IDS com key correta deveria aprovar')
+  remoteMain.remote = false
+  report = await validateCompositionContract('template', {
+    roles: [{ id: 'acao', source: 'IDS', target: { nodeName: 'acao-principal' }, componentKey: 'ids-key' }],
+  })
+  assert.strictEqual(report.passed, false, 'Imitador local nao pode aprovar como papel IDS')
 
   const child = (id, name, y, height) => ({
     id,
@@ -353,6 +424,34 @@ async function testPrototypeCollectionOutsideSection() {
   const target = report.reacoes[0].reactions[0].acoes[0].target
   assert.strictEqual(target.kind, 'NODE', 'Coletor precisa registrar destino NODE')
   assert.strictEqual(target.node.scope, 'FORA_DA_SECTION', 'Coletor precisa distinguir destino fora da Section')
+}
+
+async function testCanvasOrganization() {
+  const localArea = {
+    id: 'local-area',
+    name: '_componentes-locais',
+    type: 'SECTION',
+    absoluteBoundingBox: { x: 0, y: 0, width: 500, height: 500 },
+    findAll: () => [
+      { id: 'local-a', name: 'componente-local-a', type: 'COMPONENT', parent: localArea, absoluteBoundingBox: { x: 20, y: 20, width: 200, height: 64 } },
+      { id: 'local-b', name: 'componente-local-b', type: 'COMPONENT', parent: localArea, absoluteBoundingBox: { x: 120, y: 40, width: 200, height: 64 } },
+    ],
+  }
+  const page = {
+    id: 'page',
+    name: 'pagina',
+    type: 'PAGE',
+    children: [localArea],
+  }
+  const validateCanvasOrganization = loadFigmaFunction('scripts/validateCanvasOrganization.js', 'validateCanvasOrganization', {
+    getNodeByIdAsync: async (id) => id === page.id ? page : null,
+  })
+  const report = await validateCanvasOrganization('page', {
+    regions: ['_componentes-locais'],
+    checkLocalComponentOverlap: true,
+  })
+  assert.strictEqual(report.passed, false, 'Componentes locais sobrepostos dentro da Section devem reprovar')
+  assert.strictEqual(report.localComponentOverlaps.length, 1, 'Sobreposicao dentro de _componentes-locais deve ser registrada')
 }
 
 function testValidateRound() {
@@ -451,6 +550,9 @@ async function main() {
     await testJourneyAndLocalComponents()
     await testInteractionCompositionAndReconstruction()
     await testPrototypeCollectionOutsideSection()
+    await testCanvasOrganization()
+    testFigmaApiContracts()
+    await testRemoteComponentPreflight()
     testValidateRound()
 
     fixture = temporaryDirectory('designops-baseline-')

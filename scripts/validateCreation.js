@@ -123,8 +123,21 @@ async function validateCreation(expected, opts = {}) {
   const hasContentAlias = (value) =>
     [...variableIdsIn(value)].some((id) => contentVariableIds.has(id))
 
+  // A Plugin API so expõe definitions no COMPONENT_SET ou no COMPONENT
+  // independente. Para uma variante, a fonte correta e o set pai.
+  const componentPropertyDefinitionsOf = (node) => {
+    if (node?.type === 'COMPONENT_SET') return node.componentPropertyDefinitions
+    if (node?.type === 'COMPONENT' && node.parent?.type !== 'COMPONENT_SET') {
+      return node.componentPropertyDefinitions
+    }
+    if (node?.type === 'COMPONENT' && node.parent?.type === 'COMPONENT_SET') {
+      return node.parent.componentPropertyDefinitions
+    }
+    return null
+  }
+
   const hasContentBinding = (node, insideInstance = false) => {
-    if ('componentPropertyDefinitions' in node && hasContentAlias(node.componentPropertyDefinitions)) {
+    if (hasContentAlias(componentPropertyDefinitionsOf(node))) {
       return true
     }
     if ('componentProperties' in node && hasContentAlias(node.componentProperties)) {

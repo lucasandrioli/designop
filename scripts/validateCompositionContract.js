@@ -82,6 +82,7 @@ async function validateCompositionContract(templateId, contract = {}) {
         const main = node.mainComponent ?? await node.getMainComponentAsync?.()
         const key = main?.key ?? null
         if (!key) report.sourceIssues.push({ role: role.id, id: node.id, reason: 'instancia IDS sem mainComponent.key' })
+        else if (main.remote !== true) report.sourceIssues.push({ role: role.id, id: node.id, reason: 'papel IDS precisa resolver para componente remoto publicado' })
         else if (role.componentKey && key !== role.componentKey) report.sourceIssues.push({ role: role.id, id: node.id, expected: role.componentKey, actual: key, reason: 'key IDS diverge do contrato' })
       }
     }

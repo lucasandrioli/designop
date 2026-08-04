@@ -26,9 +26,15 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
    candidato suficiente chamar `get_libraries`; nesse caso, consumir
    apenas `libraries_added_to_file`, nunca o catalogo
    `libraries_available_to_add`.
-3. IMPORTACAO: importComponentByKeyAsync com a key de um botao real do
-   IDS. Instanciar. Conferir remote=true.
-4. PROPERTIES: setProperties num componente complexo do IDS (item de
+3. IMPORTACAO: descobrir `assetType` e key a partir de uma instancia real
+   ou de `search_design_system` restrito a biblioteca conectada. Colar
+   `scripts/inspectRemoteComponent.js` com key, assetType e libraryKey. Os
+   tres campos sao obrigatorios.
+   Conferir `remote=true` e as properties devolvidas. Falha de importacao
+   bloqueia o candidato, sem fallback silencioso.
+4. PROPERTIES: em componente variante, ler definitions no COMPONENT_SET;
+   em instancia, ler `componentProperties`. Testar `setProperties` num
+   componente complexo do IDS (item de
    lista com tag/suporte/midia). Conferir que as keys reais funcionam.
 5. OVERRIDE PROFUNDO (maior risco residual): bindar variavel no texto
    interno de uma instancia complexa do IDS (instancia dentro de
@@ -73,6 +79,12 @@ Meia tarde de trabalho. Em um arquivo de teste descartavel:
     sozinho, resumir o que encontrou e pedir apenas o recorte que faltar.
     Sem manual, deve apontar contexto guiado, nunca tratar conversa
     anterior como regra.
+15. INSTANCIAS E RODAPE: tentar somente `setProperties` numa instancia e
+    confirmar que composicao extra entra como irma, nunca como filha da
+    instancia. Em frame rolavel, testar `overflowDirection = 'VERTICAL'`,
+    anexar o rodape por ultimo e conferir `numberOfFixedChildren` e o limite
+    inferior. Os valores validos de overflow sao `NONE`, `HORIZONTAL`,
+    `VERTICAL` e `BOTH`.
 
 Cada item: PASSOU / FALHOU + nota. Item 5 falhou = parar e redesenhar
 o binding antes de seguir. Itens 8 e 9 falhos bloqueiam montagem no IDS

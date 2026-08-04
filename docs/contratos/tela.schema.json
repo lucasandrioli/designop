@@ -22,7 +22,7 @@
       "type": "object",
       "required": ["overflowDirection", "fixedChildren"],
       "properties": {
-        "overflowDirection": { "enum": ["NONE", "HORIZONTAL", "VERTICAL", "HORIZONTAL_AND_VERTICAL"] },
+        "overflowDirection": { "enum": ["NONE", "HORIZONTAL", "VERTICAL", "BOTH"] },
         "fixedChildren": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
         "fixedBottomTolerance": { "type": "number", "minimum": 0 }
       }

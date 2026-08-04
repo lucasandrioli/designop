@@ -165,6 +165,13 @@ function testFigmaApiContracts() {
   assert(analysisSkill.includes('return await reconcileAnalysisManifestFigma(manifest);'), 'Analista precisa receber a chamada literal da reconciliacao MCP')
   assert(analysisSkill.includes('nunca chame\n`skill://index.json`'), 'Analista nao pode procurar skills locais no MCP do Figma')
   assert(analysisSkill.includes('.designops/runs/<outra-rodada>/'), 'Analista precisa isolar rodadas novas de artefatos anteriores')
+  assert(analysisSkill.includes('## Escopo de skills'), 'Skill do Analista precisa diferenciar coleta tecnica isolada')
+  assert(analysisSkill.includes('somente esta\nskill `consignado-analise`, `figma-plugin-api`'), 'Coleta tecnica isolada precisa carregar as duas skills locais minimas')
+  assert(analysisSkill.includes('Em analise completa, leia tambem'), 'Analise completa precisa carregar o conjunto adicional de skills')
+
+  const analystAgent = fs.readFileSync(path.join(root, '.github/agents/analista.agent.md'), 'utf8')
+  assert(analystAgent.includes('somente `consignado-analise` e\n`figma-plugin-api`'), 'Agente Analista precisa limitar skills em coleta tecnica isolada')
+  assert(analystAgent.includes('Em analise completa, carregue'), 'Agente Analista precisa preservar as skills da analise completa')
 }
 function testManifestValidationWithoutTerminal() {
   const validateAnalysisManifestData = loadFigmaFunction(

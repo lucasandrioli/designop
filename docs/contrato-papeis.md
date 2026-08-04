@@ -94,6 +94,13 @@ explicito de retomada ou comparacao. O Analista le somente documentos e
 scripts exigidos pelo escopo; laboratorio tecnico nao autoriza leitura
 ampla de manuais de negocio.
 
+Em coleta tecnica isolada, as skills locais obrigatorias sao apenas
+`consignado-analise` e `figma-plugin-api`; o Analista tambem le
+`AGENTS.md` e o script do coletor pedido. Esse modo nao abre contexto de
+negocio, nao le `consignado-contexto` nem `figma-reconstrucao` e entrega
+somente fatos tecnicos. Analise completa carrega as quatro skills do
+papel e os documentos logicos exigidos pelo recorte.
+
 Depois da ultima escrita do manifesto temporario, o Analista o relê e
 executa `validateAnalysisManifestCore.js` junto de
 `reconcileAnalysisManifestFigma.js` pelo MCP do Figma sem mutar o

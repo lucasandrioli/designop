@@ -23,6 +23,13 @@ requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'skill://ind
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, '.designops/runs/<outra-rodada>/');
 requireText('.github/agents/analista.agent.md', analyst, 'pelo leitor local do projeto');
 requireText('.github/agents/analista.agent.md', analyst, 'Nao liste diretorios inteiros por padrao');
+requireText('.github/agents/analista.agent.md', analyst, 'Em coleta tecnica\nisolada ou laboratorio');
+requireText('.github/agents/analista.agent.md', analyst, 'somente `consignado-analise` e\n`figma-plugin-api`');
+requireText('.github/agents/analista.agent.md', analyst, 'Em analise completa, carregue');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, '## Escopo de skills');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'coleta tecnica isolada ou laboratorio');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'somente esta\nskill `consignado-analise`, `figma-plugin-api`');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'Em analise completa, leia tambem');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'So entao crie ou atualize');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'ACAO_NO_APP');
 requireText('docs/mapas/_template.md', mapTemplate, 'Origem da regra');

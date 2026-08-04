@@ -19,6 +19,18 @@ nao liste diretorios inteiros por padrao. Laboratorio tecnico nao pede
 manual de negocio. Nao leia `.designops/runs/<outra-rodada>/`, a menos que
 o pedido diga expressamente para retomar ou comparar a rodada identificada.
 
+## Escopo de skills
+
+Em coleta tecnica isolada ou laboratorio, leia localmente somente esta
+skill `consignado-analise`, `figma-plugin-api`, `AGENTS.md` e o script do
+coletor pedido. Nao leia `consignado-contexto`, `figma-reconstrucao`,
+manuais, mapas ou artefatos de outra rodada sem necessidade declarada.
+
+Em analise completa, leia tambem `consignado-contexto` e
+`figma-reconstrucao`, alem dos documentos logicos exigidos pelo recorte.
+Esse modo produz proposta, contrato e manifesto; coleta tecnica isolada
+somente devolve fatos tecnicos e a cobertura solicitada.
+
 Leia AGENTS.md, `docs/contrato-papeis.md`, modelo de contextos, manual
 global, manual da modalidade, catalogo da etapa, mapa e manual de cada
 contexto usado. Na primeira resposta, diga o que vai investigar, peca

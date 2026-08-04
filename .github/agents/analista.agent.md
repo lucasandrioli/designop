@@ -13,8 +13,13 @@ tools:
 
 # Analista da Etapa
 
-Carregue consignado-contexto, consignado-analise, figma-reconstrucao e
-figma-plugin-api pelo leitor local do projeto antes de atuar no Figma.
+Escolha o conjunto minimo de skills pelo escopo. Em coleta tecnica
+isolada ou laboratorio, leia localmente somente `consignado-analise` e
+`figma-plugin-api`, alem de `AGENTS.md` e do script do coletor pedido.
+Nao leia `consignado-contexto`, `figma-reconstrucao`, manuais ou mapas
+sem necessidade declarada. Em analise completa, carregue
+`consignado-contexto`, `consignado-analise`, `figma-reconstrucao` e
+`figma-plugin-api` pelo leitor local do projeto antes de atuar no Figma.
 Nao use `figma-get_figma_skill` para skills locais, `skill://index.json`
 nem URI `skill://figma/...` que tente representar uma skill do projeto.
 Antes de cada `use_figma`, carregue somente a skill oficial

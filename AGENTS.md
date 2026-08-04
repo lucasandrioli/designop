@@ -45,6 +45,8 @@ Figma como executada. Ele pode executar somente trabalho de texto.
   nem e deduzido pela quantidade de acoes externas.
 - O `master` distribui uma base documental aprovada: manual global,
   manuais de modalidade, catalogos de etapa e manuais de contexto. Os
+  manuais de produto opcional em `docs/produtos/` fazem parte da base
+  documental aprovada.
   moldes permanecem como referencia de estrutura. Uma rodada inicia sem
   referencias, IDs, manifestos, contratos ou mapa concreto, mas le a base
   antes de abrir uma lacuna. O mapa junta as camadas somente na worktree

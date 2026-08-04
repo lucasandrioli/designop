@@ -82,3 +82,8 @@ Antes dessas execucoes, o Analista descobre novamente a pagina e as
 Sections no arquivo atual por `figma-get_metadata`. IDs de conversas ou
 rodadas anteriores nao sao entrada valida para coleta. O manifesto
 registra essa descoberta em `fontes.figma.descoberta`.
+
+Em operacao sem terminal, a validacao do manifesto usa a funcao pura em
+`scripts/validateAnalysisManifestCore.js`, colada com o objeto do
+manifesto em uma chamada MCP somente de leitura. O adaptador Node tem o
+mesmo resultado, mas serve apenas para desenvolvimento local.

@@ -142,9 +142,12 @@ function testFigmaApiContracts() {
 
   const structureSource = fs.readFileSync(path.join(root, 'scripts/collectReferenceStructure.js'), 'utf8')
   const reactionsSource = fs.readFileSync(path.join(root, 'scripts/collectPrototypeReactions.js'), 'utf8')
+  const manifestCoreSource = fs.readFileSync(path.join(root, 'scripts/validateAnalysisManifestCore.js'), 'utf8')
   assert(structureSource.includes('totalPartes'), 'Coletor estrutural precisa expor a quantidade total de partes')
   assert(structureSource.includes('itensPorParte'), 'Coletor estrutural precisa expor a distribuicao da leitura')
   assert(reactionsSource.includes('totalParts'), 'Coletor de reacoes precisa paginar a leitura completa')
+  assert(!manifestCoreSource.includes("require('fs')"), 'Validador MCP nao pode depender de fs')
+  assert(!manifestCoreSource.includes('process.exit'), 'Validador MCP nao pode depender de process')
 
   const analysisSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-analise/SKILL.md'), 'utf8')
   assert(analysisSkill.includes('figma-get_figma_skill'), 'Analista precisa carregar a skill oficial antes de use_figma')
@@ -154,6 +157,26 @@ function testFigmaApiContracts() {
   assert(analysisSkill.includes('NAO_APLICAVEL'), 'Analista precisa distinguir regra sem escopo de violacao')
   assert(analysisSkill.includes('propriedadesVisuaisComValorSemBindingObservado'), 'Analista precisa preservar o nome do sinal estrutural retornado pelo coletor')
   assert(analysisSkill.includes('nunca o renomeie para\n`camposVisuaisSemBindingObservado`'), 'Analista precisa bloquear explicitamente o nome antigo do sinal estrutural')
+  assert(analysisSkill.includes('validateAnalysisManifestCore.js'), 'Analista precisa validar o manifesto sem terminal')
+  assert(analysisSkill.includes('return { passed: failures.length === 0, failures };'), 'Analista precisa receber o formato literal do resultado MCP')
+}
+function testManifestValidationWithoutTerminal() {
+  const validateAnalysisManifestData = loadFigmaFunction(
+    'scripts/validateAnalysisManifestCore.js',
+    'validateAnalysisManifestData',
+    {},
+  )
+  assert.strictEqual(
+    validateAnalysisManifestData(validManifest()).length,
+    0,
+    'Validador portatil precisa aprovar manifesto completo sem terminal',
+  )
+  const invalid = validManifest()
+  invalid.fontes.figma.descoberta = null
+  assert(
+    validateAnalysisManifestData(invalid).some((failure) => failure.includes('descoberta atual')),
+    'Validador portatil precisa reprovar manifesto sem descoberta atual',
+  )
 }
 async function testRemoteComponentPreflight() {
   let componentImports = 0
@@ -659,6 +682,7 @@ async function main() {
     await testReferenceStructurePagination()
     await testCanvasOrganization()
     testFigmaApiContracts()
+    testManifestValidationWithoutTerminal()
     await testRemoteComponentPreflight()
     testValidateRound()
 

@@ -85,6 +85,13 @@ temporario registra o metodo de descoberta e a pagina retornada. Quando
 uma Section pedida nao aparece com o nome exato, a coleta nao e
 executada e a lacuna e bloqueante.
 
+Depois de gravar o manifesto temporario, o Analista o relê e executa
+`validateAnalysisManifestCore.js` pelo MCP do Figma sem mutar o arquivo.
+Essa e a validacao operacional, inclusive em ambientes que nao permitem
+terminal. O adaptador Node existe somente para desenvolvimento local.
+Falha de leitura ou de execucao do validador resulta em
+`NAO_VERIFICAVEL`.
+
 Os coletores devolvem a leitura em partes numeradas. O Analista le todas
 as partes de cada Section e registra essa prova no manifesto, junto de
 `pageSize`, `totalItens` e `itensPorParte`. Uma tela ou um detalhe nao

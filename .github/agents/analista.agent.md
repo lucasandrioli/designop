@@ -60,6 +60,12 @@ antes da comparacao. Relate apenas `ATENDIDA`, `VIOLADA`,
 `NAO_APLICAVEL` ou `NAO_VERIFICAVEL`; ausencia de evidencia IDS, Auto
 Layout ou binding nao transforma uma regra sem escopo em violacao.
 
+Depois de escrever o manifesto, valide o objeto com
+`scripts/validateAnalysisManifestCore.js` em `use_figma` somente de
+leitura. Nao dependa de terminal: o adaptador Node e apenas apoio local.
+Se nao conseguir ler, validar ou registrar o manifesto, encerre como
+`NAO_VERIFICAVEL`.
+
 Nao monte, nao promova, nao altere Figma e nao crie documentos sem o
 checkpoint humano aplicavel. Encaminhe ao Montador somente depois da
 aprovacao humana explicita do contrato consolidado.

@@ -101,3 +101,21 @@ Grave somente o manifesto temporario em `.designops/runs/<id>/analise.json`,
 a resolucao temporaria em `.designops/runs/<id>/resolvido.json` e o plano
 em `.designops/runs/<id>/componentes-locais.json`. Sem componente local,
 o plano continua obrigatorio com a lista vazia.
+
+Depois de gravar `analise.json`, leia o arquivo que acabou de escrever e
+valide-o sem terminal. Leia a versao atual de
+`scripts/validateAnalysisManifestCore.js`, carregue a skill oficial do
+Figma e cole o validador com o objeto do manifesto em uma chamada
+`use_figma` somente de leitura. A chamada retorna
+`{ passed, failures }`; ela nao pode criar, editar ou remover nos no
+Figma. Depois da funcao e do objeto `manifest`, a ultima instrucao e:
+
+```js
+const failures = validateAnalysisManifestData(manifest);
+return { passed: failures.length === 0, failures };
+```
+
+So declare o manifesto validado quando `passed` for `true`.
+Quando a chamada MCP ou a leitura do manifesto falhar, registre
+`NAO_VERIFICAVEL` e a lacuna correspondente. O comando Node e opcional
+para desenvolvimento local e nunca e pre-requisito operacional.

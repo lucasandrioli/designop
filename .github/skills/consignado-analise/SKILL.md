@@ -50,6 +50,13 @@ observado tambem e apenas um fato bruto. Nao escreva "manual", "errado" ou "sem 
 comparar o contrato aplicavel. O coletor apresenta sinais tecnicos; a
 classificacao pertence ao contrato e ao Validador.
 
+No relatorio, preserve literalmente os nomes de campos devolvidos pelos
+coletores. Em especial, use
+`propriedadesVisuaisComValorSemBindingObservado`; nunca o renomeie para
+`camposVisuaisSemBindingObservado`. Caso o nome tecnico prejudique a
+leitura, explique-o em portugues ao lado, sem alterar o identificador
+original. Esse sinal continua sendo observacao bruta, nao defeito.
+
 Entregue inventario, reacoes, mapa, contrato de tela, mapa IDS, plano
 de variaveis e proposta de composicao. Para confirmacao externa dentro
 de Formalizacao, registre presenca e contrato de retorno (`DIRETO` ou

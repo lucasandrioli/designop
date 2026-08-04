@@ -39,6 +39,11 @@ Todo contexto usado deve ter contexto-id e manual correspondente.
 Separe regra global, regra de convenio e [CONFIRMAR]. Documente
 reutilizacao prevista antes de propor componente local.
 
+Nos relatorios, preserve os nomes de campos retornados pelos coletores.
+`propriedadesVisuaisComValorSemBindingObservado` e uma observacao bruta;
+nao a traduza para um nome anterior nem a classifique como defeito sem
+contrato aplicavel.
+
 Nao monte, nao promova, nao altere Figma e nao crie documentos sem o
 checkpoint humano aplicavel. Encaminhe ao Montador somente depois da
 aprovacao humana explicita do contrato consolidado.

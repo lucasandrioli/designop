@@ -144,6 +144,8 @@ function testFigmaApiContracts() {
   const analysisSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-analise/SKILL.md'), 'utf8')
   assert(analysisSkill.includes('figma-get_figma_skill'), 'Analista precisa carregar a skill oficial antes de use_figma')
   assert(analysisSkill.includes('partesLidas'), 'Analista precisa registrar que leu todas as partes')
+  assert(analysisSkill.includes('propriedadesVisuaisComValorSemBindingObservado'), 'Analista precisa preservar o nome do sinal estrutural retornado pelo coletor')
+  assert(analysisSkill.includes('nunca o renomeie para\n`camposVisuaisSemBindingObservado`'), 'Analista precisa bloquear explicitamente o nome antigo do sinal estrutural')
 }
 async function testRemoteComponentPreflight() {
   let componentImports = 0

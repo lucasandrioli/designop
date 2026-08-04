@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 /*
- * Gate estatico de uma rodada. Ele valida contratos logicos, manifesto e a
- * resolucao temporaria antes da montagem ou promocao. Provas Figma continuam
- * sendo executadas pelos validadores colados na Plugin API.
+ * Gate estatico de uma rodada. Antes da montagem, confere apenas contratos
+ * v2 e evidencias documentais. Antes da promocao, tambem vincula os
+ * relatorios literais dos validadores MCP aos IDs e a rodada corretos.
+ * Nunca substitui validateCompositionContract ou validateTypographyContract.
  *
  * Uso:
  * node scripts/validateRound.js --screens <dir> --journey <arquivo> \
- *   --resolved <arquivo> --components <arquivo> [--manifest <arquivo>]
- *   [--stage pre-montagem]
+ *   --resolved <arquivo> --components <arquivo> [--manifest <arquivo>] \
+ *   [--stage pre-montagem|pre-promocao] [--evidence <arquivo>]
  */
 const childProcess = require('child_process')
 const fs = require('fs')
@@ -28,17 +29,67 @@ function readJson(file, failures, label) {
   catch (error) { failures.push(`${label} invalido: ${error.message}`); return null }
 }
 function distinct(items) { return new Set(items).size === items.length }
+function idSetEqual(a, b) {
+  return Array.isArray(a) && Array.isArray(b) && a.length === b.length && a.every((id) => b.includes(id))
+}
+function validIsoAfter(readAt, writtenAt) {
+  const read = Date.parse(readAt ?? '')
+  const written = Date.parse(writtenAt ?? '')
+  return Number.isFinite(read) && Number.isFinite(written) && read > written
+}
+
 function validateScreen(screen, failures, file) {
-  if (!screen || screen.schemaVersion !== 1) failures.push(`${file}: schemaVersion precisa ser 1`)
+  if (!screen || screen.schemaVersion !== 2) failures.push(`${file}: contrato legado ou invalido; schemaVersion precisa ser 2`)
+  if (screen?.migration?.status === 'PENDENTE_REVISAO_HUMANA') failures.push(`${file}: contrato migrado aguarda revisao humana de Slots e tipografia`)
+  if (screen?.migration?.status === 'REVISAO_HUMANA_CONCLUIDA' && !screen.migration.approvalId) failures.push(`${file}: migracao concluida exige approvalId humano`)
   for (const field of ['id', 'modalidade', 'etapa', 'tela']) if (!screen?.[field]) failures.push(`${file}: ${field} e obrigatorio`)
   if (!screen?.viewport || screen.viewport.width <= 0 || screen.viewport.height <= 0) failures.push(`${file}: viewport invalido`)
   if (!screen?.prototype || !Array.isArray(screen.prototype.fixedChildren)) failures.push(`${file}: prototype.fixedChildren e obrigatorio`)
   const roleIds = (screen?.roles ?? []).map((role) => role?.id)
   if (roleIds.length === 0 || roleIds.some((id) => !id) || !distinct(roleIds)) failures.push(`${file}: roles precisam ter ids unicos`)
+  const roles = new Map((screen?.roles ?? []).map((role) => [role.id, role]))
   for (const role of screen?.roles ?? []) {
     if (!['IDS', 'COMPONENTE_LOCAL', 'LOCAL_LAYOUT', 'TEXTO', 'ASSET'].includes(role.source)) failures.push(`${file}: papel ${role.id ?? '?'} sem source valido`)
     if (role.source === 'COMPONENTE_LOCAL' && !role.componentId) failures.push(`${file}: papel local ${role.id ?? '?'} sem componentId`)
   }
+
+  const slots = screen?.slots
+  if (!Array.isArray(slots)) failures.push(`${file}: slots e obrigatorio em contrato v2`)
+  const slotIds = (slots ?? []).map((slot) => slot?.id)
+  if (slotIds.some((id) => !id) || !distinct(slotIds)) failures.push(`${file}: slots precisam ter ids unicos`)
+  for (const slot of slots ?? []) {
+    const host = roles.get(slot?.hostRole)
+    if (!host || host.source !== 'IDS') failures.push(`${file}: Slot ${slot?.id ?? '?'} exige hostRole IDS existente`)
+    if (!slot?.slotName || !slot?.componentPropertyName) failures.push(`${file}: Slot ${slot?.id ?? '?'} sem nome do Slot ou property publica`)
+    const contentRoles = slot?.contentRoleIds ?? []
+    if (!Array.isArray(contentRoles) || contentRoles.length === 0 || !distinct(contentRoles)) failures.push(`${file}: Slot ${slot?.id ?? '?'} sem contentRoleIds unicos`)
+    for (const roleId of contentRoles) {
+      if (roleId === slot?.hostRole || !roles.has(roleId)) failures.push(`${file}: Slot ${slot?.id ?? '?'} aponta para papel de conteudo invalido: ${roleId ?? '?'}`)
+    }
+  }
+
+  const typography = screen?.typography
+  if (!Array.isArray(typography)) failures.push(`${file}: typography e obrigatorio em contrato v2`)
+  const typographyIds = (typography ?? []).map((item) => item?.id)
+  if (typographyIds.some((id) => !id) || !distinct(typographyIds)) failures.push(`${file}: typography precisa ter ids unicos`)
+  const typographyByTarget = new Map()
+  for (const item of typography ?? []) {
+    if (!roles.has(item?.targetRole)) failures.push(`${file}: tipografia ${item?.id ?? '?'} aponta para targetRole inexistente`)
+    if (!['UNICO', 'MISTO'].includes(item?.kind)) failures.push(`${file}: tipografia ${item?.id ?? '?'} sem kind valido`)
+    if (!['IDS_STYLE', 'IDS_COMPONENT', 'LOCAL_APPROVED'].includes(item?.source)) failures.push(`${file}: tipografia ${item?.id ?? '?'} sem source valido`)
+    if (item?.source === 'IDS_COMPONENT' && roles.get(item?.targetRole)?.source !== 'IDS') failures.push(`${file}: IDS_COMPONENT exige targetRole IDS`)
+    if (item?.source !== 'IDS_COMPONENT' && !item?.styleRole) failures.push(`${file}: tipografia ${item?.id ?? '?'} exige styleRole`)
+    if (item?.source === 'LOCAL_APPROVED' && !item?.approvalId) failures.push(`${file}: LOCAL_APPROVED exige approvalId`)
+    if (item?.kind === 'MISTO' && (!Array.isArray(item?.segments) || item.segments.length === 0 || item.segments.some((segment) => !segment?.styleRole))) {
+      failures.push(`${file}: tipografia MISTO ${item?.id ?? '?'} exige segmentos ordenados`)
+    }
+    if (typographyByTarget.has(item?.targetRole)) failures.push(`${file}: targetRole possui mais de uma regra tipografica: ${item?.targetRole ?? '?'}`)
+    typographyByTarget.set(item?.targetRole, item)
+  }
+  for (const role of screen?.roles ?? []) {
+    if (role.source === 'TEXTO' && !typographyByTarget.has(role.id)) failures.push(`${file}: papel TEXTO ${role.id} sem contrato tipografico`)
+  }
+
   for (const interaction of screen?.interacoes ?? []) {
     if (!interaction?.id || !interaction?.origem || !interaction?.gatilho || !interaction?.destino?.tipo) failures.push(`${file}: interacao incompleta`)
     if (!['ON_CLICK', 'AFTER_TIMEOUT'].includes(interaction?.gatilho)) failures.push(`${file}: interacao possui gatilho invalido`)
@@ -52,45 +103,73 @@ function validateScreen(screen, failures, file) {
     if (local.aprovado !== true || uses.length < 2 || !distinct(uses)) failures.push(`${file}: componente local ${local.id ?? '?'} sem duas reutilizacoes aprovadas`)
   }
 }
+
 function validateLocalComponentPlan(plan, failures, screens) {
   if (!plan || plan.schemaVersion !== 1 || !plan.id) failures.push('plano de componentes locais incompleto')
   if (!Array.isArray(plan?.contextosConhecidos)) failures.push('plano de componentes locais sem contextosConhecidos')
-  for (const context of plan?.contextosConhecidos ?? []) {
-    if (!context?.id || !context?.rotulo) failures.push('contexto conhecido incompleto no plano de componentes locais')
-  }
-  if (!Array.isArray(plan?.componentes)) {
-    failures.push('plano de componentes locais sem componentes')
-    return
-  }
+  for (const context of plan?.contextosConhecidos ?? []) if (!context?.id || !context?.rotulo) failures.push('contexto conhecido incompleto no plano de componentes locais')
+  if (!Array.isArray(plan?.componentes)) { failures.push('plano de componentes locais sem componentes'); return }
   const componentIds = new Set()
   for (const component of plan.componentes) {
     if (!component?.id || component.aprovado !== true) failures.push('componente local sem id ou aprovacao explicita')
     if (componentIds.has(component?.id)) failures.push(`plano de componentes locais repete id: ${component?.id}`)
     componentIds.add(component?.id)
     const uses = (component?.reutilizacoes ?? []).map((use) => [use?.modalidade, use?.etapa, use?.tela, use?.casoUso].join('::'))
-    if (uses.length < 2 || new Set(uses).size !== uses.length || uses.some((use) => use.includes('undefined'))) {
-      failures.push(`componente local ${component?.id ?? '?'} sem duas reutilizacoes previstas distintas`)
-    }
+    if (uses.length < 2 || new Set(uses).size !== uses.length || uses.some((use) => use.includes('undefined'))) failures.push(`componente local ${component?.id ?? '?'} sem duas reutilizacoes previstas distintas`)
+  }
+  for (const screen of screens) for (const role of screen.roles ?? []) if (role.source === 'COMPONENTE_LOCAL' && !componentIds.has(role.componentId)) failures.push(`contrato ${screen.id}: componentId local nao consta no plano: ${role.componentId}`)
+}
+
+function validateMcpEvidence(evidence, failures, screens, roundId) {
+  if (!evidence || evidence.schemaVersion !== 1 || evidence.roundId !== roundId) {
+    failures.push('evidencia MCP invalida ou pertence a outra rodada')
+    return
+  }
+  if (!Array.isArray(evidence.slots) || !Array.isArray(evidence.typography)) {
+    failures.push('evidencia MCP sem listas de slots e typography')
+    return
+  }
+  if (!Array.isArray(evidence.referencesConsulted) || evidence.referencesConsulted.length === 0 || evidence.referencesConsulted.some((entry) => !entry?.reference || !entry?.reason || !Array.isArray(entry?.symbols))) {
+    failures.push('evidencia MCP sem referencias oficiais, motivo e simbolos consultados')
   }
   for (const screen of screens) {
-    for (const role of screen.roles ?? []) {
-      if (role.source === 'COMPONENTE_LOCAL' && !componentIds.has(role.componentId)) {
-        failures.push(`contrato ${screen.id}: componentId local nao consta no plano: ${role.componentId}`)
-      }
+    for (const slot of screen.slots ?? []) {
+      const matches = evidence.slots.filter((entry) => entry?.contractId === screen.id && entry?.slotId === slot.id)
+      if (matches.length !== 1) { failures.push(`Slot ${screen.id}/${slot.id} sem evidencia MCP unica`); continue }
+      const entry = matches[0]
+      if (entry.roundId !== roundId || entry.passed !== true || entry.status !== 'APROVADO') failures.push(`Slot ${screen.id}/${slot.id} sem passed APROVADO na rodada atual`)
+      if (![entry.hostInstanceId, entry.slotNodeId, entry.componentKey, entry.libraryKey, entry.componentPropertyKey, entry.componentPropertyName].every(Boolean) || !Array.isArray(entry.contentNodeIds) || entry.contentNodeIds.length === 0) failures.push(`Slot ${screen.id}/${slot.id} sem IDs ou identidade completa`)
+      if (entry.componentPropertyType !== 'SLOT' || entry.componentPropertyName !== slot.componentPropertyName) failures.push(`Slot ${screen.id}/${slot.id} diverge da property publica contratada`)
+      if (!Array.isArray(entry.limitViolations) || entry.limitViolations.length > 0) failures.push(`Slot ${screen.id}/${slot.id} possui limitViolations`)
+      if (!validIsoAfter(entry.readAt, entry.writtenAt)) failures.push(`Slot ${screen.id}/${slot.id} sem releitura posterior a escrita`)
+      const literal = entry.report
+      const result = literal?.slotResults?.find((item) => item?.id === slot.id)
+      if (literal?.roundId !== roundId || literal?.passed !== true || literal?.verificationStatus !== 'APROVADO' || !result || result.hostInstanceId !== entry.hostInstanceId || result.slotNodeId !== entry.slotNodeId || !idSetEqual(result.contentNodeIds, entry.contentNodeIds) || result.componentKey !== entry.componentKey || result.libraryKey !== entry.libraryKey || result.componentPropertyKey !== entry.componentPropertyKey || result.componentPropertyName !== entry.componentPropertyName || result.componentPropertyType !== 'SLOT' || !Array.isArray(result.limitViolations) || result.limitViolations.length > 0 || result.passed !== true) failures.push(`Slot ${screen.id}/${slot.id} sem relatorio MCP literal vinculado aos mesmos IDs`)
+    }
+    for (const typography of screen.typography ?? []) {
+      const matches = evidence.typography.filter((entry) => entry?.contractId === screen.id && entry?.typographyId === typography.id)
+      if (matches.length !== 1) { failures.push(`Tipografia ${screen.id}/${typography.id} sem evidencia MCP unica`); continue }
+      const entry = matches[0]
+      if (entry.roundId !== roundId || entry.passed !== true || entry.status !== 'APROVADO') failures.push(`Tipografia ${screen.id}/${typography.id} sem passed APROVADO na rodada atual`)
+      if (!Array.isArray(entry.targetNodeIds) || entry.targetNodeIds.length === 0 || !validIsoAfter(entry.readAt, entry.writtenAt)) failures.push(`Tipografia ${screen.id}/${typography.id} sem IDs ou releitura posterior`)
+      const literal = entry.report
+      const result = literal?.targetResults?.find((item) => item?.id === typography.id)
+      if (literal?.roundId !== roundId || literal?.passed !== true || literal?.verificationStatus !== 'APROVADO' || !result || !idSetEqual(result.targetNodeIds, entry.targetNodeIds) || result.passed !== true) failures.push(`Tipografia ${screen.id}/${typography.id} sem relatorio MCP literal vinculado aos mesmos IDs`)
     }
   }
 }
+
 function main() {
   const input = args(process.argv.slice(2))
   const failures = []
   if (!input.screens || !input.journey || !input.resolved || !input.components) {
-    console.error('Uso: node scripts/validateRound.js --screens <dir> --journey <arquivo> --resolved <arquivo> --components <arquivo> [--manifest <arquivo>] [--stage <nome>]')
+    console.error('Uso: node scripts/validateRound.js --screens <dir> --journey <arquivo> --resolved <arquivo> --components <arquivo> [--manifest <arquivo>] [--stage pre-montagem|pre-promocao] [--evidence <arquivo>]')
     process.exit(1)
   }
+  const stage = input.stage ?? 'pre-montagem'
+  const requiresMcpEvidence = ['pre-promocao', 'promocao'].includes(stage)
   const screenDirectory = path.resolve(input.screens)
-  const screenFiles = fs.existsSync(screenDirectory)
-    ? fs.readdirSync(screenDirectory).filter((file) => file.endsWith('.json')).map((file) => path.join(screenDirectory, file))
-    : []
+  const screenFiles = fs.existsSync(screenDirectory) ? fs.readdirSync(screenDirectory).filter((file) => file.endsWith('.json')).map((file) => path.join(screenDirectory, file)) : []
   if (screenFiles.length === 0) failures.push('nenhum contrato de tela encontrado')
   const screens = []
   for (const file of screenFiles) {
@@ -158,11 +237,15 @@ function main() {
       if (journey && !(journey.contextos ?? []).some((context) => context.id === section.contextoId)) failures.push(`Section resolvida usa contexto inexistente: ${section.contextoId}`)
     }
   }
+  if (requiresMcpEvidence) {
+    if (!input.evidence) failures.push('pre-promocao exige --evidence com relatorios MCP literais')
+    else validateMcpEvidence(readJson(input.evidence, failures, 'evidencia MCP'), failures, screens, resolved?.rodada)
+  }
   if (input.manifest) {
     const result = childProcess.spawnSync(process.execPath, [path.join(__dirname, 'validateAnalysisManifest.js'), path.resolve(input.manifest)], { encoding: 'utf8' })
     if (result.status !== 0) failures.push(`manifesto reprovado: ${(result.stderr || result.stdout).trim()}`)
   }
-  const report = { stage: input.stage ?? 'pre-montagem', screens: screens.map((screen) => screen.id), journey: journey?.id ?? null, localComponentPlan: componentPlan?.id ?? null, resolvedRound: resolved?.rodada ?? null, failures, passed: failures.length === 0 }
+  const report = { stage, screens: screens.map((screen) => screen.id), journey: journey?.id ?? null, localComponentPlan: componentPlan?.id ?? null, resolvedRound: resolved?.rodada ?? null, mcpEvidenceChecked: requiresMcpEvidence, failures, passed: failures.length === 0 }
   console.log(JSON.stringify(report, null, 2))
   process.exit(report.passed ? 0 : 1)
 }

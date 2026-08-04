@@ -15,7 +15,7 @@ somente a lacuna que impede uma prova. Execute validateCreation,
 validateContentContract, validateModeBehavior,
 validateReconstructionContract, validateLocalComponents,
 validateCompositionContract, validateJourneySection,
-validateCanvasOrganization, validateLayout, validateRound e
+validateTypographyContract, validateCanvasOrganization, validateLayout, validateRound e
 validatePromotion conforme o contrato.
 
 Antes do veredito, repita `collectPrototypeReactions.js` e
@@ -41,6 +41,22 @@ Para cada contexto do mapa, compare preview e referencia correspondente.
 Para cada Section de jornada, prove uma unica collection de conteudo
 da modalidade, collections IDS estruturais permitidas, mode aplicado
 uma vez na Section e nenhum mode explicito em descendentes.
+
+Para contratos v2, `validateRound` confere a coerencia dos arquivos e
+evidencias; ele nao prova a tela real. Rode no MCP
+`validateCompositionContract` para cada Slot declarado e
+`validateTypographyContract` para cada alvo textual. O primeiro confirma
+instancia IDS remota, SlotNode, property `SLOT`, conteudo e
+`limitViolations`; o segundo usa segmentos reais para texto UNICO ou
+MISTO. Guarde os relatorios literais com `roundId`, IDs verificados,
+`writtenAt` e `readAt` em `.designops/runs/<rodada>/evidencias-mcp.json`.
+Depois rode `validateRound --stage pre-promocao --evidence ...`.
+
+Se nao for possivel reler o Figma ou executar o validador correspondente,
+o resultado e `NAO_VERIFICAVEL`, mesmo que uma tentativa de correcao nao
+tenha retornado erro. Modes estruturais e variaveis tipograficas do IDS
+sao permitidos; so o mode da collection de conteudo de contexto e proibido
+no template e descendentes.
 
 Emita APTO PARA PROMOCAO, REPROVADO ou NAO VERIFICAVEL. Nao corrija e
 nao promova.

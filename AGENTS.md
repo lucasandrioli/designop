@@ -88,6 +88,11 @@ internas e nao publicadas. Referencia crua nao e componente.
 ## Componentes e variaveis
 
 - IDS e fonte unica de componentes sempre que cobrir a composicao.
+- Instancia permanece opaca: nunca inserir filho diretamente em `INSTANCE`.
+  A unica excecao e um `SlotNode` nativo realmente exposto por aquela
+  instancia IDS, declarado no contrato aprovado e confirmado por preflight.
+  O conteudo entra no `SlotNode`, nunca na instancia; `limitViolations` vazio
+  e obrigatorio para aprovacao.
 - Um componente local so pode ser criado quando o contrato aprovado
   comprovar reutilizacao da mesma composicao em pelo menos duas telas
   ou casos de uso. Sem essa evidencia, a composicao fica como
@@ -149,6 +154,15 @@ internas e nao publicadas. Referencia crua nao e componente.
   Artefato de rodada anterior so pode ser lido quando o pedido disser
   explicitamente para retomar ou comparar uma rodada identificada.
 - Toda escrita Figma via `use_figma` exige a skill `figma-plugin-api`.
+- `figma-use` e o unico pre-requisito MCP sempre obrigatorio. `gotchas`,
+  patterns, indice e `.d.ts` oficiais sao consultados somente quando a
+  operacao exigir; o relatorio da rodada declara quais referencias aplicou,
+  por que e quais simbolos confirmou. Essa declaracao e evidencia de
+  processo, nao prova automatica de leitura.
+- Em falha de escrita, pare, registre erro e acao afetada, releia o Figma,
+  corrija somente a causa e valide de novo. Sem releitura ou sem relatorio do
+  validador correspondente, o resultado e `NAO_VERIFICAVEL`, nunca
+  "corrigido".
 - Scripts em `scripts/` sao colados na Plugin API a partir da versao
   atual do arquivo. Eles nao executam por caminho dentro do Figma.
 - O Analista nao depende de terminal para validar o manifesto. Depois de

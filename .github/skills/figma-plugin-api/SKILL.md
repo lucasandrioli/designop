@@ -20,6 +20,13 @@ falha silenciosa.
    `use_figma`, chame `figma-get_figma_skill` para
    `skill://figma/figma-use/SKILL.md`. Em seguida carregue esta skill
    local. A regra local complementa a API oficial, nao a substitui.
+0a. **Consulta oficial e direcionada.** `figma-use` e o unico
+    pre-requisito documental de toda chamada MCP. Consulte `gotchas`,
+    patterns, indice da API ou `.d.ts` somente quando a operacao pedir
+    aquele detalhe, por exemplo Slot, texto misto ou assinatura incerta.
+    No relatorio da rodada, registre referencia, motivo e simbolos de API
+    consultados. Esse registro e evidencia declarada, nao prova automatica
+    de leitura.
 1. **Scripts falham atomicamente.** Se um script dá erro no meio, NADA
    foi aplicado. Não re-tente às cegas: corrija a causa.
 1a. **Confirme o arquivo antes de diagnosticar permissao.** Antes de
@@ -212,18 +219,28 @@ falha silenciosa.
     (`setExplicitVariableModeForCollection`) que resolva `visible` como
     `true`, edite, depois `clearExplicitVariableModeForCollection`.
     (Regra comprovada em teste interno.)
-25a. **Instancia e opaca para composicao.** Nunca use `appendChild`,
-    `insertChild` ou reparent para colocar qualquer no dentro de uma
-    `INSTANCE`, remota ou local. Use apenas `setProperties` e properties
-    publicas. Conteudo adicional fica como irmao da instancia dentro de um
-    frame local. Se a property ou slot publico nao existir, interrompa como
-    `SEM_EQUIVALENTE` ou leve a necessidade de componente local ao contrato.
+25a. **Instancia e opaca para composicao, com uma excecao nativa.** Nunca
+    use `appendChild`, `insertChild` ou reparent diretamente em uma
+    `INSTANCE`, remota ou local. A unica excecao e inserir conteudo em um
+    `SlotNode` nativo confirmado dentro da INSTANCE remota. Antes disso, o
+    contrato v2 declara host IDS, Slot esperado, papeis de conteudo e a
+    property publica `SLOT`; o preflight confirma a property e o SlotNode.
+    Depois da escrita, `validateCompositionContract` precisa reler host,
+    Slot, conteudo, vinculo da property e `limitViolations` vazio. Um
+    componente IDS chamado "Slots" nao e essa excecao por si so. Sem Slot
+    nativo confirmado, conteudo adicional fica como irmao da instancia ou
+    vira `SEM_EQUIVALENTE`/excecao aprovada.
 25b. **Leia properties no no certo.**
     `componentPropertyDefinitions` e valido no `COMPONENT_SET` ou em um
     `COMPONENT` que nao seja variante. Se um COMPONENT tiver pai
     `COMPONENT_SET`, ele e variante: leia as definitions no pai. Em uma
     instancia consumida, leia `instance.componentProperties` para saber as
     properties aplicaveis. Acesso direto na variante falha a chamada inteira.
+25c. **Recuperacao encerra somente com releitura.** Pare, registre erro e
+    acao afetada, releia o estado Figma, corrija apenas a causa, releia de
+    novo e execute o validador correspondente. Se a releitura ou o
+    validador MCP nao puder ocorrer, o status e `NAO_VERIFICAVEL`; script
+    sem erro nao comprova correcao.
 
 ## Componentes e biblioteca
 

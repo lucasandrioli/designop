@@ -16,16 +16,23 @@ apenas audita.
 
 ## Contratos e evidencias
 
-O contrato de tela define viewport, rolagem, rodape fixo, papeis,
-origens de composicao e interacoes. O contrato de jornada define
+O contrato de tela v2 define viewport, rolagem, rodape fixo, papeis,
+origens de composicao, interacoes, Slots nativos e tipografia. O contrato de jornada define
 collection, mode de contexto, presenca e ausencia de templates. Ambos
 usam IDs logicos. Node IDs do arquivo ficam apenas em
 `.designops/runs/<rodada>/resolvido.json`.
 
 O Analista coleta estrutura e reacoes antes de propor o contrato. O
-Montador roda `validateRound.js` e `validateCompositionContract.js`
-antes de escrever. O Validador repete as coletas e devolve
+Montador roda `validateRound.js` antes de escrever. Depois da escrita,
+o Validador executa `validateCompositionContract.js` e
+`validateTypographyContract.js` no MCP, guarda seus relatorios literais
+em `.designops/runs/<rodada>/evidencias-mcp.json` e roda
+`validateRound.js --stage pre-promocao --evidence ...`. O Validador repete as coletas e devolve
 `NAO VERIFICAVEL` se o Figma divergir da evidencia do Analista.
+
+Contratos v1 sao legados. A migracao para v2 usa
+`migrateScreenContractV1ToV2.js` e deixa Slots e tipografia pendentes de
+revisao humana, sem inventar decisao.
 
 ## 0. `prepararReconstrucao` (leitura obrigatoria)
 
@@ -100,7 +107,9 @@ consuma apenas `libraries_added_to_file` e descarte
 
 Para um candidato, confira key real, properties publicas, variants e
 capacidade de composicao. Instancia remota e opaca: nao existe "colocar
-um texto dentro" se o componente nao expuser slot ou property. Classifique:
+um texto dentro" diretamente na instancia. Um Slot so e utilizavel se o
+preflight confirmar `SlotNode`, property publica do tipo `SLOT` e o
+vinculo entre ambos. Classifique:
 
 - `EXATO`: key, property ou token e uso conferidos;
 - `PROVA_DE_MONTAGEM`: a leitura confirma que o mecanismo e permitido
@@ -172,7 +181,8 @@ slot necessario.
 3. Crie a arvore-alvo com containers locais, Auto Layout, sizing, gaps,
    padding e sobreposicoes declarados no contrato.
 4. Importe componentes IDS pela key real e use somente properties
-   publicas. Nunca anexe filho dentro de instancia remota.
+   publicas. Nunca anexe filho diretamente em instancia remota. Conteudo
+   em Slot entra apenas no `SlotNode` confirmado e declarado no contrato.
 5. Crie componente ou secao local somente quando a excecao aprovada
    declarar esse papel.
 6. Clone referencia somente quando o contrato aprovar um asset visual
@@ -184,6 +194,26 @@ slot necessario.
    deterministico.
 8. Crie previews sem reactions em `_verificacao-<etapa>`; mode fica
    apenas no wrapper.
+
+### Slot e tipografia
+
+Para cada Slot usado, guarde em `evidencias-mcp.json` `roundId`, IDs do
+host, Slot e conteudo, key e biblioteca, property publica `SLOT`,
+`writtenAt`, `readAt`, `limitViolations` e o relatorio literal de
+`validateCompositionContract`. `readAt` precisa ser posterior a
+`writtenAt`, mas a vinculacao real vem do relatorio com os mesmos IDs e
+rodada.
+
+Todo alvo `TEXTO` do contrato v2 declara `UNICO` ou `MISTO`. `UNICO` usa
+uma regra para todo o no; `MISTO` declara a sequencia de segmentos. O
+validador le `getStyledTextSegments`, compara Text Styles e bindings e
+guarda o relatorio literal. Tipografia pode usar modes estruturais do IDS
+e variaveis tipograficas. A proibicao continua limitada ao mode da
+collection de conteudo de contexto no template e em seus descendentes.
+
+Se uma escrita falhar, pare, registre a acao, releia, corrija apenas a
+causa e releia antes de validar. Sem releitura, o resultado e
+`NAO_VERIFICAVEL`.
 
 ### Rodape fixo em frame rolavel
 

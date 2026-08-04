@@ -12,8 +12,12 @@ Crie `docs/contratos/<modalidade>-<etapa>-<tela>.json` conforme
 Ele declara:
 
 - viewport, rolagem e filhos fixos;
-- papeis semanticos e sua origem (`IDS`, `COMPONENTE_LOCAL` ou
-  `LOCAL_LAYOUT`);
+- papeis semanticos e sua origem (`IDS`, `COMPONENTE_LOCAL`,
+  `LOCAL_LAYOUT`, `TEXTO` ou `ASSET`);
+- Slots nativos declarados por papel hospedeiro IDS, nome do Slot,
+  propriedade publica `SLOT` e papeis de conteudo; nunca registrar node IDs;
+- tipografia de cada papel textual como `UNICO` ou `MISTO`, com origem
+  `IDS_STYLE`, `IDS_COMPONENT` ou `LOCAL_APPROVED`;
 - bindings de conteudo esperados;
 - interacoes `ON_CLICK` ou `AFTER_TIMEOUT`, com destino `NODE`, `URL`,
   `BACK` ou `CLOSE`;
@@ -22,6 +26,13 @@ Ele declara:
 Um contrato de tela descreve a arvore-alvo. Ele nao copia a arvore da
 referencia e nao recebe `contexto-id` no nome de template, variavel ou
 componente.
+
+`tela.schemaVersion: 2` e obrigatorio para rodada nova. Contrato v1 e
+legado: pode ser lido, mas nao e interpretado para montagem ou promocao sem
+migracao explicita. A migracao nao inventa Slots, estilo tipografico nem
+aprovacao humana. O script marca o resultado como
+`PENDENTE_REVISAO_HUMANA`; a rodada so prossegue depois de declarar
+`REVISAO_HUMANA_CONCLUIDA` com `approvalId`.
 
 ## Contrato de jornada
 
@@ -79,6 +90,25 @@ node IDs atuais de referencias, previews e Sections de jornada.
 
 O Validador reconstroi a evidencia no Figma e reprova quando a
 resolucao temporaria nao corresponde mais ao arquivo.
+
+## Evidencia MCP de Slots e tipografia
+
+Depois da escrita, o Montador e o Validador registram
+`.designops/runs/<rodada>/evidencias-mcp.json` conforme
+`evidencias-mcp.schema.json`. Cada evidencia repete o `roundId`, IDs reais
+do host, Slot e conteudo ou dos textos examinados, `writtenAt`, `readAt` e o
+relatorio literal do validador MCP. A evidencia de Slot tambem registra key
+completa da property publica `SLOT`, biblioteca e `limitViolations`.
+O arquivo tambem registra `referencesConsulted`: referencia oficial,
+motivo e simbolos de API consultados. `figma-use` entra em toda chamada
+MCP; gotchas, patterns, indice e `.d.ts` so entram quando a operacao os
+exigiu. Isso e evidencia declarada, nao prova automatica de leitura.
+
+`readAt` posterior a `writtenAt` demonstra a sequencia declarada. A ligacao
+entre aquela releitura e os nos e demonstrada pelo relatorio literal, que
+repete o mesmo `roundId` e os mesmos IDs. Se nao for possivel reler o Figma,
+registre `NAO_VERIFICAVEL`; nunca marque a correcao como concluida apenas
+porque a nova escrita nao devolveu erro.
 
 ## Criterios tecnicos de uma rodada
 

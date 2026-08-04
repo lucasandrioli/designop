@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evidencias temporarias de validacao MCP",
+  "type": "object",
+  "required": ["schemaVersion", "roundId", "referencesConsulted", "slots", "typography"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "roundId": { "type": "string", "minLength": 1 },
+    "referencesConsulted": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["reference", "reason", "symbols"],
+        "properties": {
+          "reference": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 },
+          "symbols": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+        }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["contractId", "slotId", "roundId", "hostInstanceId", "slotNodeId", "contentNodeIds", "componentKey", "libraryKey", "componentPropertyKey", "componentPropertyName", "componentPropertyType", "writtenAt", "readAt", "limitViolations", "status", "passed", "report"],
+        "properties": {
+          "contractId": { "type": "string", "minLength": 1 },
+          "slotId": { "type": "string", "minLength": 1 },
+          "roundId": { "type": "string", "minLength": 1 },
+          "hostInstanceId": { "type": "string", "minLength": 1 },
+          "slotNodeId": { "type": "string", "minLength": 1 },
+          "contentNodeIds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+          "componentKey": { "type": "string", "minLength": 1 },
+          "libraryKey": { "type": "string", "minLength": 1 },
+          "componentPropertyKey": { "type": "string", "minLength": 1 },
+          "componentPropertyName": { "type": "string", "minLength": 1 },
+          "componentPropertyType": { "const": "SLOT" },
+          "writtenAt": { "type": "string", "format": "date-time" },
+          "readAt": { "type": "string", "format": "date-time" },
+          "limitViolations": { "type": "array", "items": { "enum": ["BELOW_MIN", "ABOVE_MAX", "HAS_NON_PREFERRED"] }, "uniqueItems": true },
+          "status": { "enum": ["APROVADO", "REPROVADO", "NAO_VERIFICAVEL"] },
+          "passed": { "type": "boolean" },
+          "report": { "type": "object" }
+        }
+      }
+    },
+    "typography": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["contractId", "typographyId", "roundId", "targetNodeIds", "writtenAt", "readAt", "status", "passed", "report"],
+        "properties": {
+          "contractId": { "type": "string", "minLength": 1 },
+          "typographyId": { "type": "string", "minLength": 1 },
+          "roundId": { "type": "string", "minLength": 1 },
+          "targetNodeIds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+          "writtenAt": { "type": "string", "format": "date-time" },
+          "readAt": { "type": "string", "format": "date-time" },
+          "status": { "enum": ["APROVADO", "REPROVADO", "NAO_VERIFICAVEL"] },
+          "passed": { "type": "boolean" },
+          "report": { "type": "object" }
+        }
+      }
+    }
+  }
+}

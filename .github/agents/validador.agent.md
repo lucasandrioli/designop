@@ -27,6 +27,14 @@ com o manifesto do Analista. Execute `validateRound.js` e
 referencia, a resolucao temporaria ou a cobertura divergirem do
 manifesto, devolva `NAO VERIFICAVEL`.
 
+Para contrato v2, execute no MCP `validateCompositionContract.js` para
+Slots e `validateTypographyContract.js` para cada alvo textual. O
+relatorio literal precisa repetir `roundId` e os IDs que verificou. Salve
+as evidencias temporarias e rode `validateRound.js --stage pre-promocao`.
+Slot so passa com host remoto, property `SLOT`, conteudo no SlotNode e
+`limitViolations` vazio. Texto MISTO passa somente pela leitura de
+segmentos. Falha de releitura e `NAO_VERIFICAVEL`, nunca "corrigido".
+
 Em ambos os coletores, leia todas as partes devolvidas em `paginacao`.
 Resumo, primeira parte ou output truncado nao provam cobertura.
 

@@ -59,8 +59,9 @@ async function inspectRemoteComponent(candidate = {}) {
       : component.parent?.type === 'COMPONENT_SET'
         ? component.parent.componentPropertyDefinitions
         : component.componentPropertyDefinitions
-    report.publicProperties = Object.entries(definitions ?? {}).map(([name, definition]) => ({
-      name,
+    report.publicProperties = Object.entries(definitions ?? {}).map(([componentPropertyKey, definition]) => ({
+      componentPropertyKey,
+      name: definition?.name ?? componentPropertyKey.split('#')[0],
       type: definition?.type ?? null,
       defaultValue: definition?.defaultValue ?? null,
     }))
@@ -70,6 +71,20 @@ async function inspectRemoteComponent(candidate = {}) {
       value: property?.value ?? null,
       boundVariables: property?.boundVariables ?? null,
     }))
+    const slotNodes = []
+    const walk = (node) => {
+      if (node.type === 'SLOT') {
+        slotNodes.push({
+          id: node.id,
+          name: node.name,
+          limitViolations: Array.isArray(node.limitViolations) ? [...node.limitViolations] : null,
+          componentPropertyReferences: node.componentPropertyReferences ?? null,
+        })
+      }
+      if ('children' in node) for (const child of node.children) walk(child)
+    }
+    walk(instance)
+    report.slotNodes = slotNodes
     instance.remove()
     report.passed = true
     return report

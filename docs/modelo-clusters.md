@@ -89,6 +89,11 @@ Uma Section de jornada aplica um mode de conteudo uma unica vez e seus
 templates descendentes herdam esse mode. Collections estruturais do IDS,
 como cor, espacamento e tipografia, podem coexistir nessa Section.
 
+Tipografia estrutural nao e conteudo por contexto. Um Text Style ou uma
+variavel tipografica do IDS pode usar modes estruturais, como tema, sem
+violar a regra de mode de contexto. A proibicao recai somente sobre o mode da
+collection `Conteudo - <Modalidade>` em template ou descendente.
+
 ## Selecionar o mecanismo correto
 
 | Diferenca observada | Mecanismo |

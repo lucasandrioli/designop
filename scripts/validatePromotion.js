@@ -10,17 +10,20 @@
  *
  * return await validatePromotion('12:34', {
  *   contentCollectionId: 'VariableCollectionId:conteudo',
+ *   roundId: 'rodada-atual',
  *   referenceIds: ['12:1', '12:2'],
  *   evidence: {
  *     creationPassed: true,
  *     contentContractPassed: true,
  *     compositionContractPassed: true,
+ *     typographyContractPassed: true,
  *     modeBehaviorPassed: true,
  *     reconstructionContractPassed: true,
  *     layoutPassed: true,
  *     visualReviewPassed: true,
  *     roundPassed: true,
  *     validatorVerdict: 'APTO PARA PROMOCAO',
+ *     mcpReports: { composition: <relatorio literal>, typography: <relatorio literal> },
  *   },
  * })
  *
@@ -47,6 +50,36 @@ async function validatePromotion(candidateId, opts = {}) {
     return report
   }
   report.candidateName = candidate.name
+
+  const reportMcp = (name, literal, requireTargets) => {
+    if (!literal || literal.roundId !== opts.roundId || literal.templateId !== candidateId || literal.passed !== true || literal.verificationStatus !== 'APROVADO') {
+      report.evidenceIssues.push({ key: `mcpReports.${name}`, reason: 'relatorio MCP literal ausente, reprovado ou fora da rodada/candidato atual' })
+      return
+    }
+    const results = name === 'composition' ? literal.slotResults : literal.targetResults
+    if (!Array.isArray(results) || (requireTargets && results.length === 0)) {
+      report.evidenceIssues.push({ key: `mcpReports.${name}`, reason: 'relatorio MCP nao traz os resultados exigidos' })
+      return
+    }
+    for (const item of results) {
+      const ids = name === 'composition'
+        ? [item?.hostInstanceId, item?.slotNodeId, ...(item?.contentNodeIds ?? [])]
+        : item?.targetNodeIds ?? []
+      if (item?.passed !== true || ids.length === 0 || ids.some((id) => typeof id !== 'string' || !id)) {
+        report.evidenceIssues.push({ key: `mcpReports.${name}`, reason: 'relatorio MCP nao vincula resultado aprovado aos IDs verificados' })
+        return
+      }
+      if (name === 'composition' && (item.componentPropertyType !== 'SLOT' || !item.componentPropertyKey || !Array.isArray(item.limitViolations) || item.limitViolations.length > 0)) {
+        report.evidenceIssues.push({ key: 'mcpReports.composition', reason: 'relatorio MCP de Slot nao confirma property SLOT ou limitViolations vazio' })
+        return
+      }
+    }
+  }
+  if (typeof opts.roundId !== 'string' || !opts.roundId) {
+    report.evidenceIssues.push({ key: 'roundId', reason: 'promocao exige roundId atual' })
+  }
+  reportMcp('composition', opts.evidence?.mcpReports?.composition, false)
+  if (opts.evidence?.typographyRequired !== false) reportMcp('typography', opts.evidence?.mcpReports?.typography, true)
 
   if (candidate.type !== 'COMPONENT' && candidate.type !== 'COMPONENT_SET') {
     report.conventionIssues.push({
@@ -174,6 +207,7 @@ async function validatePromotion(candidateId, opts = {}) {
     'creationPassed',
     'contentContractPassed',
     'compositionContractPassed',
+    'typographyContractPassed',
     'modeBehaviorPassed',
     'reconstructionContractPassed',
     'layoutPassed',

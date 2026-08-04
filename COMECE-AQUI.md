@@ -38,7 +38,9 @@ contextos preenchidos no master.
    rascunhos em `_verificacao-<etapa>`. Depois gera previews temporarios.
    Nao inicia tela por clone.
 10. O Validador audita arvore, IDS, geometria, bindings, modes,
-    comportamento e visual.
+    comportamento e visual. Para contrato v2, ele prova Slot e tipografia
+    no MCP, guarda relatorios literais da rodada e roda `validateRound` de
+    pre-promocao. Sem releitura Figma, o veredito e `NAO_VERIFICAVEL`.
 11. Somente um veredito favoravel permite promover para
     `<modalidade>/<etapa>/tpl-<tela>`.
 
@@ -76,3 +78,6 @@ descendentes herdarem. Collections estruturais do IDS podem coexistir.
 - Nao criar componente local sem duas reutilizacoes previstas no
   contrato aprovado.
 - Nao promover sem veredito favoravel do Validador.
+- Nao inserir diretamente em `INSTANCE`. Conteudo adicional so entra em
+  `SlotNode` nativo confirmado, com property publica `SLOT` declarada e
+  `limitViolations` vazio.

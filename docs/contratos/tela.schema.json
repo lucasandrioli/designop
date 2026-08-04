@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Contrato logico de tela",
   "type": "object",
-  "required": ["schemaVersion", "id", "modalidade", "etapa", "tela", "viewport", "prototype", "roles", "interacoes"],
+  "required": ["schemaVersion", "id", "modalidade", "etapa", "tela", "viewport", "prototype", "roles", "interacoes", "slots", "typography"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "id": { "type": "string", "minLength": 1 },
     "modalidade": { "type": "string", "minLength": 1 },
     "etapa": { "type": "string", "minLength": 1 },
@@ -64,6 +64,59 @@
             }
           }
         }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "hostRole", "slotName", "componentPropertyName", "contentRoleIds"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "hostRole": { "type": "string", "minLength": 1 },
+          "slotName": { "type": "string", "minLength": 1 },
+          "componentPropertyName": { "type": "string", "minLength": 1 },
+          "contentRoleIds": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "typography": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "targetRole", "kind", "source"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "targetRole": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["UNICO", "MISTO"] },
+          "source": { "enum": ["IDS_STYLE", "IDS_COMPONENT", "LOCAL_APPROVED"] },
+          "styleRole": { "type": ["string", "null"], "minLength": 1 },
+          "approvalId": { "type": ["string", "null"], "minLength": 1 },
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["styleRole"],
+              "properties": {
+                "styleRole": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "migration": {
+      "type": "object",
+      "required": ["fromSchemaVersion", "status"],
+      "properties": {
+        "fromSchemaVersion": { "const": 1 },
+        "status": { "enum": ["PENDENTE_REVISAO_HUMANA", "REVISAO_HUMANA_CONCLUIDA"] },
+        "approvalId": { "type": ["string", "null"], "minLength": 1 }
       }
     },
     "componentesLocais": {

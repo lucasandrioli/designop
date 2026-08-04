@@ -30,6 +30,13 @@ provar que cada papel sera IDS, componente local aprovado ou
 `local-layout`; uma instancia destacada ou imitador local nao e uma
 substituicao aceita.
 
+Nunca insira diretamente em INSTANCE. Use SlotNode somente quando o
+contrato v2 e o preflight confirmarem property publica `SLOT`; depois da
+escrita, registre a releitura e o relatorio literal MCP. Execute tambem
+`validateTypographyContract.js` para todo alvo textual, inclusive MISTO,
+e `validateRound.js --stage pre-promocao` com a evidencia da rodada.
+Sem releitura, pare em `NAO_VERIFICAVEL`.
+
 Use a collection de conteudo da modalidade e aplique mode apenas em
 wrappers de preview. Template e descendente nao fixam mode. Nao inicie
 por clone de referencia.

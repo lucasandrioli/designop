@@ -583,6 +583,121 @@ async function testInteractionCompositionAndReconstruction() {
   assert.strictEqual(report.passed, false, 'Rodape fora do limite inferior deveria reprovar')
 }
 
+async function testSlotsAndTypographyContracts() {
+  const createSlotFixture = ({ twoSlots = false, propertyName = 'Conteudo', contentInside = true, limitViolations = [], exposePropertyLink = true } = {}) => {
+    const contentA = { id: 'content-a', name: 'conteudo-a', type: 'TEXT', children: [] }
+    const contentB = { id: 'content-b', name: 'conteudo-b', type: 'TEXT', children: [] }
+    const slotA = {
+      id: 'slot-a', name: 'slot-a', type: 'SLOT', limitViolations,
+      componentPropertyReferences: exposePropertyLink ? { slotContent: 'Conteudo#1:2' } : {},
+      children: contentInside ? [contentA] : [],
+    }
+    const slotB = {
+      id: 'slot-b', name: 'slot-b', type: 'SLOT', limitViolations: [],
+      componentPropertyReferences: { slotContent: 'Complemento#1:3' }, children: [contentB],
+    }
+    const remoteMain = {
+      id: 'remote-main', key: 'ids-card', remote: true,
+      componentPropertyDefinitions: {
+        'Conteudo#1:2': { type: 'SLOT', name: 'Conteudo' },
+        'Complemento#1:3': { type: 'SLOT', name: 'Complemento' },
+      },
+    }
+    const host = { id: 'host', name: 'card-ids', type: 'INSTANCE', mainComponent: remoteMain, children: twoSlots ? [slotA, slotB] : [slotA] }
+    if (!contentInside) host.children.push(contentA)
+    const template = { id: 'template-slot', name: '_rascunho-modalidade-etapa-tela', type: 'COMPONENT', children: [host], findAll: () => [host] }
+    const roles = [
+      { id: 'host', source: 'IDS', target: { nodeName: 'card-ids' }, componentKey: 'ids-card' },
+      { id: 'content-a', source: 'TEXTO', target: { nodeName: 'conteudo-a' } },
+    ]
+    const slots = [{ id: 'slot-principal', hostRole: 'host', slotName: 'slot-a', componentPropertyName: propertyName, libraryKey: 'library-ids', contentRoleIds: ['content-a'] }]
+    if (twoSlots) {
+      roles.push({ id: 'content-b', source: 'TEXTO', target: { nodeName: 'conteudo-b' } })
+      slots.push({ id: 'slot-complementar', hostRole: 'host', slotName: 'slot-b', componentPropertyName: 'Complemento', libraryKey: 'library-ids', contentRoleIds: ['content-b'] })
+    }
+    return { template, roles, slots }
+  }
+  const runSlot = async (options) => {
+    const fixture = createSlotFixture(options)
+    const validateCompositionContract = loadFigmaFunction('scripts/validateCompositionContract.js', 'validateCompositionContract', {
+      getNodeByIdAsync: async (id) => id === fixture.template.id ? fixture.template : null,
+    })
+    return validateCompositionContract(fixture.template.id, { roundId: 'rodada-slot', roles: fixture.roles, slots: fixture.slots })
+  }
+  let report = await runSlot()
+  assert.strictEqual(report.passed, true, 'Slot valido deve provar host, property, conteudo e limites')
+  assert.strictEqual(report.slotResults[0].componentPropertyKey, 'Conteudo#1:2', 'Evidencia de Slot deve guardar a key publica completa')
+  report = await runSlot({ twoSlots: true })
+  assert.strictEqual(report.passed, true, 'Dois Slots no mesmo componente devem ser distinguidos pela property publica')
+  report = await runSlot({ propertyName: 'Inexistente' })
+  assert.strictEqual(report.verificationStatus, 'REPROVADO', 'Property publica errada deve reprovar')
+  report = await runSlot({ contentInside: false })
+  assert.strictEqual(report.verificationStatus, 'REPROVADO', 'Conteudo fora do Slot deve reprovar')
+  for (const violation of ['BELOW_MIN', 'ABOVE_MAX', 'HAS_NON_PREFERRED']) {
+    report = await runSlot({ limitViolations: [violation] })
+    assert.strictEqual(report.verificationStatus, 'REPROVADO', `limitViolation ${violation} deve reprovar`)
+  }
+  report = await runSlot({ exposePropertyLink: false })
+  assert.strictEqual(report.verificationStatus, 'NAO_VERIFICAVEL', 'Sem releitura do vinculo Slot/property o resultado deve ser NAO_VERIFICAVEL')
+
+  let segments = [{ start: 0, end: 5, textStyleId: 'style-body', boundVariables: {} }]
+  const text = { id: 'text-a', name: 'texto-a', type: 'TEXT', getStyledTextSegments: () => segments }
+  const template = { id: 'template-type', type: 'COMPONENT', name: '_rascunho-tipo', children: [text], findAll: () => [text] }
+  const validateTypographyContract = loadFigmaFunction('scripts/validateTypographyContract.js', 'validateTypographyContract', {
+    getNodeByIdAsync: async (id) => id === template.id ? template : null,
+  })
+  const styles = [
+    { role: 'body', styleId: 'style-body', boundVariableIds: [] },
+    { role: 'strong', styleId: 'style-strong', boundVariableIds: ['weight-variable'] },
+  ]
+  report = await validateTypographyContract(template.id, {
+    roundId: 'rodada-tipo', styles,
+    targets: [{ id: 'titulo', target: { nodeName: 'texto-a' }, kind: 'UNICO', source: 'IDS_STYLE', styleRole: 'body' }],
+  })
+  assert.strictEqual(report.passed, true, 'Texto UNICO com Text Style IDS deve aprovar')
+  segments = [
+    { start: 0, end: 2, textStyleId: 'style-body', boundVariables: {} },
+    { start: 2, end: 5, textStyleId: 'style-strong', boundVariables: { fontWeight: { type: 'VARIABLE_ALIAS', id: 'weight-variable' } } },
+  ]
+  report = await validateTypographyContract(template.id, {
+    roundId: 'rodada-tipo', styles,
+    targets: [{ id: 'titulo-misto', target: { nodeName: 'texto-a' }, kind: 'MISTO', source: 'IDS_STYLE', segments: [{ styleRole: 'body' }, { styleRole: 'strong' }] }],
+  })
+  assert.strictEqual(report.passed, true, 'Texto MISTO deve comparar segmentos, estilos e bindings')
+  delete text.getStyledTextSegments
+  report = await validateTypographyContract(template.id, {
+    roundId: 'rodada-tipo', styles,
+    targets: [{ id: 'sem-leitura', target: { nodeName: 'texto-a' }, kind: 'UNICO', source: 'IDS_STYLE', styleRole: 'body' }],
+  })
+  assert.strictEqual(report.verificationStatus, 'NAO_VERIFICAVEL', 'Sem leitura de segmentos, tipografia nao e verificavel')
+}
+
+async function testPromotionMcpAndModes() {
+  const contentVariable = { id: 'content-variable', variableCollectionId: 'content-collection' }
+  const candidate = {
+    id: 'candidate', name: '_rascunho-modalidade-etapa-tela', type: 'COMPONENT', children: [],
+    findAll: () => [], boundVariables: { content: { type: 'VARIABLE_ALIAS', id: 'content-variable' } },
+    explicitVariableModes: { 'ids-structural': 'theme-claro' },
+  }
+  const reference = { id: 'reference', name: 'ref-modalidade-tela-ctx-a', type: 'FRAME' }
+  const validatePromotion = loadFigmaFunction('scripts/validatePromotion.js', 'validatePromotion', {
+    getNodeByIdAsync: async (id) => ({ candidate, reference })[id] ?? null,
+    variables: { getLocalVariablesAsync: async () => [contentVariable] },
+  })
+  const evidence = {
+    creationPassed: true, contentContractPassed: true, compositionContractPassed: true,
+    typographyContractPassed: true, modeBehaviorPassed: true, reconstructionContractPassed: true,
+    layoutPassed: true, visualReviewPassed: true, roundPassed: true,
+    typographyRequired: false, validatorVerdict: 'APTO PARA PROMOCAO',
+    mcpReports: { composition: { roundId: 'rodada-promocao', templateId: 'candidate', passed: true, verificationStatus: 'APROVADO', slotResults: [] } },
+  }
+  let report = await validatePromotion('candidate', { contentCollectionId: 'content-collection', referenceIds: ['reference'], roundId: 'rodada-promocao', evidence })
+  assert.strictEqual(report.passed, true, 'Mode estrutural IDS permitido nao pode bloquear promocao')
+  candidate.explicitVariableModes['content-collection'] = 'modo-contexto'
+  report = await validatePromotion('candidate', { contentCollectionId: 'content-collection', referenceIds: ['reference'], roundId: 'rodada-promocao', evidence })
+  assert.strictEqual(report.passed, false, 'Mode de conteudo no template deve bloquear promocao')
+}
+
 async function testPrototypeCollectionOutsideSection() {
   const source = {
     id: 'source',
@@ -700,8 +815,14 @@ function testValidateRound() {
   const fixture = temporaryDirectory('designops-round-')
   const screens = path.join(fixture, 'screens')
   fs.mkdirSync(screens)
+  const legacyInput = path.join(fixture, 'legacy-v1.json')
+  const legacyOutput = path.join(fixture, 'legacy-v2.json')
+  fs.writeFileSync(legacyInput, JSON.stringify({ schemaVersion: 1, id: 'legado' }))
+  expectSuccess(runNode(path.join(root, 'scripts/migrateScreenContractV1ToV2.js'), [legacyInput, legacyOutput]), 'Migracao explicita v1 para v2')
+  const migrated = JSON.parse(fs.readFileSync(legacyOutput, 'utf8'))
+  assert.strictEqual(migrated.migration.status, 'PENDENTE_REVISAO_HUMANA', 'Migracao nao pode aprovar Slots e tipografia sozinha')
   const screen = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     id: 'screen-a',
     modalidade: 'modalidade-a',
     etapa: 'etapa-a',
@@ -710,6 +831,8 @@ function testValidateRound() {
     prototype: { overflowDirection: 'NONE', fixedChildren: [] },
     roles: [{ id: 'raiz', source: 'LOCAL_LAYOUT' }],
     interacoes: [],
+    slots: [],
+    typography: [],
   }
   const journey = {
     schemaVersion: 1,
@@ -735,6 +858,53 @@ function testValidateRound() {
   fs.writeFileSync(componentsFile, JSON.stringify({ schemaVersion: 1, id: 'componentes-a', contextosConhecidos: [{ id: 'ctx-a', rotulo: 'Contexto A' }], componentes: [] }))
   const roundArgs = ['--screens', screens, '--journey', journeyFile, '--resolved', resolvedFile, '--components', componentsFile]
   expectSuccess(runNode(path.join(root, 'scripts/validateRound.js'), roundArgs), 'Round valido')
+
+  screen.roles = [
+    { id: 'host', source: 'IDS' },
+    { id: 'texto-slot', source: 'TEXTO' },
+  ]
+  screen.slots = [{ id: 'slot-a', hostRole: 'host', slotName: 'slot-a', componentPropertyName: 'Conteudo', contentRoleIds: ['texto-slot'] }]
+  screen.typography = [{ id: 'tipo-a', targetRole: 'texto-slot', kind: 'UNICO', source: 'IDS_STYLE', styleRole: 'corpo' }]
+  fs.writeFileSync(screenFile, JSON.stringify(screen))
+  const evidenceFile = path.join(fixture, 'evidencias-mcp.json')
+  const evidence = {
+    schemaVersion: 1,
+    roundId: 'rodada-a',
+    referencesConsulted: [{ reference: 'figma-use', reason: 'pre-requisito MCP da rodada', symbols: ['use_figma'] }],
+    slots: [{
+      contractId: 'screen-a', slotId: 'slot-a', roundId: 'rodada-a', hostInstanceId: 'host-real', slotNodeId: 'slot-real', contentNodeIds: ['content-real'],
+      componentKey: 'component-key', libraryKey: 'library-key', componentPropertyKey: 'Conteudo#1:2', componentPropertyName: 'Conteudo', componentPropertyType: 'SLOT',
+      writtenAt: '2026-08-04T10:00:00.000Z', readAt: '2026-08-04T10:01:00.000Z', limitViolations: [], status: 'APROVADO', passed: true,
+      report: { roundId: 'rodada-a', passed: true, verificationStatus: 'APROVADO', slotResults: [{ id: 'slot-a', hostInstanceId: 'host-real', slotNodeId: 'slot-real', contentNodeIds: ['content-real'], componentKey: 'component-key', libraryKey: 'library-key', componentPropertyKey: 'Conteudo#1:2', componentPropertyName: 'Conteudo', componentPropertyType: 'SLOT', limitViolations: [], passed: true }] },
+    }],
+    typography: [{
+      contractId: 'screen-a', typographyId: 'tipo-a', roundId: 'rodada-a', targetNodeIds: ['content-real'],
+      writtenAt: '2026-08-04T10:00:00.000Z', readAt: '2026-08-04T10:01:00.000Z', status: 'APROVADO', passed: true,
+      report: { roundId: 'rodada-a', passed: true, verificationStatus: 'APROVADO', targetResults: [{ id: 'tipo-a', targetNodeIds: ['content-real'], passed: true }] },
+    }],
+  }
+  const runPromotionRound = (nextEvidence, description, shouldPass = true) => {
+    fs.writeFileSync(evidenceFile, JSON.stringify(nextEvidence))
+    const result = runNode(path.join(root, 'scripts/validateRound.js'), [...roundArgs, '--stage', 'pre-promocao', '--evidence', evidenceFile])
+    if (shouldPass) expectSuccess(result, description)
+    else expectFailure(result, description)
+  }
+  runPromotionRound(evidence, 'Evidencia MCP vinculada a Slot e tipografia')
+  const changedRound = JSON.parse(JSON.stringify(evidence)); changedRound.roundId = 'rodada-outra'
+  runPromotionRound(changedRound, 'Evidencia de outra rodada', false)
+  const missingReport = JSON.parse(JSON.stringify(evidence)); missingReport.slots[0].report = {}
+  runPromotionRound(missingReport, 'Relatorio MCP de Slot ausente', false)
+  const divergentIds = JSON.parse(JSON.stringify(evidence)); divergentIds.slots[0].report.slotResults[0].slotNodeId = 'outro-slot'
+  runPromotionRound(divergentIds, 'IDs divergentes no relatorio MCP', false)
+  const failedEvidence = JSON.parse(JSON.stringify(evidence)); failedEvidence.slots[0].passed = false
+  runPromotionRound(failedEvidence, 'Evidencia MCP reprovada', false)
+  const missingId = JSON.parse(JSON.stringify(evidence)); missingId.slots[0].contentNodeIds = []
+  runPromotionRound(missingId, 'Evidencia MCP sem ID de conteudo', false)
+  const staleRead = JSON.parse(JSON.stringify(evidence)); staleRead.slots[0].readAt = staleRead.slots[0].writtenAt
+  runPromotionRound(staleRead, 'Releitura sem ordem temporal posterior', false)
+  const notVerifiable = JSON.parse(JSON.stringify(evidence)); notVerifiable.slots[0].status = 'NAO_VERIFICAVEL'; notVerifiable.slots[0].passed = false
+  runPromotionRound(notVerifiable, 'Falha de releitura deve permanecer NAO_VERIFICAVEL', false)
+
   journey.composicoesInternas = [{
     id: 'confirmacao-externa',
     contextoId: 'ctx-a',
@@ -816,6 +986,8 @@ async function main() {
 
     await testJourneyAndLocalComponents()
     await testInteractionCompositionAndReconstruction()
+    await testSlotsAndTypographyContracts()
+    await testPromotionMcpAndModes()
     await testPrototypeCollectionOutsideSection()
     await testReferenceStructurePagination()
     await testCanvasOrganization()

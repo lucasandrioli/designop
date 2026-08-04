@@ -61,6 +61,12 @@ Em `/consignado-contexto`, ele conversa com o designer para separar
 fato observado de regra de negocio. Mostra o rascunho do manual global,
 manual da modalidade, catalogo de etapa, manual de contexto e mapa.
 So grava esses documentos depois de aprovacao humana explicita do texto.
+Quando Formalizacao tiver confirmacao externa, registra no mapa somente a
+presenca, o roteiro de orientacao e o contrato de retorno ao app. O
+tutorial, quando existir, e opcional e reencontra o mesmo
+direcionamento externo. Quantidade, canais e formato das acoes externas
+ficam no manual do contexto; evidencias externas nao viram templates
+internos.
 
 Em `/consignado-analise`, ele le somente referencias cruas, reacoes de
 prototipo, documentos aprovados e evidencia IDS. Antes de propor mapa,

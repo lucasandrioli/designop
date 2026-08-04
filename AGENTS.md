@@ -27,10 +27,22 @@ Figma como executada. Ele pode executar somente trabalho de texto.
 - As etapas canonicas sao `consentimento`, `simular-e-revisar` e
   `formalizacao`. Etapa e capacidade reutilizavel, definida uma vez em
   `docs/etapas/<etapa>.md`.
-- Uma composicao adicional ou externa pode existir dentro de
-  Formalizacao quando o contrato aprovado a exigir. Ela nao cria etapa
-  independente sem duas ocorrencias reais em etapas distintas e nova
-  aprovacao humana.
+- Uma confirmacao externa pode compor Formalizacao quando o contrato
+  aprovado a exigir. Ela nao cria etapa canonica independente. O mapa
+  decide apenas se a composicao esta presente e qual e o caminho de
+  retorno ao app; quantidade, canais e formato das acoes fora do app
+  pertencem a regra local do contexto.
+- Uma confirmacao externa com qualquer quantidade de acoes fora do app
+  continua sendo a mesma composicao. O que pode alterar a estrutura de
+  Formalizacao e o retorno: `DIRETO`, quando a jornada segue apos voltar
+  ao app, ou `ACAO_NO_APP`, quando a pessoa precisa concluir uma acao
+  interna antes de a jornada seguir. Novo comportamento exige contrato
+  aprovado, mas nao cria etapa canonica automaticamente.
+- Quando a confirmacao externa tiver orientacao, ela pode oferecer um
+  tutorial opcional. O mapa declara se ha apenas caminho direto ou se
+  existe tambem o caminho de ajuda; o tutorial sempre reencontra o
+  mesmo direcionamento externo. Ele nunca vira etapa canonica separada
+  nem e deduzido pela quantidade de acoes externas.
 - O molde do Manual do Credito Consignado vive em
   `docs/manual-credito-consignado_template.md`. Em uma rodada concreta,
   o manual global registra regras globais; cada modalidade tem seu manual
@@ -79,6 +91,8 @@ internas e nao publicadas. Referencia crua nao e componente.
   modalidade. Collections estruturais do IDS podem coexistir.
 - O mode de contexto e aplicado uma unica vez na Section. Templates e
   descendentes herdam o mode e nao podem fixa-lo explicitamente.
+- Evidencias de ambientes externos comprovam o caminho e a regra local,
+  mas nao viram templates ou componentes publicados da biblioteca.
 
 ## Squad e checkpoints humanos
 

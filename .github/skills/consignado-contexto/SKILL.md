@@ -18,7 +18,13 @@ Antes de perguntar, recupere manual global, manual da modalidade,
 catalogo da etapa, mapa e manuais de contexto que ja existirem.
 Descubra o que puder nas referencias e pergunte apenas objetivo,
 limite, modalidade, contexto-id, rotulo atual e regra que explica
-diferencas. Mostre em conversa o rascunho do manual global, manual da
+diferencas. Quando houver confirmacao externa dentro de Formalizacao,
+pergunte se ela esta presente e qual e o contrato de retorno ao app:
+`DIRETO` ou `ACAO_NO_APP`. Pergunte tambem se a orientacao oferece
+tutorial opcional, que deve reencontrar o mesmo direcionamento externo
+do caminho direto. Nao pergunte quantidade de acoes externas
+para decidir a arquitetura: quantidade, canais e formato sao regra local
+do contexto. Mostre em conversa o rascunho do manual global, manual da
 modalidade, manual de contexto, catalogo e mapa.
 
 Espere aprovacao humana explicita do texto. So entao crie ou atualize

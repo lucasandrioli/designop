@@ -9,6 +9,7 @@ Esta e a doutrina normativa de variacao da biblioteca.
 | Modalidade | Templates separados e collection propria | Mapa da modalidade e Figma |
 | Contexto | Modes da collection de conteudo | Manual de contexto e Figma |
 | Composicao da jornada | Presenca e caminho no mapa | `docs/mapas/<modalidade>.md` |
+| Confirmacao externa dentro de Formalizacao | Presenca e contrato de retorno no mapa | Mapa, catalogo da etapa e manual de contexto |
 | Estado de UI | Properties ou variants | Contrato da tela |
 | Diferenca estrutural | Template funcional especializado | Contrato e mapa |
 
@@ -29,6 +30,29 @@ Cada decisao de negocio deve aparecer em uma camada somente:
 
 O mapa referencia as quatro camadas anteriores. Ele nao duplica suas
 regras: apenas registra onde cada regra se aplica na jornada.
+
+## Confirmacao externa dentro de Formalizacao
+
+Uma confirmacao externa pode ser uma composicao interna de
+Formalizacao. Ela nao e uma etapa canonica por si so. O mapa registra
+se ela esta presente e como a jornada retorna ao app:
+
+| Contrato de retorno | Significado |
+| --- | --- |
+| `DIRETO` | Ao retornar, a jornada continua para a proxima tela interna prevista. |
+| `ACAO_NO_APP` | Ao retornar, a pessoa precisa concluir uma acao interna antes de a jornada seguir. |
+
+O numero de acoes, canais ou verificacoes fora do app nao cria novas
+etapas, templates ou modos. Isso e regra local do contexto, registrada
+no respectivo manual e evidenciada nas referencias externas. Somente um
+novo comportamento de retorno pode exigir nova tela ou nova composicao
+no contrato aprovado.
+
+Quando a composicao tiver orientacao, o mapa tambem declara seu roteiro:
+somente caminho direto ou caminho direto com tutorial opcional. O
+tutorial e um caminho alternativo de ajuda e converge para o mesmo
+handoff externo. Ele nao e uma etapa canonica e nao e consequencia
+automatica da quantidade de acoes externas.
 
 Os contratos logicos de tela e jornada ficam em `docs/contratos/`. Eles
 descrevem a estrutura verificavel sem repetir regra de negocio nem

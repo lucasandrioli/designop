@@ -41,7 +41,10 @@ const referenceSkill = read('.github/skills/figma-referencias/SKILL.md');
   'duas telas',
   'collection de conteudo da',
   'aprovacao humana',
-  'veredito favoravel'
+  'veredito favoravel',
+  'confirmacao externa',
+  'ACAO_NO_APP',
+  'tutorial opcional'
 ].forEach((expected) => requireText('AGENTS.md', agents, expected));
 requireText('docs/modelo-clusters.md', model, '<etapa>/<tela>/<papel>');
 requireText('docs/modelo-clusters.md', model, 'Collections estruturais do IDS');
@@ -50,6 +53,8 @@ requireText('docs/modalidades/_template.md', modalityTemplate, 'Regras estrutura
 requireText('docs/manual-credito-consignado_template.md', globalTemplate, 'Regras globais');
 requireText('docs/mapas/_template.md', mapTemplate, 'Origem da regra');
 requireText('docs/mapas/_template.md', mapTemplate, 'Manual da modalidade');
+requireText('docs/mapas/_template.md', mapTemplate, 'Contrato de retorno');
+requireText('docs/mapas/_template.md', mapTemplate, 'Roteiro de orientacao');
 requireText('docs/contextos/_template.md', contextTemplate, 'Rotulo atual');
 requireText('scripts/validateLocalComponents.js', localValidator, 'duas reutilizacoes previstas distintas');
 requireText('scripts/validateLocalComponents.js', localValidator, 'knownContexts');
@@ -63,6 +68,9 @@ requireText('scripts/validateRound.js', roundValidator, 'resolucao temporaria');
 requireText('scripts/validateRound.js', roundValidator, 'plano de componentes locais');
 requireText('docs/contratos/tela.schema.json', screenSchema, 'fixedChildren');
 requireText('docs/contratos/jornada.schema.json', journeySchema, 'selecoes');
+requireText('docs/contratos/jornada.schema.json', journeySchema, 'composicoesInternas');
+requireText('docs/contratos/jornada.schema.json', journeySchema, 'ACAO_NO_APP');
+requireText('docs/contratos/jornada.schema.json', journeySchema, 'DIRETA_COM_TUTORIAL_OPCIONAL');
 requireText('docs/contratos/resolucao.schema.json', resolutionSchema, 'sectionId');
 requireText('docs/contratos/componentes-locais.schema.json', localComponentsSchema, 'reutilizacoes');
 requireText('docs/contratos/_template.md', contractTemplate, 'IDs logicos');

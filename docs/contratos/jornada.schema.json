@@ -36,6 +36,32 @@
         }
       }
     },
+    "composicoesInternas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "contextoId", "etapaHospedeira", "presente", "origemRegra"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "contextoId": { "type": "string", "pattern": "^ctx-[a-z0-9-]+$" },
+          "etapaHospedeira": { "type": "string", "minLength": 1 },
+          "presente": { "type": "boolean" },
+          "orientacao": { "enum": ["DIRETA", "DIRETA_COM_TUTORIAL_OPCIONAL", "[CONFIRMAR]"] },
+          "retorno": { "enum": ["DIRETO", "ACAO_NO_APP", "[CONFIRMAR]"] },
+          "origemRegra": { "enum": ["global", "convenio", "[CONFIRMAR]"] }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "presente": { "const": true } } },
+            "then": { "required": ["orientacao", "retorno"] }
+          },
+          {
+            "if": { "properties": { "presente": { "const": false } } },
+            "then": { "not": { "anyOf": [{ "required": ["orientacao"] }, { "required": ["retorno"] }] } }
+          }
+        ]
+      }
+    },
     "documentos": {
       "type": "object",
       "properties": {

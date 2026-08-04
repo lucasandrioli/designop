@@ -32,7 +32,14 @@ reacao nao existe porque a resposta ficou grande; marque a varredura
 como `FALHOU` e mantenha a lacuna bloqueante ate recuperar a evidencia.
 
 Entregue inventario, reacoes, mapa, contrato de tela, mapa IDS, plano
-de variaveis e proposta de composicao. Quando houver componente local,
+de variaveis e proposta de composicao. Para confirmacao externa dentro
+de Formalizacao, registre presenca e contrato de retorno (`DIRETO` ou
+`ACAO_NO_APP`), alem da orientacao direta ou do tutorial opcional, no
+mapa e no contrato de jornada. Quando existir tutorial, prove a
+bifurcacao e o reencontro no mesmo direcionamento externo. As telas e a cadeia do
+ambiente externo sao evidencias de caminho, nao templates internos; sua
+quantidade, canais e formato so podem ser registrados como regra local
+do contexto. Quando houver componente local,
 registre tambem o plano temporario com aprovacao, duas reutilizacoes
 previstas e contextos conhecidos. Classifique cada diferenca como
 regra de negocio, defeito estrutural, variavel, property, variant,

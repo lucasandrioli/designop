@@ -394,6 +394,25 @@ function testValidateRound() {
   fs.writeFileSync(componentsFile, JSON.stringify({ schemaVersion: 1, id: 'componentes-a', contextosConhecidos: [{ id: 'ctx-a', rotulo: 'Contexto A' }], componentes: [] }))
   const roundArgs = ['--screens', screens, '--journey', journeyFile, '--resolved', resolvedFile, '--components', componentsFile]
   expectSuccess(runNode(path.join(root, 'scripts/validateRound.js'), roundArgs), 'Round valido')
+  journey.composicoesInternas = [{
+    id: 'confirmacao-externa',
+    contextoId: 'ctx-a',
+    etapaHospedeira: 'etapa-a',
+    presente: true,
+    orientacao: 'DIRETA_COM_TUTORIAL_OPCIONAL',
+    retorno: 'DIRETO',
+    origemRegra: 'convenio',
+  }]
+  fs.writeFileSync(journeyFile, JSON.stringify(journey))
+  expectSuccess(runNode(path.join(root, 'scripts/validateRound.js'), roundArgs), 'Composicao externa com tutorial opcional valida')
+  delete journey.composicoesInternas[0].orientacao
+  fs.writeFileSync(journeyFile, JSON.stringify(journey))
+  expectFailure(runNode(path.join(root, 'scripts/validateRound.js'), roundArgs), 'Composicao externa presente sem roteiro de orientacao')
+  journey.composicoesInternas[0].orientacao = 'DIRETA'
+  journey.composicoesInternas[0].presente = false
+  fs.writeFileSync(journeyFile, JSON.stringify(journey))
+  expectFailure(runNode(path.join(root, 'scripts/validateRound.js'), roundArgs), 'Composicao externa ausente com retorno declarado')
+  journey.composicoesInternas = []
   journey.selecoes[0].template = null
   fs.writeFileSync(journeyFile, JSON.stringify(journey))
   expectFailure(runNode(path.join(root, 'scripts/validateRound.js'), roundArgs), 'Jornada sem template para tela presente')

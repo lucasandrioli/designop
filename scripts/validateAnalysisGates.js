@@ -16,8 +16,12 @@ requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'collectProt
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'collectReferenceStructure.js');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'em cada Section');
 requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'resolvido.json');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'contrato de retorno');
+requireText('.github/skills/consignado-analise/SKILL.md', analysis, 'reencontro');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'So entao crie ou atualize');
+requireText('.github/skills/consignado-contexto/SKILL.md', context, 'ACAO_NO_APP');
 requireText('docs/mapas/_template.md', mapTemplate, 'Origem da regra');
+requireText('docs/mapas/_template.md', mapTemplate, 'Composicoes internas');
 requireText('docs/contextos/_template.md', contextTemplate, 'Regras locais por etapa');
 if (failures.length) { console.error('Portoes da analise reprovados:'); failures.forEach((failure) => console.error('- ' + failure)); process.exit(1); }
 console.log('Portoes da analise aprovados.');

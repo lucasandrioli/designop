@@ -117,6 +117,25 @@ function main() {
       if (selection?.presente === true && !selection.template) failures.push(`tela presente sem template: ${selection?.tela ?? '?'}`)
       if (selection?.presente === false && selection.template) failures.push(`tela ausente nao pode selecionar template: ${selection?.tela ?? '?'}`)
     }
+    const compositionIds = new Set()
+    for (const composition of journey.composicoesInternas ?? []) {
+      if (!composition?.id || !composition?.etapaHospedeira || typeof composition?.presente !== 'boolean') {
+        failures.push('composicao interna incompleta')
+        continue
+      }
+      const compositionId = [composition.contextoId, composition.id].join('::')
+      if (compositionIds.has(compositionId)) failures.push(`composicao interna duplicada: ${compositionId}`)
+      compositionIds.add(compositionId)
+      if (!contextIds.includes(composition.contextoId)) failures.push(`composicao interna usa contexto inexistente: ${composition.contextoId ?? '?'}`)
+      if (!['global', 'convenio', '[CONFIRMAR]'].includes(composition.origemRegra)) failures.push(`composicao interna sem origem de regra valida: ${composition.id}`)
+      if (composition.presente === true && !['DIRETA', 'DIRETA_COM_TUTORIAL_OPCIONAL', '[CONFIRMAR]'].includes(composition.orientacao)) {
+        failures.push(`composicao interna presente sem roteiro de orientacao: ${composition.id}`)
+      }
+      if (composition.presente === true && !['DIRETO', 'ACAO_NO_APP', '[CONFIRMAR]'].includes(composition.retorno)) {
+        failures.push(`composicao interna presente sem contrato de retorno: ${composition.id}`)
+      }
+      if (composition.presente === false && (composition.orientacao || composition.retorno)) failures.push(`composicao interna ausente nao pode declarar orientacao ou retorno: ${composition.id}`)
+    }
     for (const document of Object.values(journey.documentos ?? {})) {
       if (document && !fs.existsSync(path.resolve(document))) failures.push(`documento declarado nao encontrado: ${document}`)
     }

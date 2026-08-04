@@ -32,6 +32,14 @@ Ele declara a collection de conteudo, os contexts/modes e, para cada
 contexto, quais telas estao presentes ou ausentes. Ausencia e uma
 selecao `presente: false`, sem template escondido por variavel.
 
+Quando uma etapa contem confirmacao externa, o contrato usa
+`composicoesInternas` para declarar a presenca por contexto e o contrato
+de retorno: `DIRETO` ou `ACAO_NO_APP`. Tambem declara o roteiro de
+orientacao: `DIRETA` ou `DIRETA_COM_TUTORIAL_OPCIONAL`. O tutorial e
+uma rota de ajuda que retorna ao mesmo direcionamento externo. O contrato nao registra nem
+deduz a quantidade de acoes fora do app. Essa quantidade pertence ao
+manual de contexto e as evidencias de referencia.
+
 ## Plano de componentes locais
 
 Crie `.designops/runs/<rodada>/componentes-locais.json` conforme

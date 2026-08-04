@@ -63,8 +63,8 @@ aprovacao humana e nenhuma afirmacao `[CONFIRMAR]` bloqueante. O adaptador
 Node e apoio local, nunca pre-requisito operacional.
 
 Em consignado-analise, crie primeiro o recorte temporario
-`.designops/runs/<rodada>/referencias.json` e use somente as referencias
-cruas selecionadas nele, documentos
+`.designops/runs/<rodada>/referencias.json` e use somente as referencias cruas
+selecionadas nele, documentos
 aprovados, reacoes observadas e evidencia IDS. Leia e execute
 `scripts/collectPrototypeReactions.js` e
 `scripts/collectReferenceStructure.js` para cada Section `ref-*` e seus

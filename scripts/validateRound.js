@@ -7,7 +7,7 @@
  *
  * Uso:
  * node scripts/validateRound.js --screens <dir> --journey <arquivo> \
- *   --resolved <arquivo> --components <arquivo> [--manifest <arquivo>] \
+ *   --resolved <arquivo> --components <arquivo> [--manifest <arquivo> --references <arquivo>] \
  *   [--stage pre-montagem|pre-promocao] [--evidence <arquivo>]
  */
 const childProcess = require('child_process')
@@ -163,7 +163,7 @@ function main() {
   const input = args(process.argv.slice(2))
   const failures = []
   if (!input.screens || !input.journey || !input.resolved || !input.components) {
-    console.error('Uso: node scripts/validateRound.js --screens <dir> --journey <arquivo> --resolved <arquivo> --components <arquivo> [--manifest <arquivo>] [--stage pre-montagem|pre-promocao] [--evidence <arquivo>]')
+    console.error('Uso: node scripts/validateRound.js --screens <dir> --journey <arquivo> --resolved <arquivo> --components <arquivo> [--manifest <arquivo> --references <arquivo>] [--stage pre-montagem|pre-promocao] [--evidence <arquivo>]')
     process.exit(1)
   }
   const stage = input.stage ?? 'pre-montagem'
@@ -242,8 +242,12 @@ function main() {
     else validateMcpEvidence(readJson(input.evidence, failures, 'evidencia MCP'), failures, screens, resolved?.rodada)
   }
   if (input.manifest) {
-    const result = childProcess.spawnSync(process.execPath, [path.join(__dirname, 'validateAnalysisManifest.js'), path.resolve(input.manifest)], { encoding: 'utf8' })
-    if (result.status !== 0) failures.push(`manifesto reprovado: ${(result.stderr || result.stdout).trim()}`)
+    if (!input.references) {
+      failures.push('manifesto exige --references com referencias.json da rodada')
+    } else {
+      const result = childProcess.spawnSync(process.execPath, [path.join(__dirname, 'validateAnalysisManifest.js'), path.resolve(input.manifest), path.resolve(input.references)], { encoding: 'utf8' })
+      if (result.status !== 0) failures.push(`manifesto reprovado: ${(result.stderr || result.stdout).trim()}`)
+    }
   }
   const report = { stage, screens: screens.map((screen) => screen.id), journey: journey?.id ?? null, localComponentPlan: componentPlan?.id ?? null, resolvedRound: resolved?.rodada ?? null, mcpEvidenceChecked: requiresMcpEvidence, failures, passed: failures.length === 0 }
   console.log(JSON.stringify(report, null, 2))

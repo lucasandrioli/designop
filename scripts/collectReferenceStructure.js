@@ -133,6 +133,10 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
       mainComponentRemote: summary.mainComponentRemote,
       localCompositionId: summary.localCompositionId,
       localCompositionName: summary.localCompositionName,
+      classificacaoObservada: summary.classificacaoObservada ?? null,
+      instanciasIDSDescendentes: Array.isArray(summary.instanciasIDSDescendentes)
+        ? summary.instanciasIDSDescendentes.map(compact)
+        : [],
   })
   const isScreen = (node) =>
     (node.type === 'FRAME' || node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') &&
@@ -140,7 +144,7 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
     (screenNames ? screenNames.has(node.name) : node.parentId === section.id)
   const inThisPart = (summaries) => {
     const ids = new Set(summaries.map((summary) => summary.id))
-    return nodesThisPart.filter((summary) => ids.has(summary.id)).map(compact)
+    return summaries.filter((summary) => ids.has(summary.id) && nodesThisPart.some((node) => node.id === summary.id)).map(compact)
   }
 
   return {

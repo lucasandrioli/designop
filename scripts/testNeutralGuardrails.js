@@ -219,7 +219,7 @@ function testFigmaApiContracts() {
   assert(analysisSkill.includes('nunca o renomeie para\n`camposVisuaisSemBindingObservado`'), 'Analista precisa bloquear explicitamente o nome antigo do sinal estrutural')
   assert(analysisSkill.includes('validateAnalysisManifestCore.js'), 'Analista precisa validar o manifesto sem terminal')
   assert(analysisSkill.includes('reconcileAnalysisManifestFigma.js'), 'Analista precisa reconciliar o manifesto com Figma atual')
-  assert(analysisSkill.includes('return await reconcileAnalysisManifestFigma(manifest);'), 'Analista precisa receber a chamada literal da reconciliacao MCP')
+  assert(analysisSkill.includes('return await reconcileAnalysisManifestFigma(manifest, referenceScope);'), 'Analista precisa receber a chamada literal da reconciliacao MCP com recorte')
   assert(analysisSkill.includes('nunca chame\n`skill://index.json`'), 'Analista nao pode procurar skills locais no MCP do Figma')
   assert(analysisSkill.includes('.designops/runs/<outra-rodada>/'), 'Analista precisa isolar rodadas novas de artefatos anteriores')
   assert(analysisSkill.includes('## Escopo de skills'), 'Skill do Analista precisa diferenciar coleta tecnica isolada')
@@ -928,6 +928,18 @@ function testValidateRound() {
   fs.writeFileSync(componentsFile, JSON.stringify({ schemaVersion: 1, id: 'componentes-a', contextosConhecidos: [{ id: 'ctx-a', rotulo: 'Contexto A' }], componentes: [] }))
   const roundArgs = ['--screens', screens, '--journey', journeyFile, '--resolved', resolvedFile, '--components', componentsFile]
   expectSuccess(runNode(path.join(root, 'scripts/validateRound.js'), roundArgs), 'Round valido')
+  const manifestFile = path.join(fixture, 'analise.json')
+  const referenceScopeFile = path.join(fixture, 'referencias.json')
+  fs.writeFileSync(manifestFile, JSON.stringify(validManifest()))
+  fs.writeFileSync(referenceScopeFile, JSON.stringify(validReferenceScope()))
+  expectFailure(
+    runNode(path.join(root, 'scripts/validateRound.js'), [...roundArgs, '--manifest', manifestFile]),
+    'Round com manifesto sem referencias da rodada',
+  )
+  expectSuccess(
+    runNode(path.join(root, 'scripts/validateRound.js'), [...roundArgs, '--manifest', manifestFile, '--references', referenceScopeFile]),
+    'Round com manifesto e recorte de referencias',
+  )
 
   screen.roles = [
     { id: 'host', source: 'IDS' },

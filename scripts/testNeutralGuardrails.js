@@ -195,12 +195,17 @@ function testFigmaApiContracts() {
   const structureSource = fs.readFileSync(path.join(root, 'scripts/collectReferenceStructure.js'), 'utf8')
   const reactionsSource = fs.readFileSync(path.join(root, 'scripts/collectPrototypeReactions.js'), 'utf8')
   const manifestCoreSource = fs.readFileSync(path.join(root, 'scripts/validateAnalysisManifestCore.js'), 'utf8')
+  const referenceScopeCoreSource = fs.readFileSync(path.join(root, 'scripts/validateReferenceScopeCore.js'), 'utf8')
   const reconciliationSource = fs.readFileSync(path.join(root, 'scripts/reconcileAnalysisManifestFigma.js'), 'utf8')
   assert(structureSource.includes('totalPartes'), 'Coletor estrutural precisa expor a quantidade total de partes')
   assert(structureSource.includes('itensPorParte'), 'Coletor estrutural precisa expor a distribuicao da leitura')
   assert(reactionsSource.includes('totalParts'), 'Coletor de reacoes precisa paginar a leitura completa')
   assert(!manifestCoreSource.includes("require('fs')"), 'Validador MCP nao pode depender de fs')
   assert(!manifestCoreSource.includes('process.exit'), 'Validador MCP nao pode depender de process')
+  assert(!referenceScopeCoreSource.includes("require('fs')"), 'Validador de recorte MCP nao pode depender de fs')
+  assert(!referenceScopeCoreSource.includes('process.exit'), 'Validador de recorte MCP nao pode depender de process')
+  assert(structureSource.includes('COMPONENTE_LOCAL_COM_IDS'), 'Coletor precisa distinguir componente local com IDS descendente')
+  assert(structureSource.includes("child.type === 'SLOT'"), 'Coletor deve parar em instancia remota fora de Slot nativo')
   assert(!reconciliationSource.includes("require('fs')"), 'Reconciliacao MCP nao pode depender de fs')
   assert(!reconciliationSource.includes('process.exit'), 'Reconciliacao MCP nao pode depender de process')
 
@@ -220,11 +225,14 @@ function testFigmaApiContracts() {
   assert(analysisSkill.includes('## Escopo de skills'), 'Skill do Analista precisa diferenciar coleta tecnica isolada')
   assert(analysisSkill.includes('somente esta\nskill `consignado-analise`, `figma-plugin-api`'), 'Coleta tecnica isolada precisa carregar as duas skills locais minimas')
   assert(analysisSkill.includes('Em analise completa, leia tambem'), 'Analise completa precisa carregar o conjunto adicional de skills')
+  assert(analysisSkill.includes('referencias.json'), 'Analista precisa fixar recorte de referencias')
+  assert(analysisSkill.includes('COMPONENTE_LOCAL_COM_IDS'), 'Analista precisa registrar IDS dentro de composicao local')
 
   const analystAgent = fs.readFileSync(path.join(root, '.github/agents/analista.agent.md'), 'utf8')
   assert(analystAgent.includes('somente `consignado-analise` e\n`figma-plugin-api`'), 'Agente Analista precisa limitar skills em coleta tecnica isolada')
   assert(analystAgent.includes('Em analise completa, carregue'), 'Agente Analista precisa preservar as skills da analise completa')
   assert(analystAgent.includes('Em contexto guiado que inclui leitura de\nreferencias Figma'), 'Agente Analista precisa carregar o conjunto correto em contexto guiado com Figma')
+  assert(analystAgent.includes('referencias.json'), 'Agente Analista precisa declarar recorte de referencias')
   assert(analystAgent.includes('`FATO OBSERVADO`, `REGRA\nDOCUMENTADA`, `REGRA CONFIRMADA` ou `[CONFIRMAR]`'), 'Contexto guiado precisa separar fato de regra por origem')
 
   const contextSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-contexto/SKILL.md'), 'utf8')
@@ -254,6 +262,30 @@ function testManifestValidationWithoutTerminal() {
   assert(
     validateAnalysisManifestData(invalid, validReferenceScope()).some((failure) => failure.includes('descoberta atual')),
     'Validador portatil precisa reprovar manifesto sem descoberta atual',
+  )
+}
+function testReferenceScopeValidationWithoutTerminal() {
+  const validateReferenceScopeData = loadFigmaFunction(
+    'scripts/validateReferenceScopeCore.js',
+    'validateReferenceScopeData',
+    {},
+  )
+  assert.strictEqual(validateReferenceScopeData(validReferenceScope()).length, 0, 'Recorte valido precisa aprovar sem terminal')
+  const invalid = validReferenceScope()
+  invalid.ativosExistentes.adocaoAutomatica = true
+  assert(
+    validateReferenceScopeData(invalid).some((failure) => failure.includes('adocao automatica')),
+    'Recorte nao pode permitir adocao automatica de ativo existente',
+  )
+  const manifest = validManifest()
+  manifest.evidenciasEstruturais = [{
+    nodeId: '1:8', sectionId: '1:2', nome: 'local-existente',
+    tipoEncontrado: 'COMPONENTE_LOCAL_EXISTENTE', decisao: 'CANDIDATO_COMPONENTE_LOCAL',
+  }]
+  const validateAnalysisManifestData = loadFigmaFunction('scripts/validateAnalysisManifestCore.js', 'validateAnalysisManifestData', {})
+  assert(
+    validateAnalysisManifestData(manifest, validReferenceScope()).some((failure) => failure.includes('nao pode ser adotado automaticamente')),
+    'Ativo local existente nao pode virar candidato automaticamente',
   )
 }
 function testContextDraftValidationWithoutTerminal() {
@@ -800,6 +832,27 @@ async function testReferenceStructurePagination() {
   )
 }
 
+async function testLocalCompositionWithIds() {
+  const remoteChild = {
+    id: 'remote-ids', name: 'ids-card', type: 'INSTANCE', children: [{ id: 'opaque-child', name: 'opaque', type: 'TEXT', children: [] }],
+    mainComponent: { id: 'remote-main', key: 'ids-card-key', remote: true }, boundVariables: {},
+  }
+  const local = { id: 'local-component', name: 'composicao-local', type: 'COMPONENT', children: [remoteChild], layoutMode: 'VERTICAL', boundVariables: {} }
+  const section = {
+    id: 'section', name: 'ref-modalidade-tela-ctx-a', type: 'SECTION', children: [local], boundVariables: {},
+    findOne: (predicate) => predicate(section) ? section : null,
+  }
+  const page = { id: 'page', findOne: (predicate) => predicate(section) ? section : null }
+  const collectReferenceStructure = loadFigmaFunction('scripts/collectReferenceStructure.js', 'collectReferenceStructure', {
+    root: { children: [page] }, setCurrentPageAsync: async () => {},
+  })
+  const report = await collectReferenceStructure('page', 'section', { part: 1, pageSize: 20 })
+  assert.strictEqual(report.sinais.totais.remoteInstances, 1, 'IDS aninhado em componente local precisa ser encontrado')
+  assert.strictEqual(report.sinais.totais.componentesLocaisComIDS, 1, 'Composicao local com IDS precisa ser identificada')
+  assert.strictEqual(report.sinais.nestaParte.componentesLocaisComIDS[0].instanciasIDSDescendentes[0].mainComponentKey, 'ids-card-key', 'IDS descendente precisa preservar key')
+  assert(!report.nodes.some((node) => node.id === 'opaque-child'), 'Coletor nao pode atravessar internals opacos de instancia remota')
+}
+
 async function testCanvasOrganization() {
   const localArea = {
     id: 'local-area',
@@ -1007,9 +1060,11 @@ async function main() {
     await testPromotionMcpAndModes()
     await testPrototypeCollectionOutsideSection()
     await testReferenceStructurePagination()
+    await testLocalCompositionWithIds()
     await testCanvasOrganization()
     testFigmaApiContracts()
     testManifestValidationWithoutTerminal()
+    testReferenceScopeValidationWithoutTerminal()
     testContextDraftValidationWithoutTerminal()
     await testManifestReconciliationWithoutTerminal()
     await testRemoteComponentPreflight()

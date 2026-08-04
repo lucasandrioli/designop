@@ -30,11 +30,21 @@ origens, destinos e raiz de validacao observados. A raiz escolhida deve
 conter a acao declarada. Nome vindo de memoria, de documento ou de plano
 nao substitui a evidencia Figma.
 
-Faca uma chamada por Section para evitar truncamento. Se a resposta for
-salva em arquivo temporario pelo cliente, leia o arquivo por trechos ou
-pesquise os pontos necessarios antes de seguir. Nunca conclua que uma
-reacao nao existe porque a resposta ficou grande; marque a varredura
-como `FALHOU` e mantenha a lacuna bloqueante ate recuperar a evidencia.
+Antes de cada `use_figma`, carregue tambem a skill oficial com
+`figma-get_figma_skill` em `skill://figma/figma-use/SKILL.md`; a skill
+local `figma-plugin-api` nao a substitui. Faca uma chamada por Section.
+Para estrutura, comece com `summaryOnly: true`, que preserva cobertura,
+telas e sinais relevantes sem devolver a arvore inteira. So peca o
+detalhe completo ou um trecho focado quando ele for necessario para uma
+conclusao. Se a resposta for salva em arquivo temporario pelo cliente,
+leia o trecho exato que sustenta o fato. Nunca complete uma lacuna por
+"padrao semelhante": marque a varredura como `FALHOU` e mantenha a
+lacuna bloqueante ate recuperar a evidencia.
+
+`boundVariableFields` vazio significa somente "nenhum binding observado
+nos campos lidos". Nao escreva "manual", "errado" ou "sem token" sem
+comparar o contrato aplicavel. O coletor apresenta sinais tecnicos; a
+classificacao pertence ao contrato e ao Validador.
 
 Entregue inventario, reacoes, mapa, contrato de tela, mapa IDS, plano
 de variaveis e proposta de composicao. Para confirmacao externa dentro

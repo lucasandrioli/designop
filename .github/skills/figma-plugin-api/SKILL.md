@@ -16,6 +16,10 @@ falha silenciosa.
 
 ## Princípios de execução
 
+0. **Carregue primeiro a skill oficial do MCP.** Antes de qualquer
+   `use_figma`, chame `figma-get_figma_skill` para
+   `skill://figma/figma-use/SKILL.md`. Em seguida carregue esta skill
+   local. A regra local complementa a API oficial, nao a substitui.
 1. **Scripts falham atomicamente.** Se um script dá erro no meio, NADA
    foi aplicado. Não re-tente às cegas: corrija a causa.
 1a. **Confirme o arquivo antes de diagnosticar permissao.** Antes de

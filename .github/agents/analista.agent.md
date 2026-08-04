@@ -14,7 +14,9 @@ tools:
 # Analista da Etapa
 
 Carregue consignado-contexto, consignado-analise, figma-reconstrucao e
-figma-plugin-api antes de atuar no Figma.
+figma-plugin-api antes de atuar no Figma. Antes de cada `use_figma`,
+carregue tambem `skill://figma/figma-use/SKILL.md` via
+`figma-get_figma_skill`.
 
 Em consignado-contexto, recupere primeiro manual global, manual da
 modalidade, catalogo da etapa, mapa e manuais de contexto existentes.

@@ -4,6 +4,11 @@
  * Uso:
  * return await collectReferenceStructure('<page-id>', '<section-id>')
  *
+ * Para respostas que poderiam truncar no cliente:
+ * return await collectReferenceStructure('<page-id>', '<section-id>', {
+ *   summaryOnly: true,
+ * })
+ *
  * Ele descreve fatos tecnicos da referencia sem concluir se um valor manual,
  * componente local ou instancia destacada e uma regra de negocio.
  */
@@ -72,6 +77,21 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
 
   visit(section, section.name)
   const screenNames = Array.isArray(opts.screenNames) ? new Set(opts.screenNames) : null
+  const summaryOnly = opts.summaryOnly === true
+  const compact = (summary) => ({
+    id: summary.id,
+    name: summary.name,
+    type: summary.type,
+    parentId: summary.parentId,
+    path: summary.path,
+    layoutMode: summary.layoutMode,
+    box: summary.box,
+    boundVariableFields: summary.boundVariableFields,
+    detached: summary.detached,
+    detachedInfo: summary.detachedInfo,
+    mainComponentKey: summary.mainComponentKey,
+    mainComponentRemote: summary.mainComponentRemote,
+  })
   const screens = nodes.filter((node) =>
     (node.type === 'FRAME' || node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') &&
     node.id !== section.id &&
@@ -86,14 +106,15 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
       coletor: 'scripts/collectReferenceStructure.js',
       status: 'COBERTA',
     },
-    telas: screens,
+    telas: summaryOnly ? screens.map(compact) : screens,
     sinais: {
-      detachedInstances,
-      remoteInstances,
-      localComponents,
-      unboundVisualSignals,
-      noAutoLayout,
+      detachedInstances: summaryOnly ? detachedInstances.map(compact) : detachedInstances,
+      remoteInstances: summaryOnly ? remoteInstances.map(compact) : remoteInstances,
+      localComponents: summaryOnly ? localComponents.map(compact) : localComponents,
+      unboundVisualSignals: summaryOnly ? [] : unboundVisualSignals,
+      unboundVisualSignalCount: unboundVisualSignals.length,
+      noAutoLayout: summaryOnly ? noAutoLayout.map(compact) : noAutoLayout,
     },
-    nodes,
+    nodes: summaryOnly ? [] : nodes,
   }
 }

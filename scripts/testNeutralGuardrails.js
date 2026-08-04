@@ -124,6 +124,14 @@ function testFigmaApiContracts() {
   assert(inspectSource.includes('importComponentByKeyAsync'), 'Preflight precisa importar COMPONENT pela API correta')
   assert(inspectSource.includes('importComponentSetByKeyAsync'), 'Preflight precisa importar COMPONENT_SET pela API correta')
   assert(inspectSource.includes('component.parent?.type === \'COMPONENT_SET\''), 'Preflight precisa ler definitions no set pai da variante')
+
+  const structureSource = fs.readFileSync(path.join(root, 'scripts/collectReferenceStructure.js'), 'utf8')
+  assert(structureSource.includes('summaryOnly'), 'Coletor estrutural precisa oferecer resumo contra truncamento')
+  assert(structureSource.includes('unboundVisualSignalCount'), 'Resumo estrutural precisa preservar a contagem de sinais sem binding')
+
+  const analysisSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-analise/SKILL.md'), 'utf8')
+  assert(analysisSkill.includes('figma-get_figma_skill'), 'Analista precisa carregar a skill oficial antes de use_figma')
+  assert(analysisSkill.includes('summaryOnly: true'), 'Analista precisa iniciar coleta estrutural em modo resumido')
 }
 async function testRemoteComponentPreflight() {
   let componentImports = 0

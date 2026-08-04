@@ -7,7 +7,7 @@ let manifest;
 try { manifest = JSON.parse(fs.readFileSync(path.resolve(manifestPath), 'utf8')); }
 catch (error) { console.error('Manifesto invalido: ' + error.message); process.exit(1); }
 const failures = [];
-const required = ['schemaVersion', 'id', 'etapa', 'status', 'fontes', 'inventario', 'coberturaReacoes', 'coberturaEstrutura', 'reacoes', 'diferencas', 'lacunas'];
+const required = ['schemaVersion', 'id', 'etapa', 'status', 'fontes', 'inventario', 'execucoesColeta', 'coberturaReacoes', 'coberturaEstrutura', 'reacoes', 'diferencas', 'lacunas'];
 for (const field of required) if (!(field in manifest)) failures.push('campo ausente: ' + field);
 if (manifest.schemaVersion !== 2) failures.push('schemaVersion precisa ser 2');
 if (!['PRECISA_CONTEXTO', 'ANALISE_INCOMPLETA', 'PROPOSTA_PARA_APROVACAO'].includes(manifest.status)) failures.push('status invalido');
@@ -94,6 +94,54 @@ for (const section of referenceSections) {
   const structure = structureByNodeId.get(section.nodeId);
   if (!structure) failures.push('secao de referencia sem cobertura estrutural: ' + section.nodeId);
   else if (structure.status !== 'COBERTA') failures.push('varredura estrutural falhou para a secao: ' + section.nodeId);
+}
+const allowedCollectors = new Set([
+  'scripts/collectPrototypeReactions.js',
+  'scripts/collectReferenceStructure.js',
+]);
+const coverageEntries = [
+  ...(manifest.coberturaReacoes ?? []).map((coverage) => ({ coverage })),
+  ...(manifest.coberturaEstrutura ?? []).map((coverage) => ({ coverage })),
+];
+const expectedExecutions = new Set();
+for (const { coverage } of coverageEntries) {
+  if (!coverage?.coletor || !coverage?.nodeId || !Number.isInteger(coverage?.totalPartes)) continue;
+  for (let part = 1; part <= coverage.totalPartes; part += 1) {
+    expectedExecutions.add(`${coverage.coletor}\u0000${coverage.nodeId}\u0000${part}`);
+  }
+}
+const observedExecutions = new Set();
+for (const [index, execution] of (manifest.execucoesColeta ?? []).entries()) {
+  if (!allowedCollectors.has(execution?.coletor) || !execution?.secao || !execution?.nodeId || !Number.isInteger(execution?.parte) || execution.parte < 1) {
+    failures.push('execucoesColeta[' + index + '] incompleta');
+    continue;
+  }
+  const section = referenceByNodeId.get(execution.nodeId);
+  if (!section || section.nome !== execution.secao) {
+    failures.push('execucoesColeta[' + index + '] nao corresponde a uma Section de referencia');
+    continue;
+  }
+  const executionKey = `${execution.coletor}\u0000${execution.nodeId}\u0000${execution.parte}`;
+  if (observedExecutions.has(executionKey)) failures.push('execucoesColeta possui duplicidade de coletor, Section e parte: ' + executionKey);
+  observedExecutions.add(executionKey);
+  if (!expectedExecutions.has(executionKey)) failures.push('execucoesColeta[' + index + '] nao corresponde a uma parte esperada da cobertura');
+}
+for (const executionKey of expectedExecutions) {
+  if (!observedExecutions.has(executionKey)) failures.push('coleta unitaria ausente para ' + executionKey);
+}
+for (const [index, verification] of (manifest.verificacoesTecnicas ?? []).entries()) {
+  if (!verification?.regraId || !Array.isArray(verification?.aplicacao?.secoesReferencia) || verification.aplicacao.secoesReferencia.length === 0) {
+    failures.push('verificacoesTecnicas[' + index + '] sem regra ou escopo explicito');
+    continue;
+  }
+  if (!['ATENDIDA', 'VIOLADA', 'NAO_APLICAVEL', 'NAO_VERIFICAVEL'].includes(verification.status)) {
+    failures.push('verificacoesTecnicas[' + index + '] sem status valido');
+  }
+  for (const sectionName of verification.aplicacao.secoesReferencia) {
+    if (![...referenceByNodeId.values()].some((section) => section.nome === sectionName)) {
+      failures.push('verificacoesTecnicas[' + index + '] aponta para Section fora da rodada: ' + sectionName);
+    }
+  }
 }
 for (const [index, reaction] of (manifest.reacoes ?? []).entries()) {
   const origin = reaction?.origem;

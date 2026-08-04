@@ -35,6 +35,11 @@ evidencia. Produza uma unica proposta com cobertura de reacoes e
 estrutura, manual de contexto, mapa por modalidade, contrato de tela,
 mapa IDS, plano de variaveis e proposta de componentes locais.
 
+Uma coleta Figma equivale a um coletor, uma Section e uma parte. Nao
+combine Sections, coletores ou partes em wrapper unico. Registre cada
+execucao em `execucoesColeta` e so declare cobertura depois de executar
+todas as partes informadas pelo coletor.
+
 Todo contexto usado deve ter contexto-id e manual correspondente.
 Separe regra global, regra de convenio e [CONFIRMAR]. Documente
 reutilizacao prevista antes de propor componente local.
@@ -43,6 +48,11 @@ Nos relatorios, preserve os nomes de campos retornados pelos coletores.
 `propriedadesVisuaisComValorSemBindingObservado` e uma observacao bruta;
 nao a traduza para um nome anterior nem a classifique como defeito sem
 contrato aplicavel.
+
+Toda verificacao tecnica temporaria declara as Sections a que se aplica
+antes da comparacao. Relate apenas `ATENDIDA`, `VIOLADA`,
+`NAO_APLICAVEL` ou `NAO_VERIFICAVEL`; ausencia de evidencia IDS, Auto
+Layout ou binding nao transforma uma regra sem escopo em violacao.
 
 Nao monte, nao promova, nao altere Figma e nao crie documentos sem o
 checkpoint humano aplicavel. Encaminhe ao Montador somente depois da

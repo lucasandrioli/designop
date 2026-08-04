@@ -83,6 +83,19 @@ as partes de cada Section e registra essa prova no manifesto, junto de
 `pageSize`, `totalItens` e `itensPorParte`. Uma tela ou um detalhe nao
 pode ser omitido porque a resposta ficou grande.
 
+Cada coleta e atomica: um coletor, uma Section e uma parte por execucao
+no Figma. O Analista nao cria wrappers que varrem varias Sections ou
+misturam reacoes e estrutura em uma unica chamada. O manifesto registra
+cada execucao para que o Validador confira a cobertura sem depender de
+uma afirmacao textual.
+
+Quando a rodada usar um criterio tecnico temporario, o Analista registra
+primeiro o escopo explicito da regra. O resultado so pode ser
+`ATENDIDA`, `VIOLADA`, `NAO_APLICAVEL` ou `NAO_VERIFICAVEL`. Uma regra
+de IDS, por exemplo, nao se aplica a uma referencia apenas porque ela
+nao tem instancia remota: o contrato precisa ter declarado que aquela
+Section deveria usar IDS.
+
 O Analista nao monta nem promove. Seu turno termina pedindo aprovacao
 do contrato consolidado ao designer, quando nao houver lacuna bloqueante.
 

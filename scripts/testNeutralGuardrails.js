@@ -71,6 +71,10 @@ function validManifest() {
       frame: { nome: 'ref-modalidade-tela-ctx-a', nodeId: '1:3' },
       evidencia: { screenshot: '1:3', designContext: '1:3' },
     }],
+    execucoesColeta: [
+      { coletor: 'scripts/collectPrototypeReactions.js', secao: 'ref-modalidade-tela-ctx-a', nodeId: '1:2', parte: 1 },
+      { coletor: 'scripts/collectReferenceStructure.js', secao: 'ref-modalidade-tela-ctx-a', nodeId: '1:2', parte: 1 },
+    ],
     coberturaReacoes: [{
       secao: 'ref-modalidade-tela-ctx-a',
       nodeId: '1:2',
@@ -144,6 +148,8 @@ function testFigmaApiContracts() {
   const analysisSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-analise/SKILL.md'), 'utf8')
   assert(analysisSkill.includes('figma-get_figma_skill'), 'Analista precisa carregar a skill oficial antes de use_figma')
   assert(analysisSkill.includes('partesLidas'), 'Analista precisa registrar que leu todas as partes')
+  assert(analysisSkill.includes('um coletor, uma Section e uma parte'), 'Analista precisa impedir coleta combinada')
+  assert(analysisSkill.includes('NAO_APLICAVEL'), 'Analista precisa distinguir regra sem escopo de violacao')
   assert(analysisSkill.includes('propriedadesVisuaisComValorSemBindingObservado'), 'Analista precisa preservar o nome do sinal estrutural retornado pelo coletor')
   assert(analysisSkill.includes('nunca o renomeie para\n`camposVisuaisSemBindingObservado`'), 'Analista precisa bloquear explicitamente o nome antigo do sinal estrutural')
 }
@@ -607,6 +613,21 @@ async function main() {
     expectFailure(runNode(path.join(fixture, 'scripts/validatePilotSquad.js')), 'Leitor com Figma')
 
     let manifest = validManifest()
+    manifest.execucoesColeta = []
+    expectFailure(validateManifest(manifest), 'Manifesto sem execucoes unitarias de coleta')
+    manifest = validManifest()
+    manifest.execucoesColeta.push({ ...manifest.execucoesColeta[0] })
+    expectFailure(validateManifest(manifest), 'Manifesto com execucao de coleta duplicada')
+    manifest = validManifest()
+    manifest.execucoesColeta[0].parte = 2
+    expectFailure(validateManifest(manifest), 'Manifesto com parte de coleta inexistente')
+    manifest = validManifest()
+    manifest.verificacoesTecnicas = [{ regraId: 'ids-remoto', aplicacao: { secoesReferencia: [] }, status: 'VIOLADA' }]
+    expectFailure(validateManifest(manifest), 'Verificacao tecnica sem escopo explicito')
+    manifest = validManifest()
+    manifest.verificacoesTecnicas = [{ regraId: 'ids-remoto', aplicacao: { secoesReferencia: ['ref-modalidade-tela-ctx-a'] }, status: 'NAO_APLICAVEL' }]
+    expectSuccess(validateManifest(manifest), 'Verificacao tecnica nao aplicavel com escopo explicito')
+    manifest = validManifest()
     manifest.reacoes = []
     expectFailure(validateManifest(manifest), 'Manifesto com reacoes vazias')
     manifest = validManifest()

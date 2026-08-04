@@ -60,3 +60,20 @@ node IDs atuais de referencias, previews e Sections de jornada.
 
 O Validador reconstroi a evidencia no Figma e reprova quando a
 resolucao temporaria nao corresponde mais ao arquivo.
+
+## Criterios tecnicos de uma rodada
+
+Uma regra tecnica temporaria deve declarar explicitamente a quais
+Sections de referencia ela se aplica. O relatorio registra esse escopo e
+um dos quatro resultados: `ATENDIDA`, `VIOLADA`, `NAO_APLICAVEL` ou
+`NAO_VERIFICAVEL`.
+
+Por exemplo, a exigencia de instancia remota so pode ser cobrada de uma
+Section que o contrato da rodada declarou como composicao IDS. A falta
+dessa declaracao nao e violacao. Ela exige `NAO_APLICAVEL` ou
+`NAO_VERIFICAVEL`, conforme exista ou nao evidencia suficiente para
+definir o escopo.
+
+O manifesto tambem lista cada coleta de forma unitaria: um coletor, uma
+Section e uma parte por execucao. Ele nao aceita uma chamada combinada
+que esconda quais partes foram realmente lidas.

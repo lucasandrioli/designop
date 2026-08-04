@@ -32,13 +32,17 @@ nao substitui a evidencia Figma.
 
 Antes de cada `use_figma`, carregue tambem a skill oficial com
 `figma-get_figma_skill` em `skill://figma/figma-use/SKILL.md`; a skill
-local `figma-plugin-api` nao a substitui. Faca uma chamada por Section.
-Para cada coletor, comece na `part: 1`, leia `paginacao.totalPartes` e
-execute todas as partes restantes da mesma Section. Registre no
+local `figma-plugin-api` nao a substitui. Cada chamada de coleta deve
+executar exatamente um coletor, uma Section e uma parte. Nao envolva
+duas Sections, dois coletores ou varias partes no mesmo script
+`use_figma`. Para cada coletor, comece na `part: 1`, leia
+`paginacao.totalPartes` e execute todas as partes restantes da mesma
+Section, uma por vez. Registre no
 manifesto `totalPartes`, `pageSize`, `totalItens`, `itensPorParte` e a
-lista ordenada `partesLidas`; uma Section so recebe `COBERTA` quando
-todas as partes estao completas. No relatorio final, mostre esses mesmos
-numeros para cada coleta, para que a cobertura possa ser auditada. Se a resposta for
+lista ordenada `partesLidas`, alem de uma entrada em `execucoesColeta`
+para cada coletor, Section e parte; uma Section so recebe `COBERTA`
+quando todas as partes estao completas. No relatorio final, mostre esses
+mesmos numeros para cada coleta, para que a cobertura possa ser auditada. Se a resposta for
 salva em arquivo temporario pelo cliente, recupere a parte correspondente
 ou reduza `pageSize` e rode novamente aquela parte. Nunca complete uma
 lacuna por "padrao semelhante": marque a varredura como `FALHOU` e
@@ -56,6 +60,13 @@ coletores. Em especial, use
 `camposVisuaisSemBindingObservado`. Caso o nome tecnico prejudique a
 leitura, explique-o em portugues ao lado, sem alterar o identificador
 original. Esse sinal continua sendo observacao bruta, nao defeito.
+
+Uma regra tecnica temporaria so pode produzir `VIOLADA` quando seu
+escopo foi declarado explicitamente para a Section avaliada. Registre
+cada regra em `verificacoesTecnicas` com as Sections a que ela se aplica
+e use somente `ATENDIDA`, `VIOLADA`, `NAO_APLICAVEL` ou
+`NAO_VERIFICAVEL`. Ausencia de instancia IDS, Auto Layout ou binding
+nunca basta para concluir que a regra se aplica.
 
 Entregue inventario, reacoes, mapa, contrato de tela, mapa IDS, plano
 de variaveis e proposta de composicao. Para confirmacao externa dentro

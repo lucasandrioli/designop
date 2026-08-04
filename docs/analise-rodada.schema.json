@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Manifesto temporario de analise de etapa",
   "type": "object",
-  "required": ["schemaVersion", "id", "etapa", "status", "fontes", "inventario", "coberturaReacoes", "coberturaEstrutura", "reacoes", "diferencas", "lacunas"],
+  "required": ["schemaVersion", "id", "etapa", "status", "fontes", "inventario", "execucoesColeta", "coberturaReacoes", "coberturaEstrutura", "reacoes", "diferencas", "lacunas"],
   "properties": {
     "schemaVersion": { "const": 2 },
     "id": { "type": "string", "minLength": 1 },
@@ -54,6 +54,21 @@
           "contextoId": { "type": "string", "pattern": "^ctx-[a-z0-9-]+$" },
           "frame": { "type": "object", "required": ["nome", "nodeId"] },
           "evidencia": { "type": "object", "required": ["screenshot", "designContext"] }
+        }
+      }
+    },
+    "execucoesColeta": {
+      "description": "Registro unitario de cada coleta feita no Figma. Uma execucao nao combina coletores, Sections ou partes.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["coletor", "secao", "nodeId", "parte"],
+        "properties": {
+          "coletor": { "enum": ["scripts/collectPrototypeReactions.js", "scripts/collectReferenceStructure.js"] },
+          "secao": { "type": "string", "minLength": 1 },
+          "nodeId": { "type": "string", "minLength": 1 },
+          "parte": { "type": "integer", "minimum": 1 }
         }
       }
     },
@@ -130,6 +145,31 @@
           "origemRegra": { "enum": ["global", "convenio", "[CONFIRMAR]"] },
           "regraDocumentada": { "type": ["string", "null"] },
           "confirmar": { "type": "boolean" }
+        }
+      }
+    },
+    "verificacoesTecnicas": {
+      "description": "Classificacao de uma regra tecnica explicitamente declarada para a rodada. Ausencia de escopo nunca vira violacao.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["regraId", "aplicacao", "status"],
+        "properties": {
+          "regraId": { "type": "string", "minLength": 1 },
+          "aplicacao": {
+            "type": "object",
+            "required": ["secoesReferencia"],
+            "properties": {
+              "secoesReferencia": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "minLength": 1 },
+                "uniqueItems": true
+              }
+            }
+          },
+          "status": { "enum": ["ATENDIDA", "VIOLADA", "NAO_APLICAVEL", "NAO_VERIFICAVEL"] },
+          "evidencias": { "type": "array", "items": { "type": "string", "minLength": 1 } }
         }
       }
     },

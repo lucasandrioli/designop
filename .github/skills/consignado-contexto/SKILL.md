@@ -14,6 +14,30 @@ somente a primeira lacuna bloqueante e informe qual texto entregara ao
 fim do turno. Tela e prototipo revelam fluxo, nunca a origem de uma
 regra.
 
+## Contexto guiado com referencias Figma
+
+Quando o pedido incluir leitura Figma, carregue localmente
+`consignado-contexto`, `consignado-analise` e `figma-plugin-api`.
+Carregue `figma-reconstrucao` somente se tambem precisar resolver IDS,
+arvore-alvo ou fontes de composicao. Antes de cada `use_figma`, inclusive
+uma chamada subsequente somente de leitura, carregue a skill oficial
+`skill://figma/figma-use/SKILL.md`. Uma coleta continua atomica: um
+coletor, uma Section e uma parte por chamada; nao use lotes nem wrappers.
+
+Para localizar documentos existentes, leia os caminhos canonicos do
+recorte um a um: manual global, modalidade, etapa, mapa e cada
+`docs/contextos/<contexto-id>.md` informado ou descoberto nas referencias.
+Nao liste diretorios inteiros. Quando nenhum documento preenchido existir,
+isso e uma lacuna de contexto, nao autorizacao para inferir regra.
+
+Classifique cada frase do rascunho como `FATO OBSERVADO`, `REGRA
+DOCUMENTADA`, `REGRA CONFIRMADA` ou `[CONFIRMAR]`. Estrutura, reacao,
+sequencia, timeout e tela existente no Figma sao somente `FATO
+OBSERVADO`. Nunca escreva "regra global" ou "regra local" sem fonte
+documental ou confirmacao humana identificada. Em particular, retorno
+`DIRETO` ou `ACAO_NO_APP`, presenca obrigatoria de confirmacao externa e
+tutorial opcional ficam `[CONFIRMAR]` ate essa fonte existir.
+
 Antes de perguntar, recupere manual global, manual da modalidade,
 catalogo da etapa, mapa e manuais de contexto que ja existirem.
 Descubra o que puder nas referencias e pergunte apenas objetivo,

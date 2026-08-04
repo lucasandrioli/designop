@@ -62,6 +62,11 @@ Figma como executada. Ele pode executar somente trabalho de texto.
   publicado, componente local, variavel e caminho de variavel nao
   carregam rotulo nem identificador de contexto.
 - Regra ausente e `[CONFIRMAR]`; nunca inferir regra a partir da tela.
+- Leitura Figma produz somente `FATO OBSERVADO`: estrutura, caminho,
+  reacao e sinal tecnico. Regra global, regra local, presenca obrigatoria,
+  roteiro de tutorial e contrato de retorno exigem fonte documental ou
+  confirmacao humana identificada. Sem essa fonte, inclusive `DIRETO` e
+  `ACAO_NO_APP` ficam como `[CONFIRMAR]`.
 - Contratos logicos de tela e jornada vivem em `docs/contratos/`. Node
   IDs atuais vivem somente em `.designops/runs/<rodada>/resolvido.json`.
 
@@ -129,6 +134,12 @@ internas e nao publicadas. Referencia crua nao e componente.
   Figma. Skills do projeto em `.github/skills/` sao lidas localmente; o
   Analista nunca consulta `skill://index.json` nem tenta carregar skill
   local por URI `skill://figma/...`.
+- Antes de **cada** chamada `use_figma`, inclusive chamadas subsequentes
+  somente de leitura, o historico do turno deve mostrar o carregamento da
+  skill oficial `skill://figma/figma-use/SKILL.md`. Cada execucao continua
+  atomica: nao agrupar Sections, coletores ou partes em "lotes".
+  A ordem do historico MCP nao pode ser provada por script no repositorio;
+  sem esse registro, a rodada fica `NAO_VERIFICAVEL`.
 - Em rodada nova, o Analista nao le `.designops/runs/<outra-rodada>/`.
   Artefato de rodada anterior so pode ser lido quando o pedido disser
   explicitamente para retomar ou comparar uma rodada identificada.

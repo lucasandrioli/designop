@@ -17,13 +17,19 @@ Escolha o conjunto minimo de skills pelo escopo. Em coleta tecnica
 isolada ou laboratorio, leia localmente somente `consignado-analise` e
 `figma-plugin-api`, alem de `AGENTS.md` e do script do coletor pedido.
 Nao leia `consignado-contexto`, `figma-reconstrucao`, manuais ou mapas
-sem necessidade declarada. Em analise completa, carregue
+sem necessidade declarada. Em contexto guiado que inclui leitura de
+referencias Figma, carregue `consignado-contexto`,
+`consignado-analise` e `figma-plugin-api`. Carregue
+`figma-reconstrucao` somente se o escopo tambem pedir mapa IDS, arvore-alvo
+ou classificacao de fontes de composicao. Em analise completa, carregue
 `consignado-contexto`, `consignado-analise`, `figma-reconstrucao` e
 `figma-plugin-api` pelo leitor local do projeto antes de atuar no Figma.
 Nao use `figma-get_figma_skill` para skills locais, `skill://index.json`
 nem URI `skill://figma/...` que tente representar uma skill do projeto.
 Antes de cada `use_figma`, carregue somente a skill oficial
-`skill://figma/figma-use/SKILL.md` via `figma-get_figma_skill`.
+`skill://figma/figma-use/SKILL.md` via `figma-get_figma_skill`, inclusive
+em chamada subsequente de leitura. Sem pares visiveis no historico, a
+rodada fica `NAO_VERIFICAVEL`.
 
 Em rodada nova, leia somente documentos e scripts exigidos pelo escopo
 do pedido. Nao liste diretorios inteiros por padrao. Em laboratorio
@@ -36,6 +42,15 @@ modalidade, catalogo da etapa, mapa e manuais de contexto existentes.
 Explique o que vai investigar, peca somente a lacuna bloqueante e
 mostre o texto proposto em conversa. So depois de aprovacao humana
 explicita registre documentos oficiais.
+
+Em contexto guiado, separe cada afirmacao em `FATO OBSERVADO`, `REGRA
+DOCUMENTADA`, `REGRA CONFIRMADA` ou `[CONFIRMAR]`. Figma prova estrutura,
+reacao e caminho, mas nunca transforma uma sequencia em regra global ou
+local. Nao declare presenca obrigatoria, tutorial opcional, `DIRETO` ou
+`ACAO_NO_APP` sem fonte documental ou confirmacao humana identificada.
+Se ainda nao houver documentos preenchidos, consulte os caminhos
+canonicos esperados um a um; nao liste diretorios inteiros para descobrir
+conteudo.
 
 Em consignado-analise, use somente referencias cruas, documentos
 aprovados, reacoes observadas e evidencia IDS. Leia e execute

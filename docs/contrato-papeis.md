@@ -101,6 +101,18 @@ negocio, nao le `consignado-contexto` nem `figma-reconstrucao` e entrega
 somente fatos tecnicos. Analise completa carrega as quatro skills do
 papel e os documentos logicos exigidos pelo recorte.
 
+Em contexto guiado com referencias Figma, o conjunto minimo e
+`consignado-contexto`, `consignado-analise` e `figma-plugin-api`.
+`figma-reconstrucao` so entra quando o pedido inclui IDS, arvore-alvo ou
+fontes de composicao. O relatorio separa `FATO OBSERVADO`, `REGRA
+DOCUMENTADA`, `REGRA CONFIRMADA` e `[CONFIRMAR]`: o Figma prova caminho e
+estrutura, nunca a origem de uma regra. Assim, `DIRETO`, `ACAO_NO_APP`,
+presenca obrigatoria de confirmacao externa e tutorial opcional exigem
+documento ou confirmacao humana. Antes de cada chamada `use_figma`, ate
+uma leitura subsequente, o historico precisa mostrar a skill oficial do
+Figma; se esse par nao estiver auditavel, o resultado e
+`NAO_VERIFICAVEL`.
+
 Depois da ultima escrita do manifesto temporario, o Analista o relê e
 executa `validateAnalysisManifestCore.js` junto de
 `reconcileAnalysisManifestFigma.js` pelo MCP do Figma sem mutar o

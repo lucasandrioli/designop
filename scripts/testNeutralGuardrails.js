@@ -172,6 +172,14 @@ function testFigmaApiContracts() {
   const analystAgent = fs.readFileSync(path.join(root, '.github/agents/analista.agent.md'), 'utf8')
   assert(analystAgent.includes('somente `consignado-analise` e\n`figma-plugin-api`'), 'Agente Analista precisa limitar skills em coleta tecnica isolada')
   assert(analystAgent.includes('Em analise completa, carregue'), 'Agente Analista precisa preservar as skills da analise completa')
+  assert(analystAgent.includes('Em contexto guiado que inclui leitura de\nreferencias Figma'), 'Agente Analista precisa carregar o conjunto correto em contexto guiado com Figma')
+  assert(analystAgent.includes('`FATO OBSERVADO`, `REGRA\nDOCUMENTADA`, `REGRA CONFIRMADA` ou `[CONFIRMAR]`'), 'Contexto guiado precisa separar fato de regra por origem')
+
+  const contextSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-contexto/SKILL.md'), 'utf8')
+  assert(contextSkill.includes('## Contexto guiado com referencias Figma'), 'Skill de contexto precisa definir a leitura Figma')
+  assert(contextSkill.includes('`consignado-contexto`, `consignado-analise` e `figma-plugin-api`'), 'Contexto guiado com Figma precisa carregar as skills locais minimas')
+  assert(contextSkill.includes('Estrutura, reacao,\nsequencia, timeout e tela existente no Figma sao somente `FATO\nOBSERVADO`'), 'Skill de contexto precisa impedir que Figma vire regra de negocio')
+  assert(contextSkill.includes('Nao liste diretorios inteiros'), 'Skill de contexto precisa bloquear descoberta ampla de documentos')
 }
 function testManifestValidationWithoutTerminal() {
   const validateAnalysisManifestData = loadFigmaFunction(

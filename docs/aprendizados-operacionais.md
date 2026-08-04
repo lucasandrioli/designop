@@ -43,6 +43,8 @@ de contexto depois de explicacao e aprovacao humana.
 | L-022 | O contrato de interacao usa nomes, destinos e raiz extraidos pelo coletor de reacoes. Nomes transcritos de memoria ou raiz que nao contem a acao devem reprovar e ser corrigidos pela evidencia. | GENERICO | validateInteractionContract no laboratorio MCP | CONSOLIDADO | consignado-analise, figma-referencias |
 | L-023 | Leitura estrutural ou de reacoes grande e paginada. O modelo le todas as partes e o manifesto prova a cobertura completa; resumo ou extrapolacao por semelhanca nao substituem evidencia. | GENERICO | laboratorio MCP com output truncado | CONSOLIDADO | coletores, consignado-analise, validateAnalysisManifest |
 | L-024 | Campo sem binding observado e sinal tecnico, nao prova de valor manual, erro ou ausencia de token. A conclusao depende do contrato aplicavel. | GENERICO | laboratorio MCP de leitura estrutural | CONSOLIDADO | consignado-analise, script de coleta |
+| L-025 | Contexto guiado com evidencia Figma carrega contexto, analise e Plugin API; a referencia produz fato observado, nunca regra global ou local sem fonte documental ou confirmacao humana. | GENERICO | rodada de contexto guiado com classificacao indevida de fatos | CONSOLIDADO | AGENTS, analista, consignado-contexto, contrato de papeis |
+| L-026 | Cada chamada `use_figma`, inclusive leitura, precisa de skill oficial registrada imediatamente antes; como a ordem do historico MCP nao e verificavel por script local, ausencia dessa prova resulta em `NAO_VERIFICAVEL`. | GENERICO | rodada de contexto guiado com preflight incompleto | CONSOLIDADO | AGENTS, analista, consignado-contexto, contrato de papeis |
 
 ## Registro futuro
 

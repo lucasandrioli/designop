@@ -102,20 +102,24 @@ a resolucao temporaria em `.designops/runs/<id>/resolvido.json` e o plano
 em `.designops/runs/<id>/componentes-locais.json`. Sem componente local,
 o plano continua obrigatorio com a lista vazia.
 
-Depois de gravar `analise.json`, leia o arquivo que acabou de escrever e
-valide-o sem terminal. Leia a versao atual de
-`scripts/validateAnalysisManifestCore.js`, carregue a skill oficial do
-Figma e cole o validador com o objeto do manifesto em uma chamada
-`use_figma` somente de leitura. A chamada retorna
-`{ passed, failures }`; ela nao pode criar, editar ou remover nos no
-Figma. Depois da funcao e do objeto `manifest`, a ultima instrucao e:
+Depois da ultima escrita de `analise.json`, leia o arquivo que acabou de
+escrever e valide-o sem terminal. Leia as versoes atuais de
+`scripts/validateAnalysisManifestCore.js` e
+`scripts/reconcileAnalysisManifestFigma.js`, carregue a skill oficial do
+Figma e cole os dois scripts com o objeto do manifesto em uma chamada
+`use_figma` somente de leitura. A reconciliacao consulta a pagina e as
+Sections que existem agora e precisa ser a ultima interacao Figma do turno.
+O core sozinho valida apenas a forma do objeto, portanto nao encerra a
+rodada. A chamada nao pode criar, editar ou remover nos no Figma. Depois
+das funcoes e do objeto `manifest`, a ultima instrucao e:
 
 ```js
-const failures = validateAnalysisManifestData(manifest);
-return { passed: failures.length === 0, failures };
+return await reconcileAnalysisManifestFigma(manifest);
 ```
 
-So declare o manifesto validado quando `passed` for `true`.
+So declare o manifesto validado quando a reconciliacao retornar
+`passed: true`. Ela confirma alinhamento com o Figma atual, mas nao
+substitui o registro unitario das coletas no historico do turno.
 Quando a chamada MCP ou a leitura do manifesto falhar, registre
 `NAO_VERIFICAVEL` e a lacuna correspondente. O comando Node e opcional
 para desenvolvimento local e nunca e pre-requisito operacional.

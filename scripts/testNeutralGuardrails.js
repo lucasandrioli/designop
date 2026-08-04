@@ -36,9 +36,9 @@ function expectFailure(result, description) {
 function expectSuccess(result, description) {
   assert.strictEqual(result.status, 0, description + ': ' + (result.stderr || result.stdout))
 }
-function loadFigmaFunction(relative, name, figma) {
+function loadFigmaFunction(relative, name, figma, globals = {}) {
   const source = fs.readFileSync(path.join(root, relative), 'utf8') + '\nmodule.exports = ' + name
-  const sandbox = { module: { exports: null }, exports: {}, figma, console }
+  const sandbox = { module: { exports: null }, exports: {}, figma, console, ...globals }
   vm.runInNewContext(source, sandbox, { filename: relative })
   return sandbox.module.exports
 }
@@ -143,11 +143,14 @@ function testFigmaApiContracts() {
   const structureSource = fs.readFileSync(path.join(root, 'scripts/collectReferenceStructure.js'), 'utf8')
   const reactionsSource = fs.readFileSync(path.join(root, 'scripts/collectPrototypeReactions.js'), 'utf8')
   const manifestCoreSource = fs.readFileSync(path.join(root, 'scripts/validateAnalysisManifestCore.js'), 'utf8')
+  const reconciliationSource = fs.readFileSync(path.join(root, 'scripts/reconcileAnalysisManifestFigma.js'), 'utf8')
   assert(structureSource.includes('totalPartes'), 'Coletor estrutural precisa expor a quantidade total de partes')
   assert(structureSource.includes('itensPorParte'), 'Coletor estrutural precisa expor a distribuicao da leitura')
   assert(reactionsSource.includes('totalParts'), 'Coletor de reacoes precisa paginar a leitura completa')
   assert(!manifestCoreSource.includes("require('fs')"), 'Validador MCP nao pode depender de fs')
   assert(!manifestCoreSource.includes('process.exit'), 'Validador MCP nao pode depender de process')
+  assert(!reconciliationSource.includes("require('fs')"), 'Reconciliacao MCP nao pode depender de fs')
+  assert(!reconciliationSource.includes('process.exit'), 'Reconciliacao MCP nao pode depender de process')
 
   const analysisSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-analise/SKILL.md'), 'utf8')
   assert(analysisSkill.includes('figma-get_figma_skill'), 'Analista precisa carregar a skill oficial antes de use_figma')
@@ -158,7 +161,8 @@ function testFigmaApiContracts() {
   assert(analysisSkill.includes('propriedadesVisuaisComValorSemBindingObservado'), 'Analista precisa preservar o nome do sinal estrutural retornado pelo coletor')
   assert(analysisSkill.includes('nunca o renomeie para\n`camposVisuaisSemBindingObservado`'), 'Analista precisa bloquear explicitamente o nome antigo do sinal estrutural')
   assert(analysisSkill.includes('validateAnalysisManifestCore.js'), 'Analista precisa validar o manifesto sem terminal')
-  assert(analysisSkill.includes('return { passed: failures.length === 0, failures };'), 'Analista precisa receber o formato literal do resultado MCP')
+  assert(analysisSkill.includes('reconcileAnalysisManifestFigma.js'), 'Analista precisa reconciliar o manifesto com Figma atual')
+  assert(analysisSkill.includes('return await reconcileAnalysisManifestFigma(manifest);'), 'Analista precisa receber a chamada literal da reconciliacao MCP')
 }
 function testManifestValidationWithoutTerminal() {
   const validateAnalysisManifestData = loadFigmaFunction(
@@ -177,6 +181,42 @@ function testManifestValidationWithoutTerminal() {
     validateAnalysisManifestData(invalid).some((failure) => failure.includes('descoberta atual')),
     'Validador portatil precisa reprovar manifesto sem descoberta atual',
   )
+}
+async function testManifestReconciliationWithoutTerminal() {
+  const destination = { id: '1:4', name: 'destino', type: 'FRAME', children: [] }
+  const action = {
+    id: '1:3',
+    name: 'acao-principal',
+    type: 'FRAME',
+    children: [],
+    reactions: [{ trigger: { type: 'ON_CLICK' }, actions: [{ type: 'NODE', destinationId: '1:4' }] }],
+  }
+  const section = {
+    id: '1:2',
+    name: 'ref-modalidade-tela-ctx-a',
+    type: 'SECTION',
+    children: [action, destination],
+    findAll: () => [action, destination],
+  }
+  const page = { id: '1:1', children: [section], findOne: (predicate) => predicate(section) ? section : null }
+  const figma = { root: { children: [page] } }
+  const validateAnalysisManifestData = loadFigmaFunction('scripts/validateAnalysisManifestCore.js', 'validateAnalysisManifestData', {})
+  const reconcileAnalysisManifestFigma = loadFigmaFunction(
+    'scripts/reconcileAnalysisManifestFigma.js',
+    'reconcileAnalysisManifestFigma',
+    figma,
+    { validateAnalysisManifestData },
+  )
+  const approved = await reconcileAnalysisManifestFigma(validManifest())
+  assert.strictEqual(approved.passed, true, 'Reconciliacao MCP precisa aprovar manifesto que coincide com Figma atual')
+
+  const stale = validManifest()
+  stale.coberturaEstrutura[0].nodesInspecionados = 8
+  stale.coberturaEstrutura[0].totalItens = 8
+  stale.coberturaEstrutura[0].itensPorParte = [8]
+  const rejected = await reconcileAnalysisManifestFigma(stale)
+  assert.strictEqual(rejected.passed, false, 'Reconciliacao MCP precisa reprovar manifesto reaproveitado com estrutura divergente')
+  assert(rejected.failures.some((failure) => failure.includes('cobertura estrutural')), 'Reconciliacao precisa explicar a divergencia estrutural')
 }
 async function testRemoteComponentPreflight() {
   let componentImports = 0
@@ -683,6 +723,7 @@ async function main() {
     await testCanvasOrganization()
     testFigmaApiContracts()
     testManifestValidationWithoutTerminal()
+    await testManifestReconciliationWithoutTerminal()
     await testRemoteComponentPreflight()
     testValidateRound()
 

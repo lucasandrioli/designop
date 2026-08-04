@@ -83,7 +83,10 @@ Sections no arquivo atual por `figma-get_metadata`. IDs de conversas ou
 rodadas anteriores nao sao entrada valida para coleta. O manifesto
 registra essa descoberta em `fontes.figma.descoberta`.
 
-Em operacao sem terminal, a validacao do manifesto usa a funcao pura em
-`scripts/validateAnalysisManifestCore.js`, colada com o objeto do
-manifesto em uma chamada MCP somente de leitura. O adaptador Node tem o
-mesmo resultado, mas serve apenas para desenvolvimento local.
+Em operacao sem terminal, a verificacao final usa
+`scripts/validateAnalysisManifestCore.js` junto de
+`scripts/reconcileAnalysisManifestFigma.js`, colados com o objeto do
+manifesto em uma chamada MCP somente de leitura. A reconciliacao compara
+o objeto com o Figma atual e precisa retornar `passed: true`; o core
+sozinho verifica apenas a forma do manifesto. O adaptador Node tem o
+mesmo resultado estrutural, mas serve apenas para desenvolvimento local.

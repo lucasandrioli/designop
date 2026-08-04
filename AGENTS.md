@@ -129,8 +129,11 @@ internas e nao publicadas. Referencia crua nao e componente.
 - Scripts em `scripts/` sao colados na Plugin API a partir da versao
   atual do arquivo. Eles nao executam por caminho dentro do Figma.
 - O Analista nao depende de terminal para validar o manifesto. Depois de
-  grava-lo, ele executa `validateAnalysisManifestCore.js` em uma chamada
-  `use_figma` somente de leitura, com o objeto do manifesto. O adaptador
+  grava-lo, ele relê o objeto e executa `validateAnalysisManifestCore.js`
+  junto de `reconcileAnalysisManifestFigma.js` em uma chamada `use_figma`
+  somente de leitura. A reconciliacao compara o manifesto com a pagina e
+  Sections existentes naquele instante; `validateAnalysisManifestCore.js`
+  sozinho valida apenas a forma do objeto. O adaptador
   `validateAnalysisManifest.js` e apoio opcional de desenvolvimento.
 - Nenhuma tela e entregue sem validacao completa.
 - Skill orienta a sequencia; contratos e validadores decidem se uma

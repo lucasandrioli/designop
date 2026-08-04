@@ -3,21 +3,22 @@
 ## Status da base
 
 - Aprovado por: [CONFIRMAR]
-- Atualizado em: [CONFIRMAR]
-- Fonte inicial: Curadoria humana da base documental
+- Atualizado em: 2026-08-04
+- Fonte inicial: Explicação oral da pessoa responsável pela curadoria
 
 ## Proposito e limite
 
-- Proposito: modalidade PCon a detalhar na curadoria humana.
+- Proposito: modalidade documental PCon. [REGRA CONFIRMADA]
 - Inicio: [CONFIRMAR]
 - Fim: [CONFIRMAR]
-- Fora do escopo: refin e portabilidade.
+- Fora do escopo: fluxos, elegibilidade, telas e regras específicas. [CONFIRMAR]
 
 ## Regras estruturais
 
 | Regra | Efeito na jornada ou nos templates | Origem | Status |
 | --- | --- | --- | --- |
-| Nenhuma regra estrutural registrada nesta versao inicial. | [CONFIRMAR] | Curadoria humana pendente | [CONFIRMAR] |
+| PCon é um nome documental da base. | Organização da base. | AGENTS.md, docs/base-documental.md | CONFIRMADA POR FONTE FORMAL |
+| Fluxos, elegibilidade, telas e regras específicas de PCon. | [CONFIRMAR] | [CONFIRMAR] | [CONFIRMAR] |
 
 ## Etapas previstas
 
@@ -31,4 +32,4 @@
 
 - Regras globais: `docs/manual-credito-consignado.md`.
 - Mapas que consomem este manual: worktrees de rodada em `docs/mapas/pcon.md`.
-- [CONFIRMAR]: todas as regras especificas de PCon.
+- [CONFIRMAR]: todas as regras específicas de PCon que dependam de política ou contexto formal.

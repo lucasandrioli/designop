@@ -3,21 +3,22 @@
 ## Status da base
 
 - Aprovado por: [CONFIRMAR]
-- Atualizado em: [CONFIRMAR]
-- Fonte inicial: Curadoria humana da base documental
+- Atualizado em: 2026-08-04
+- Fonte inicial: Explicação oral da pessoa responsável pela curadoria
 
 ## Proposito e limite
 
-- Proposito: modalidade portabilidade a detalhar na curadoria humana.
+- Proposito: modalidade documental portabilidade. [REGRA CONFIRMADA]
 - Inicio: [CONFIRMAR]
 - Fim: [CONFIRMAR]
-- Fora do escopo: PCon e refin.
+- Fora do escopo: fluxos, elegibilidade, telas e regras específicas. [CONFIRMAR]
 
 ## Regras estruturais
 
 | Regra | Efeito na jornada ou nos templates | Origem | Status |
 | --- | --- | --- | --- |
-| Nenhuma regra estrutural registrada nesta versao inicial. | [CONFIRMAR] | Curadoria humana pendente | [CONFIRMAR] |
+| Portabilidade é um nome documental da base. | Organização da base. | AGENTS.md, docs/base-documental.md | CONFIRMADA POR FONTE FORMAL |
+| Fluxos, elegibilidade, telas e regras específicas de portabilidade. | [CONFIRMAR] | [CONFIRMAR] | [CONFIRMAR] |
 
 ## Etapas previstas
 
@@ -31,4 +32,4 @@
 
 - Regras globais: `docs/manual-credito-consignado.md`.
 - Mapas que consomem este manual: worktrees de rodada em `docs/mapas/portabilidade.md`.
-- [CONFIRMAR]: todas as regras especificas de portabilidade.
+- [CONFIRMAR]: todas as regras específicas de portabilidade que dependam de contexto ou política formal.

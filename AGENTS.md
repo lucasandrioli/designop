@@ -108,6 +108,11 @@ internas e nao publicadas. Referencia crua nao e componente.
   de contexto, mapa, contrato de tela, mapa IDS, plano de variaveis e
   proposta de componentes locais. Em `/consignado-contexto`, so grava
   documentos apos aprovacao humana explicita do texto.
+- Antes de pedir essa aprovacao, o Analista grava e valida
+  `.designops/runs/<rodada>/contexto.json`. Cada afirmacao declara se e
+  fato Figma, regra documentada, regra confirmada ou `[CONFIRMAR]`, com
+  a fonte correspondente. Rascunho sem essa prova nao pode virar manual,
+  catalogo ou mapa.
 - O contrato consolidado exige aprovacao humana antes de o Montador
   criar componentes locais ou templates.
 - O Montador escreve em serie: primeiro componentes locais aprovados,

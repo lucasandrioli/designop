@@ -40,6 +40,10 @@ requireText('.github/skills/consignado-contexto/SKILL.md', context, '## Contexto
 requireText('.github/skills/consignado-contexto/SKILL.md', context, '`consignado-contexto`, `consignado-analise` e `figma-plugin-api`');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, '`FATO OBSERVADO`, `REGRA\nDOCUMENTADA`, `REGRA CONFIRMADA` ou `[CONFIRMAR]`');
 requireText('.github/skills/consignado-contexto/SKILL.md', context, 'Nao liste diretorios inteiros');
+requireText('.github/skills/consignado-contexto/SKILL.md', context, 'contexto.json');
+requireText('.github/skills/consignado-contexto/SKILL.md', context, 'validateContextDraftCore.js');
+requireText('.github/agents/analista.agent.md', analyst, 'contexto-rodada.schema.json');
+requireText('.github/agents/analista.agent.md', analyst, 'validateContextDraftCore.js');
 requireText('docs/mapas/_template.md', mapTemplate, 'Origem da regra');
 requireText('docs/mapas/_template.md', mapTemplate, 'Composicoes internas');
 requireText('docs/contextos/_template.md', contextTemplate, 'Regras locais por etapa');

@@ -52,6 +52,16 @@ Se ainda nao houver documentos preenchidos, consulte os caminhos
 canonicos esperados um a um; nao liste diretorios inteiros para descobrir
 conteudo.
 
+Antes de mostrar o rascunho para aprovacao, grave somente
+`.designops/runs/<rodada>/contexto.json`, conforme
+`docs/contratos/contexto-rodada.schema.json`. Leia a versao atual de
+`scripts/validateContextDraftCore.js`, releia o objeto recem-gravado e,
+depois de carregar a skill oficial, execute o core com esse objeto em
+`use_figma` somente de leitura. O rascunho so pode ser apresentado quando
+retornar `passed: true`. `APROVADO_PARA_REGISTRO` exige registro da
+aprovacao humana e nenhuma afirmacao `[CONFIRMAR]` bloqueante. O adaptador
+Node e apoio local, nunca pre-requisito operacional.
+
 Em consignado-analise, use somente referencias cruas, documentos
 aprovados, reacoes observadas e evidencia IDS. Leia e execute
 `scripts/collectPrototypeReactions.js` e

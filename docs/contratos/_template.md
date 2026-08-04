@@ -52,6 +52,25 @@ Um papel com origem `COMPONENTE_LOCAL` no contrato de tela precisa apontar
 para um `componentId` presente nesse plano. Sem plano aprovado, a composicao
 fica como `LOCAL_LAYOUT`.
 
+## Rascunho temporario de contexto
+
+Antes de pedir aprovacao para criar documentos oficiais, o Analista grava
+`.designops/runs/<rodada>/contexto.json` conforme
+`contexto-rodada.schema.json`. Ele nao e documento oficial e registra cada
+afirmacao com escopo, classificacao e fonte.
+
+As classificacoes permitidas sao `FATO_OBSERVADO`, `REGRA_DOCUMENTADA`,
+`REGRA_CONFIRMADA` e `CONFIRMAR`. Fato observado exige Section Figma de
+origem e nao pode declarar regra de negocio, presenca obrigatoria, roteiro
+de orientacao ou retorno `DIRETO`/`ACAO_NO_APP`. Esses valores exigem
+documento, confirmacao humana ou `[CONFIRMAR]`.
+
+Em ambiente sem terminal, o Analista le o arquivo recem-gravado e executa
+`validateContextDraftCore.js` com o objeto em `use_figma` somente de
+leitura. Somente um rascunho aprovado pelo core pode ser mostrado para
+aprovacao humana; `APROVADO_PARA_REGISTRO` exige registro dessa aprovacao e
+nenhuma lacuna bloqueante.
+
 ## Resolucao temporaria
 
 O Analista grava `.designops/runs/<rodada>/resolvido.json` conforme

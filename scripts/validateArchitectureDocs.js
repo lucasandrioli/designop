@@ -33,7 +33,9 @@ const screenSchema = read('docs/contratos/tela.schema.json');
 const journeySchema = read('docs/contratos/jornada.schema.json');
 const resolutionSchema = read('docs/contratos/resolucao.schema.json');
 const localComponentsSchema = read('docs/contratos/componentes-locais.schema.json');
+const contextDraftSchema = read('docs/contratos/contexto-rodada.schema.json');
 const contractTemplate = read('docs/contratos/_template.md');
+const contextDraftCore = read('scripts/validateContextDraftCore.js');
 const referenceSkill = read('.github/skills/figma-referencias/SKILL.md');
 
 [
@@ -73,8 +75,13 @@ requireText('docs/contratos/jornada.schema.json', journeySchema, 'ACAO_NO_APP');
 requireText('docs/contratos/jornada.schema.json', journeySchema, 'DIRETA_COM_TUTORIAL_OPCIONAL');
 requireText('docs/contratos/resolucao.schema.json', resolutionSchema, 'sectionId');
 requireText('docs/contratos/componentes-locais.schema.json', localComponentsSchema, 'reutilizacoes');
+requireText('docs/contratos/contexto-rodada.schema.json', contextDraftSchema, 'FATO_OBSERVADO');
+requireText('docs/contratos/contexto-rodada.schema.json', contextDraftSchema, 'APROVADO_PARA_REGISTRO');
 requireText('docs/contratos/_template.md', contractTemplate, 'IDs logicos');
 requireText('docs/contratos/_template.md', contractTemplate, 'componentes-locais.json');
+requireText('docs/contratos/_template.md', contractTemplate, 'contexto-rodada.schema.json');
+requireText('scripts/validateContextDraftCore.js', contextDraftCore, 'validateContextDraftData');
+requireText('scripts/validateContextDraftCore.js', contextDraftCore, 'nao pode transformar fato Figma em regra de negocio');
 requireText('.github/skills/figma-referencias/SKILL.md', referenceSkill, 'validateInteractionContract');
 requireText('.github/skills/figma-referencias/SKILL.md', referenceSkill, 'nao podem revelar o defeito');
 requireText('docs/contrato-papeis.md', roleContract, 'Conversa guiada');

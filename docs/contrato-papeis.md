@@ -113,6 +113,15 @@ uma leitura subsequente, o historico precisa mostrar a skill oficial do
 Figma; se esse par nao estiver auditavel, o resultado e
 `NAO_VERIFICAVEL`.
 
+Antes de solicitar aprovacao do texto de contexto, o Analista grava o
+rascunho temporario em `.designops/runs/<rodada>/contexto.json` e o valida
+com `validateContextDraftCore.js` pelo MCP em leitura. Cada afirmacao tem
+uma das quatro classificacoes e a fonte correspondente. A validacao impede
+que fato Figma seja promovido como regra de negocio e bloqueia
+`APROVADO_PARA_REGISTRO` sem aprovacao humana ou com `[CONFIRMAR]`
+bloqueante. Somente depois disso a conversa pode pedir a aprovacao para
+escrever manuais, catalogo e mapa.
+
 Depois da ultima escrita do manifesto temporario, o Analista o relê e
 executa `validateAnalysisManifestCore.js` junto de
 `reconcileAnalysisManifestFigma.js` pelo MCP do Figma sem mutar o

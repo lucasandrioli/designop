@@ -113,6 +113,41 @@ function validManifest() {
     lacunas: [],
   }
 }
+function validContextDraft() {
+  return {
+    schemaVersion: 1,
+    id: 'contexto-neutro',
+    status: 'AGUARDANDO_DESIGNER',
+    modalidade: 'modalidade-exemplo',
+    etapa: 'etapa-exemplo',
+    contextos: [{ id: 'ctx-a', rotulo: null }],
+    afirmacoes: [
+      {
+        id: 'topologia-observada',
+        escopo: 'CONTEXTO',
+        contextoId: 'ctx-a',
+        categoria: 'TOPOLOGIA_OBSERVADA',
+        classificacao: 'FATO_OBSERVADO',
+        texto: 'Caminho observado na referencia.',
+        valorControlado: null,
+        bloqueante: false,
+        fonte: { tipo: 'FIGMA', referencias: [{ section: 'ref-modalidade-tela-ctx-a', nodeId: '1:2' }] },
+      },
+      {
+        id: 'retorno-pendente',
+        escopo: 'CONTEXTO',
+        contextoId: 'ctx-a',
+        categoria: 'RETORNO_APP',
+        classificacao: 'CONFIRMAR',
+        texto: 'Contrato de retorno ainda nao confirmado.',
+        valorControlado: 'DIRETO',
+        bloqueante: true,
+        fonte: { tipo: 'AUSENTE', motivo: 'Sem documento ou confirmacao humana.' },
+      },
+    ],
+    aprovacaoHumana: null,
+  }
+}
 function validateManifest(manifest) {
   const fixture = temporaryDirectory('designops-manifest-')
   const file = path.join(fixture, 'analise.json')
@@ -180,6 +215,11 @@ function testFigmaApiContracts() {
   assert(contextSkill.includes('`consignado-contexto`, `consignado-analise` e `figma-plugin-api`'), 'Contexto guiado com Figma precisa carregar as skills locais minimas')
   assert(contextSkill.includes('Estrutura, reacao,\nsequencia, timeout e tela existente no Figma sao somente `FATO\nOBSERVADO`'), 'Skill de contexto precisa impedir que Figma vire regra de negocio')
   assert(contextSkill.includes('Nao liste diretorios inteiros'), 'Skill de contexto precisa bloquear descoberta ampla de documentos')
+  assert(contextSkill.includes('validateContextDraftCore.js'), 'Skill de contexto precisa validar rascunho sem terminal')
+
+  const contextCoreSource = fs.readFileSync(path.join(root, 'scripts/validateContextDraftCore.js'), 'utf8')
+  assert(!contextCoreSource.includes("require('fs')"), 'Validador de contexto MCP nao pode depender de fs')
+  assert(!contextCoreSource.includes('process.exit'), 'Validador de contexto MCP nao pode depender de process')
 }
 function testManifestValidationWithoutTerminal() {
   const validateAnalysisManifestData = loadFigmaFunction(
@@ -197,6 +237,47 @@ function testManifestValidationWithoutTerminal() {
   assert(
     validateAnalysisManifestData(invalid).some((failure) => failure.includes('descoberta atual')),
     'Validador portatil precisa reprovar manifesto sem descoberta atual',
+  )
+}
+function testContextDraftValidationWithoutTerminal() {
+  const validateContextDraftData = loadFigmaFunction(
+    'scripts/validateContextDraftCore.js',
+    'validateContextDraftData',
+    {},
+  )
+  assert.strictEqual(
+    validateContextDraftData(validContextDraft()).length,
+    0,
+    'Rascunho de contexto deve aceitar fato Figma e regra pendente separados',
+  )
+
+  const inferredRule = validContextDraft()
+  inferredRule.afirmacoes[1] = {
+    ...inferredRule.afirmacoes[1],
+    classificacao: 'FATO_OBSERVADO',
+    fonte: { tipo: 'FIGMA', referencias: [{ section: 'ref-modalidade-tela-ctx-a' }] },
+  }
+  assert(
+    validateContextDraftData(inferredRule).some((failure) => failure.includes('nao pode transformar fato Figma em regra de negocio')),
+    'Rascunho precisa reprovar retorno inferido a partir do Figma',
+  )
+
+  const missingSource = validContextDraft()
+  missingSource.afirmacoes[0].fonte = { tipo: 'DOCUMENTO' }
+  assert(
+    validateContextDraftData(missingSource).some((failure) => failure.includes('FATO_OBSERVADO precisa de fonte FIGMA')),
+    'Fato observado sem fonte Figma precisa reprovar',
+  )
+
+  const unapproved = validContextDraft()
+  unapproved.status = 'APROVADO_PARA_REGISTRO'
+  assert(
+    validateContextDraftData(unapproved).some((failure) => failure.includes('aprovacao humana')),
+    'Contexto aprovado sem registro humano precisa reprovar',
+  )
+  assert(
+    validateContextDraftData(unapproved).some((failure) => failure.includes('CONFIRMAR bloqueante')),
+    'Contexto aprovado com lacuna bloqueante precisa reprovar',
   )
 }
 async function testManifestReconciliationWithoutTerminal() {
@@ -740,6 +821,7 @@ async function main() {
     await testCanvasOrganization()
     testFigmaApiContracts()
     testManifestValidationWithoutTerminal()
+    testContextDraftValidationWithoutTerminal()
     await testManifestReconciliationWithoutTerminal()
     await testRemoteComponentPreflight()
     testValidateRound()

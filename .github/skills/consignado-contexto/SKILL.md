@@ -38,6 +38,17 @@ documental ou confirmacao humana identificada. Em particular, retorno
 `DIRETO` ou `ACAO_NO_APP`, presenca obrigatoria de confirmacao externa e
 tutorial opcional ficam `[CONFIRMAR]` ate essa fonte existir.
 
+Antes de mostrar qualquer rascunho para aprovacao, grave somente
+`.designops/runs/<rodada>/contexto.json` conforme
+`docs/contratos/contexto-rodada.schema.json`. Cada afirmacao precisa ter
+escopo, classificacao, fonte e, quando for Figma, Section de evidencia.
+Leia `scripts/validateContextDraftCore.js`, releia o arquivo recem-gravado
+e rode o core com o objeto em `use_figma` somente de leitura, depois de
+carregar a skill oficial. So apresente o rascunho quando o retorno literal
+for `passed: true`. O status `APROVADO_PARA_REGISTRO` exige a aprovacao
+humana registrada e nenhuma lacuna `[CONFIRMAR]` bloqueante. O adaptador
+Node e opcional e nao participa da operacao no banco.
+
 Antes de perguntar, recupere manual global, manual da modalidade,
 catalogo da etapa, mapa e manuais de contexto que ja existirem.
 Descubra o que puder nas referencias e pergunte apenas objetivo,

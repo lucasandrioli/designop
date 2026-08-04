@@ -18,6 +18,7 @@ const allowedTemplates = new Set([
   'docs/contratos/jornada.schema.json',
   'docs/contratos/resolucao.schema.json',
   'docs/contratos/componentes-locais.schema.json',
+  'docs/contratos/contexto-rodada.schema.json',
   'docs/manual-credito-consignado_template.md',
   'docs/receitas/_template.md',
   'docs/receitas/_comuns.md',

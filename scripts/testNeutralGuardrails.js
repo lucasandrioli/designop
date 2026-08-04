@@ -78,6 +78,8 @@ function validManifest() {
       nodesComReacao: 1,
       coletor: 'scripts/collectPrototypeReactions.js',
       status: 'COBERTA',
+      totalPartes: 1,
+      partesLidas: [1],
     }],
     coberturaEstrutura: [{
       secao: 'ref-modalidade-tela-ctx-a',
@@ -85,6 +87,8 @@ function validManifest() {
       nodesInspecionados: 3,
       coletor: 'scripts/collectReferenceStructure.js',
       status: 'COBERTA',
+      totalPartes: 1,
+      partesLidas: [1],
     }],
     reacoes: [{
       origem: { nodeId: '1:3', nome: 'acao-principal' },
@@ -126,12 +130,13 @@ function testFigmaApiContracts() {
   assert(inspectSource.includes('component.parent?.type === \'COMPONENT_SET\''), 'Preflight precisa ler definitions no set pai da variante')
 
   const structureSource = fs.readFileSync(path.join(root, 'scripts/collectReferenceStructure.js'), 'utf8')
-  assert(structureSource.includes('summaryOnly'), 'Coletor estrutural precisa oferecer resumo contra truncamento')
-  assert(structureSource.includes('unboundVisualSignalCount'), 'Resumo estrutural precisa preservar a contagem de sinais sem binding')
+  const reactionsSource = fs.readFileSync(path.join(root, 'scripts/collectPrototypeReactions.js'), 'utf8')
+  assert(structureSource.includes('totalPartes'), 'Coletor estrutural precisa expor a quantidade total de partes')
+  assert(reactionsSource.includes('totalParts'), 'Coletor de reacoes precisa paginar a leitura completa')
 
   const analysisSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-analise/SKILL.md'), 'utf8')
   assert(analysisSkill.includes('figma-get_figma_skill'), 'Analista precisa carregar a skill oficial antes de use_figma')
-  assert(analysisSkill.includes('summaryOnly: true'), 'Analista precisa iniciar coleta estrutural em modo resumido')
+  assert(analysisSkill.includes('partesLidas'), 'Analista precisa registrar que leu todas as partes')
 }
 async function testRemoteComponentPreflight() {
   let componentImports = 0
@@ -410,12 +415,21 @@ async function testPrototypeCollectionOutsideSection() {
       actions: [{ type: 'NODE', destinationId: 'outside' }],
     }],
   }
+  const secondSource = {
+    id: 'second-source',
+    name: 'acao-secundaria',
+    type: 'FRAME',
+    reactions: [{
+      trigger: { type: 'ON_CLICK' },
+      actions: [{ type: 'BACK' }],
+    }],
+  }
   const section = {
     id: 'section',
     name: 'ref-modalidade-tela-ctx-a',
     type: 'SECTION',
-    children: [source],
-    findAll: () => [source],
+    children: [source, secondSource],
+    findAll: () => [source, secondSource],
   }
   const page = {
     id: 'page',
@@ -428,10 +442,52 @@ async function testPrototypeCollectionOutsideSection() {
       ? { id: 'outside', name: 'evidencia-externa' }
       : null,
   })
-  const report = await collectPrototypeReactions('page', 'section')
+  const report = await collectPrototypeReactions('page', 'section', { part: 1, pageSize: 1 })
   const target = report.reacoes[0].reactions[0].acoes[0].target
   assert.strictEqual(target.kind, 'NODE', 'Coletor precisa registrar destino NODE')
   assert.strictEqual(target.node.scope, 'FORA_DA_SECTION', 'Coletor precisa distinguir destino fora da Section')
+  assert.strictEqual(report.paginacao.totalPartes, 2, 'Coletor de reacoes precisa dividir uma leitura grande')
+  assert.strictEqual(report.cobertura.status, 'PARCIAL', 'Cobertura nao pode ser concluida antes da ultima parte')
+  const secondPart = await collectPrototypeReactions('page', 'section', { part: 2, pageSize: 1 })
+  assert.strictEqual(secondPart.reacoes[0].origem.id, 'second-source', 'Segunda parte precisa conservar a reacao restante')
+}
+
+async function testReferenceStructurePagination() {
+  const nodes = ['a', 'b', 'c'].map((id) => ({
+    id,
+    name: 'frame-' + id,
+    type: 'FRAME',
+    children: [],
+    layoutMode: 'VERTICAL',
+    absoluteBoundingBox: { x: 0, y: 0, width: 360, height: 80 },
+    boundVariables: {},
+  }))
+  const section = {
+    id: 'section',
+    name: 'ref-modalidade-tela-ctx-a',
+    type: 'SECTION',
+    children: nodes,
+    findOne: (predicate) => predicate(section) ? section : null,
+    findAll: () => nodes,
+    boundVariables: {},
+  }
+  const page = {
+    id: 'page',
+    findOne: (predicate) => predicate(section) ? section : null,
+  }
+  const collectReferenceStructure = loadFigmaFunction('scripts/collectReferenceStructure.js', 'collectReferenceStructure', {
+    root: { children: [page] },
+    setCurrentPageAsync: async () => {},
+  })
+  const firstPart = await collectReferenceStructure('page', 'section', { part: 1, pageSize: 2 })
+  const secondPart = await collectReferenceStructure('page', 'section', { part: 2, pageSize: 2 })
+  assert.strictEqual(firstPart.paginacao.totalPartes, 2, 'Coletor estrutural precisa dividir todos os nos')
+  assert.strictEqual(firstPart.cobertura.status, 'PARCIAL', 'Estrutura nao pode ser coberta antes de todas as partes')
+  assert.deepStrictEqual(
+    [...firstPart.nodes, ...secondPart.nodes].map((node) => node.id),
+    ['section', 'a', 'b', 'c'],
+    'Partes estruturais precisam reconstruir a arvore completa sem omissao',
+  )
 }
 
 async function testCanvasOrganization() {
@@ -553,11 +609,16 @@ async function main() {
     manifest = validManifest()
     manifest.reacoes[0].target.node = null
     expectFailure(validateManifest(manifest), 'Reacao observada sem destino')
+    manifest = validManifest()
+    manifest.coberturaEstrutura[0].totalPartes = 2
+    manifest.coberturaEstrutura[0].partesLidas = [1]
+    expectFailure(validateManifest(manifest), 'Manifesto com parte estrutural nao lida')
     expectSuccess(validateManifest(validManifest()), 'Manifesto completo')
 
     await testJourneyAndLocalComponents()
     await testInteractionCompositionAndReconstruction()
     await testPrototypeCollectionOutsideSection()
+    await testReferenceStructurePagination()
     await testCanvasOrganization()
     testFigmaApiContracts()
     await testRemoteComponentPreflight()

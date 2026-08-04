@@ -16,6 +16,21 @@ if (!Array.isArray(manifest.fontes?.figma?.secoesReferencia) || manifest.fontes.
 if (!Array.isArray(manifest.fontes?.documentos?.manuaisContexto)) failures.push('manuais de contexto ausentes');
 const referenceSections = manifest.fontes?.figma?.secoesReferencia ?? [];
 const referenceByNodeId = new Map();
+const validatePagination = (coverage, label, index) => {
+  if (!Number.isInteger(coverage?.totalPartes) || coverage.totalPartes < 1) {
+    failures.push(`${label}[${index}] sem totalPartes valido`);
+    return;
+  }
+  if (!Array.isArray(coverage?.partesLidas)) {
+    failures.push(`${label}[${index}] sem partesLidas`);
+    return;
+  }
+  const parts = [...new Set(coverage.partesLidas)];
+  const expected = Array.from({ length: coverage.totalPartes }, (_, part) => part + 1);
+  if (parts.length !== coverage.partesLidas.length || parts.length !== expected.length || parts.some((part, position) => part !== expected[position])) {
+    failures.push(`${label}[${index}] nao comprova leitura de todas as partes`);
+  }
+};
 for (const [index, section] of referenceSections.entries()) {
   if (!section?.nome || !section?.nodeId || !section?.contextoId) failures.push('secoesReferencia[' + index + '] incompleta');
   if (referenceByNodeId.has(section?.nodeId)) failures.push('secoesReferencia possui nodeId duplicado: ' + section.nodeId);
@@ -32,6 +47,7 @@ for (const [index, coverage] of (manifest.coberturaReacoes ?? []).entries()) {
   }
   if (coverage.coletor !== 'scripts/collectPrototypeReactions.js') failures.push('coberturaReacoes[' + index + '] precisa usar scripts/collectPrototypeReactions.js');
   if (!['COBERTA', 'FALHOU'].includes(coverage.status)) failures.push('coberturaReacoes[' + index + '] possui status invalido');
+  validatePagination(coverage, 'coberturaReacoes', index);
   const referencedSection = referenceByNodeId.get(coverage.nodeId);
   if (!referencedSection) failures.push('coberturaReacoes[' + index + '] aponta para Section que nao e referencia');
   else if (referencedSection.nome !== coverage.secao) failures.push('coberturaReacoes[' + index + '] nao corresponde ao nome da Section de referencia');
@@ -47,6 +63,7 @@ for (const [index, coverage] of (manifest.coberturaEstrutura ?? []).entries()) {
   }
   if (coverage.coletor !== 'scripts/collectReferenceStructure.js') failures.push('coberturaEstrutura[' + index + '] precisa usar scripts/collectReferenceStructure.js');
   if (!['COBERTA', 'FALHOU'].includes(coverage.status)) failures.push('coberturaEstrutura[' + index + '] possui status invalido');
+  validatePagination(coverage, 'coberturaEstrutura', index);
   const referencedSection = referenceByNodeId.get(coverage.nodeId);
   if (!referencedSection) failures.push('coberturaEstrutura[' + index + '] aponta para Section que nao e referencia');
   else if (referencedSection.nome !== coverage.secao) failures.push('coberturaEstrutura[' + index + '] nao corresponde ao nome da Section de referencia');

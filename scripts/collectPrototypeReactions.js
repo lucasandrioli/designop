@@ -3,13 +3,13 @@
  *
  * Este arquivo nao roda o MCP sozinho. O Analista deve ler e colar o corpo
  * abaixo e chamar:
- * `return await collectPrototypeReactions('<node-id-da-pagina>', '<node-id-da-secao>')`.
+ * `return await collectPrototypeReactions('<node-id-da-pagina>', '<node-id-da-secao>', { part: 1, pageSize: 10 })`.
  * Uma secao por chamada evita que uma leitura completa seja truncada pelo
- * cliente. A pagina e carregada explicitamente, pois o contexto de pagina
- * reinicia a cada chamada do MCP.
+ * cliente. Se houver mais de uma parte, leia todas. A pagina e carregada
+ * explicitamente, pois o contexto de pagina reinicia a cada chamada do MCP.
  */
 
-async function collectPrototypeReactions(pageId, sectionId) {
+async function collectPrototypeReactions(pageId, sectionId, opts = {}) {
   const page = figma.root.children.find((candidate) => candidate.id === pageId);
   if (!page) throw new Error(`Pagina da etapa invalida: ${pageId}`);
   await figma.setCurrentPageAsync(page);
@@ -32,6 +32,14 @@ async function collectPrototypeReactions(pageId, sectionId) {
   const withReactions = allNodes.filter(
     (node) => 'reactions' in node && Array.isArray(node.reactions) && node.reactions.length > 0,
   );
+  const requestedPart = Number.isInteger(opts.part) ? opts.part : 1
+  const pageSize = Number.isInteger(opts.pageSize) ? Math.min(Math.max(opts.pageSize, 1), 10) : 10
+  const totalParts = Math.max(1, Math.ceil(withReactions.length / pageSize))
+  if (requestedPart < 1 || requestedPart > totalParts) {
+    throw new Error(`Parte de reacoes invalida: ${requestedPart}/${totalParts}`)
+  }
+  const start = (requestedPart - 1) * pageSize
+  const reactionsThisPart = withReactions.slice(start, start + pageSize)
 
   const nodeTarget = async (nodeId) => {
     if (!nodeId) return null
@@ -71,15 +79,22 @@ async function collectPrototypeReactions(pageId, sectionId) {
   }
 
   return {
+    paginacao: {
+      parteAtual: requestedPart,
+      totalPartes: totalParts,
+      pageSize,
+      totalItens: withReactions.length,
+      itensNestaParte: reactionsThisPart.length,
+    },
     cobertura: {
       secao: section.name,
       nodeId: section.id,
       nodesInspecionados: allNodes.length,
       nodesComReacao: withReactions.length,
       coletor: 'scripts/collectPrototypeReactions.js',
-      status: 'COBERTA',
+      status: totalParts === 1 ? 'COBERTA' : 'PARCIAL',
     },
-    reacoes: await Promise.all(withReactions.map(async (node) => ({
+    reacoes: await Promise.all(reactionsThisPart.map(async (node) => ({
       origem: nodesById.get(node.id),
       reactions: await Promise.all(node.reactions.map(async (reaction) => ({
         gatilho: reaction.trigger,

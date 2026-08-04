@@ -27,6 +27,9 @@ com o manifesto do Analista. Execute `validateRound.js` e
 referencia, a resolucao temporaria ou a cobertura divergirem do
 manifesto, devolva `NAO VERIFICAVEL`.
 
+Em ambos os coletores, leia todas as partes devolvidas em `paginacao`.
+Resumo, primeira parte ou output truncado nao provam cobertura.
+
 Para uma Section de jornada, prove uma unica collection de conteudo
 da modalidade, com collections estruturais IDS permitidas, um mode
 aplicado na Section e heranca integral nos descendentes.

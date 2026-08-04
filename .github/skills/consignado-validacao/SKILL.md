@@ -25,6 +25,12 @@ locais da rodada. Divergencia,
 Section sem cobertura ou evidencia que o Figma nao permita confirmar
 resulta em `NAO VERIFICAVEL`.
 
+Execute todos os coletores por partes: leia `part: 1`, descubra
+`paginacao.totalPartes` e recupere cada parte ate completar a lista. O
+manifesto so prova cobertura se `partesLidas` contiver exatamente todas
+as partes de cada Section. Nunca aceite uma conclusao baseada em resumo
+ou em trecho truncado.
+
 Prove que IDS foi usado quando disponivel, componente local tem duas
 reutilizacoes previstas aprovadas e composicao unica esta declarada
 como local-layout. Confirme que nomes publicados nao carregam

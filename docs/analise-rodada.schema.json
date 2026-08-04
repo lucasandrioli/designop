@@ -61,12 +61,14 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["secao", "nodeId", "nodesInspecionados", "nodesComReacao", "coletor", "status"],
+        "required": ["secao", "nodeId", "nodesInspecionados", "nodesComReacao", "coletor", "status", "totalPartes", "partesLidas"],
         "properties": {
           "secao": { "type": "string", "minLength": 1 },
           "nodeId": { "type": "string", "minLength": 1 },
           "nodesInspecionados": { "type": "integer", "minimum": 1 },
           "nodesComReacao": { "type": "integer", "minimum": 0 },
+          "totalPartes": { "type": "integer", "minimum": 1 },
+          "partesLidas": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 1 },
           "coletor": { "const": "scripts/collectPrototypeReactions.js" },
           "status": { "enum": ["COBERTA", "FALHOU"] }
         }
@@ -76,11 +78,13 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["secao", "nodeId", "nodesInspecionados", "coletor", "status"],
+        "required": ["secao", "nodeId", "nodesInspecionados", "coletor", "status", "totalPartes", "partesLidas"],
         "properties": {
           "secao": { "type": "string", "minLength": 1 },
           "nodeId": { "type": "string", "minLength": 1 },
           "nodesInspecionados": { "type": "integer", "minimum": 1 },
+          "totalPartes": { "type": "integer", "minimum": 1 },
+          "partesLidas": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 1 },
           "coletor": { "const": "scripts/collectReferenceStructure.js" },
           "status": { "enum": ["COBERTA", "FALHOU"] }
         }

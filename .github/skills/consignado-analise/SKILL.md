@@ -33,13 +33,14 @@ nao substitui a evidencia Figma.
 Antes de cada `use_figma`, carregue tambem a skill oficial com
 `figma-get_figma_skill` em `skill://figma/figma-use/SKILL.md`; a skill
 local `figma-plugin-api` nao a substitui. Faca uma chamada por Section.
-Para estrutura, comece com `summaryOnly: true`, que preserva cobertura,
-telas e sinais relevantes sem devolver a arvore inteira. So peca o
-detalhe completo ou um trecho focado quando ele for necessario para uma
-conclusao. Se a resposta for salva em arquivo temporario pelo cliente,
-leia o trecho exato que sustenta o fato. Nunca complete uma lacuna por
-"padrao semelhante": marque a varredura como `FALHOU` e mantenha a
-lacuna bloqueante ate recuperar a evidencia.
+Para cada coletor, comece na `part: 1`, leia `paginacao.totalPartes` e
+execute todas as partes restantes da mesma Section. Registre no
+manifesto `totalPartes` e a lista ordenada `partesLidas`; uma Section so
+recebe `COBERTA` quando as duas listas estao completas. Se a resposta for
+salva em arquivo temporario pelo cliente, recupere a parte correspondente
+ou reduza `pageSize` e rode novamente aquela parte. Nunca complete uma
+lacuna por "padrao semelhante": marque a varredura como `FALHOU` e
+mantenha a lacuna bloqueante ate recuperar a evidencia.
 
 `boundVariableFields` vazio significa somente "nenhum binding observado
 nos campos lidos". Nao escreva "manual", "errado" ou "sem token" sem

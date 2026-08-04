@@ -78,6 +78,10 @@ com inventario, prova de reacoes e estrutura, mapa de jornada, contrato
 de tela, mapa IDS, plano de variaveis e proposta de componentes locais.
 Rascunhos e previews nao sao evidencia analitica.
 
+Os coletores devolvem a leitura em partes numeradas. O Analista le todas
+as partes de cada Section e registra essa prova no manifesto. Uma tela ou
+um detalhe nao pode ser omitido porque a resposta ficou grande.
+
 O Analista nao monta nem promove. Seu turno termina pedindo aprovacao
 do contrato consolidado ao designer, quando nao houver lacuna bloqueante.
 

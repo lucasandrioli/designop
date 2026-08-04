@@ -2,12 +2,15 @@
  * Coletor de estrutura de referencias para executar DENTRO de use_figma.
  *
  * Uso:
- * return await collectReferenceStructure('<page-id>', '<section-id>')
- *
- * Para respostas que poderiam truncar no cliente:
  * return await collectReferenceStructure('<page-id>', '<section-id>', {
- *   summaryOnly: true,
+ *   part: 1,
+ *   pageSize: 20,
  * })
+ *
+ * A arvore inteira e sempre lida dentro do Figma. A resposta e paginada
+ * para que o agente consiga ler todos os nos sem depender de truncamento
+ * do cliente. Leia parte 1, use `paginacao.totalPartes` e chame cada parte
+ * restante antes de declarar a cobertura como completa.
  *
  * Ele descreve fatos tecnicos da referencia sem concluir se um valor manual,
  * componente local ou instancia destacada e uma regra de negocio.
@@ -77,7 +80,14 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
 
   visit(section, section.name)
   const screenNames = Array.isArray(opts.screenNames) ? new Set(opts.screenNames) : null
-  const summaryOnly = opts.summaryOnly === true
+  const requestedPart = Number.isInteger(opts.part) ? opts.part : 1
+  const pageSize = Number.isInteger(opts.pageSize) ? Math.min(Math.max(opts.pageSize, 1), 20) : 20
+  const totalParts = Math.max(1, Math.ceil(nodes.length / pageSize))
+  if (requestedPart < 1 || requestedPart > totalParts) {
+    throw new Error(`Parte estrutural invalida: ${requestedPart}/${totalParts}`)
+  }
+  const start = (requestedPart - 1) * pageSize
+  const nodesThisPart = nodes.slice(start, start + pageSize)
   const compact = (summary) => ({
     id: summary.id,
     name: summary.name,
@@ -92,29 +102,47 @@ async function collectReferenceStructure(pageId, sectionId, opts = {}) {
     mainComponentKey: summary.mainComponentKey,
     mainComponentRemote: summary.mainComponentRemote,
   })
-  const screens = nodes.filter((node) =>
+  const isScreen = (node) =>
     (node.type === 'FRAME' || node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') &&
     node.id !== section.id &&
-    (screenNames ? screenNames.has(node.name) : node.parentId === section.id),
-  )
+    (screenNames ? screenNames.has(node.name) : node.parentId === section.id)
+  const inThisPart = (summaries) => {
+    const ids = new Set(summaries.map((summary) => summary.id))
+    return nodesThisPart.filter((summary) => ids.has(summary.id)).map(compact)
+  }
 
   return {
+    paginacao: {
+      parteAtual: requestedPart,
+      totalPartes: totalParts,
+      pageSize,
+      totalItens: nodes.length,
+      itensNestaParte: nodesThisPart.length,
+    },
     cobertura: {
       secao: section.name,
       nodeId: section.id,
       nodesInspecionados: nodes.length,
       coletor: 'scripts/collectReferenceStructure.js',
-      status: 'COBERTA',
+      status: totalParts === 1 ? 'COBERTA' : 'PARCIAL',
     },
-    telas: summaryOnly ? screens.map(compact) : screens,
+    telas: nodesThisPart.filter(isScreen).map(compact),
     sinais: {
-      detachedInstances: summaryOnly ? detachedInstances.map(compact) : detachedInstances,
-      remoteInstances: summaryOnly ? remoteInstances.map(compact) : remoteInstances,
-      localComponents: summaryOnly ? localComponents.map(compact) : localComponents,
-      unboundVisualSignals: summaryOnly ? [] : unboundVisualSignals,
-      unboundVisualSignalCount: unboundVisualSignals.length,
-      noAutoLayout: summaryOnly ? noAutoLayout.map(compact) : noAutoLayout,
+      totais: {
+        detachedInstances: detachedInstances.length,
+        remoteInstances: remoteInstances.length,
+        localComponents: localComponents.length,
+        camposVisuaisSemBindingObservado: unboundVisualSignals.length,
+        noAutoLayout: noAutoLayout.length,
+      },
+      nestaParte: {
+        detachedInstances: inThisPart(detachedInstances),
+        remoteInstances: inThisPart(remoteInstances),
+        localComponents: inThisPart(localComponents),
+        camposVisuaisSemBindingObservado: inThisPart(unboundVisualSignals),
+        noAutoLayout: inThisPart(noAutoLayout),
+      },
     },
-    nodes: summaryOnly ? [] : nodes,
+    nodes: nodesThisPart,
   }
 }

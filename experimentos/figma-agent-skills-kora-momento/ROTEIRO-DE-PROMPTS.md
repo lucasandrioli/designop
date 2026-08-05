@@ -68,7 +68,9 @@ comum, diferencas por modalidade e preflight exigido. A referencia pode nao ter
 bindings, variaveis ou componentes: trate isso como divida tecnica e projete o
 alvo de biblioteca, nao uma copia. Todo template alvo deve ser COMPONENT ou
 COMPONENT_SET; todo texto visivel e propriedade tokenizavel precisa de binding
-ou de um recurso criado pelo contrato. Nao altere o canvas.
+ou de um recurso criado pelo contrato. Antes de marcar `CRIAR`, procure o
+equivalente nas bibliotecas instaladas, incluindo propriedades de binding,
+tokens, estilos, variaveis, collections e modos. Nao altere o canvas.
 ```
 
 Revise o contrato. A montagem so pode comecar depois de aprovacao humana
@@ -92,7 +94,9 @@ e bindings, alem da lista e dos nomes dos TEMPLATE_ALVO. Se todos forem
 confirmados, crie um rascunho para cada template nesta mesma chamada. Se houver
 divergencia, nao altere o canvas e devolva IMPASSE_TECNICO. Crie bindings,
 variaveis, tokens, estilos, componentes e variantes quando o contrato declarar
-`CRIAR`; a ausencia desses itens na referencia nao autoriza omiti-los.
+`CRIAR`; antes, procure todas as bibliotecas instaladas e reutilize o que ja
+existir, inclusive as propriedades de binding. A ausencia desses itens na
+referencia nao autoriza omiti-los.
 ```
 
 ## 4. Revisar um impasse tecnico

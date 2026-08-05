@@ -26,23 +26,25 @@ o item ausente.
 
 Compare referencias, contrato e rascunho em todos estes pontos:
 
-1. cobertura de telas, hierarquia, textos, controles, estados e comportamento;
-2. mapa de entregaveis: um rascunho por `TEMPLATE_ALVO`, sem tela declarada
+1. recursos das bibliotecas instaladas: componente, estilo, token, variavel,
+   collection, modo e propriedade de binding usados conforme o contrato;
+2. cobertura de telas, hierarquia, textos, controles, estados e comportamento;
+3. mapa de entregaveis: um rascunho por `TEMPLATE_ALVO`, sem tela declarada
    ausente, sem rascunho extra e com nomes conforme o contrato;
-3. arvore de composicao e diferencas declaradas por modalidade;
-4. biblioteca, componente, variante e propriedade aplicados;
-5. cada template como `COMPONENT` ou `COMPONENT_SET`, com variantes e
+4. arvore de composicao e diferencas declaradas por modalidade;
+5. biblioteca, componente, variante e propriedade aplicados;
+6. cada template como `COMPONENT` ou `COMPONENT_SET`, com variantes e
    propriedades previstas para seus estados;
-6. token, estilo, variavel, collection, modo e binding na propriedade alvo;
-7. cobertura de texto: todo texto visivel ligado a variavel;
-8. cobertura de propriedades tokenizaveis: nenhum valor bruto para cor,
+7. token, estilo, variavel, collection, modo e binding na propriedade alvo;
+8. cobertura de texto: todo texto visivel ligado a variavel;
+9. cobertura de propriedades tokenizaveis: nenhum valor bruto para cor,
    tipografia, espacamento, padding, gap, tamanho, raio, borda, opacidade ou
    elevacao aplicavel;
-9. auto layout, redimensionamento, restricoes e integridade de instancias;
-10. decisao por bloco interno: reutilizacao, componente local ou
+10. auto layout, redimensionamento, restricoes e integridade de instancias;
+11. decisao por bloco interno: reutilizacao, componente local ou
    `LOCAL_LAYOUT_INTERNO`, incluindo as duas reutilizacoes aprovadas quando
    houver componente local;
-11. area de verificacao e ausencia de publicacao indevida.
+12. area de verificacao e ausencia de publicacao indevida.
 
 Classifique cada divergencia como `EXECUCAO`, quando o contrato e suficiente e
 o Montador nao o aplicou, ou `ARQUITETURA`, quando o contrato e insuficiente,
@@ -57,6 +59,8 @@ Responda somente no chat:
 APTO PARA DECISAO DE PUBLICACAO | REPROVADO: MONTADOR | REPROVADO: ANALISTA | NAO VERIFICAVEL
 
 ## O que foi relido
+
+## Recursos das bibliotecas instaladas verificados
 
 ## Comparacao com o contrato de arquitetura
 

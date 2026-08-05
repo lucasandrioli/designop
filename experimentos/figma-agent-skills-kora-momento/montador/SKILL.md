@@ -26,20 +26,27 @@ Se faltar uma pre-condicao, informe somente o campo ausente e nao altere nada.
 Antes de qualquer escrita, confira no arquivo e nas bibliotecas conectadas cada
 item do contrato:
 
-1. componente, biblioteca, variante, propriedade e acao `REUTILIZAR` ou
+1. busque novamente em todas as bibliotecas instaladas o componente, token,
+   estilo, variavel, collection, modo ou propriedade de binding declarado;
+2. componente, biblioteca, variante, propriedade e acao `REUTILIZAR` ou
    `CRIAR`;
-2. token, estilo, variavel, collection, modo, propriedade de destino e acao
+3. token, estilo, variavel, collection, modo, propriedade de destino e acao
    `REUTILIZAR` ou `CRIAR`;
-3. possibilidade real de aplicar o binding sem editar uma instancia opaca;
-4. lista, quantidade, nome logico e nome de rascunho de cada `TEMPLATE_ALVO`;
-5. area de destino;
-6. evidencia das duas reutilizacoes planejadas para cada componente local.
+4. possibilidade real de aplicar o binding na propriedade correta, sem editar
+   uma instancia opaca;
+5. lista, quantidade, nome logico e nome de rascunho de cada `TEMPLATE_ALVO`;
+6. area de destino;
+7. evidencia das duas reutilizacoes planejadas para cada componente local.
 
 Para itens `REUTILIZAR`, eleve `CANDIDATO` para `CONFIRMADO_TECNICAMENTE`
 somente quando o item existir e puder ser aplicado como declarado. Para itens
 `CRIAR`, confirme que o contrato define nome, destino, collection ou escopo e
 que a criacao e tecnicamente possivel no arquivo alvo. A falta de binding na
 referencia nunca e um impasse por si so.
+
+Nunca declare `CRIAR` antes de procurar o equivalente nas bibliotecas
+instaladas. Ao reutilizar, use a propriedade de componente, binding ou variavel
+nativa disponivel em vez de escrever um valor duplicado no rascunho.
 
 Se qualquer item falhar, nao crie nem altere o canvas. Responda com:
 
@@ -96,6 +103,8 @@ Depois da montagem, responda no chat:
 - Templates pendentes:
 
 ## Preflight confirmado
+
+## Recursos reutilizados das bibliotecas instaladas
 
 ## Forma tecnica e estados dos templates
 

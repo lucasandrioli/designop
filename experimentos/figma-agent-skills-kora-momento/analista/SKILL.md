@@ -22,8 +22,13 @@ momento, telas declaradas e escopo de modalidades ou de instancia de montagem.
 Se um campo indispensavel faltar, informe somente o campo ausente e pare.
 
 - Leia apenas os frames de nivel superior selecionados e seus descendentes.
-- Consulte na biblioteca conectada somente o necessario para identificar a
-  origem tecnica de algo presente nesses frames ou no contrato ativo.
+- Antes de propor qualquer criacao, procure nas bibliotecas instaladas todos os
+  recursos tecnicos relevantes ao momento: componentes, variantes, propriedades
+  de componente, estilos, tokens, collections, modos, variaveis e bindings
+  disponiveis. Use nomes, papeis e valores das referencias como termos de busca.
+- Biblioteca instalada e fonte de reutilizacao tecnica, nao de regra de
+  negocio. Registre o que foi encontrado, a biblioteca de origem e o que nao
+  tem equivalente utilizavel.
 - Preserve cada tela declarada como principal, detalhe ou auxiliar. Cada tela
   declarada e um `TEMPLATE_ALVO`: nunca funda, descarte ou rebaixe uma tela a
   componente local por conveniencia.
@@ -45,16 +50,23 @@ Se um campo indispensavel faltar, informe somente o campo ausente e pare.
 3. Registre sinais tecnicos observaveis: instancias, componentes, variantes,
    estilos, tokens, variaveis e bindings, com origem quando ela estiver
    identificavel.
-4. Registre separadamente a divida tecnica observada: valores brutos, textos
+4. Varra as bibliotecas instaladas e inventarie os candidatos tecnicos que
+   atendem cada elemento da referencia, incluindo propriedades que aceitam
+   binding e collections ou modos de variaveis disponiveis.
+5. Registre separadamente a divida tecnica observada: valores brutos, textos
    sem binding, frames que ainda nao sao componentes, controles sem variante e
    composicoes repetidas sem reutilizacao.
-5. Separe fatos observados, regras declaradas no contexto e lacunas. Nao
+6. Separe fatos observados, regras declaradas no contexto e lacunas. Nao
    proponha ainda uma estrutura para montar.
 
 ## MODO: ARQUITETAR
 
 Use somente o inventario desta conversa e o contexto do momento. Produza um
 contrato de arquitetura para aprovacao humana, sem editar nada.
+
+Reutilize primeiro o que foi encontrado nas bibliotecas instaladas. Marque
+`CRIAR` somente quando o inventario comprovar que nao existe recurso compativel
+ou quando a composicao nova for exigida pelo contrato.
 
 Para cada tela, declare:
 
@@ -121,6 +133,8 @@ Responda apenas no chat, usando o bloco do modo ativo.
 ## Fatos visuais por tela
 
 ## Sinais tecnicos observados
+
+## Recursos encontrados nas bibliotecas instaladas
 
 ## Divida tecnica observada
 

@@ -109,7 +109,9 @@ momento em uma modalidade. As referencias podem nao ter binding algum: isso e
 divida tecnica, nao modelo para copia. Projete os dois templates como COMPONENT
 ou COMPONENT_SET, com textos vinculados a variaveis e espacamentos, cores,
 tipografia, raios e demais propriedades tokenizaveis ligados a tokens ou estilos
-semanticos. Nao altere o canvas.
+semanticos. Antes de propor `CRIAR`, procure nas bibliotecas instaladas os
+componentes, variantes, propriedades de binding, tokens, estilos, variaveis,
+collections e modos ja disponiveis. Nao altere o canvas.
 ```
 
 ## Montar a 4790 aprovada
@@ -130,8 +132,9 @@ os componentes, tokens, variaveis, bindings e os dois TEMPLATE_ALVO. Se todos
 existirem e puderem ser aplicados como declarados, crie os dois rascunhos nesta
 chamada como componentes e aplique os bindings, tokens, estilos e variantes do
 contrato. Crie os itens tecnicos que o contrato marcar como `CRIAR`; nao copie
-as ausencias tecnicas das referencias. Se algum item divergir, nao altere o
-canvas e devolva IMPASSE_TECNICO.
+as ausencias tecnicas das referencias. Antes de criar, procure e use os recursos
+das bibliotecas instaladas, inclusive propriedades de binding. Se algum item
+divergir, nao altere o canvas e devolva IMPASSE_TECNICO.
 ```
 
 ## Revisar impasse da 4790

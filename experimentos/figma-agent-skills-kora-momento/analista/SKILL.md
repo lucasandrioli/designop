@@ -20,8 +20,9 @@ Se um campo indispensavel faltar, informe somente o campo ausente e pare.
 - Leia apenas os frames de nivel superior selecionados e seus descendentes.
 - Consulte na biblioteca conectada somente o necessario para identificar a
   origem tecnica de algo presente nesses frames ou no contrato ativo.
-- Preserve cada tela declarada como principal, detalhe ou auxiliar. Nunca funda
-  telas, nem use outro momento como evidencia.
+- Preserve cada tela declarada como principal, detalhe ou auxiliar. Cada tela
+  declarada e um `TEMPLATE_ALVO`: nunca funda, descarte ou rebaixe uma tela a
+  componente local por conveniencia.
 - Nunca crie, copie, mova, edite, renomeie, exclua, publique ou converta nada
   no canvas, na biblioteca, em componentes, estilos ou variaveis.
 - `OBSERVADO` significa visto na referencia selecionada. `CANDIDATO` significa
@@ -46,24 +47,36 @@ contrato de arquitetura para aprovacao humana, sem editar nada.
 
 Para cada tela, declare:
 
-1. **Arvore de composicao**: blocos, relacoes e ordem de montagem.
-2. **Componentes de biblioteca**: biblioteca, componente, variante ou
+1. **Entregavel**: `TEMPLATE_ALVO`, nome logico, rascunho previsto e template
+   futuro. Use a convencao declarada no prompt. Sem convencao, proponha
+   `tpl-<tela>` como nome logico e deixe a instancia fisica por modalidade
+   explicita. Em momento transversal, nao invente uma modalidade no nome.
+2. **Arvore de composicao**: blocos, relacoes e ordem de montagem dentro do
+   template alvo.
+3. **Componentes de biblioteca**: biblioteca, componente, variante ou
    propriedade pretendida, papel na tela e status. Sem identificacao segura,
    use `CANDIDATO`, nunca finja certeza.
-3. **Matriz de tokens e bindings**: elemento e propriedade alvo, valor ou sinal
+4. **Matriz de tokens e bindings**: elemento e propriedade alvo, valor ou sinal
    observado, token/estilo/variavel pretendido, origem, status e condicao que o
    Montador precisa confirmar.
-4. **Plano de variaveis de conteudo**: existente ou nova, collection, modo,
+5. **Plano de variaveis de conteudo**: existente ou nova, collection, modo,
    caminho, papel e telas consumidoras. Nao proponha variavel para ausencia de
    uma etapa ou para contexto. Em momento transversal, separe o nucleo comum
    das instancias que so existem por diferenca real de modalidade.
-5. **Composicao local**: `local-layout` ou candidato a componente local. So
-   proponha componente local quando o contrato apontar duas reutilizacoes
-   planejadas distintas; caso contrario, mantenha como `local-layout`.
-6. **Diferencas reais**: diferencie o que e comum do que varia por modalidade,
+6. **Decisao por bloco interno**: para cada composicao relevante, escolha
+   `REUTILIZAR_EXISTENTE`, `CRIAR_COMPONENTE_LOCAL`, `LOCAL_LAYOUT_INTERNO` ou
+   `PENDENTE_DE_PREFLIGHT`. Um componente local visto na referencia e apenas
+   um fato, nao uma decisao de reutilizacao. So proponha
+   `CRIAR_COMPONENTE_LOCAL` quando o contrato apontar duas reutilizacoes
+   planejadas distintas; caso contrario, use `LOCAL_LAYOUT_INTERNO` dentro do
+   template.
+7. **Diferencas reais**: diferencie o que e comum do que varia por modalidade,
    sem criar variacao por convencao de nome.
 
-Feche com preflight exigido, lacunas bloqueantes e a decisao humana necessaria.
+Abra o contrato com o **Mapa de entregaveis**: uma linha para cada tela
+declarada e uma contagem de `TEMPLATE_ALVO`. Componentes locais nao entram
+nessa contagem. Feche com preflight exigido, lacunas bloqueantes e a decisao
+humana necessaria.
 
 ## MODO: REVISAR_IMPASSE
 
@@ -104,6 +117,8 @@ Responda apenas no chat, usando o bloco do modo ativo.
 ```markdown
 ## Momento e cobertura
 
+## Mapa de entregaveis e arquitetura de ativos
+
 ## Base da arquitetura
 
 ## Arquitetura por tela
@@ -114,7 +129,7 @@ Responda apenas no chat, usando o bloco do modo ativo.
 
 ## Plano de variaveis
 
-## Composicoes locais
+## Decisoes de composicao interna
 
 ## Nucleo comum e diferencas por modalidade
 

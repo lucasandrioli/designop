@@ -89,6 +89,18 @@ defina o nucleo comum da 4790. Depois, separe apenas diferencas reais que as
 referencias ou eu tiver declarado. Nao gere PCon/4790, Refin/4790 ou outra
 variacao apenas por convencao de nome.
 
+O mapa de entregaveis desta rodada tem obrigatoriamente dois TEMPLATE_ALVO:
+
+- Autorizacao de debito em conta: template da tela principal.
+- Mais detalhes sobre autorizacao de debito: template da tela secundaria.
+
+Crie um rascunho previsto e um nome logico de template para cada um. Esses sao
+os dois templates que o Montador devera criar. Componentes locais, se existirem,
+sao somente blocos internos: nao substituem, reduzem ou aumentam a quantidade
+de templates. Um componente local visto na referencia nao e automaticamente
+reutilizavel; decida entre reutilizar existente, criar componente local, local
+layout interno (`LOCAL_LAYOUT_INTERNO`) ou pendencia de preflight.
+
 Para cada tela, declare a arvore de composicao, os componentes e bibliotecas,
 a matriz de tokens e bindings, o plano de variaveis e o que e local-layout ou
 candidato a componente local. Quando uma instancia por modalidade for
@@ -106,15 +118,13 @@ montagem. Envie:
 
 APROVACAO HUMANA: MONTAGEM APROVADA
 MOMENTO ATIVO: 4790, Autorizacao de debito em conta
-UNIDADE DE MONTAGEM: <tela principal, detalhe ou recorte aprovado>
 MODALIDADE DE EXECUCAO: <preencha somente se o template exigir uma instancia>
 AREA DE DESTINO: <area de verificacao>
-NOME DO RASCUNHO: <nome aprovado>
 
 Use o contrato de arquitetura aprovado nesta conversa. Confirme no preflight
-os componentes, tokens, variaveis e bindings. Se todos existirem e puderem ser
-aplicados como declarados, monte nesta chamada. Se algum item divergir, nao
-altere o canvas e devolva IMPASSE_TECNICO.
+os componentes, tokens, variaveis, bindings e os dois TEMPLATE_ALVO. Se todos
+existirem e puderem ser aplicados como declarados, crie os dois rascunhos nesta
+chamada. Se algum item divergir, nao altere o canvas e devolva IMPASSE_TECNICO.
 ```
 
 ## Revisar impasse da 4790
@@ -132,7 +142,7 @@ canvas.
 
 ## Validar a 4790
 
-Selecione a referencia e o rascunho do mesmo recorte. Envie:
+Selecione as duas referencias e os dois rascunhos da 4790. Envie:
 
 ```text
 /validador

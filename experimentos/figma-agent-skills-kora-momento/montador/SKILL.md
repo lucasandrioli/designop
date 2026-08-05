@@ -15,8 +15,8 @@ Antes de editar, confirme que o prompt atual contem:
 
 - `APROVACAO HUMANA: MONTAGEM APROVADA`;
 - contrato de arquitetura sem lacuna bloqueante;
-- momento, telas, unidade de montagem e area de destino;
-- nome do rascunho ou convencao aprovada;
+- mapa de entregaveis aprovado, com um `TEMPLATE_ALVO` por tela declarada;
+- momento, telas e area de destino;
 - modalidade de execucao, quando o contrato criar um asset de modalidade.
 
 Se faltar uma pre-condicao, informe somente o campo ausente e nao altere nada.
@@ -29,8 +29,9 @@ item do contrato:
 1. componente, biblioteca, variante e propriedade;
 2. token, estilo, variavel, collection, modo e propriedade de destino;
 3. possibilidade real de aplicar o binding sem editar uma instancia opaca;
-4. area de destino e nome do rascunho;
-5. evidencia das duas reutilizacoes planejadas para cada componente local.
+4. lista, quantidade, nome logico e nome de rascunho de cada `TEMPLATE_ALVO`;
+5. area de destino;
+6. evidencia das duas reutilizacoes planejadas para cada componente local.
 
 Eleve `CANDIDATO` para `CONFIRMADO_TECNICAMENTE` somente quando o item existir
 e puder ser aplicado como declarado.
@@ -52,12 +53,17 @@ arquitetura por conta propria.
 
 Depois de preflight integralmente favoravel:
 
-- Crie somente um rascunho novo na area de verificacao declarada.
-- Recompose a tela a partir do contrato; nunca copie ou mova a referencia.
+- Crie exatamente um rascunho novo para cada `TEMPLATE_ALVO` na area de
+  verificacao declarada. Nao crie rascunho adicional, nem pule tela declarada.
+- Use o nome de rascunho definido no mapa de entregaveis. O Montador nao decide
+  nome de frame, template ou componente.
+- Recompose cada template alvo a partir do contrato; nunca copie ou mova a
+  referencia.
 - Use somente componentes, variantes, estilos, tokens e bindings confirmados.
 - Aplique variavel apenas no caminho, collection, modo e papel aprovados.
-- Crie componente local apenas quando o contrato trouxer duas reutilizacoes
-  planejadas aprovadas; nos demais casos, mantenha `local-layout`.
+- Trate `LOCAL_LAYOUT_INTERNO` como estrutura dentro do template, nao como
+  componente ou entregavel separado. Crie componente local apenas quando o
+  contrato trouxer duas reutilizacoes planejadas aprovadas.
 - Nao altere referencias, bibliotecas conectadas, ativos publicados ou itens
   fora do recorte. Nao publique nada.
 
@@ -68,6 +74,11 @@ Depois da montagem, responda no chat:
 ```markdown
 ## Rascunho montado
 
+## Entregaveis montados
+- Templates previstos:
+- Rascunhos criados:
+- Templates pendentes:
+
 ## Preflight confirmado
 
 ## Componentes e variantes aplicados
@@ -76,7 +87,7 @@ Depois da montagem, responda no chat:
 
 ## Variaveis, collections e modos aplicados
 
-## Composicoes locais aplicadas
+## Decisoes de composicao interna aplicadas
 
 ## Itens nao montados
 

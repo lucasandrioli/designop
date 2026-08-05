@@ -60,9 +60,11 @@ Mantenha selecionadas somente as referencias do mesmo momento. Envie:
 MODO: ARQUITETAR
 Use o inventario e o CARTAO DE CONTEXTO DA ETAPA desta conversa.
 Trabalhe somente o momento ativo. Entregue o contrato de arquitetura completo,
-com arvore de composicao, componentes e bibliotecas, matriz de tokens e
-bindings, plano de variaveis, composicoes locais, nucleo comum, diferencas por
-modalidade e preflight exigido. Nao altere o canvas.
+abrindo pelo mapa de entregaveis: cada tela declarada deve ser um
+`TEMPLATE_ALVO`, com nome logico, rascunho previsto e template futuro. Em
+seguida, detalhe arvore de composicao, componentes e bibliotecas, matriz de
+tokens e bindings, plano de variaveis, decisoes de composicao interna, nucleo
+comum, diferencas por modalidade e preflight exigido. Nao altere o canvas.
 ```
 
 Revise o contrato. A montagem so pode comecar depois de aprovacao humana
@@ -78,14 +80,13 @@ Declare a area de verificacao em que o rascunho pode ser criado. Envie:
 APROVACAO HUMANA: MONTAGEM APROVADA
 Use o contrato de arquitetura aprovado nesta conversa.
 MOMENTO ATIVO: <nome>
-UNIDADE DE MONTAGEM: <tela ou recorte aprovado>
 MODALIDADE DE EXECUCAO: <preencha se o asset for de uma modalidade>
 AREA DE DESTINO: <nome da Section ou area de verificacao>
-NOME DO RASCUNHO: <nome aprovado>
 
 Faca o preflight tecnico de todos os componentes, variantes, tokens, variaveis
-e bindings. Se todos forem confirmados, monte o rascunho nesta mesma chamada.
-Se houver divergencia, nao altere o canvas e devolva IMPASSE_TECNICO.
+e bindings, alem da lista e dos nomes dos TEMPLATE_ALVO. Se todos forem
+confirmados, crie um rascunho para cada template nesta mesma chamada. Se houver
+divergencia, nao altere o canvas e devolva IMPASSE_TECNICO.
 ```
 
 ## 4. Revisar um impasse tecnico

@@ -26,12 +26,15 @@ o item ausente.
 Compare referencias, contrato e rascunho em todos estes pontos:
 
 1. cobertura de telas, hierarquia, textos, controles, estados e comportamento;
-2. arvore de composicao e diferencas declaradas por modalidade;
-3. biblioteca, componente, variante e propriedade aplicados;
-4. token, estilo, variavel, collection, modo e binding na propriedade alvo;
-5. componente local versus `local-layout`, incluindo as duas reutilizacoes
-   aprovadas quando houver componente local;
-6. area de verificacao, nome de rascunho e ausencia de publicacao indevida.
+2. mapa de entregaveis: um rascunho por `TEMPLATE_ALVO`, sem tela declarada
+   ausente, sem rascunho extra e com nomes conforme o contrato;
+3. arvore de composicao e diferencas declaradas por modalidade;
+4. biblioteca, componente, variante e propriedade aplicados;
+5. token, estilo, variavel, collection, modo e binding na propriedade alvo;
+6. decisao por bloco interno: reutilizacao, componente local ou
+   `LOCAL_LAYOUT_INTERNO`, incluindo as duas reutilizacoes aprovadas quando
+   houver componente local;
+7. area de verificacao e ausencia de publicacao indevida.
 
 Classifique cada divergencia como `EXECUCAO`, quando o contrato e suficiente e
 o Montador nao o aplicou, ou `ARQUITETURA`, quando o contrato e insuficiente,
@@ -48,6 +51,8 @@ APTO PARA DECISAO DE PUBLICACAO | REPROVADO: MONTADOR | REPROVADO: ANALISTA | NA
 ## O que foi relido
 
 ## Comparacao com o contrato de arquitetura
+
+## Entregaveis e contagem de templates
 
 ## Componentes, tokens e bindings verificados
 

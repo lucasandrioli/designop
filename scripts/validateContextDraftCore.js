@@ -6,7 +6,7 @@
  */
 function validateContextDraftData(contexto) {
   const failures = [];
-  const required = ['schemaVersion', 'id', 'status', 'modalidade', 'etapa', 'contextos', 'afirmacoes'];
+  const required = ['schemaVersion', 'id', 'rodada', 'status', 'modalidade', 'etapa', 'contextos', 'afirmacoes'];
   for (const field of required) if (!(field in (contexto ?? {}))) failures.push('campo ausente: ' + field);
   if (contexto?.schemaVersion !== 1) failures.push('schemaVersion precisa ser 1');
   if (!['RASCUNHO', 'AGUARDANDO_DESIGNER', 'PRONTO_PARA_APROVACAO', 'APROVADO_PARA_REGISTRO'].includes(contexto?.status)) failures.push('status invalido');

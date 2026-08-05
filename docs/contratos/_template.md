@@ -82,11 +82,17 @@ leitura. Somente um rascunho aprovado pelo core pode ser mostrado para
 aprovacao humana; `APROVADO_PARA_REGISTRO` exige registro dessa aprovacao e
 nenhuma lacuna bloqueante.
 
+`contexto.json` declara tambem `rodada`, igual ao identificador do diretorio
+que o contem. O plano `componentes-locais.json` declara o mesmo campo. Isso
+permite ao gate impedir mistura acidental de artefatos de rodadas distintas.
+
 ## Resolucao temporaria
 
-O Analista grava `.designops/runs/<rodada>/resolvido.json` conforme
+Quando a proposta temporaria tiver contrato que dependa de IDs logicos, o
+Analista grava `.designops/runs/<rodada>/resolvido.json` conforme
 `resolucao.schema.json`. O arquivo associa os IDs logicos aprovados aos
-node IDs atuais de referencias, previews e Sections de jornada.
+node IDs atuais de referencias, previews e Sections de jornada. Uma leitura
+que ainda nao declarou contrato dependente de IDs nao cria esse arquivo.
 
 O Validador reconstroi a evidencia no Figma e reprova quando a
 resolucao temporaria nao corresponde mais ao arquivo.
@@ -156,3 +162,10 @@ manifesto em uma chamada MCP somente de leitura. A reconciliacao compara
 o objeto com o Figma atual e precisa retornar `passed: true`; o core
 sozinho verifica apenas a forma do manifesto. O adaptador Node tem o
 mesmo resultado estrutural, mas serve apenas para desenvolvimento local.
+
+O gate local `scripts/validateAnalysisRound.js` une o recorte e os artefatos
+temporarios: `--stage pre-coleta` valida o recorte antes do Figma e
+`--stage pre-proposta` exige manifesto, contexto, plano de componentes,
+recibo declarativo da reconciliacao MCP e resolucao apenas quando a proposta
+declarou dependencia de IDs. Esse recibo registra o resultado literal
+favoravel, mas nao substitui a auditoria do historico MCP.

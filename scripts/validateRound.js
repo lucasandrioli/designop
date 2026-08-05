@@ -105,7 +105,7 @@ function validateScreen(screen, failures, file) {
 }
 
 function validateLocalComponentPlan(plan, failures, screens) {
-  if (!plan || plan.schemaVersion !== 1 || !plan.id) failures.push('plano de componentes locais incompleto')
+  if (!plan || plan.schemaVersion !== 1 || !plan.id || !plan.rodada) failures.push('plano de componentes locais incompleto')
   if (!Array.isArray(plan?.contextosConhecidos)) failures.push('plano de componentes locais sem contextosConhecidos')
   for (const context of plan?.contextosConhecidos ?? []) if (!context?.id || !context?.rotulo) failures.push('contexto conhecido incompleto no plano de componentes locais')
   if (!Array.isArray(plan?.componentes)) { failures.push('plano de componentes locais sem componentes'); return }

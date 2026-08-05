@@ -19,6 +19,24 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
    confirmar os portoes de evidencia, IDS e limite de papel antes de
    testar o Analista.
 
+## Operacao guiada do Analista
+
+Selecione `Analista da Etapa` e envie somente:
+
+```text
+Figma: <URL>
+Sections: <nomes exatos, separados por virgula>
+Contexto curto: <uma frase opcional>
+```
+
+O Analista localiza pagina e IDs, cria a rodada temporaria, le estrutura e
+interacoes e devolve um resumo humano. Nao informe node IDs, comandos,
+schemas, manuais ou arquivos de rodada. Ele so deve perguntar se nao localizar
+a referencia, nao conseguir concluir a leitura ou precisar de decisao que
+mude a proposta. A revisao recebe um pacote de proposta e, no maximo, tres
+decisoes com impacto e recomendacao. Evidencias, gates e recibos permanecem
+na rodada para auditoria e nunca sao despejados na conversa.
+
 ## Piloto da Squad - Fase 0
 
 Este e um teste de coordenacao, nao uma etapa de montagem. Antes dele,
@@ -77,6 +95,23 @@ temporario registra as duas coberturas; node IDs ficam somente em
 `.designops/runs/<rodada>/resolvido.json`. Resultado reprovado: concluir
 que uma reacao ou a estrutura nao existe porque uma leitura veio grande
 ou foi truncada.
+
+Depois de gravar `referencias.json`, confirme antes de qualquer coleta:
+
+```sh
+node scripts/validateAnalysisRound.js --round <rodada> --stage pre-coleta
+```
+
+Antes de aceitar proposta, exija o JSON favoravel de:
+
+```sh
+node scripts/validateAnalysisRound.js --round <rodada> --stage pre-proposta
+```
+
+Resultado reprovado: artefato diretamente em `.designops/runs/`, cobertura
+parcial apresentada como completa, mapa `*-rascunho.md` criado antes do gate,
+ou proposta sem recibo favoravel da reconciliacao MCP. Esses materiais sao
+rascunhos invalidos, nao entregas para aprovacao.
 
 Asset proprietario obrigatorio ausente bloqueia a tela correspondente.
 Resultado reprovado: propor placeholder, frame local substituto ou

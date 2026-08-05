@@ -92,6 +92,13 @@ conter IDS, registra a composicao local e as instancias IDS descendentes
 separadamente. Isso prova a estrutura observada, mas nao promove a
 composicao local para reutilizacao.
 
+Logo depois de gravar o recorte, o Analista executa
+`node scripts/validateAnalysisRound.js --round <rodada> --stage pre-coleta`.
+Somente `passed: true` autoriza os coletores. Depois da reconciliacao MCP e
+antes de criar mapa, contrato ou pedir aprovacao, executa o mesmo comando
+com `--stage pre-proposta`. Sem esse segundo resultado favoravel, mapa e
+contrato sao rascunhos invalidos, nao entregas.
+
 Antes da primeira coleta, o Analista redescobre a pagina e as Sections
 por `figma-get_metadata` no arquivo atual. IDs obtidos em conversa,
 manifesto ou rodada anteriores nao podem ser reutilizados. O manifesto
@@ -148,6 +155,11 @@ Node existe somente para desenvolvimento local. A reconciliacao nao e
 prova criptografica da ordem do chat, por isso o historico ainda precisa
 mostrar as coletas unitarias antes da escrita. Falha de leitura ou de
 execucao resulta em `NAO_VERIFICAVEL`.
+
+O recibo favoravel da reconciliacao e gravado no manifesto. Ele e exigido
+pelo gate `pre-proposta`, junto de `contexto.json`,
+`componentes-locais.json` e, somente quando houver contrato dependente de
+IDs, `resolvido.json` da mesma rodada.
 
 Os coletores devolvem a leitura em partes numeradas. O Analista le todas
 as partes de cada Section e registra essa prova no manifesto, junto de

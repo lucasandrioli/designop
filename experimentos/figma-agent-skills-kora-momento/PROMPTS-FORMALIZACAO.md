@@ -3,9 +3,9 @@
 ## Contexto da etapa
 
 ```text
-Vamos trabalhar na etapa de Formalizacao do credito consignado. Absorva este
-contexto para esta conversa, mas nao analise frames, nao procure telas e nao
-crie nada ainda.
+Vamos trabalhar na etapa de Formalizacao do credito consignado. Apenas absorva
+este contexto para esta conversa. Nao analise frames, nao procure telas, nao
+crie nada e nao faca perguntas neste momento.
 
 Formalizacao e a etapa em que a pessoa confirma as condicoes da operacao e
 conclui a contratacao. Ela pode envolver informacoes importantes, anuencias,
@@ -25,9 +25,9 @@ Vamos trabalhar por momentos. Em cada momento, eu vou selecionar somente as
 telas de referencia daquele recorte. Nao use uma tela para inventar regra de
 negocio e nao misture fatos de um momento com outro.
 
-Por enquanto, apenas confirme que entendeu o contexto da etapa e faça, no
-maximo, tres perguntas que sejam realmente indispensaveis antes de eu abrir o
-primeiro momento.
+Nesta abertura, nao preciso de analise, sugestao, decisao, pergunta ou acao no
+canvas. Responda somente: "Contexto da etapa de Formalizacao absorvido. Aguardo
+o primeiro momento."
 ```
 
 ## Autorizacao de debito em conta

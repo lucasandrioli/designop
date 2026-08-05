@@ -5,6 +5,7 @@
  */
 const assert = require('assert')
 const childProcess = require('child_process')
+const crypto = require('crypto')
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
@@ -30,6 +31,7 @@ function runNode(script, args = [], cwd = root) {
     encoding: 'utf8',
   })
 }
+function sha256(file) { return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex') }
 function expectFailure(result, description) {
   assert.notStrictEqual(result.status, 0, description + ' deveria reprovar')
 }
@@ -50,6 +52,206 @@ function createSquadFixture() {
   copy('.vscode/settings.json', fixture)
   copy('.gitignore', fixture)
   return fixture
+}
+function createKoraFixture() {
+  const fixture = temporaryDirectory('designops-kora-')
+  ;[
+    'scripts/startKoraRound.js',
+    'scripts/validateKoraRound.js',
+    'scripts/validateKoraStateCore.js',
+    'scripts/authorizeKoraAction.js',
+    'scripts/resumeKoraDecision.js',
+    'scripts/recordKoraAuditEvent.js',
+    'scripts/koraAuditHook.js',
+    'scripts/generateKoraAuditReport.js',
+    'scripts/validateKoraAuditTrail.js',
+    'scripts/validateKoraAuditEventCore.js',
+    'scripts/auditKoraRounds.js',
+    'scripts/publishKoraAuditSummary.js',
+    'scripts/diagnoseKoraFailure.js',
+    'scripts/openKoraOperationIncident.js',
+    'scripts/interruptKoraForIncident.js',
+    'scripts/resumeKoraIncident.js',
+    'scripts/recordKoraIncidentResolution.js',
+    'scripts/validateAnalysisRound.js',
+    'scripts/validateReferenceScopeCore.js',
+    'scripts/validateAnalysisManifestCore.js',
+    'scripts/validateContextDraftCore.js',
+  ].forEach((file) => copy(file, fixture))
+  return fixture
+}
+function testKoraRoundAndAudit() {
+  const fixture = createKoraFixture()
+  const round = 'kora-regressao'
+  expectSuccess(runNode(path.join(fixture, 'scripts/startKoraRound.js'), ['--round', round, '--figma-url', 'https://www.figma.com/design/nao-publicar', '--sections', 'ref-a,ref-b', '--root', fixture]), 'Kora inicia com Figma e Sections sem exigir IDs')
+  expectSuccess(runNode(path.join(fixture, 'scripts/validateKoraRound.js'), ['--round', round, '--root', fixture]), 'Estado inicial Kora valido')
+  expectSuccess(runNode(path.join(fixture, 'scripts/authorizeKoraAction.js'), ['--round', round, '--role', 'ANALISTA', '--action', 'ANALISAR', '--root', fixture]), 'Kora libera somente a analise no inicio')
+  expectFailure(runNode(path.join(fixture, 'scripts/authorizeKoraAction.js'), ['--round', round, '--role', 'MONTADOR', '--action', 'MONTAR', '--root', fixture]), 'Kora bloqueia montagem antes da aprovacao')
+
+  const decisionStateFile = path.join(fixture, '.designops/runs', round, 'kora.json')
+  const decisionState = JSON.parse(fs.readFileSync(decisionStateFile, 'utf8'))
+  decisionState.status = 'AGUARDANDO_DECISAO_DO_DESIGNER'
+  decisionState.checkpoints.analise.status = 'EM_ANDAMENTO'
+  decisionState.decisoes = [{ id: 'regra-pendente', pergunta: 'MCP indisponivel: devo retomar a leitura?', status: 'PENDENTE', resposta: null, respondidaEm: null }]
+  decisionState.historico = [
+    { de: 'PREPARANDO', para: 'ANALISANDO', ocorreuEm: '2026-08-05T09:58:00.000Z', motivo: null },
+    { de: 'ANALISANDO', para: 'AGUARDANDO_DECISAO_DO_DESIGNER', ocorreuEm: '2026-08-05T09:59:00.000Z', motivo: 'MCP indisponivel' },
+  ]
+  fs.writeFileSync(decisionStateFile, JSON.stringify(decisionState, null, 2))
+  expectSuccess(runNode(path.join(fixture, 'scripts/resumeKoraDecision.js'), ['--round', round, '--decision', 'regra-pendente', '--answer', 'Sim, retome a leitura.', '--resume', 'ANALISANDO', '--root', fixture]), 'Kora registra resposta humana e devolve a orientacao ao Analista')
+
+  const stateFile = path.join(fixture, '.designops/runs', round, 'kora.json')
+  const state = JSON.parse(fs.readFileSync(stateFile, 'utf8'))
+  state.status = 'ANALISANDO'
+  state.checkpoints.analise.status = 'EM_ANDAMENTO'
+  state.historico = [{ de: 'PREPARANDO', para: 'ANALISANDO', ocorreuEm: '2026-08-05T10:00:00.000Z', motivo: null }]
+  state.tentativas = [1, 2, 3].map((attempt) => ({ agente: 'ANALISTA', causa: 'MCP indisponivel', acao: 'Ler Section', evidencia: 'metadados da pagina', resultado: 'FALHOU', ocorreuEm: `2026-08-05T10:0${attempt}:00.000Z` }))
+  fs.writeFileSync(stateFile, JSON.stringify(state, null, 2))
+  expectFailure(runNode(path.join(fixture, 'scripts/validateKoraRound.js'), ['--round', round, '--root', fixture]), 'Kora bloqueia terceira repeticao da mesma causa')
+  state.status = 'BLOQUEADA'
+  state.bloqueios = [{ codigo: 'MCP_REPETIDO', mensagem: 'MCP indisponivel apos duas recuperacoes.', proximaAcao: 'Decidir como retomar a leitura.' }]
+  state.historico.push({ de: 'ANALISANDO', para: 'BLOQUEADA', ocorreuEm: '2026-08-05T10:04:00.000Z', motivo: 'MCP indisponivel' })
+  fs.writeFileSync(stateFile, JSON.stringify(state, null, 2))
+  expectSuccess(runNode(path.join(fixture, 'scripts/validateKoraRound.js'), ['--round', round, '--root', fixture]), 'Kora conserva a terceira ocorrencia somente como bloqueio consolidado')
+
+  state.tentativas = []
+  state.artefatos = [{ id: 'vazamento', caminho: '.designops/runs/outra-rodada/analise.json', sha256: '0'.repeat(64) }]
+  fs.writeFileSync(stateFile, JSON.stringify(state, null, 2))
+  expectFailure(runNode(path.join(fixture, 'scripts/validateKoraRound.js'), ['--round', round, '--root', fixture]), 'Kora isola artefatos da rodada atual')
+
+  state.artefatos = []
+  fs.writeFileSync(stateFile, JSON.stringify(state, null, 2))
+  expectSuccess(runNode(path.join(fixture, 'scripts/recordKoraAuditEvent.js'), ['--round', round, '--type', 'RODADA_INICIADA', '--result', 'INICIADO', '--message', 'Figma https://www.figma.com/design/segredo?node-id=10-20', '--root', fixture]), 'Auditoria registra fato sanitizado')
+  expectSuccess(runNode(path.join(fixture, 'scripts/generateKoraAuditReport.js'), ['--round', round, '--root', fixture]), 'Relato sanitizado da Kora')
+  expectSuccess(runNode(path.join(fixture, 'scripts/validateKoraAuditTrail.js'), ['--round', round, '--root', fixture]), 'Trilha da Kora com hashes integros')
+  expectSuccess(runNode(path.join(fixture, 'scripts/auditKoraRounds.js'), ['--round', round, '--root', fixture]), 'Auditoria explica rodada sem receber print ou transcricao')
+  const archiveFixture = temporaryDirectory('designops-kora-audit-branch-')
+  const archiveReport = path.join(archiveFixture, 'relatos', round)
+  fs.mkdirSync(archiveReport, { recursive: true })
+  fs.copyFileSync(path.join(fixture, '.designops/audit/rodada-' + round, 'relato-kora.md'), path.join(archiveReport, 'relato-kora.md'))
+  const emptyWorkspace = temporaryDirectory('designops-kora-audit-query-')
+  const archiveQuery = runNode(path.join(fixture, 'scripts/auditKoraRounds.js'), ['--round', round, '--root', emptyWorkspace, '--archive-root', archiveFixture])
+  expectSuccess(archiveQuery, 'Auditoria consulta relato publicado sem evidencia local')
+  assert(archiveQuery.stdout.includes('AUDIT_KORA'), 'Auditoria precisa identificar relato vindo da branch dedicada')
+  const auditBranch = temporaryDirectory('designops-kora-audit-publish-')
+  childProcess.execFileSync('git', ['init', '-q'], { cwd: auditBranch })
+  childProcess.execFileSync('git', ['config', 'user.email', 'kora@example.test'], { cwd: auditBranch })
+  childProcess.execFileSync('git', ['config', 'user.name', 'Kora Audit'], { cwd: auditBranch })
+  fs.writeFileSync(path.join(auditBranch, '.gitkeep'), '')
+  childProcess.execFileSync('git', ['add', '.gitkeep'], { cwd: auditBranch })
+  childProcess.execFileSync('git', ['commit', '-qm', 'audit: iniciar trilha'], { cwd: auditBranch })
+  childProcess.execFileSync('git', ['checkout', '-qb', 'audit/kora'], { cwd: auditBranch })
+  expectSuccess(runNode(path.join(fixture, 'scripts/publishKoraAuditSummary.js'), ['--round', round, '--root', fixture, '--archive-root', auditBranch]), 'Registrador publica somente relato sanitizado na branch de auditoria')
+  expectFailure(runNode(path.join(fixture, 'scripts/publishKoraAuditSummary.js'), ['--round', round, '--root', fixture, '--archive-root', auditBranch]), 'Branch de auditoria rejeita sobrescrita de relato')
+  const audit = fs.readFileSync(path.join(fixture, '.designops/audit/rodada-' + round, 'eventos.jsonl'), 'utf8')
+  assert(!audit.includes('figma.com') && !audit.includes('node-id') && !audit.includes('10-20'), 'Auditoria nao pode reter URL ou node ID Figma')
+
+  const completeFixture = createKoraFixture()
+  const completeRound = 'kora-completa'
+  writeAnalysisRoundFixture(completeFixture, completeRound)
+  expectSuccess(runNode(path.join(completeFixture, 'scripts/startKoraRound.js'), ['--round', completeRound, '--figma-url', 'https://www.figma.com/design/nao-publicar', '--sections', 'ref-modalidade-tela-ctx-a,ref-modalidade-tela-ctx-b,ref-modalidade-tela-ctx-c', '--root', completeFixture]), 'Kora inicia a rodada com tres Sections')
+  const completeStateFile = path.join(completeFixture, '.designops/runs', completeRound, 'kora.json')
+  const completeState = JSON.parse(fs.readFileSync(completeStateFile, 'utf8'))
+  const now = '2026-08-05T11:00:00.000Z'
+  completeState.status = 'AGUARDANDO_APROVACAO_CONTRATO'
+  completeState.checkpoints.analise = { status: 'APROVADA', gatePreProposta: true, reconciliada: true }
+  completeState.checkpoints.contrato.status = 'AGUARDANDO_APROVACAO'
+  completeState.recibos = [{ papel: 'ANALISTA', checkpoint: 'ANALISE', resultado: 'FAVORAVEL', evidencia: 'gate e reconciliacao favoraveis', ocorreuEm: now }]
+  completeState.artefatos = ['referencias.json', 'analise.json', 'contexto.json', 'componentes-locais.json', 'resolvido.json'].map((name) => {
+    const file = path.join(completeFixture, '.designops/runs', completeRound, name)
+    return { id: name, caminho: '.designops/runs/' + completeRound + '/' + name, sha256: sha256(file) }
+  })
+  completeState.historico = [
+    { de: 'PREPARANDO', para: 'ANALISANDO', ocorreuEm: now, motivo: null },
+    { de: 'ANALISANDO', para: 'AGUARDANDO_APROVACAO_CONTRATO', ocorreuEm: now, motivo: null },
+  ]
+  fs.writeFileSync(completeStateFile, JSON.stringify(completeState, null, 2))
+  expectSuccess(runNode(path.join(completeFixture, 'scripts/validateKoraRound.js'), ['--round', completeRound, '--root', completeFixture]), 'Kora exige gate completo antes de apresentar proposta')
+
+  completeState.status = 'MONTANDO'
+  completeState.checkpoints.contrato.status = 'APROVADO'
+  completeState.checkpoints.montagem.status = 'EM_ANDAMENTO'
+  completeState.aprovacoes.contrato = { tipo: 'CONTRATO', decisao: 'APROVADA', confirmadoPor: 'DESIGNER', ocorreuEm: now }
+  completeState.historico.push({ de: 'AGUARDANDO_APROVACAO_CONTRATO', para: 'MONTANDO', ocorreuEm: now, motivo: null })
+  fs.writeFileSync(completeStateFile, JSON.stringify(completeState, null, 2))
+  expectSuccess(runNode(path.join(completeFixture, 'scripts/authorizeKoraAction.js'), ['--round', completeRound, '--role', 'MONTADOR', '--action', 'MONTAR', '--root', completeFixture]), 'Montador so inicia apos aprovacao explicita')
+
+  completeState.status = 'VALIDANDO'
+  completeState.checkpoints.montagem.status = 'CONCLUIDA'
+  completeState.checkpoints.validacao.status = 'EM_ANDAMENTO'
+  completeState.recibos.push({ papel: 'MONTADOR', checkpoint: 'MONTAGEM', resultado: 'FAVORAVEL', evidencia: 'montagem registrada', ocorreuEm: now })
+  completeState.historico.push({ de: 'MONTANDO', para: 'VALIDANDO', ocorreuEm: now, motivo: null })
+  fs.writeFileSync(completeStateFile, JSON.stringify(completeState, null, 2))
+  expectSuccess(runNode(path.join(completeFixture, 'scripts/authorizeKoraAction.js'), ['--round', completeRound, '--role', 'VALIDADOR', '--action', 'VALIDAR', '--root', completeFixture]), 'Validador so inicia depois da montagem')
+
+  completeState.status = 'AGUARDANDO_APROVACAO_PROMOCAO'
+  completeState.checkpoints.validacao.status = 'FAVORAVEL'
+  completeState.checkpoints.promocao.status = 'AGUARDANDO_APROVACAO'
+  completeState.recibos.push({ papel: 'VALIDADOR', checkpoint: 'VALIDACAO', resultado: 'FAVORAVEL', evidencia: 'veredito independente', ocorreuEm: now })
+  completeState.historico.push({ de: 'VALIDANDO', para: 'AGUARDANDO_APROVACAO_PROMOCAO', ocorreuEm: now, motivo: null })
+  fs.writeFileSync(completeStateFile, JSON.stringify(completeState, null, 2))
+  expectSuccess(runNode(path.join(completeFixture, 'scripts/validateKoraRound.js'), ['--round', completeRound, '--root', completeFixture]), 'Kora apresenta promocao somente com veredito favoravel')
+
+  completeState.status = 'CONCLUIDA'
+  completeState.checkpoints.promocao.status = 'CONCLUIDA'
+  completeState.aprovacoes.promocao = { tipo: 'PROMOCAO', decisao: 'APROVADA', confirmadoPor: 'DESIGNER', ocorreuEm: now }
+  completeState.historico.push({ de: 'AGUARDANDO_APROVACAO_PROMOCAO', para: 'CONCLUIDA', ocorreuEm: now, motivo: null })
+  fs.writeFileSync(completeStateFile, JSON.stringify(completeState, null, 2))
+  expectSuccess(runNode(path.join(completeFixture, 'scripts/validateKoraRound.js'), ['--round', completeRound, '--root', completeFixture]), 'Rodada completa so encerra depois da aprovacao de promocao')
+}
+function testKoraOperationIncidentRoute() {
+  const fixture = createKoraFixture()
+  const round = 'kora-incidente'
+  expectSuccess(runNode(path.join(fixture, 'scripts/startKoraRound.js'), ['--round', round, '--figma-url', 'https://www.figma.com/design/nao-publicar', '--sections', 'ref-a', '--root', fixture]), 'Kora prepara a rodada antes de diagnosticar incidente')
+  const business = runNode(path.join(fixture, 'scripts/diagnoseKoraFailure.js'), ['--round', round, '--role', 'ANALISTA', '--phase', 'ANALISE', '--expected', 'Aplicar regra conhecida', '--observed', 'Regra de elegibilidade nao esta documentada', '--root', fixture])
+  expectSuccess(business, 'Regra de negocio vira decisao humana, nao incidente')
+  assert.strictEqual(JSON.parse(business.stdout).classificacao, 'DECISAO_DE_NEGOCIO', 'Regra ausente precisa manter classificacao humana')
+  const temporary = runNode(path.join(fixture, 'scripts/diagnoseKoraFailure.js'), ['--round', round, '--role', 'ANALISTA', '--phase', 'ANALISE', '--expected', 'Ler referencia', '--observed', 'Timeout temporario da leitura', '--root', fixture])
+  expectSuccess(temporary, 'Falha temporaria pode ser recuperada sem incidente prematuro')
+  assert.strictEqual(JSON.parse(temporary.stdout).classificacao, 'RECUPERAVEL', 'Timeout precisa seguir recuperacao limitada')
+  const evidence = runNode(path.join(fixture, 'scripts/diagnoseKoraFailure.js'), ['--round', round, '--role', 'ANALISTA', '--phase', 'ANALISE', '--expected', 'Ler referencia', '--observed', 'Section de referencia nao encontrada no Figma', '--root', fixture])
+  expectSuccess(evidence, 'Indisponibilidade de referencia fica como evidencia insuficiente')
+  assert.strictEqual(JSON.parse(evidence.stdout).classificacao, 'EVIDENCIA_INSUFICIENTE', 'Figma indisponivel nao e defeito de codigo sem prova')
+  const opened = runNode(path.join(fixture, 'scripts/openKoraOperationIncident.js'), ['--round', round, '--role', 'KORA', '--phase', 'ORQUESTRACAO', '--expected', 'Registrar a mudanca de estado', '--observed', 'TypeError: configuracao do hook invalida em https://www.figma.com/design/segredo?node-id=10-20', '--root', fixture])
+  expectSuccess(opened, 'Falha de hook cria incidente de manutencao')
+  const openData = JSON.parse(opened.stdout)
+  const prompt = fs.readFileSync(path.join(fixture, openData.promptPath), 'utf8')
+  assert(prompt.includes('# Encaminhar ao Codex'), 'Incidente precisa conter um unico handoff copiavel')
+  assert(!/figma\.com|node-id|10-20/i.test(prompt), 'Pedido de manutencao nao pode vazar referencia Figma')
+  expectSuccess(runNode(path.join(fixture, 'scripts/interruptKoraForIncident.js'), ['--round', round, '--incident', openData.incidentId, '--root', fixture]), 'Kora interrompe a rodada sem editar produto ou Figma')
+  expectSuccess(runNode(path.join(fixture, 'scripts/recordKoraAuditEvent.js'), ['--round', round, '--type', 'INCIDENTE_OPERACAO_ABERTO', '--result', 'CONCLUIDO', '--message', 'Incidente de manutencao aberto', '--root', fixture]), 'Auditoria registra a abertura do incidente')
+  expectSuccess(runNode(path.join(fixture, 'scripts/generateKoraAuditReport.js'), ['--round', round, '--root', fixture]), 'Relato inicial inclui incidente sanitizado')
+  expectSuccess(runNode(path.join(fixture, 'scripts/validateKoraAuditTrail.js'), ['--round', round, '--root', fixture]), 'Pacote do incidente tem integridade antes da publicacao')
+  const auditBranch = temporaryDirectory('designops-kora-incident-audit-')
+  childProcess.execFileSync('git', ['init', '-q'], { cwd: auditBranch })
+  childProcess.execFileSync('git', ['config', 'user.email', 'kora@example.test'], { cwd: auditBranch })
+  childProcess.execFileSync('git', ['config', 'user.name', 'Kora Audit'], { cwd: auditBranch })
+  fs.writeFileSync(path.join(auditBranch, '.gitkeep'), '')
+  childProcess.execFileSync('git', ['add', '.gitkeep'], { cwd: auditBranch })
+  childProcess.execFileSync('git', ['commit', '-qm', 'audit: iniciar trilha'], { cwd: auditBranch })
+  childProcess.execFileSync('git', ['checkout', '-qb', 'audit/kora'], { cwd: auditBranch })
+  expectSuccess(runNode(path.join(fixture, 'scripts/publishKoraAuditSummary.js'), ['--round', round, '--root', fixture, '--archive-root', auditBranch]), 'Incidente aberto entra na branch append-only')
+  childProcess.execFileSync('git', ['init', '-q'], { cwd: fixture })
+  childProcess.execFileSync('git', ['config', 'user.email', 'kora@example.test'], { cwd: fixture })
+  childProcess.execFileSync('git', ['config', 'user.name', 'Kora Test'], { cwd: fixture })
+  childProcess.execFileSync('git', ['add', '.'], { cwd: fixture })
+  childProcess.execFileSync('git', ['commit', '-qm', 'test: estado interrompido'], { cwd: fixture })
+  fs.writeFileSync(path.join(fixture, 'correcao-operacao.txt'), 'correcao integrada em fixture\n')
+  childProcess.execFileSync('git', ['add', 'correcao-operacao.txt'], { cwd: fixture })
+  childProcess.execFileSync('git', ['commit', '-qm', 'fix: corrigir mecanismo Kora'], { cwd: fixture })
+  const correctionCommit = childProcess.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: fixture, encoding: 'utf8' }).trim()
+  expectSuccess(runNode(path.join(fixture, 'scripts/resumeKoraIncident.js'), ['--round', round, '--incident', openData.incidentId, '--correction-commit', correctionCommit, '--root', fixture]), 'Correcao integrada retoma apenas a fase segura')
+  expectSuccess(runNode(path.join(fixture, 'scripts/recordKoraIncidentResolution.js'), ['--round', round, '--incident', openData.incidentId, '--correction-commit', correctionCommit, '--root', fixture]), 'Retomada fica registrada como novo fato append-only')
+  expectSuccess(runNode(path.join(fixture, 'scripts/recordKoraAuditEvent.js'), ['--round', round, '--type', 'INCIDENTE_OPERACAO_RETOMADO', '--result', 'CONCLUIDO', '--message', 'Retomada limitada registrada', '--root', fixture]), 'Auditoria registra retomada do incidente')
+  expectSuccess(runNode(path.join(fixture, 'scripts/generateKoraAuditReport.js'), ['--round', round, '--root', fixture]), 'Relato atualizado reconhece retomada')
+  expectSuccess(runNode(path.join(fixture, 'scripts/validateKoraAuditTrail.js'), ['--round', round, '--root', fixture]), 'Trilha continua valida depois da retomada')
+  expectSuccess(runNode(path.join(fixture, 'scripts/publishKoraAuditSummary.js'), ['--round', round, '--root', fixture, '--archive-root', auditBranch]), 'Branch de auditoria recebe apenas a nova evidencia de retomada')
+  const archived = runNode(path.join(fixture, 'scripts/auditKoraRounds.js'), ['--round', round, '--root', temporaryDirectory('designops-kora-no-local-'), '--archive-root', auditBranch])
+  expectSuccess(archived, 'Auditoria publicada explica incidente sem evidencia local')
+  assert.strictEqual(JSON.parse(archived.stdout).rodadas[0].incidentes[0].status, 'RETOMADO', 'Auditoria publicada precisa apontar a retomada segura')
+  const resumed = JSON.parse(fs.readFileSync(path.join(fixture, '.designops/runs', round, 'kora.json'), 'utf8'))
+  assert.strictEqual(resumed.status, 'ANALISANDO', 'Incidente de orquestracao retorna a analise')
+  assert.strictEqual(resumed.aprovacoes.contrato, null, 'Retomada nao restaura aprovacao anterior')
 }
 function writeValidBaselineFixture(fixture) {
   const metadata = '# Documento\n\n## Status da base\n\n- Aprovado por: [CONFIRMAR]\n- Atualizado em: [CONFIRMAR]\n- Fonte inicial: Curadoria humana\n'
@@ -1221,6 +1423,14 @@ async function main() {
     const readerFileWithFigma = path.join(fixture, '.github/agents/leitor-de-etapa.agent.md')
     fs.writeFileSync(readerFileWithFigma, fs.readFileSync(readerFileWithFigma, 'utf8').replace('  - search/codebase\n', '  - search/codebase\n  - figma/*\n'))
     expectFailure(runNode(path.join(fixture, 'scripts/validatePilotSquad.js')), 'Leitor com Figma')
+
+    fixture = createSquadFixture()
+    const koraFile = path.join(fixture, '.github/agents/kora.agent.md')
+    fs.writeFileSync(koraFile, fs.readFileSync(koraFile, 'utf8').replace('user-invocable: true', 'user-invocable: false'))
+    expectFailure(runNode(path.join(fixture, 'scripts/validatePilotSquad.js')), 'Kora precisa ser a unica porta humana')
+
+    testKoraRoundAndAudit()
+    testKoraOperationIncidentRoute()
 
     let manifest = validManifest()
     delete manifest.fontes.figma.descoberta

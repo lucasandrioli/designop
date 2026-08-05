@@ -43,6 +43,15 @@ const referenceScopeCore = read('scripts/validateReferenceScopeCore.js');
 const contractTemplate = read('docs/contratos/_template.md');
 const contextDraftCore = read('scripts/validateContextDraftCore.js');
 const referenceSkill = read('.github/skills/figma-referencias/SKILL.md');
+const koraAgent = read('.github/agents/kora.agent.md');
+const koraOperation = read('docs/operacao-kora.md');
+const koraSchema = read('docs/contratos/rodada-kora.schema.json');
+const koraAuditSchema = read('docs/contratos/evento-auditoria-kora.schema.json');
+const koraAuditReader = read('scripts/auditKoraRounds.js');
+const koraDecisionResume = read('scripts/resumeKoraDecision.js');
+const koraIncidentOpen = read('scripts/openKoraOperationIncident.js');
+const koraIncidentResume = read('scripts/resumeKoraIncident.js');
+const koraIncidentResolution = read('scripts/recordKoraIncidentResolution.js');
 
 [
   'contexto-id',
@@ -103,6 +112,26 @@ requireText('scripts/validateContextDraftCore.js', contextDraftCore, 'nao pode t
 requireText('.github/skills/figma-referencias/SKILL.md', referenceSkill, 'validateInteractionContract');
 requireText('.github/skills/figma-referencias/SKILL.md', referenceSkill, 'nao podem revelar o defeito');
 requireText('docs/contrato-papeis.md', roleContract, 'Conversa guiada');
+requireText('AGENTS.md', agents, 'Kora e a unica agente visivel');
+requireText('.github/agents/kora.agent.md', koraAgent, 'unica porta de entrada humana');
+requireText('.github/agents/kora.agent.md', koraAgent, 'Nao abra Figma');
+requireText('.github/agents/kora.agent.md', koraAgent, 'authorizeKoraAction.js');
+requireText('.github/agents/kora.agent.md', koraAgent, 'Nunca encaminhe a saida bruta');
+requireText('docs/operacao-kora.md', koraOperation, 'Kora, audite as rodadas');
+requireText('docs/operacao-kora.md', koraOperation, 'nunca pede que voce forneca ID');
+requireText('docs/contratos/rodada-kora.schema.json', koraSchema, 'AGUARDANDO_APROVACAO_CONTRATO');
+requireText('docs/contratos/rodada-kora.schema.json', koraSchema, 'recibos');
+requireText('docs/contratos/evento-auditoria-kora.schema.json', koraAuditSchema, 'RODADA_INICIADA');
+requireText('scripts/auditKoraRounds.js', koraAuditReader, 'AUDIT_KORA');
+requireText('scripts/resumeKoraDecision.js', koraDecisionResume, 'Decisao humana registrada');
+requireText('.github/agents/kora.agent.md', koraAgent, 'INCIDENTE_DA_OPERACAO');
+if (!/Kora nunca\s+edita codigo, hook ou script no VS Code\./.test(koraAgent)) failures.push('.github/agents/kora.agent.md precisa impedir correcao de codigo durante a rodada');
+requireText('docs/operacao-kora.md', koraOperation, 'Encaminhar ao Codex');
+requireText('docs/contratos/rodada-kora.schema.json', koraSchema, 'incidenteOperacao');
+requireText('docs/contratos/evento-auditoria-kora.schema.json', koraAuditSchema, 'INCIDENTE_OPERACAO_ABERTO');
+requireText('scripts/openKoraOperationIncident.js', koraIncidentOpen, 'pedido-codex.md');
+requireText('scripts/resumeKoraIncident.js', koraIncidentResume, 'correction-commit');
+requireText('scripts/recordKoraIncidentResolution.js', koraIncidentResolution, 'RETOMADO');
 requireText('.github/skills/consignado-base/SKILL.md', baseSkill, 'sem Figma');
 requireText('.github/skills/consignado-base/SKILL.md', baseSkill, 'merge manual');
 ['consignado-base', 'consignado-contexto', 'consignado-analise', 'consignado-montagem', 'consignado-validacao'].forEach((skill) => {

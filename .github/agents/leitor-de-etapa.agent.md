@@ -3,7 +3,7 @@ name: leitor-de-etapa
 description: "Leitor interno do Operador para recuperar documentos de uma etapa sem alterar estado oficial."
 target: vscode
 user-invocable: false
-disable-model-invocation: true
+disable-model-invocation: false
 tools:
   - read
   - search/codebase

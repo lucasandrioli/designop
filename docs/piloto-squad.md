@@ -4,26 +4,26 @@
 
 1. Atualize o repositorio com a branch que contem esta Fase 0.
 2. Em Settings, confirme `chat.customAgentInSubagent.enabled` como ativo.
-3. Abra Chat Diagnostics e confirme que aparecem `operador` e
-   `leitor-de-etapa` sem erro.
+3. Abra Chat Diagnostics e confirme que Kora aparece como agente visivel e
+   que `operador` e `leitor-de-etapa` estao disponiveis somente como internos.
 4. Rode `node scripts/validatePilotSquad.js`. O resultado precisa dizer
    que a Fase 0 esta aprovada antes de abrir a primeira rodada.
 
 ## Roteiro de teste
 
-1. Selecione o agente `operador`.
+1. Selecione o agente `Kora`.
 2. Envie:
 
 ```text
-Inicie uma rodada de leitura para as etapas <etapa-a> e <etapa-b>.
-Nao altere Figma nem documentos oficiais. Quero apenas saber o que ja
-esta pronto e o que precisa de contexto.
+Figma: <URL de teste>
+Sections: <Sections de teste>
+Contexto curto: preciso entender se a base documental ja sustenta estas etapas.
 ```
 
 3. Observe os dois subagentes. Eles devem ser leitores de etapa e podem
    aparecer em paralelo.
-4. Espere o resumo consolidado do Operador. Ele precisa listar os dois
-   Leitores que concluiram antes de classificar as etapas.
+4. Espere o resumo consolidado da Kora. Ela precisa consultar o Operador e
+   listar os dois Leitores que concluiram antes de classificar as etapas.
 
 ## Resultado esperado
 
@@ -36,11 +36,12 @@ esta pronto e o que precisa de contexto.
 - outra etapa aparece `precisa_contexto` se faltar regra para compor o mapa;
 - outra etapa aparece `precisa_curadoria` se faltar manual-base essencial;
 - as perguntas, quando existirem, aparecem juntas na caixa de decisoes;
-- em novo chat, o Operador consegue informar o estado da rodada mais
-  recente sem repetir a leitura concluida.
+- em novo chat, Kora consegue informar o estado da rodada mais recente sem
+  repetir a leitura concluida.
 
 ## Resultado que reprova o piloto
 
+- Kora pede que a pessoa operadora selecione o Operador;
 - o Operador chama Montador, Validador ou Analista;
 - o Operador le ou classifica documentos de uma etapa antes de chamar os
   Leitores;

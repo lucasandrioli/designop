@@ -7,10 +7,9 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
 ## Antes de iniciar
 
 1. Abra este workspace no VS Code em modo confiavel.
-2. Em `Chat: Open Customizations`, confirme os tres agentes de execucao:
-   Analista da Etapa, Montador e Validador. Para o piloto da Fase 0,
-   confirme tambem `operador`; `leitor-de-etapa` e interno e pode aparecer
-   somente em Chat Diagnostics ou dentro de uma rodada.
+2. Em `Chat: Open Customizations`, confirme somente Kora como agente do
+   projeto visivel. Analista, Montador, Validador, Operador, Leitor e
+   Registrador aparecem apenas no diagnostico ou como subagentes da Kora.
 3. Em `Chat Diagnostics`, corrija qualquer erro de agente ou skill.
 4. No VS Code, em `MCP: List Servers`, inicie e autentique `figma`.
    Confirme que as ferramentas Figma aparecem.
@@ -19,9 +18,9 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
    confirmar os portoes de evidencia, IDS e limite de papel antes de
    testar o Analista.
 
-## Operacao guiada do Analista
+## Operacao guiada pela Kora
 
-Selecione `Analista da Etapa` e envie somente:
+Selecione `Kora` e envie somente:
 
 ```text
 Figma: <URL>
@@ -29,33 +28,38 @@ Sections: <nomes exatos, separados por virgula>
 Contexto curto: <uma frase opcional>
 ```
 
-O Analista localiza pagina e IDs, cria a rodada temporaria, le estrutura e
-interacoes e devolve um resumo humano. Nao informe node IDs, comandos,
-schemas, manuais ou arquivos de rodada. Ele so deve perguntar se nao localizar
-a referencia, nao conseguir concluir a leitura ou precisar de decisao que
-mude a proposta. A revisao recebe um pacote de proposta e, no maximo, tres
-decisoes com impacto e recomendacao. Evidencias, gates e recibos permanecem
-na rodada para auditoria e nunca sao despejados na conversa.
+Kora localiza ou cria a rodada, chama os papeis internos e devolve um resumo
+humano. Nao informe node IDs, comandos, schemas, manuais ou arquivos de rodada.
+Ela so deve perguntar se nao localizar a referencia, nao conseguir recuperar
+uma falha tecnica ou precisar de decisao que mude a proposta. A revisao recebe
+um pacote de proposta e, no maximo, tres decisoes com impacto e recomendacao.
+Evidencias, gates e recibos permanecem na rodada para auditoria e nunca sao
+despejados na conversa.
+
+Se Kora identificar um problema da propria operacao, ela para a rodada sem
+tentar consertar codigo e mostra apenas o bloco **Encaminhar ao Codex**. Esse
+bloco vai para a manutencao; a pessoa operadora nao precisa rodar comandos,
+interpretar logs ou escolher um agente. A retomada acontece somente depois de
+uma correcao integrada e recomeça no ponto que ainda precisa ser comprovado.
 
 ## Piloto da Squad - Fase 0
 
 Este e um teste de coordenacao, nao uma etapa de montagem. Antes dele,
 confirme em Settings que `chat.customAgentInSubagent.enabled` esta ativo.
 
-1. Selecione `operador`.
-2. Envie: "Inicie uma rodada de leitura para as etapas <etapa-a> e
-   <etapa-b>. Nao altere Figma nem documentos oficiais. Quero apenas saber
-   o que ja esta pronto e o que precisa de contexto."
-3. Confirme que ele chama um `leitor-de-etapa` para cada etapa, em
-   paralelo, e que nenhum deles usa Figma ou edita `docs/`.
-4. Ao final, confirme que o Operador devolve uma unica caixa de decisoes
-   e cria somente `.designops/runs/<id>/estado.json`.
-5. Abra um chat novo com `operador` e peca o estado da ultima rodada.
-   Ele deve retomar esse arquivo, sem repetir a leitura concluida.
+1. Selecione `Kora` e informe uma duvida documental real como contexto da
+   rodada. Nao selecione o Operador diretamente.
+2. Confirme no diagnostico que Kora chama um `operador`, que por sua vez
+   chama um `leitor-de-etapa` para cada etapa, em paralelo, e que nenhum deles
+   usa Figma ou edita `docs/`.
+3. Ao final, confirme que Kora apresenta uma unica caixa humana de decisoes
+   e que o estado permanece somente em `.designops/runs/<id>/`.
+4. Abra um novo chat com Kora e peca a situacao da rodada. Ela deve recuperar
+   o estado existente sem pedir que voce troque de agente ou repita leituras.
 
-Resultado reprovado: chamar Analista, Montador ou Validador; escrever em
-`docs/`; usar Figma; ou pedir que voce troque de agente para ler cada
-resultado. O roteiro completo esta em `docs/piloto-squad.md`.
+Resultado reprovado: o Operador chamar Analista, Montador ou Validador;
+escrever em `docs/`; usar Figma; ou Kora pedir que voce troque de agente para
+ler cada resultado. O roteiro completo esta em `docs/piloto-squad.md`.
 
 Use uma etapa real, dois contextos reais e um arquivo Figma descartavel.
 Se os manuais ainda nao existirem, comecar pelo contexto guiado e nao

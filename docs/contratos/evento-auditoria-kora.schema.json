@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evento auditavel da Kora",
+  "description": "Registro local e sanitizado de um fato operacional. Nao carrega URLs Figma, node IDs ou conteudo bruto de ferramentas.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "eventoId", "ocorridoEm", "tipo", "origem", "detalhes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "eventoId": { "type": "string", "minLength": 1 },
+    "ocorridoEm": { "type": "string", "format": "date-time" },
+    "tipo": {
+      "enum": ["SESSAO_INICIADA", "FERRAMENTA_INICIADA", "FERRAMENTA_CONCLUIDA", "SUBAGENTE_INICIADO", "SUBAGENTE_CONCLUIDO", "SESSAO_ENCERRADA", "RODADA_INICIADA", "PAPEL_ACIONADO", "PAPEL_CONCLUIDO", "ESTADO_ALTERADO", "RECUPERACAO_REGISTRADA", "APROVACAO_REGISTRADA", "BLOQUEIO_REGISTRADO", "RODADA_INTERROMPIDA", "INCIDENTE_OPERACAO_ABERTO", "INCIDENTE_OPERACAO_RETOMADO", "RODADA_ENCERRADA", "OUTRO"]
+    },
+    "origem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eventoHook", "escopo"],
+      "properties": {
+        "eventoHook": { "type": "string", "minLength": 1 },
+        "escopo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tipo", "id"],
+          "properties": {
+            "tipo": { "enum": ["RODADA", "SESSAO"] },
+            "id": { "type": "string", "minLength": 1 }
+          }
+        },
+        "sessao": { "type": "string", "minLength": 1 },
+        "rodada": { "type": "string", "minLength": 1 }
+      }
+    },
+    "detalhes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resultado"],
+      "properties": {
+        "ferramenta": { "type": "string", "minLength": 1 },
+        "chavesEntrada": { "type": "array", "items": { "type": "string" } },
+        "chavesSaida": { "type": "array", "items": { "type": "string" } },
+        "agente": { "type": "string", "minLength": 1 },
+        "resultado": { "enum": ["INICIADO", "CONCLUIDO", "ENCERRADO", "NAO_INFORMADO"] },
+        "mensagem": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

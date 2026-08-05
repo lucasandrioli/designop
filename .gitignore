@@ -2,3 +2,5 @@
 *.swp
 .designops/runs/*
 !.designops/runs/.gitkeep
+.designops/audit/*
+!.designops/audit/.gitkeep

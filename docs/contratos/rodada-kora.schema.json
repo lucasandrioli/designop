@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Estado governado de uma rodada Kora",
+  "type": "object",
+  "required": ["schemaVersion", "rodada", "status", "entrada", "checkpoints", "aprovacoes", "tentativas", "recibos", "artefatos", "decisoes", "bloqueios", "historico"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
+    "status": {
+      "enum": [
+        "PREPARANDO",
+        "ANALISANDO",
+        "AGUARDANDO_APROVACAO_CONTRATO",
+        "MONTANDO",
+        "VALIDANDO",
+        "AGUARDANDO_APROVACAO_PROMOCAO",
+        "CONCLUIDA",
+        "AGUARDANDO_DECISAO_DO_DESIGNER",
+        "BLOQUEADA",
+        "INTERROMPIDA"
+      ]
+    },
+    "entrada": {
+      "type": "object",
+      "required": ["figmaUrl", "sections", "contextoCurto"],
+      "properties": {
+        "figmaUrl": { "type": "string", "minLength": 1 },
+        "sections": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "contextoCurto": { "type": ["string", "null"] }
+      }
+    },
+    "checkpoints": {
+      "type": "object",
+      "required": ["analise", "contrato", "montagem", "validacao", "promocao"],
+      "properties": {
+        "analise": {
+          "type": "object",
+          "required": ["status", "gatePreProposta", "reconciliada"],
+          "properties": {
+            "status": { "enum": ["PENDENTE", "EM_ANDAMENTO", "APROVADA"] },
+            "gatePreProposta": { "type": "boolean" },
+            "reconciliada": { "type": "boolean" }
+          }
+        },
+        "contrato": { "type": "object", "required": ["status"], "properties": { "status": { "enum": ["PENDENTE", "AGUARDANDO_APROVACAO", "APROVADO"] } } },
+        "montagem": { "type": "object", "required": ["status"], "properties": { "status": { "enum": ["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA"] } } },
+        "validacao": { "type": "object", "required": ["status"], "properties": { "status": { "enum": ["PENDENTE", "EM_ANDAMENTO", "FAVORAVEL", "DESFAVORAVEL"] } } },
+        "promocao": { "type": "object", "required": ["status"], "properties": { "status": { "enum": ["PENDENTE", "AGUARDANDO_APROVACAO", "APROVADA", "CONCLUIDA"] } } }
+      }
+    },
+    "aprovacoes": {
+      "type": "object",
+      "required": ["contrato", "promocao"],
+      "properties": {
+        "contrato": { "$ref": "#/$defs/aprovacao" },
+        "promocao": { "$ref": "#/$defs/aprovacao" }
+      }
+    },
+    "tentativas": { "type": "array", "items": { "$ref": "#/$defs/tentativa" } },
+    "recibos": { "type": "array", "items": { "$ref": "#/$defs/recibo" } },
+    "artefatos": { "type": "array", "items": { "$ref": "#/$defs/artefato" } },
+    "decisoes": { "type": "array", "items": { "$ref": "#/$defs/decisao" } },
+    "bloqueios": { "type": "array", "items": { "$ref": "#/$defs/bloqueio" } },
+    "incidenteOperacao": { "$ref": "#/$defs/incidenteOperacao" },
+    "motivoInterrupcao": { "type": ["string", "null"] },
+    "historico": { "type": "array", "items": { "$ref": "#/$defs/transicao" } }
+  },
+  "$defs": {
+    "aprovacao": {
+      "type": ["object", "null"],
+      "required": ["tipo", "decisao", "confirmadoPor", "ocorreuEm"],
+      "properties": {
+        "tipo": { "enum": ["CONTRATO", "PROMOCAO"] },
+        "decisao": { "const": "APROVADA" },
+        "confirmadoPor": { "const": "DESIGNER" },
+        "ocorreuEm": { "type": "string", "format": "date-time" }
+      }
+    },
+    "tentativa": {
+      "type": "object",
+      "required": ["agente", "causa", "acao", "evidencia", "resultado", "ocorreuEm"],
+      "properties": {
+        "agente": { "type": "string", "minLength": 1 },
+        "causa": { "type": "string", "minLength": 1 },
+        "acao": { "type": "string", "minLength": 1 },
+        "evidencia": { "type": "string", "minLength": 1 },
+        "resultado": { "enum": ["FALHOU", "SUCESSO"] },
+        "ocorreuEm": { "type": "string", "format": "date-time" }
+      }
+    },
+    "recibo": {
+      "type": "object",
+      "required": ["papel", "checkpoint", "resultado", "evidencia", "ocorreuEm"],
+      "properties": {
+        "papel": { "enum": ["ANALISTA", "MONTADOR", "VALIDADOR", "OPERADOR", "REGISTRADOR"] },
+        "checkpoint": { "enum": ["ANALISE", "MONTAGEM", "VALIDACAO", "AUDITORIA"] },
+        "resultado": { "enum": ["FAVORAVEL", "DESFAVORAVEL", "LIMITADA"] },
+        "evidencia": { "type": "string", "minLength": 1 },
+        "ocorreuEm": { "type": "string", "format": "date-time" }
+      }
+    },
+    "artefato": {
+      "type": "object",
+      "required": ["id", "caminho", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "caminho": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "decisao": {
+      "type": "object",
+      "required": ["id", "pergunta", "status"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "pergunta": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["PENDENTE", "RESPONDIDA"] },
+        "resposta": { "type": ["string", "null"] },
+        "respondidaEm": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "bloqueio": {
+      "type": "object",
+      "required": ["codigo", "mensagem", "proximaAcao"],
+      "properties": {
+        "codigo": { "type": "string", "minLength": 1 },
+        "mensagem": { "type": "string", "minLength": 1 },
+        "proximaAcao": { "type": "string", "minLength": 1 }
+      }
+    },
+    "incidenteOperacao": {
+      "type": ["object", "null"],
+      "required": ["id", "classificacao", "fase", "papel", "impacto", "versaoBase", "pontoRetomada", "status", "criadoEm"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "classificacao": { "const": "INCIDENTE_DA_OPERACAO" },
+        "fase": { "enum": ["ANALISE", "MONTAGEM", "VALIDACAO", "ORQUESTRACAO"] },
+        "papel": { "enum": ["KORA", "ANALISTA", "MONTADOR", "VALIDADOR", "OPERADOR", "REGISTRADOR"] },
+        "impacto": { "const": "BLOQUEIA_RODADA" },
+        "versaoBase": { "type": ["string", "null"] },
+        "pontoRetomada": { "enum": ["ANALISANDO", "MONTANDO", "VALIDANDO"] },
+        "status": { "enum": ["ABERTO", "RETOMADO"] },
+        "criadoEm": { "type": "string", "format": "date-time" },
+        "retomadoEm": { "type": ["string", "null"], "format": "date-time" },
+        "correcaoCommit": { "type": ["string", "null"] }
+      }
+    },
+    "transicao": {
+      "type": "object",
+      "required": ["de", "para", "ocorreuEm"],
+      "properties": {
+        "de": { "type": "string", "minLength": 1 },
+        "para": { "type": "string", "minLength": 1 },
+        "ocorreuEm": { "type": "string", "format": "date-time" },
+        "motivo": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

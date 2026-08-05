@@ -29,6 +29,8 @@ const allowedReferenceDocs = new Set([
   'docs/contratos/evidencias-mcp.schema.json',
   'docs/contratos/referencias-rodada.schema.json',
   'docs/contratos/estado-analista.schema.json',
+  'docs/contratos/rodada-kora.schema.json',
+  'docs/contratos/evento-auditoria-kora.schema.json',
   'docs/manual-credito-consignado_template.md',
   'docs/receitas/_template.md',
   'docs/receitas/_comuns.md',

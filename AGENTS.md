@@ -109,6 +109,32 @@ internas e nao publicadas. Referencia crua nao e componente.
 
 ## Squad e checkpoints humanos
 
+- Kora e a unica agente visivel da operacao multiagente governada. Ela recebe
+  URL Figma, nomes de Sections e contexto curto, mantem o estado da rodada,
+  confere recibos e chama os papeis internos. Kora nao interpreta regra de
+  negocio, nao escreve no Figma, nao altera manuais e nao promove por conta
+  propria.
+- Analista, Montador, Validador, Operador, Leitor e Registrador de Auditoria
+  sao subagentes internos. A pessoa operadora nao troca de papel, nao repete
+  contexto e nao opera artefatos tecnicos da rodada.
+- `.designops/runs/<rodada>/kora.json` e a fonte de verdade da rodada
+  orquestrada. Estados e transicoes so avancam depois do recibo favoravel do
+  papel anterior e do validador aplicavel. Kora retoma a rodada desse estado,
+  nunca por memoria de conversa.
+- Recuperacao automatica se limita a duas tentativas para a mesma combinacao
+  de papel, acao, causa e evidencia. Na repeticao seguinte, Kora consolida
+  uma unica decisao humana ou encerra como bloqueada. Nao cria loop.
+- Antes de qualquer pergunta humana, Kora classifica a falha como
+  `RECUPERAVEL`, `DECISAO_DE_NEGOCIO`, `EVIDENCIA_INSUFICIENTE` ou
+  `INCIDENTE_DA_OPERACAO`. Incidente da operacao interrompe a rodada em
+  `INTERROMPIDA`, gera pedido sanitizado para manutencao e nunca vira uma
+  decisao de negocio nem uma tentativa de corrigir codigo no VS Code.
+- Retomada de incidente exige correcao integrada identificada por commit e
+  retorna somente ao ponto seguro afetado. Analise, montagem, aprovacao e
+  promocao anteriores nao sao restauradas por mudanca de codigo.
+- A trilha local em `.designops/audit/` registra fatos operacionais. O resumo
+  sanitizado pode ser publicado somente em `audit/kora`; `master` permanece
+  sem referencia, ID, mapa, evidencia ou estado concreto de rodada.
 - O Operador coordena leituras paralelas e grava somente estado
   temporario em `.designops/runs/`. Ele nao escreve no Figma nem em
   documentos oficiais.
@@ -192,6 +218,10 @@ internas e nao publicadas. Referencia crua nao e componente.
   sozinho valida apenas a forma do objeto. O adaptador
   `validateAnalysisManifest.js` e apoio opcional de desenvolvimento.
 - Nenhuma tela e entregue sem validacao completa.
+- Kora so apresenta proposta para revisao quando `validateKoraRound` e o
+  gate de analise correspondente forem favoraveis. Resposta narrativa de
+  subagente nao e recibo. Montagem exige aprovacao humana de contrato;
+  promocao exige veredito favoravel e aprovacao humana de promocao.
 - Skill orienta a sequencia; contratos e validadores decidem se uma
   proposta, montagem ou promocao pode seguir.
 - Na conversa com a pessoa operadora, o Analista mostra somente progresso,

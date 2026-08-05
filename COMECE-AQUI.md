@@ -9,13 +9,8 @@ IDs, contratos de rodada ou mapas preenchidos.
 
 | Comando | Papel | Responsabilidade |
 | --- | --- | --- |
-| `/consignado-base` | Analista | Cura a base documental em worktree dedicada, sem Figma |
-| `/consignado-contexto` e `/consignado-analise` | Analista | Usa a base, analisa referencias e consolida proposta da rodada |
-| `/montador` | Montador | Cria componentes locais e templates aprovados |
-| `/validador` | Validador | Audita e emite veredito |
-| `operador` | Operador | Coordena leituras paralelas e estado temporario |
-| `/consignado-aprendizado` | Aprendiz | Registra receitas observadas |
-| `/figma-referencias` | Preparador de evidencia | Cria referencias cruas somente por pedido explicito |
+| `Kora` | Pessoa operadora | Conduz uma rodada, evidencia cada passagem e pede somente decisoes humanas legitimas |
+| Internos da Kora | Analista, Montador, Validador, Operador, Leitores e Registrador | Executam tarefas especializadas sem exigir troca de agente |
 
 ## Ordem de trabalho
 
@@ -28,26 +23,18 @@ IDs, contratos de rodada ou mapas preenchidos.
 4. Para uma rodada, crie uma worktree nova a partir do master. Ela recebe
    os manuais aprovados, mas nao recebe artefatos, mapas, referencias,
    IDs ou evidencias de rodadas anteriores.
-5. Na worktree da rodada, adicione referencias reais e inicie
-   `/consignado-contexto` somente para lacunas, conflito ou proposta de
-   mapa. Ele nao reescreve os manuais-base.
-6. Execute `/consignado-analise`. O Analista entrega prova de reacoes
-   e estrutura, mapa, contratos logicos, mapa IDS, plano de variaveis
-   e proposta de componentes locais.
-7. O designer aprova o contrato consolidado. Sem essa aprovacao, o
-   Montador nao cria componente local nem template.
-8. O Montador cria primeiro componentes locais que tenham evidencia de
-   reutilizacao aprovada em duas ou mais telas ou casos. Composicao de
-   uso unico fica como `local-layout`.
-9. O Montador resolve IDs temporarios, roda `validateRound` e cria
-   rascunhos em `_verificacao-<etapa>`. Depois gera previews temporarios.
-   Nao inicia tela por clone.
-10. O Validador audita arvore, IDS, geometria, bindings, modes,
-    comportamento e visual. Para contrato v2, ele prova Slot e tipografia
-    no MCP, guarda relatorios literais da rodada e roda `validateRound` de
-    pre-promocao. Sem releitura Figma, o veredito e `NAO_VERIFICAVEL`.
-11. Somente um veredito favoravel permite promover para
-    `<modalidade>/<etapa>/tpl-<tela>`.
+5. Abra Kora e informe Figma, Sections e contexto curto. Ela prepara ou
+   retoma a rodada, executa a analise e mostra uma proposta somente quando a
+   evidencia estiver completa.
+6. O designer aprova o contrato consolidado. Sem essa aprovacao, Kora nao
+   chama o Montador.
+7. Kora conduz montagem e validacao. O Validador continua independente e
+   nenhum resultado favoravel e inferido sem releitura Figma.
+8. Kora pede a aprovacao de promocao apenas depois do veredito favoravel.
+   So entao o template pode seguir para `<modalidade>/<etapa>/tpl-<tela>`.
+9. Se houver incidente da operacao, Kora interrompe a rodada e prepara o
+   encaminhamento para manutencao. Depois da correcao integrada, ela retoma
+   somente a fase afetada e repete as verificacoes, sem restaurar aprovacoes.
 
 ## Documentos da base e da worktree
 

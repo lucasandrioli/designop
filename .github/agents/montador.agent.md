@@ -2,8 +2,8 @@
 name: montador
 description: "Monta componentes locais e templates somente a partir de contrato consolidado aprovado."
 target: vscode
-user-invocable: true
-disable-model-invocation: true
+user-invocable: false
+disable-model-invocation: false
 tools:
   - read
   - search/codebase

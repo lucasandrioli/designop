@@ -2,8 +2,8 @@
 name: validador
 description: "Audita contratos, montagem e consumo de jornadas sem corrigir nem promover."
 target: vscode
-user-invocable: true
-disable-model-invocation: true
+user-invocable: false
+disable-model-invocation: false
 tools:
   - read
   - search/codebase

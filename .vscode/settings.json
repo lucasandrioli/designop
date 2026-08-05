@@ -1,3 +1,5 @@
 {
-  "chat.customAgentInSubagent.enabled": true
+  "chat.customAgentInSubagent.enabled": true,
+  "chat.subagents.allowInvocationsFromSubagents": true,
+  "chat.useCustomAgentHooks": true
 }

@@ -2,8 +2,8 @@
 name: operador
 description: "Coordena leituras paralelas e mantem apenas estado temporario da rodada."
 target: vscode
-user-invocable: true
-disable-model-invocation: true
+user-invocable: false
+disable-model-invocation: false
 tools:
   - read
   - search/codebase

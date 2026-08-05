@@ -41,9 +41,21 @@ function eventResult(type) {
   return 'CONCLUIDO'
 }
 
-function maybeRound(input) {
+function activeRound(root) {
+  const runs = path.join(root, '.designops', 'runs')
+  if (!fs.existsSync(runs)) return null
+  const found = fs.readdirSync(runs, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(runs, entry.name, 'kora.json'))
+    .filter((file) => fs.existsSync(file))
+    .map((file) => { try { return JSON.parse(fs.readFileSync(file, 'utf8')) } catch { return null } })
+    .filter((state) => state?.rodada && state.status !== 'CONCLUIDA')
+  return found.length === 1 ? found[0].rodada : null
+}
+
+function maybeRound(input, root) {
   const metadata = input.metadata && typeof input.metadata === 'object' ? input.metadata : {}
-  return input.kora_round ?? input.koraRound ?? input.round ?? input.rodada ?? metadata.kora_round ?? metadata.koraRound ?? metadata.round ?? metadata.rodada ?? process.env.KORA_ROUND
+  return input.kora_round ?? input.koraRound ?? input.round ?? input.rodada ?? metadata.kora_round ?? metadata.koraRound ?? metadata.round ?? metadata.rodada ?? process.env.KORA_ROUND ?? activeRound(root)
 }
 
 function keyList(value) {
@@ -52,10 +64,10 @@ function keyList(value) {
     : []
 }
 
-function eventFromHook(input) {
+function eventFromHook(input, root) {
   const eventName = input.hook_event_name ?? input.hookEventName ?? input.event ?? 'Unknown'
   const type = normaliseEvent(eventName)
-  const round = maybeRound(input)
+  const round = maybeRound(input, root)
   const session = input.session_id ?? input.sessionId ?? input.session ?? process.env.KORA_SESSION
   const scope = round
     ? { tipo: 'RODADA', id: safePart(round, 'rodada-desconhecida') }
@@ -86,8 +98,8 @@ function eventFromHook(input) {
 
 function main() {
   const input = readStdin()
-  const event = eventFromHook(input)
   const root = path.resolve(process.env.KORA_AUDIT_ROOT ?? path.join(__dirname, '..'))
+  const event = eventFromHook(input, root)
   const folder = path.join(root, '.designops', 'audit', (event.origem.escopo.tipo === 'RODADA' ? 'rodada-' : 'sessao-') + event.origem.escopo.id)
   const failures = validateKoraAuditEventData(event)
   if (failures.length) throw new Error('evento de auditoria invalido: ' + failures.join('; '))

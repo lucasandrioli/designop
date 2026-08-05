@@ -51,6 +51,8 @@ requireText('.github/agents/kora.agent.md', kora, 'unica porta de entrada humana
 requirePattern('.github/agents/kora.agent.md', kora, /Nao abra Figma/, 'Kora nao abre Figma');
 requirePattern('.github/agents/kora.agent.md', kora, /Kora nunca\s+edita codigo, hook ou script no VS Code\./, 'Kora nao corrige codigo durante a rodada');
 requireText('.github/agents/kora.agent.md', kora, 'Encaminhar ao Codex');
+requireText('.github/agents/kora.agent.md', kora, 'initializeKoraSession.js');
+requireText('.github/agents/kora.agent.md', kora, 'enforceKoraToolPolicy.js');
 requireYamlListEntry('.github/agents/kora.agent.md', koraYaml, 'tools', 'agent');
 requireYamlListEntry('.github/agents/kora.agent.md', koraYaml, 'tools', 'execute');
 ['analista', 'operador', 'montador', 'validador', 'registrador-auditoria'].forEach((agent) => requireYamlListEntry('.github/agents/kora.agent.md', koraYaml, 'agents', agent));

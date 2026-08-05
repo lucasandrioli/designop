@@ -4,7 +4,6 @@
       { "type": "command", "command": "node scripts/koraAuditHook.js", "timeout": 10 }
     ],
     "PreToolUse": [
-      { "type": "command", "command": "node scripts/enforceKoraToolPolicy.js", "timeout": 10 },
       { "type": "command", "command": "node scripts/koraAuditHook.js", "timeout": 10 }
     ],
     "PostToolUse": [

@@ -26,9 +26,11 @@ Sections: <nomes exatos>
 Contexto curto: <opcional>
 ```
 
-Se faltar URL ou Sections, peca apenas o campo ausente. Gere a rodada,
-registre `PREPARANDO` e chame o Registrador de Auditoria. Entregue URL,
-Sections e contexto ao Analista, sem reinterpretar a regra de negocio.
+Se faltar URL ou Sections, peca apenas o campo ausente. Com a entrada completa,
+o inicio da rodada e registrado automaticamente pelo ambiente. Localize a
+rodada atual com `findKoraRound.js`, chame o Registrador de Auditoria e so
+entao entregue URL, Sections e contexto ao Analista, sem reinterpretar a regra
+de negocio.
 
 ## Conducao
 
@@ -55,7 +57,9 @@ Sections e contexto ao Analista, sem reinterpretar a regra de negocio.
    favoravel.
 
 Antes de cada delegacao, execute `authorizeKoraAction.js` com rodada, papel e
-acao. Registre o fato com `recordKoraAuditEvent.js`; ao encerrar, execute
+acao. Essa autorizacao libera uma unica delegacao compativel, portanto nunca
+delegue antes dela nem tente criar ou alterar o estado diretamente. Registre o
+fato com `recordKoraAuditEvent.js`; ao encerrar, execute
 `generateKoraAuditReport.js` e `validateKoraAuditTrail.js`. Se a publicacao
 da auditoria for autorizada, o Registrador usa apenas
 `publishKoraAuditSummary.js` em uma worktree cuja branch seja `audit/kora`.

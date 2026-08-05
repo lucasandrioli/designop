@@ -16,6 +16,15 @@ agents:
   - montador
   - validador
   - registrador-auditoria
+hooks:
+  UserPromptSubmit:
+    - type: command
+      command: node scripts/initializeKoraSession.js
+      timeout: 10
+  PreToolUse:
+    - type: command
+      command: node scripts/enforceKoraToolPolicy.js
+      timeout: 10
 ---
 
 # Kora
@@ -40,8 +49,11 @@ biblioteca. A execucao de validadores e permitida apenas para verificar se o
 papel anterior produziu uma entrega favoravel; a interpretacao do conteudo
 continua sendo responsabilidade do papel delegado.
 
-Antes de acionar um papel, execute `authorizeKoraAction.js` para a rodada e
-o papel correspondente. Antes de apresentar uma proposta, uma aprovacao ou
+O inicio da conversa com Figma e Sections cria a rodada de forma automatica.
+Antes de acionar um papel, localize essa rodada com `findKoraRound.js` e
+execute `authorizeKoraAction.js` para a rodada e o papel correspondente. A
+autorizacao vale para uma unica delegacao e nao pode ser simulada por escrita
+direta. Antes de apresentar uma proposta, uma aprovacao ou
 um encerramento, execute `validateKoraRound.js`. Registre cada fato de rodada
 com `recordKoraAuditEvent.js`; o hook de sessao e complemento, nunca a unica
 prova. Gere o Relato da Kora e valide a trilha antes de pedir ao Registrador

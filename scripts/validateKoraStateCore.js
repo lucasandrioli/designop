@@ -178,6 +178,14 @@ function validateKoraStateData(state, options = {}) {
   const verdictPackage = legacyPackages || validatePackage(packages?.veredito, 'veredito', 'APTO_PARA_PROMOCAO', state, options.repositoryRoot, failures)
   const promotionPackage = legacyPackages || validatePackage(packages?.promocao, 'promocao', 'CONCLUIDA', state, options.repositoryRoot, failures)
 
+  const pendingAuthorization = state?.autorizacaoPendente
+  if (pendingAuthorization !== undefined && pendingAuthorization !== null) {
+    if (!['ANALISTA', 'MONTADOR', 'VALIDADOR', 'OPERADOR', 'REGISTRADOR'].includes(pendingAuthorization?.papel) ||
+      !pendingAuthorization?.acao || !validDate(pendingAuthorization?.autorizadaEm)) {
+      failures.push('autorizacao pendente invalida')
+    }
+  }
+
   if (!Array.isArray(state?.decisoes)) failures.push('decisoes precisa ser lista')
   for (const [index, decision] of (state?.decisoes ?? []).entries()) {
     if (!decision?.id || !decision?.pergunta || !['PENDENTE', 'RESPONDIDA'].includes(decision?.status)) failures.push(`decisoes[${index}] invalida`)

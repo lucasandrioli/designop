@@ -46,5 +46,16 @@ if (state && ['MONTADOR', 'VALIDADOR'].includes(role)) {
   if (result.status !== 0) failures.push('recibos obrigatorios da fase nao permitem esta delegacao')
 }
 const passed = failures.length === 0
-process.stdout.write(JSON.stringify({ passed, round: round ?? null, role, action, status: state?.status ?? null, failures }, null, 2) + '\n')
-process.exit(passed ? 0 : 1)
+if (passed && state) {
+  if (state.status === 'PREPARANDO' && role === 'ANALISTA' && action === 'ANALISAR') {
+    state.status = 'ANALISANDO'
+    state.checkpoints.analise.status = 'EM_ANDAMENTO'
+    state.historico.push({ de: 'PREPARANDO', para: 'ANALISANDO', ocorreuEm: new Date().toISOString() })
+  }
+  state.autorizacaoPendente = { papel: role, acao: action, autorizadaEm: new Date().toISOString() }
+  const stateFailures = validateKoraStateData(state, { round, repositoryRoot: root })
+  if (stateFailures.length) failures.push(...stateFailures)
+  else fs.writeFileSync(file, JSON.stringify(state, null, 2) + '\n')
+}
+process.stdout.write(JSON.stringify({ passed: failures.length === 0, round: round ?? null, role, action, status: state?.status ?? null, failures }, null, 2) + '\n')
+process.exit(failures.length === 0 ? 0 : 1)

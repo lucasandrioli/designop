@@ -57,6 +57,10 @@ function createKoraFixture() {
   const fixture = temporaryDirectory('designops-kora-')
   ;[
     'scripts/startKoraRound.js',
+    'scripts/koraRoundState.js',
+    'scripts/initializeKoraSession.js',
+    'scripts/findKoraRound.js',
+    'scripts/enforceKoraToolPolicy.js',
     'scripts/validateKoraRound.js',
     'scripts/validateKoraPackages.js',
     'scripts/validateKoraStateCore.js',
@@ -1539,6 +1543,7 @@ async function main() {
     expectFailure(runNode(path.join(fixture, 'scripts/validatePilotSquad.js')), 'Kora precisa ser a unica porta humana')
 
     testKoraRoundAndAudit()
+    expectSuccess(runNode(path.join(root, 'scripts/testKoraSessionGuard.js')), 'Kora bloqueia a rodada quando a inicializacao ou delegacao foge do fluxo')
     testKoraOperationIncidentRoute()
     testAssemblyPackage()
 

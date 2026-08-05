@@ -58,7 +58,7 @@ function validateAssemblyPackageData(data, options = {}) {
   const round = options.round ?? data?.rodada
   const repositoryRoot = options.repositoryRoot
   if (!ROUND_ID.test(round ?? '')) failures.push('rodada invalida')
-  if (data?.schemaVersion !== 1) failures.push('schemaVersion precisa ser 1')
+  if (![1, 2].includes(data?.schemaVersion)) failures.push('schemaVersion precisa ser 1 ou 2')
   if (data?.rodada !== round) failures.push('pacote pertence a outra rodada')
   if (data?.estado !== 'CONCLUIDA_PARA_VALIDACAO') failures.push('pacote nao esta concluido para validacao')
   if (!repositoryRoot) {
@@ -86,7 +86,7 @@ function validateAssemblyPackageData(data, options = {}) {
   const seenPaths = new Set()
   validArtifact(area?.evidencia, 'evidencia da area de verificacao', round, repositoryRoot, seenPaths, failures)
 
-  const groups = [
+  const groups = data?.schemaVersion === 2 ? [] : [
     ['rascunhos', data?.rascunhos],
     ['previews', data?.previews],
     ['evidencias MCP', data?.evidenciasMcp],
@@ -100,6 +100,23 @@ function validateAssemblyPackageData(data, options = {}) {
   }
   validArtifact(data?.componentesLocais, 'plano de componentes locais', round, repositoryRoot, seenPaths, failures)
   validArtifact(data?.planoVariaveis, 'plano de variaveis aplicado', round, repositoryRoot, seenPaths, failures)
+  if (data?.schemaVersion === 2) {
+    validArtifact(data?.escopoMomento, 'escopo de momento', round, repositoryRoot, seenPaths, failures)
+    validArtifact(data?.contratoMomento, 'contrato de momento', round, repositoryRoot, seenPaths, failures)
+    const targets = data?.alvos
+    if (!Array.isArray(targets) || targets.length === 0) failures.push('montagem por momento sem alvos')
+    const seenTargets = new Set()
+    for (const [index, target] of (targets ?? []).entries()) {
+      if (!target?.modalidade || !target?.tela) { failures.push(`alvos[${index}] sem modalidade ou tela`); continue }
+      const key = `${target.modalidade}::${target.tela}`
+      if (seenTargets.has(key)) failures.push('alvo de montagem duplicado: ' + key)
+      seenTargets.add(key)
+      for (const [label, artifacts] of [['rascunhos', target.rascunhos], ['previews', target.previews], ['evidencias MCP', target.evidenciasMcp]]) {
+        if (!Array.isArray(artifacts) || !artifacts.length) failures.push(`alvo ${key} sem ${label}`)
+        else artifacts.forEach((artifact, artifactIndex) => validArtifact(artifact, `alvo ${key} ${label}[${artifactIndex}]`, round, repositoryRoot, seenPaths, failures))
+      }
+    }
+  }
   return failures
 }
 

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Recorte humano imutavel de uma rodada por momento",
+  "type": "object",
+  "required": ["schemaVersion", "id", "rodada", "tipoRodada", "etapa", "momento", "modalidades", "telas", "sections", "contextoCurto"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
+    "tipoRodada": { "const": "MOMENTO" },
+    "etapa": { "type": "string", "minLength": 1 },
+    "momento": { "type": "string", "minLength": 1 },
+    "modalidades": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }, "uniqueItems": true },
+    "telas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "nome", "papel", "abertaPor"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "nome": { "type": "string", "minLength": 1 },
+          "papel": { "enum": ["PRINCIPAL", "DETALHE", "AUXILIAR"] },
+          "abertaPor": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "sections": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^ref-" }, "uniqueItems": true },
+    "contextoCurto": { "type": ["string", "null"] }
+  }
+}

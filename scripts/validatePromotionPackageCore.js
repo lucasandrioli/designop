@@ -36,7 +36,7 @@ function validateArtifact(artifact, label, options, failures) {
 function validatePromotionPackageData(data, options = {}) {
   const failures = []
   const round = options.round ?? data?.rodada
-  if (data?.schemaVersion !== 1) failures.push('schemaVersion precisa ser 1')
+  if (![1, 2].includes(data?.schemaVersion)) failures.push('schemaVersion precisa ser 1 ou 2')
   if (!validRound(data?.rodada) || (options.round && data.rodada !== options.round)) failures.push('pacote pertence a outra rodada ou possui rodada invalida')
   if (!validDate(data?.emitidoEm)) failures.push('emitidoEm invalido')
   const koraPath = validateArtifact(data?.aprovacaoKora, 'aprovacaoKora', { ...options, round }, failures)
@@ -72,7 +72,8 @@ function validatePromotionPackageData(data, options = {}) {
     const names = new Set()
     const forbidden = ['ctx-', ...(data.contextosProibidosNoNome ?? [])].map((term) => String(term).toLowerCase())
     for (const [index, asset] of assets.entries()) {
-      if (!asset?.template || !/^[a-z0-9-]+\/[a-z0-9-]+\/tpl-[a-z0-9-]+$/.test(asset?.nome ?? '') || !['COMPONENT', 'COMPONENT_SET'].includes(asset?.tipo) || asset?.resultado !== 'FAVORAVEL') failures.push(`ativosPublicados[${index}] invalido`)
+      if (!asset?.template || (data?.schemaVersion === 2 && (!asset?.modalidade || !asset?.tela)) || !/^[a-z0-9-]+\/[a-z0-9-]+\/tpl-[a-z0-9-]+$/.test(asset?.nome ?? '') || !['COMPONENT', 'COMPONENT_SET'].includes(asset?.tipo) || asset?.resultado !== 'FAVORAVEL') failures.push(`ativosPublicados[${index}] invalido`)
+      if (data?.schemaVersion === 2 && !asset.nome.startsWith(`${asset.modalidade}/`)) failures.push(`ativo publicado fora da modalidade declarada: ${asset?.nome}`)
       if (names.has(asset?.nome)) failures.push(`ativo publicado duplicado: ${asset?.nome}`)
       names.add(asset?.nome)
       if (forbidden.some((term) => term && asset?.nome?.toLowerCase().includes(term))) failures.push(`ativo publicado carrega contexto no nome: ${asset?.nome}`)

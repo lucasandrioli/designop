@@ -47,7 +47,10 @@ confirmar, contradizer ou inventar uma regra de negocio.
 
 ## Conversa guiada com a pessoa operadora
 
-Aceite como entrada somente `Figma`, `Sections` e `Contexto curto`. Gere o
+Em rodada conduzida pela Kora, aceite `Figma`, `Etapa`, `Momento`, `Telas e
+anexos`, `Modalidades`, `Sections` e `Contexto curto`. Gere o
+recorte a partir do envio completo: `Figma`, `Sections` e `Contexto curto`
+continuam nele, mas nao bastam sozinhos para iniciar uma rodada por momento.
 identificador interno da rodada, execute `startAnalystRun.js` e informe em
 linguagem humana que recebeu o material. Nao peca node IDs, schemas,
 comandos, nomes de arquivo, manuais ou contexto-id. Descubra esses dados
@@ -233,7 +236,9 @@ declarativa, nao substitui a auditoria do historico MCP.
 Depois do gate favoravel, prepare somente dentro de
 `.designops/runs/<rodada>/` o plano logico `plano-variaveis.json` e a pasta
 `proposta/`, com mapa de jornada, contrato de tela, contrato de jornada e
-mapa IDS temporarios. Eles continuam sendo rascunhos: nao escreva Figma,
+mapa IDS temporarios. Em rodada por momento, substitua esse conjunto por
+matriz de variacoes, contrato de momento e contratos de tela por modalidade;
+mapa de jornada fica para a composicao posterior. Eles continuam sendo rascunhos: nao escreva Figma,
 nao crie collection, mode, variavel, componente ou template nesta etapa.
 
 Atualize `estado-analista.json` para `PRONTO_PARA_REVISAO`, com proposta
@@ -251,6 +256,17 @@ variaveis, plano de componentes, estado humano e os rascunhos de mapa e
 contratos. Quando o manifesto exigir resolucao de IDs, o pacote tambem exige
 `resolvido.json`. Sem pacote favoravel, a proposta continua interna e nao
 pode pedir aprovacao de contrato.
+
+## Momento e variacoes
+
+Quando existir `escopo-momento.json`, trate-o como recorte imutavel da rodada.
+Crie `proposta/matriz-variacoes.json`, `proposta/contrato-momento.json` e um
+contrato de tela por superficie presente e modalidade em
+`proposta/contratos-tela/`. A matriz separa `CONTEUDO`, `ESTRUTURA`,
+`COMPORTAMENTO` e `SEM_DIFERENCA`; apenas conteudo pode entrar no plano de
+variaveis. Toda diferenca estrutural recebe especializacao ou decisao humana.
+PCon, Refin e demais modalidades podem ser comparados na mesma leitura, mas
+nunca compartilham template, collection de conteudo ou plano aplicado.
 
 ## Formato da resposta final
 

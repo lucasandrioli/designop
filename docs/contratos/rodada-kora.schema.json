@@ -2,10 +2,11 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Estado governado de uma rodada Kora",
   "type": "object",
-  "required": ["schemaVersion", "rodada", "status", "entrada", "checkpoints", "aprovacoes", "tentativas", "recibos", "artefatos", "decisoes", "bloqueios", "historico"],
+  "required": ["schemaVersion", "rodada", "tipoRodada", "status", "entrada", "escopo", "checkpoints", "aprovacoes", "tentativas", "recibos", "artefatos", "pacotes", "pacotesPorModalidade", "decisoes", "bloqueios", "historico"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "rodada": { "type": "string", "minLength": 1 },
+    "tipoRodada": { "enum": ["MOMENTO", "COMPOSICAO_ETAPA"] },
     "status": {
       "enum": [
         "PREPARANDO",
@@ -23,13 +24,18 @@
     },
     "entrada": {
       "type": "object",
-      "required": ["figmaUrl", "sections", "contextoCurto"],
+      "required": ["figmaUrl", "sections", "contextoCurto", "etapa", "momento", "modalidades", "telas"],
       "properties": {
         "figmaUrl": { "type": "string", "minLength": 1 },
-        "sections": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
-        "contextoCurto": { "type": ["string", "null"] }
+        "sections": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "contextoCurto": { "type": ["string", "null"] },
+        "etapa": { "type": "string", "minLength": 1 },
+        "momento": { "type": "string", "minLength": 1 },
+        "modalidades": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+        "telas": { "type": "array", "items": { "type": "object" } }
       }
     },
+    "escopo": { "type": "object", "required": ["arquivo", "sha256"], "properties": { "arquivo": { "type": "string", "minLength": 1 }, "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" } } },
     "checkpoints": {
       "type": "object",
       "required": ["analise", "contrato", "montagem", "validacao", "promocao"],
@@ -61,12 +67,23 @@
     "recibos": { "type": "array", "items": { "$ref": "#/$defs/recibo" } },
     "artefatos": { "type": "array", "items": { "$ref": "#/$defs/artefato" } },
     "pacotes": { "$ref": "#/$defs/pacotes" },
+    "pacotesPorModalidade": { "type": "object", "additionalProperties": { "$ref": "#/$defs/pacotes" } },
     "decisoes": { "type": "array", "items": { "$ref": "#/$defs/decisao" } },
     "bloqueios": { "type": "array", "items": { "$ref": "#/$defs/bloqueio" } },
     "incidenteOperacao": { "$ref": "#/$defs/incidenteOperacao" },
     "motivoInterrupcao": { "type": ["string", "null"] },
     "historico": { "type": "array", "items": { "$ref": "#/$defs/transicao" } }
   },
+  "allOf": [
+    {
+      "if": { "properties": { "tipoRodada": { "const": "MOMENTO" } } },
+      "then": { "properties": { "entrada": { "properties": { "sections": { "minItems": 1 }, "telas": { "minItems": 1 } } } } }
+    },
+    {
+      "if": { "properties": { "tipoRodada": { "const": "COMPOSICAO_ETAPA" } } },
+      "then": { "properties": { "entrada": { "properties": { "sections": { "maxItems": 0 }, "telas": { "maxItems": 0 }, "modalidades": { "minItems": 1, "maxItems": 1 } } } } }
+    }
+  ],
   "$defs": {
     "aprovacao": {
       "type": ["object", "null"],

@@ -14,6 +14,7 @@ const path = require('path')
 const { validateReferenceScopeData } = require('./validateReferenceScopeCore')
 const { validateAnalysisManifestData } = require('./validateAnalysisManifestCore')
 const { validateContextDraftData } = require('./validateContextDraftCore')
+const { validateVariablePlanData } = require('./validateVariablePlanCore')
 
 function args(argv) {
   const result = {}
@@ -54,6 +55,32 @@ function validateComponentPlan(plan, round, failures) {
       failures.push(`componente local invalido no plano: ${component?.id ?? '?'}`)
     }
   }
+}
+
+function validateMomentScopeReference(references, repositoryRoot, roundDirectory, failures) {
+  if (references?.schemaVersion !== 2) return
+  const scopeRef = references.escopoMomento
+  const scopeFile = path.join(roundDirectory, 'escopo-momento.json')
+  if (!scopeRef?.caminho || scopeRef.caminho !== `.designops/runs/${references.rodada}/escopo-momento.json` || !/^[a-f0-9]{64}$/.test(scopeRef?.sha256 ?? '')) {
+    failures.push('recorte de momento sem vinculo valido ao escopo imutavel')
+    return
+  }
+  if (!fs.existsSync(scopeFile)) { failures.push('escopo imutavel ausente para o recorte'); return }
+  const crypto = require('crypto')
+  const actual = crypto.createHash('sha256').update(fs.readFileSync(scopeFile)).digest('hex')
+  if (actual !== scopeRef.sha256) failures.push('recorte de referencias diverge do escopo imutavel')
+  try {
+    const scope = JSON.parse(fs.readFileSync(scopeFile, 'utf8'))
+    const sections = new Set(scope.sections ?? [])
+    const modalities = new Set(scope.modalidades ?? [])
+    const surfaces = new Set((scope.telas ?? []).map((item) => item.id))
+    for (const section of (references?.figma?.secoes ?? [])) {
+      if (!sections.has(section?.nome)) failures.push('recorte inclui Section fora do momento declarado: ' + section?.nome)
+      if (!modalities.has(section?.modalidade)) failures.push('recorte inclui modalidade fora do momento declarado: ' + section?.modalidade)
+      for (const surface of (section?.superficies ?? [])) if (!surfaces.has(surface)) failures.push('recorte inclui tela fora do momento declarado: ' + surface)
+    }
+    for (const section of sections) if (!(references?.figma?.secoes ?? []).some((item) => item?.nome === section)) failures.push('Section declarada ausente do recorte descoberto: ' + section)
+  } catch { failures.push('escopo imutavel invalido para o recorte') }
 }
 
 function validateResolution(resolved, round, failures) {
@@ -129,6 +156,7 @@ function main() {
   if (references) {
     failures.push(...validateReferenceScopeData(references))
     if (references.rodada !== round) failures.push('recorte de referencias pertence a outra rodada')
+    if (roundDirectory) validateMomentScopeReference(references, repositoryRoot, roundDirectory, failures)
   }
 
   if (stage === 'pre-proposta') {
@@ -150,6 +178,10 @@ function main() {
 
     const components = roundDirectory ? readJson(path.join(roundDirectory, 'componentes-locais.json'), failures, 'plano de componentes locais') : null
     validateComponentPlan(components, round, failures)
+
+    const variableFile = roundDirectory ? path.join(roundDirectory, 'plano-variaveis.json') : null
+    const variablePlan = variableFile && fs.existsSync(variableFile) ? readJson(variableFile, failures, 'plano de variaveis') : null
+    if (variablePlan) failures.push(...validateVariablePlanData(variablePlan, { round }))
 
     if (manifest?.requerResolucaoIds === true) {
       const resolved = roundDirectory ? readJson(path.join(roundDirectory, 'resolvido.json'), failures, 'resolucao temporaria') : null

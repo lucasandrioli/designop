@@ -155,8 +155,9 @@ Se nao conseguir ler, reconciliar ou registrar o manifesto, encerre como
 
 Depois do gate de analise favoravel, grave somente dentro da pasta da rodada
 o plano logico `plano-variaveis.json` e os rascunhos temporarios em
-`proposta/`: mapa de jornada, contrato de tela, contrato de jornada e mapa
-IDS. Atualize o cartao para proposta pronta e execute
+`proposta/`. Em rodada por momento, crie matriz de variacoes, contrato de
+momento e contratos de tela separados; mapa e contrato de jornada ficam para
+a composicao posterior da etapa. Atualize o cartao para proposta pronta e execute
 `createAnalystPackage.js`, `validateAnalystPackage.js` e
 `renderAnalystStatus.js --write`. O `pacote-analista.json` vincula por hash
 todas as evidencias e gera a conversa humana. Sem esse recibo favoravel,
@@ -167,3 +168,15 @@ alteracao no Figma.
 Nao monte, nao promova, nao altere Figma e nao crie documentos sem o
 checkpoint humano aplicavel. Encaminhe ao Montador somente depois da
 aprovacao humana explicita do contrato consolidado.
+
+## Rodada por momento
+
+Na conversa conduzida pela Kora, receba Figma, etapa, momento, telas e anexos,
+modalidades, Sections e uma frase curta de contexto. O escopo humano e
+imutavel: documente cada tela declarada sem fundi-la, renomea-la ou inventar
+outra. Uma mesma entrega pode conter PCon, Refin e outras modalidades para
+comparacao. Produza matriz de variacoes, contrato do momento e um contrato de
+tela para cada combinacao presente de modalidade e tela. Cada modalidade recebe
+plano de variaveis e collection de conteudo proprios. Diferenca estrutural,
+comportamento e conexao nunca viram variavel apenas por existirem em uma
+referencia.

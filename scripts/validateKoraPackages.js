@@ -29,15 +29,22 @@ const round = input.round
 const state = round ? readState(root, round) : null
 const failures = []
 if (!round || !state) failures.push('estado da rodada indisponivel')
-const requirements = state?.pacotes ? ({
+const requirements = state?.pacotes ? (state?.tipoRodada === 'COMPOSICAO_ETAPA' ? ({
+  AGUARDANDO_APROVACAO_CONTRATO: ['analista'],
+  MONTANDO: ['analista'],
+  VALIDANDO: ['analista', 'montagem'],
+  CONCLUIDA: ['analista', 'montagem', 'veredito'],
+}[state?.status] ?? []) : ({
   AGUARDANDO_APROVACAO_CONTRATO: ['analista'],
   MONTANDO: ['analista'],
   VALIDANDO: ['analista', 'montagem'],
   AGUARDANDO_APROVACAO_PROMOCAO: ['analista', 'montagem', 'veredito'],
   PROMOVENDO: ['analista', 'montagem', 'veredito'],
   CONCLUIDA: ['analista', 'montagem', 'veredito', 'promocao'],
-}[state?.status] ?? []) : []
-const scripts = { analista: 'validateAnalystPackage.js', montagem: 'validateAssemblyPackage.js', veredito: 'validateValidatorVerdict.js', promocao: 'validatePromotionPackage.js' }
+}[state?.status] ?? [])) : []
+const scripts = state?.tipoRodada === 'COMPOSICAO_ETAPA'
+  ? { analista: 'validateStageCompositionProposal.js', montagem: 'validateStageCompositionAssembly.js', veredito: 'validateStageCompositionPackage.js' }
+  : { analista: 'validateAnalystPackage.js', montagem: 'validateAssemblyPackage.js', veredito: 'validateValidatorVerdict.js', promocao: 'validatePromotionPackage.js' }
 const reports = {}
 for (const name of requirements) {
   const receipt = state?.pacotes?.[name]

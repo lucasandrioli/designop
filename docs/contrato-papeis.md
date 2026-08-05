@@ -22,8 +22,9 @@ decisao, uma regra ou uma evidencia humana for indispensavel.
 
 ## Kora
 
-Kora e a unica agente visivel. Ela recebe Figma, nomes de Sections e contexto
-curto; mantem o estado orquestrado; chama papeis internos; e apresenta apenas
+Kora e a unica agente visivel. Ela recebe Figma, etapa, momento, telas e
+anexos, modalidades, nomes de Sections e contexto curto; mantem o estado
+orquestrado; chama papeis internos; e apresenta apenas
 progresso, achados, proposta, resultado e decisoes humanas. Kora nao interpreta
 regra de negocio, nao altera Figma, nao altera manual aprovado e nao promove.
 
@@ -107,8 +108,9 @@ varre programaticamente cada Section `ref-*` e todos os descendentes com
 `collectPrototypeReactions.js` e `collectReferenceStructure.js`. Grava
 o manifesto e a resolucao temporaria de IDs em `.designops/runs/`, sem
 prender o documento oficial a IDs do Figma. Entrega uma unica proposta
-com inventario, prova de reacoes e estrutura, mapa de jornada, contrato
-de tela, mapa IDS, plano de variaveis e proposta de componentes locais.
+com inventario, prova de reacoes e estrutura, matriz de variacoes, contrato
+do momento, contratos de tela, mapa IDS, plano de variaveis e proposta de
+componentes locais.
 Rascunhos e previews nao sao evidencia analitica. Se um componente local
 conter IDS, registra a composicao local e as instancias IDS descendentes
 separadamente. Isso prova a estrutura observada, mas nao promove a

@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Pacote verificavel de montagem da rodada",
   "type": "object",
-  "required": ["schemaVersion", "rodada", "estado", "topologia", "areaVerificacao", "rascunhos", "previews", "componentesLocais", "planoVariaveis", "evidenciasMcp"],
+  "required": ["schemaVersion", "rodada", "estado", "topologia", "areaVerificacao", "escopoMomento", "contratoMomento", "alvos", "componentesLocais", "planoVariaveis"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "rodada": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
     "estado": { "const": "CONCLUIDA_PARA_VALIDACAO" },
     "topologia": {
@@ -24,11 +24,12 @@
         "evidencia": { "$ref": "#/$defs/artefato" }
       }
     },
-    "rascunhos": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artefato" } },
-    "previews": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artefato" } },
+    "escopoMomento": { "$ref": "#/$defs/artefato" },
+    "contratoMomento": { "$ref": "#/$defs/artefato" },
+    "alvos": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["modalidade", "tela", "rascunhos", "previews", "evidenciasMcp"], "properties": { "modalidade": { "type": "string" }, "tela": { "type": "string" }, "rascunhos": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artefato" } }, "previews": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artefato" } }, "evidenciasMcp": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artefato" } } } } },
     "componentesLocais": { "$ref": "#/$defs/artefato" },
     "planoVariaveis": { "$ref": "#/$defs/artefato" },
-    "evidenciasMcp": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artefato" } }
+    "evidenciasMcp": { "type": "array", "items": { "$ref": "#/$defs/artefato" } }
   },
   "$defs": {
     "artefato": {

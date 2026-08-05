@@ -1,6 +1,7 @@
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
+const { validateMomentScopeData } = require('./validateMomentScopeCore')
 
 const STATUSES = [
   'PREPARANDO',
@@ -21,7 +22,7 @@ const TRANSITIONS = {
   ANALISANDO: ['ANALISANDO', 'AGUARDANDO_APROVACAO_CONTRATO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
   AGUARDANDO_APROVACAO_CONTRATO: ['MONTANDO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
   MONTANDO: ['MONTANDO', 'VALIDANDO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
-  VALIDANDO: ['MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
+  VALIDANDO: ['MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'CONCLUIDA', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
   AGUARDANDO_APROVACAO_PROMOCAO: ['PROMOVENDO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
   PROMOVENDO: ['CONCLUIDA', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
   AGUARDANDO_DECISAO_DO_DESIGNER: ['PREPARANDO', 'ANALISANDO', 'AGUARDANDO_APROVACAO_CONTRATO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'PROMOVENDO', 'BLOQUEADA', 'INTERROMPIDA'],
@@ -70,7 +71,9 @@ function validatePackage(entry, name, expectedState, state, repositoryRoot, fail
     failures.push(`pacotes.${name} invalido`)
     return false
   }
-  const expectedPath = `.designops/runs/${state.rodada}/${name === 'analista' ? 'pacote-analista.json' : name === 'montagem' ? 'pacote-montagem.json' : name === 'veredito' ? 'veredito-validador.json' : 'pacote-promocao.json'}`
+  const compositionFiles = { analista: 'proposta-composicao-etapa.json', montagem: 'pacote-composicao-montagem.json', veredito: 'pacote-composicao-etapa.json' }
+  const standardFiles = { analista: 'pacote-analista.json', montagem: 'pacote-montagem.json', veredito: 'veredito-validador.json', promocao: 'pacote-promocao.json' }
+  const expectedPath = `.designops/runs/${state.rodada}/${state.tipoRodada === 'COMPOSICAO_ETAPA' ? compositionFiles[name] : standardFiles[name]}`
   if (entry.arquivo !== expectedPath) {
     failures.push(`pacotes.${name} precisa apontar para o recibo da rodada atual`)
     return false
@@ -93,13 +96,14 @@ function validateKoraStateData(state, options = {}) {
   const failures = []
   const required = ['schemaVersion', 'rodada', 'status', 'entrada', 'checkpoints', 'aprovacoes', 'tentativas', 'recibos', 'artefatos', 'decisoes', 'bloqueios', 'historico']
   for (const field of required) if (!(field in (state ?? {}))) failures.push('campo ausente: ' + field)
-  if (state?.schemaVersion !== 1) failures.push('schemaVersion precisa ser 1')
+  if (![1, 2].includes(state?.schemaVersion)) failures.push('schemaVersion precisa ser 1 ou 2')
   if (!state?.rodada || !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(state.rodada)) failures.push('rodada invalida')
   if (options.round && state?.rodada !== options.round) failures.push('estado pertence a outra rodada')
   if (!STATUSES.includes(state?.status)) failures.push('status invalido')
 
   const sections = state?.entrada?.sections
-  if (typeof state?.entrada?.figmaUrl !== 'string' || !state.entrada.figmaUrl.trim() || !Array.isArray(sections) || sections.length === 0) failures.push('entrada sem Figma ou Sections')
+  const composition = state?.schemaVersion === 2 && state?.tipoRodada === 'COMPOSICAO_ETAPA'
+  if (typeof state?.entrada?.figmaUrl !== 'string' || !state.entrada.figmaUrl.trim() || !Array.isArray(sections) || (!composition && sections.length === 0)) failures.push('entrada sem Figma ou Sections')
   if (state?.entrada && state.entrada.contextoCurto !== null && typeof state.entrada.contextoCurto !== 'string') failures.push('contexto curto invalido')
   const uniqueSections = new Set()
   for (const [index, section] of (sections ?? []).entries()) {
@@ -107,6 +111,67 @@ function validateKoraStateData(state, options = {}) {
     if (!name) failures.push(`entrada.sections[${index}] vazia`)
     if (uniqueSections.has(name)) failures.push('entrada possui Section duplicada: ' + name)
     uniqueSections.add(name)
+  }
+
+  if (state?.schemaVersion === 2) {
+    if (!['MOMENTO', 'COMPOSICAO_ETAPA'].includes(state?.tipoRodada)) failures.push('tipo de rodada Kora invalido')
+    if (state?.tipoRodada === 'MOMENTO') {
+      const entry = state?.entrada ?? {}
+      if (!entry?.etapa || !entry?.momento || !Array.isArray(entry?.modalidades) || !Array.isArray(entry?.telas)) failures.push('entrada de momento incompleta')
+      const scopeRef = state?.escopo
+      if (!scopeRef?.arquivo || !/^[a-f0-9]{64}$/.test(scopeRef?.sha256 ?? '')) failures.push('escopo imutavel ausente ou invalido')
+      if (scopeRef?.arquivo !== `.designops/runs/${state.rodada}/escopo-momento.json`) failures.push('escopo precisa apontar para a rodada atual')
+      if (options.repositoryRoot && scopeRef?.arquivo) {
+        const scopeFile = path.resolve(options.repositoryRoot, scopeRef.arquivo)
+        if (!fs.existsSync(scopeFile) || !fs.statSync(scopeFile).isFile()) failures.push('arquivo de escopo de momento ausente')
+        else {
+          const actual = crypto.createHash('sha256').update(fs.readFileSync(scopeFile)).digest('hex')
+          if (actual !== scopeRef.sha256) failures.push('hash do escopo de momento diverge')
+          try {
+            const scope = JSON.parse(fs.readFileSync(scopeFile, 'utf8'))
+            failures.push(...validateMomentScopeData(scope, { round: state.rodada }))
+            if (scope.etapa !== entry.etapa || scope.momento !== entry.momento || JSON.stringify(scope.modalidades) !== JSON.stringify(entry.modalidades) || JSON.stringify(scope.telas) !== JSON.stringify(entry.telas) || JSON.stringify(scope.sections) !== JSON.stringify(entry.sections)) failures.push('entrada Kora diverge do escopo imutavel')
+          } catch { failures.push('arquivo de escopo de momento invalido') }
+        }
+      }
+      const grouped = state?.pacotesPorModalidade
+      if (!grouped || typeof grouped !== 'object' || Array.isArray(grouped)) failures.push('pacotes por modalidade ausentes')
+      else {
+        const expected = new Set(entry.modalidades ?? [])
+        for (const modalidade of expected) {
+          const pack = grouped[modalidade]
+          if (!pack || typeof pack !== 'object' || !['analista', 'montagem', 'veredito', 'promocao'].every((name) => name in pack)) failures.push('pacotes por modalidade incompletos: ' + modalidade)
+        }
+        for (const modalidade of Object.keys(grouped)) if (!expected.has(modalidade)) failures.push('pacotes por modalidade fora do escopo: ' + modalidade)
+      }
+    } else if (state?.tipoRodada === 'COMPOSICAO_ETAPA') {
+      const entry = state?.entrada ?? {}
+      if (!entry?.etapa || !Array.isArray(entry?.modalidades) || entry.modalidades.length !== 1 || !Array.isArray(entry?.sections) || entry.sections.length !== 0) failures.push('entrada de composicao de etapa invalida')
+      const scopeRef = state?.escopo
+      const expectedPath = `.designops/runs/${state.rodada}/escopo-composicao-etapa.json`
+      if (scopeRef?.arquivo !== expectedPath || !/^[a-f0-9]{64}$/.test(scopeRef?.sha256 ?? '')) failures.push('escopo de composicao ausente ou invalido')
+      if (options.repositoryRoot && scopeRef?.arquivo) {
+        const scopeFile = path.resolve(options.repositoryRoot, scopeRef.arquivo)
+        if (!fs.existsSync(scopeFile)) failures.push('arquivo de escopo de composicao ausente')
+        else {
+          const actual = crypto.createHash('sha256').update(fs.readFileSync(scopeFile)).digest('hex')
+          if (actual !== scopeRef.sha256) failures.push('hash do escopo de composicao diverge')
+          try {
+            const scope = JSON.parse(fs.readFileSync(scopeFile, 'utf8'))
+            if (scope?.schemaVersion !== 1 || scope?.rodada !== state.rodada || scope?.tipoRodada !== 'COMPOSICAO_ETAPA' || scope?.etapa !== entry.etapa || scope?.modalidade !== entry.modalidades[0] || !Array.isArray(scope?.momentos) || !scope.momentos.length) failures.push('escopo de composicao invalido')
+            const seenMoments = new Set()
+            for (const [index, moment] of (scope?.momentos ?? []).entries()) {
+              const sourceRound = moment?.rodada
+              const promotion = moment?.promocao
+              if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(sourceRound ?? '') || sourceRound === state.rodada || seenMoments.has(sourceRound) || promotion?.caminho !== `.designops/runs/${sourceRound}/pacote-promocao.json` || !/^[a-f0-9]{64}$/.test(promotion?.sha256 ?? '')) failures.push(`escopo de composicao.momentos[${index}] invalido`)
+              seenMoments.add(sourceRound)
+            }
+          } catch { failures.push('arquivo de escopo de composicao invalido') }
+        }
+      }
+      const grouped = state?.pacotesPorModalidade
+      if (!grouped?.[entry.modalidades[0]]) failures.push('pacotes da modalidade de composicao ausentes')
+    }
   }
 
   const checkpoints = state?.checkpoints ?? {}
@@ -175,7 +240,7 @@ function validateKoraStateData(state, options = {}) {
   const legacyPackages = packages === undefined
   const analystPackage = legacyPackages || validatePackage(packages?.analista, 'analista', 'PRONTO_PARA_REVISAO', state, options.repositoryRoot, failures)
   const assemblyPackage = legacyPackages || validatePackage(packages?.montagem, 'montagem', 'CONCLUIDA_PARA_VALIDACAO', state, options.repositoryRoot, failures)
-  const verdictPackage = legacyPackages || validatePackage(packages?.veredito, 'veredito', 'APTO_PARA_PROMOCAO', state, options.repositoryRoot, failures)
+  const verdictPackage = legacyPackages || validatePackage(packages?.veredito, 'veredito', state?.tipoRodada === 'COMPOSICAO_ETAPA' ? 'CONCLUIDA' : 'APTO_PARA_PROMOCAO', state, options.repositoryRoot, failures)
   const promotionPackage = legacyPackages || validatePackage(packages?.promocao, 'promocao', 'CONCLUIDA', state, options.repositoryRoot, failures)
 
   const pendingAuthorization = state?.autorizacaoPendente
@@ -225,6 +290,7 @@ function validateKoraStateData(state, options = {}) {
   if (state?.status !== 'PREPARANDO' && state?.historico?.length === 0) failures.push('status fora de PREPARANDO sem historico de transicao')
   if (state?.historico?.length && current !== state.status) failures.push('ultimo historico nao corresponde ao status atual')
 
+  const isStageComposition = state?.schemaVersion === 2 && state?.tipoRodada === 'COMPOSICAO_ETAPA'
   const analysisReady = checkpoints?.analise?.status === 'APROVADA' && checkpoints.analise.gatePreProposta === true && checkpoints.analise.reconciliada === true && analystPackage
   const contractReady = checkpoints?.contrato?.status === 'APROVADO' && contractApproved
   const assemblyReady = analysisReady && contractReady && checkpoints?.montagem?.status === 'CONCLUIDA' && receiptTypes.has('MONTADOR::MONTAGEM::FAVORAVEL') && assemblyPackage
@@ -252,7 +318,9 @@ function validateKoraStateData(state, options = {}) {
     if (!validationReady || checkpoints?.promocao?.status !== 'APROVADA' || !promotionApproved) failures.push('PROMOVENDO exige veredito favoravel e aprovacao humana de promocao')
   }
   if (state?.status === 'CONCLUIDA') {
-    if (!validationReady || !promotionPackage || checkpoints?.promocao?.status !== 'CONCLUIDA' || !promotionApproved || (!legacyPackages && !receiptTypes.has('MONTADOR::PROMOCAO::FAVORAVEL'))) failures.push('CONCLUIDA exige validacao favoravel e promocao explicitamente aprovada e concluida')
+    if (isStageComposition) {
+      if (!validationReady || checkpoints?.promocao?.status !== 'PENDENTE') failures.push('composicao concluida exige validacao favoravel sem promocao')
+    } else if (!validationReady || !promotionPackage || checkpoints?.promocao?.status !== 'CONCLUIDA' || !promotionApproved || (!legacyPackages && !receiptTypes.has('MONTADOR::PROMOCAO::FAVORAVEL'))) failures.push('CONCLUIDA exige validacao favoravel e promocao explicitamente aprovada e concluida')
   }
   if (state?.status === 'AGUARDANDO_DECISAO_DO_DESIGNER' && !pendingDecision) failures.push('aguardando decisao sem pergunta pendente')
   if (state?.status === 'BLOQUEADA' && state?.bloqueios?.length === 0) failures.push('BLOQUEADA exige bloqueio registrado')

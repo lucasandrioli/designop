@@ -2,20 +2,23 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Estado operacional legivel da rodada do Analista",
   "type": "object",
-  "required": ["schemaVersion", "rodada", "status", "entrada", "progresso", "achados", "confrontos", "decisoes", "problemas", "proposta"],
+  "required": ["schemaVersion", "rodada", "status", "entrada", "escopoMomento", "progresso", "achados", "confrontos", "decisoes", "problemas", "proposta"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "rodada": { "type": "string", "minLength": 1 },
     "status": { "enum": ["PREPARANDO", "LENDO_REFERENCIAS", "ORGANIZANDO_ACHADOS", "AGUARDANDO_DECISAO_DO_DESIGNER", "PRONTO_PARA_REVISAO", "BLOQUEADO_TECNICAMENTE"] },
     "entrada": {
       "type": "object",
-      "required": ["figmaUrl", "sections", "contextoCurto"],
+      "required": ["figmaUrl", "sections", "contextoCurto", "etapa", "momento", "modalidades", "telas"],
       "properties": {
         "figmaUrl": { "type": "string", "minLength": 1 },
         "sections": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
-        "contextoCurto": { "type": ["string", "null"] }
+        "contextoCurto": { "type": ["string", "null"] },
+        "etapa": { "type": "string" }, "momento": { "type": "string" },
+        "modalidades": { "type": "array", "items": { "type": "string" } }, "telas": { "type": "array", "items": { "type": "object" } }
       }
     },
+    "escopoMomento": { "type": "object", "required": ["caminho", "sha256"], "properties": { "caminho": { "type": "string" }, "sha256": { "type": "string" } } },
     "progresso": {
       "type": "object",
       "required": ["sections"],

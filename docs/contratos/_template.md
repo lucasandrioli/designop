@@ -34,10 +34,23 @@ aprovacao humana. O script marca o resultado como
 `PENDENTE_REVISAO_HUMANA`; a rodada so prossegue depois de declarar
 `REVISAO_HUMANA_CONCLUIDA` com `approvalId`.
 
+## Contrato de momento
+
+Uma rodada por momento usa `escopo-momento.json` como recorte humano imutavel,
+`proposta/matriz-variacoes.json` para comparar cada modalidade, e
+`proposta/contrato-momento.json` para registrar telas, cobertura e conexoes
+observadas. Cada superficie presente recebe contrato de tela proprio; detalhe
+ou auxiliar nao e fundido ao template principal. Apenas diferencas de conteudo
+podem entrar no plano de variaveis. Estrutura e comportamento viram
+especializacao, conexao ou decisao humana.
+
 ## Contrato de jornada
 
 Crie `docs/contratos/<modalidade>-jornada.json` conforme
 `jornada.schema.json`.
+
+Esse contrato e preparado na rodada posterior de composicao da etapa, nao e
+pre-requisito para aprovar um momento isolado.
 
 Ele declara a collection de conteudo, os contexts/modes e, para cada
 contexto, quais telas estao presentes ou ausentes. Ausencia e uma

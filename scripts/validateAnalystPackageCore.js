@@ -7,16 +7,14 @@ function validateAnalystPackageData(pacote, options = {}) {
   const failures = [];
   const required = ['schemaVersion', 'id', 'rodada', 'status', 'artefatos', 'resumoHumano'];
   for (const field of required) if (!(field in (pacote ?? {}))) failures.push('campo ausente: ' + field);
-  if (pacote?.schemaVersion !== 1) failures.push('schemaVersion precisa ser 1');
+  if (![1, 2].includes(pacote?.schemaVersion)) failures.push('schemaVersion precisa ser 1 ou 2');
   if (!pacote?.id || !pacote?.rodada) failures.push('id e rodada sao obrigatorios');
   if (options.round && pacote?.rodada !== options.round) failures.push('pacote pertence a outra rodada');
   if (pacote?.status !== 'PRONTO_PARA_REVISAO') failures.push('pacote precisa estar PRONTO_PARA_REVISAO');
 
-  const requiredTypes = [
-    'REFERENCIAS', 'MANIFESTO_ANALISE', 'CONTEXTO', 'ESTADO_ANALISTA',
-    'PLANO_VARIAVEIS', 'PLANO_COMPONENTES_LOCAIS', 'MAPA_JORNADA',
-    'CONTRATO_TELA', 'CONTRATO_JORNADA', 'MAPA_IDS',
-  ];
+  const requiredTypes = pacote?.schemaVersion === 2
+    ? ['ESCOPO_MOMENTO', 'REFERENCIAS', 'MANIFESTO_ANALISE', 'CONTEXTO', 'ESTADO_ANALISTA', 'MATRIZ_VARIACOES', 'CONTRATO_MOMENTO', 'PLANO_VARIAVEIS', 'PLANO_COMPONENTES_LOCAIS', 'CONTRATO_TELA', 'MAPA_IDS']
+    : ['REFERENCIAS', 'MANIFESTO_ANALISE', 'CONTEXTO', 'ESTADO_ANALISTA', 'PLANO_VARIAVEIS', 'PLANO_COMPONENTES_LOCAIS', 'MAPA_JORNADA', 'CONTRATO_TELA', 'CONTRATO_JORNADA', 'MAPA_IDS'];
   if (!Array.isArray(pacote?.artefatos)) failures.push('artefatos precisa ser uma lista');
   const types = new Set();
   const paths = new Set();

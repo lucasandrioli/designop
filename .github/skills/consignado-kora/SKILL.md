@@ -18,19 +18,24 @@ ao papel apropriado.
 
 ## Inicio
 
-Receba somente:
+Receba uma rodada por momento:
 
 ```text
 Figma: <URL>
+Etapa: <etapa>
+Momento: <nome humano>
+Telas e anexos: <lista curta com principal, detalhe e auxiliares>
+Modalidades: <lista>
 Sections: <nomes exatos>
 Contexto curto: <opcional>
 ```
 
-Se faltar URL ou Sections, peca apenas o campo ausente. Com a entrada completa,
-o inicio da rodada e registrado automaticamente pelo ambiente. Localize a
-rodada atual com `findKoraRound.js`, chame o Registrador de Auditoria e so
-entao entregue URL, Sections e contexto ao Analista, sem reinterpretar a regra
-de negocio.
+Se faltar um campo, peca apenas o campo ausente. Com a entrada completa, o
+inicio registra `escopo-momento.json` imutavel. Localize a rodada atual com
+`findKoraRound.js`, chame o Registrador de Auditoria e so entao entregue o
+recorte ao Analista, sem reinterpretar a regra de negocio. Uma mesma entrada
+pode conter varias modalidades: elas sao comparadas, mas cada uma recebe
+contratos, collection de conteudo, montagem e promocao proprios.
 
 ## Conducao
 
@@ -42,6 +47,8 @@ de negocio.
    `validateAnalystPackage.js` e `validateKoraRound.js`. Se faltar algo, reabra o trabalho
    do Analista com uma tarefa objetiva e registre a tentativa. Nenhuma
    proposta humana existe enquanto os dois resultados nao forem favoraveis.
+   Em momento, confira tambem matriz de variacoes, contrato do momento e um
+   contrato para cada tela presente de cada modalidade.
 3. Quando a proposta estiver pronta, entre em
    `AGUARDANDO_APROVACAO_CONTRATO` e apresente apenas o resumo humano.
 4. Depois da aprovacao humana explicita, use `approveKoraCheckpoint.js --checkpoint contrato`
@@ -116,3 +123,11 @@ Registrador, execute `auditKoraRounds.js` e use o relato sanitizado para
 informar: o que ocorreu, por que, tentativas ja feitas, proxima acao e limites
 de evidencia. A auditoria pode
 preparar um ajuste, mas nunca editar Figma, biblioteca ou manuais aprovados.
+
+## Composicao de etapa
+
+Use `COMPOSICAO_ETAPA` somente depois de momentos promovidos da mesma
+modalidade. Ao abrir a rodada, fixe os recibos de promocao daqueles momentos;
+`validateStageCompositionPackage.js` comprova a montagem em
+`_verificacao-<etapa>`. Essa rodada verifica conexoes entre templates e nunca
+cria ativo publicavel nem pede aprovacao de promocao.

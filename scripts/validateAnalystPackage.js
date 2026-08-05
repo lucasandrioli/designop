@@ -9,6 +9,9 @@ const fs = require('fs')
 const path = require('path')
 const { validateAnalystPackageData } = require('./validateAnalystPackageCore')
 const { validateAnalystStateData } = require('./validateAnalystStateCore')
+const { validateMomentScopeData } = require('./validateMomentScopeCore')
+const { validateVariationMatrixData, validateMomentContractData } = require('./validateMomentProposalCore')
+const { validateVariablePlanData } = require('./validateVariablePlanCore')
 
 function args(argv) {
   const input = {}
@@ -77,8 +80,37 @@ if (state) {
 }
 const variablePlanArtifact = (analystPackage?.artefatos ?? []).find((artifact) => artifact.tipo === 'PLANO_VARIAVEIS')
 const variablePlan = variablePlanArtifact ? readJson(path.resolve(directory, variablePlanArtifact.caminho), failures, 'plano de variaveis') : null
-if (variablePlan && (variablePlan.schemaVersion !== 1 || variablePlan.rodada !== round || variablePlan.status !== 'PROPOSTO' || !variablePlan.id || !variablePlan.modalidade || !variablePlan.etapa || !Array.isArray(variablePlan.collections) || !Array.isArray(variablePlan.variaveis))) {
-  failures.push('plano de variaveis invalido para esta rodada')
+if (variablePlan) failures.push(...validateVariablePlanData(variablePlan, { round }))
+
+if (analystPackage?.schemaVersion === 2) {
+  const artifactByType = (type) => (analystPackage.artefatos ?? []).filter((artifact) => artifact.tipo === type)
+  const scopeArtifact = artifactByType('ESCOPO_MOMENTO')[0]
+  const scope = scopeArtifact ? readJson(path.resolve(directory, scopeArtifact.caminho), failures, 'escopo de momento') : null
+  if (scope) {
+    failures.push(...validateMomentScopeData(scope, { round }))
+    const currentKora = readJson(path.join(directory, 'kora.json'), failures, 'estado Kora')
+    if (currentKora?.schemaVersion !== 2 || currentKora?.escopo?.sha256 !== scopeArtifact.sha256) failures.push('pacote de momento nao corresponde ao escopo imutavel da Kora')
+    const matrixArtifact = artifactByType('MATRIZ_VARIACOES')[0]
+    const matrix = matrixArtifact ? readJson(path.resolve(directory, matrixArtifact.caminho), failures, 'matriz de variacoes') : null
+    if (matrix) failures.push(...validateVariationMatrixData(matrix, scope, { round }))
+    const momentArtifact = artifactByType('CONTRATO_MOMENTO')[0]
+    const moment = momentArtifact ? readJson(path.resolve(directory, momentArtifact.caminho), failures, 'contrato de momento') : null
+    if (moment) failures.push(...validateMomentContractData(moment, scope, { round }))
+    const expected = new Set((moment?.cobertura ?? []).filter((item) => item.status === 'PRESENTE').map((item) => `${item.modalidade}::${item.tela}`))
+    if (!expected.size) failures.push('momento nao possui nenhuma tela presente para contratar')
+    const contracts = artifactByType('CONTRATO_TELA')
+    const actual = new Set()
+    for (const artifact of contracts) {
+      const contract = readJson(path.resolve(directory, artifact.caminho), failures, 'contrato de tela')
+      if (!contract || contract.schemaVersion !== 2 || contract.rodada && contract.rodada !== round || contract.etapa !== scope.etapa || !scope.modalidades.includes(contract.modalidade) || !scope.telas.some((tela) => tela.id === contract.tela)) {
+        failures.push('contrato de tela invalido ou fora do momento')
+        continue
+      }
+      actual.add(`${contract.modalidade}::${contract.tela}`)
+    }
+    for (const key of expected) if (!actual.has(key)) failures.push('tela declarada sem contrato por modalidade: ' + key)
+    for (const key of actual) if (!expected.has(key)) failures.push('contrato de tela fora do escopo do momento: ' + key)
+  }
 }
 
 if (directory && analystPackage) {

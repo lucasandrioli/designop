@@ -53,3 +53,12 @@ validatePromotion aprovado. O nome final e
 
 Deixe registrado para revisao humana que `_componentes-locais` continua
 interno antes da publicacao da library.
+
+Em rodada de momento, trate cada `modalidade + tela` como alvo proprio. Uma
+tela de detalhe declarada pelo designer recebe contrato e rascunho proprios,
+mesmo que seja aberta pela tela principal. Nunca misture modalidades em uma
+collection de conteudo, template, preview ou nome publicado.
+
+Para composicao de etapa, monte somente um prototipo conectado em
+`_verificacao-<etapa>` a partir de momentos ja promovidos. Nao crie novo
+componente, variavel, collection ou ativo publicavel nessa rodada.

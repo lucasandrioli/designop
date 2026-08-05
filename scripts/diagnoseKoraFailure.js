@@ -49,7 +49,7 @@ function main() {
   const failures = []
   if (!round || !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(round)) failures.push('round invalida')
   if (!['KORA', 'ANALISTA', 'MONTADOR', 'VALIDADOR', 'OPERADOR', 'REGISTRADOR'].includes(role)) failures.push('role invalido')
-  if (!['ANALISE', 'MONTAGEM', 'VALIDACAO', 'ORQUESTRACAO'].includes(phase)) failures.push('phase invalida')
+  if (!['ANALISE', 'MONTAGEM', 'VALIDACAO', 'PROMOCAO', 'ORQUESTRACAO'].includes(phase)) failures.push('phase invalida')
   if (!String(input.observed ?? '').trim()) failures.push('observed obrigatorio')
   const state = round ? readState(root, round) : null
   if (!state) failures.push('estado da rodada indisponivel para diagnostico')

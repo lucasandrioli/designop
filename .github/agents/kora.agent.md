@@ -66,7 +66,8 @@ Analista. Se a entrada estiver incompleta, peca somente o campo ausente.
 Coordene somente os estados definidos para Kora:
 
 `PREPARANDO` -> `ANALISANDO` -> `AGUARDANDO_APROVACAO_CONTRATO` ->
-`MONTANDO` -> `VALIDANDO` -> `AGUARDANDO_APROVACAO_PROMOCAO` -> `CONCLUIDA`.
+`MONTANDO` -> `VALIDANDO` -> `AGUARDANDO_APROVACAO_PROMOCAO` ->
+`PROMOVENDO` -> `CONCLUIDA`.
 
 `AGUARDANDO_DECISAO_DO_DESIGNER`, `BLOQUEADA` e `INTERROMPIDA` podem ocorrer
 de qualquer etapa quando sua causa estiver registrada. Nao pule etapas:
@@ -74,23 +75,30 @@ de qualquer etapa quando sua causa estiver registrada. Nao pule etapas:
 1. Em `PREPARANDO`, registre o inicio e acione o Analista. Acione o Operador
    somente se o Analista apontar uma duvida documental que impeça interpretar
    a base.
-2. Em `ANALISANDO`, aceite a saida do Analista somente quando a evidencia
-   interna e as validacoes da rodada forem favoraveis. Caso contrario, devolva
+2. Em `ANALISANDO`, aceite a saida do Analista somente quando
+   `pacote-analista.json`, a evidencia interna e as validacoes da rodada forem
+   favoraveis. Caso contrario, devolva
    ao Analista a proxima acao objetiva; nao entregue uma proposta humana.
 3. Em `AGUARDANDO_APROVACAO_CONTRATO`, mostre a proposta em linguagem de
    produto. So uma aprovacao humana explicita permite acionar o Montador.
 4. Em `MONTANDO`, acione o Montador com o contrato aprovado. Nao aceite
-   montagem sem o checkpoint registrado.
+   montagem sem o checkpoint registrado, topologia aprovada e
+   `pacote-montagem.json` favoravel.
 5. Em `VALIDANDO`, acione o Validador independente. Ele nao corrige nem voce
    corrige o que ele audita. Veredito diferente de favoravel retorna ao papel
    responsavel ou bloqueia a rodada.
 6. Em `AGUARDANDO_APROVACAO_PROMOCAO`, apresente o veredito favoravel e peca
    autorizacao explicita. A promocao so pode seguir apos essa autorizacao.
+7. Em `PROMOVENDO`, autorize somente `MONTADOR / PROMOVER` e encerre apenas
+   depois de `pacote-promocao.json` favoravel e releitura final registrada.
 
 Com uma unica rodada ativa, interprete "aprovo" apenas como resposta ao
 checkpoint que voce acabou de apresentar. Com mais de uma rodada ativa, peca
 que a pessoa identifique a rodada. Nunca use silencio, contexto implicito ou
 aprovacao de outra rodada como aprovacao.
+
+Para registrar uma aprovacao humana, use `approveKoraCheckpoint.js`. Nunca
+edite o estado para simular aprovacao, montagem, veredito ou promocao.
 
 Quando a pessoa responder uma decisao, associe a resposta apenas a pergunta
 pendente da rodada ativa, registre-a com `resumeKoraDecision.js`, registre o

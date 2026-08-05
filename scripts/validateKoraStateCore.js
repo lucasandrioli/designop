@@ -9,6 +9,7 @@ const STATUSES = [
   'MONTANDO',
   'VALIDANDO',
   'AGUARDANDO_APROVACAO_PROMOCAO',
+  'PROMOVENDO',
   'CONCLUIDA',
   'AGUARDANDO_DECISAO_DO_DESIGNER',
   'BLOQUEADA',
@@ -21,10 +22,11 @@ const TRANSITIONS = {
   AGUARDANDO_APROVACAO_CONTRATO: ['MONTANDO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
   MONTANDO: ['MONTANDO', 'VALIDANDO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
   VALIDANDO: ['MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
-  AGUARDANDO_APROVACAO_PROMOCAO: ['CONCLUIDA', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
-  AGUARDANDO_DECISAO_DO_DESIGNER: ['PREPARANDO', 'ANALISANDO', 'AGUARDANDO_APROVACAO_CONTRATO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'BLOQUEADA', 'INTERROMPIDA'],
-  BLOQUEADA: ['PREPARANDO', 'ANALISANDO', 'AGUARDANDO_APROVACAO_CONTRATO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'INTERROMPIDA'],
-  INTERROMPIDA: ['PREPARANDO', 'ANALISANDO', 'AGUARDANDO_APROVACAO_CONTRATO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA'],
+  AGUARDANDO_APROVACAO_PROMOCAO: ['PROMOVENDO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
+  PROMOVENDO: ['CONCLUIDA', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA', 'INTERROMPIDA'],
+  AGUARDANDO_DECISAO_DO_DESIGNER: ['PREPARANDO', 'ANALISANDO', 'AGUARDANDO_APROVACAO_CONTRATO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'PROMOVENDO', 'BLOQUEADA', 'INTERROMPIDA'],
+  BLOQUEADA: ['PREPARANDO', 'ANALISANDO', 'AGUARDANDO_APROVACAO_CONTRATO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'PROMOVENDO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'INTERROMPIDA'],
+  INTERROMPIDA: ['PREPARANDO', 'ANALISANDO', 'AGUARDANDO_APROVACAO_CONTRATO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO', 'PROMOVENDO', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'BLOQUEADA'],
   CONCLUIDA: [],
 }
 
@@ -60,6 +62,31 @@ function validateArtifact(artifact, index, repositoryRoot, failures) {
   }
   const actualHash = crypto.createHash('sha256').update(fs.readFileSync(absolute)).digest('hex')
   if (actualHash !== artifact.sha256) failures.push(`artefatos[${index}] diverge do sha256 registrado: ${relative}`)
+}
+
+function validatePackage(entry, name, expectedState, state, repositoryRoot, failures) {
+  if (entry == null) return false
+  if (!entry?.arquivo || !/^[a-f0-9]{64}$/.test(entry?.sha256 ?? '') || entry?.estado !== expectedState) {
+    failures.push(`pacotes.${name} invalido`)
+    return false
+  }
+  const expectedPath = `.designops/runs/${state.rodada}/${name === 'analista' ? 'pacote-analista.json' : name === 'montagem' ? 'pacote-montagem.json' : name === 'veredito' ? 'veredito-validador.json' : 'pacote-promocao.json'}`
+  if (entry.arquivo !== expectedPath) {
+    failures.push(`pacotes.${name} precisa apontar para o recibo da rodada atual`)
+    return false
+  }
+  if (!repositoryRoot) return true
+  const file = path.resolve(repositoryRoot, entry.arquivo)
+  if (!fs.existsSync(file) || !fs.statSync(file).isFile()) {
+    failures.push(`pacotes.${name} ausente`)
+    return false
+  }
+  const actual = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')
+  if (actual !== entry.sha256) {
+    failures.push(`pacotes.${name} diverge do sha256 registrado`)
+    return false
+  }
+  return true
 }
 
 function validateKoraStateData(state, options = {}) {
@@ -124,7 +151,7 @@ function validateKoraStateData(state, options = {}) {
   if (!Array.isArray(state?.recibos)) failures.push('recibos precisa ser lista')
   const receiptTypes = new Set()
   for (const [index, receipt] of (state?.recibos ?? []).entries()) {
-    if (!['ANALISTA', 'MONTADOR', 'VALIDADOR', 'OPERADOR', 'REGISTRADOR'].includes(receipt?.papel) || !['ANALISE', 'MONTAGEM', 'VALIDACAO', 'AUDITORIA'].includes(receipt?.checkpoint) || !['FAVORAVEL', 'DESFAVORAVEL', 'LIMITADA'].includes(receipt?.resultado) || !receipt?.evidencia || !validDate(receipt?.ocorreuEm)) {
+    if (!['ANALISTA', 'MONTADOR', 'VALIDADOR', 'OPERADOR', 'REGISTRADOR'].includes(receipt?.papel) || !['ANALISE', 'MONTAGEM', 'VALIDACAO', 'PROMOCAO', 'AUDITORIA'].includes(receipt?.checkpoint) || !['FAVORAVEL', 'DESFAVORAVEL', 'LIMITADA'].includes(receipt?.resultado) || !receipt?.evidencia || !validDate(receipt?.ocorreuEm)) {
       failures.push(`recibos[${index}] invalido`)
       continue
     }
@@ -142,6 +169,14 @@ function validateKoraStateData(state, options = {}) {
     artifactPaths.add(artifact?.caminho)
     if (artifact?.caminho && !artifact.caminho.startsWith(`.designops/runs/${state?.rodada}/`)) failures.push(`artefatos[${index}] precisa permanecer isolado na rodada atual`)
   }
+
+  const packages = state?.pacotes
+  if (packages !== undefined && (typeof packages !== 'object' || Array.isArray(packages))) failures.push('pacotes precisa ser objeto')
+  const legacyPackages = packages === undefined
+  const analystPackage = legacyPackages || validatePackage(packages?.analista, 'analista', 'PRONTO_PARA_REVISAO', state, options.repositoryRoot, failures)
+  const assemblyPackage = legacyPackages || validatePackage(packages?.montagem, 'montagem', 'CONCLUIDA_PARA_VALIDACAO', state, options.repositoryRoot, failures)
+  const verdictPackage = legacyPackages || validatePackage(packages?.veredito, 'veredito', 'APTO_PARA_PROMOCAO', state, options.repositoryRoot, failures)
+  const promotionPackage = legacyPackages || validatePackage(packages?.promocao, 'promocao', 'CONCLUIDA', state, options.repositoryRoot, failures)
 
   if (!Array.isArray(state?.decisoes)) failures.push('decisoes precisa ser lista')
   for (const [index, decision] of (state?.decisoes ?? []).entries()) {
@@ -161,7 +196,7 @@ function validateKoraStateData(state, options = {}) {
 
   const incident = state?.incidenteOperacao
   if (incident !== undefined && incident !== null) {
-    if (!/^inc-[A-Za-z0-9._-]+$/.test(incident?.id ?? '') || incident?.classificacao !== 'INCIDENTE_DA_OPERACAO' || !['ANALISE', 'MONTAGEM', 'VALIDACAO', 'ORQUESTRACAO'].includes(incident?.fase) || !['KORA', 'ANALISTA', 'MONTADOR', 'VALIDADOR', 'OPERADOR', 'REGISTRADOR'].includes(incident?.papel) || incident?.impacto !== 'BLOQUEIA_RODADA' || !['ANALISANDO', 'MONTANDO', 'VALIDANDO'].includes(incident?.pontoRetomada) || !['ABERTO', 'RETOMADO'].includes(incident?.status) || !validDate(incident?.criadoEm)) {
+    if (!/^inc-[A-Za-z0-9._-]+$/.test(incident?.id ?? '') || incident?.classificacao !== 'INCIDENTE_DA_OPERACAO' || !['ANALISE', 'MONTAGEM', 'VALIDACAO', 'PROMOCAO', 'ORQUESTRACAO'].includes(incident?.fase) || !['KORA', 'ANALISTA', 'MONTADOR', 'VALIDADOR', 'OPERADOR', 'REGISTRADOR'].includes(incident?.papel) || incident?.impacto !== 'BLOQUEIA_RODADA' || !['ANALISANDO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO'].includes(incident?.pontoRetomada) || !['ABERTO', 'RETOMADO'].includes(incident?.status) || !validDate(incident?.criadoEm)) {
       failures.push('incidente da operacao invalido')
     }
     if (incident?.status === 'RETOMADO' && (!validDate(incident?.retomadoEm) || !/^[a-f0-9]{7,64}$/.test(incident?.correcaoCommit ?? ''))) failures.push('incidente retomado sem commit de correcao verificavel')
@@ -182,9 +217,10 @@ function validateKoraStateData(state, options = {}) {
   if (state?.status !== 'PREPARANDO' && state?.historico?.length === 0) failures.push('status fora de PREPARANDO sem historico de transicao')
   if (state?.historico?.length && current !== state.status) failures.push('ultimo historico nao corresponde ao status atual')
 
-  const analysisReady = checkpoints?.analise?.status === 'APROVADA' && checkpoints.analise.gatePreProposta === true && checkpoints.analise.reconciliada === true
+  const analysisReady = checkpoints?.analise?.status === 'APROVADA' && checkpoints.analise.gatePreProposta === true && checkpoints.analise.reconciliada === true && analystPackage
   const contractReady = checkpoints?.contrato?.status === 'APROVADO' && contractApproved
-  const assemblyReady = analysisReady && contractReady && checkpoints?.montagem?.status === 'CONCLUIDA' && receiptTypes.has('MONTADOR::MONTAGEM::FAVORAVEL')
+  const assemblyReady = analysisReady && contractReady && checkpoints?.montagem?.status === 'CONCLUIDA' && receiptTypes.has('MONTADOR::MONTAGEM::FAVORAVEL') && assemblyPackage
+  const validationReady = assemblyReady && checkpoints?.validacao?.status === 'FAVORAVEL' && receiptTypes.has('VALIDADOR::VALIDACAO::FAVORAVEL') && verdictPackage
   const pendingDecision = (state?.decisoes ?? []).some((item) => item?.status === 'PENDENTE')
   if (state?.status === 'PREPARANDO' && checkpoints?.analise?.status !== 'PENDENTE') failures.push('PREPARANDO exige analise pendente')
   if (state?.status === 'ANALISANDO' && checkpoints?.analise?.status !== 'EM_ANDAMENTO') failures.push('ANALISANDO exige analise em andamento')
@@ -201,11 +237,14 @@ function validateKoraStateData(state, options = {}) {
     if (!assemblyReady || checkpoints?.validacao?.status !== 'EM_ANDAMENTO') failures.push('VALIDANDO exige analise, contrato e montagem concluidos com recibo favoravel do Montador')
   }
   if (state?.status === 'AGUARDANDO_APROVACAO_PROMOCAO') {
-    if (!assemblyReady || checkpoints?.validacao?.status !== 'FAVORAVEL' || checkpoints?.promocao?.status !== 'AGUARDANDO_APROVACAO' || !receiptTypes.has('VALIDADOR::VALIDACAO::FAVORAVEL')) failures.push('aguardando promocao exige veredito favoravel independente')
+    if (!validationReady || checkpoints?.promocao?.status !== 'AGUARDANDO_APROVACAO') failures.push('aguardando promocao exige veredito favoravel independente')
     if (approvals.promocao !== null) failures.push('aguardando promocao nao pode conter aprovacao ja registrada')
   }
+  if (state?.status === 'PROMOVENDO') {
+    if (!validationReady || checkpoints?.promocao?.status !== 'APROVADA' || !promotionApproved) failures.push('PROMOVENDO exige veredito favoravel e aprovacao humana de promocao')
+  }
   if (state?.status === 'CONCLUIDA') {
-    if (!assemblyReady || checkpoints?.promocao?.status !== 'CONCLUIDA' || !promotionApproved || !receiptTypes.has('VALIDADOR::VALIDACAO::FAVORAVEL')) failures.push('CONCLUIDA exige validacao favoravel e promocao explicitamente aprovada e concluida')
+    if (!validationReady || !promotionPackage || checkpoints?.promocao?.status !== 'CONCLUIDA' || !promotionApproved || (!legacyPackages && !receiptTypes.has('MONTADOR::PROMOCAO::FAVORAVEL'))) failures.push('CONCLUIDA exige validacao favoravel e promocao explicitamente aprovada e concluida')
   }
   if (state?.status === 'AGUARDANDO_DECISAO_DO_DESIGNER' && !pendingDecision) failures.push('aguardando decisao sem pergunta pendente')
   if (state?.status === 'BLOQUEADA' && state?.bloqueios?.length === 0) failures.push('BLOQUEADA exige bloqueio registrado')

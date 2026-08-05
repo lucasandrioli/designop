@@ -228,9 +228,33 @@ estiver completa e o recibo da reconciliacao MCP da mesma rodada tiver
 `status: "APROVADA"` e `report.passed: true`. Esse recibo e evidencia
 declarativa, nao substitui a auditoria do historico MCP.
 
+## Pacote final para revisao
+
+Depois do gate favoravel, prepare somente dentro de
+`.designops/runs/<rodada>/` o plano logico `plano-variaveis.json` e a pasta
+`proposta/`, com mapa de jornada, contrato de tela, contrato de jornada e
+mapa IDS temporarios. Eles continuam sendo rascunhos: nao escreva Figma,
+nao crie collection, mode, variavel, componente ou template nesta etapa.
+
+Atualize `estado-analista.json` para `PRONTO_PARA_REVISAO`, com proposta
+`PRONTA`, e execute:
+
+```sh
+node scripts/createAnalystPackage.js --round <rodada>
+node scripts/validateAnalystPackage.js --round <rodada>
+node scripts/renderAnalystStatus.js --round <rodada> --write
+```
+
+`pacote-analista.json` e o unico recibo de proposta que Kora aceita. Ele
+amarra, por hash, o recorte, manifesto e coletas, contexto, plano de
+variaveis, plano de componentes, estado humano e os rascunhos de mapa e
+contratos. Quando o manifesto exigir resolucao de IDs, o pacote tambem exige
+`resolvido.json`. Sem pacote favoravel, a proposta continua interna e nao
+pode pedir aprovacao de contrato.
+
 ## Formato da resposta final
 
-Devolva somente o resumo humano gerado para a rodada: o que foi concluido,
+Devolva somente o resumo humano gerado a partir do pacote final: o que foi concluido,
 o que encontrou, proposta temporaria, decisoes pendentes e proximo passo.
 Sem evidencia interna favoravel, explique o que o Analista ainda precisa
 resolver; nunca entregue JSON, nomes de gate ou rotulos internos. Sem

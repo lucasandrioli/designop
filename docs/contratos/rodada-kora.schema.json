@@ -14,6 +14,7 @@
         "MONTANDO",
         "VALIDANDO",
         "AGUARDANDO_APROVACAO_PROMOCAO",
+        "PROMOVENDO",
         "CONCLUIDA",
         "AGUARDANDO_DECISAO_DO_DESIGNER",
         "BLOQUEADA",
@@ -59,6 +60,7 @@
     "tentativas": { "type": "array", "items": { "$ref": "#/$defs/tentativa" } },
     "recibos": { "type": "array", "items": { "$ref": "#/$defs/recibo" } },
     "artefatos": { "type": "array", "items": { "$ref": "#/$defs/artefato" } },
+    "pacotes": { "$ref": "#/$defs/pacotes" },
     "decisoes": { "type": "array", "items": { "$ref": "#/$defs/decisao" } },
     "bloqueios": { "type": "array", "items": { "$ref": "#/$defs/bloqueio" } },
     "incidenteOperacao": { "$ref": "#/$defs/incidenteOperacao" },
@@ -93,7 +95,7 @@
       "required": ["papel", "checkpoint", "resultado", "evidencia", "ocorreuEm"],
       "properties": {
         "papel": { "enum": ["ANALISTA", "MONTADOR", "VALIDADOR", "OPERADOR", "REGISTRADOR"] },
-        "checkpoint": { "enum": ["ANALISE", "MONTAGEM", "VALIDACAO", "AUDITORIA"] },
+        "checkpoint": { "enum": ["ANALISE", "MONTAGEM", "VALIDACAO", "PROMOCAO", "AUDITORIA"] },
         "resultado": { "enum": ["FAVORAVEL", "DESFAVORAVEL", "LIMITADA"] },
         "evidencia": { "type": "string", "minLength": 1 },
         "ocorreuEm": { "type": "string", "format": "date-time" }
@@ -134,15 +136,34 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "classificacao": { "const": "INCIDENTE_DA_OPERACAO" },
-        "fase": { "enum": ["ANALISE", "MONTAGEM", "VALIDACAO", "ORQUESTRACAO"] },
+        "fase": { "enum": ["ANALISE", "MONTAGEM", "VALIDACAO", "PROMOCAO", "ORQUESTRACAO"] },
         "papel": { "enum": ["KORA", "ANALISTA", "MONTADOR", "VALIDADOR", "OPERADOR", "REGISTRADOR"] },
         "impacto": { "const": "BLOQUEIA_RODADA" },
         "versaoBase": { "type": ["string", "null"] },
-        "pontoRetomada": { "enum": ["ANALISANDO", "MONTANDO", "VALIDANDO"] },
+        "pontoRetomada": { "enum": ["ANALISANDO", "MONTANDO", "VALIDANDO", "AGUARDANDO_APROVACAO_PROMOCAO"] },
         "status": { "enum": ["ABERTO", "RETOMADO"] },
         "criadoEm": { "type": "string", "format": "date-time" },
         "retomadoEm": { "type": ["string", "null"], "format": "date-time" },
         "correcaoCommit": { "type": ["string", "null"] }
+      }
+    },
+    "pacote": {
+      "type": ["object", "null"],
+      "required": ["arquivo", "sha256", "estado"],
+      "properties": {
+        "arquivo": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "estado": { "type": "string", "minLength": 1 }
+      }
+    },
+    "pacotes": {
+      "type": "object",
+      "required": ["analista", "montagem", "veredito", "promocao"],
+      "properties": {
+        "analista": { "$ref": "#/$defs/pacote" },
+        "montagem": { "$ref": "#/$defs/pacote" },
+        "veredito": { "$ref": "#/$defs/pacote" },
+        "promocao": { "$ref": "#/$defs/pacote" }
       }
     },
     "transicao": {

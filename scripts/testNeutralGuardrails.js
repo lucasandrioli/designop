@@ -58,6 +58,7 @@ function createKoraFixture() {
   ;[
     'scripts/startKoraRound.js',
     'scripts/validateKoraRound.js',
+    'scripts/validateKoraPackages.js',
     'scripts/validateKoraStateCore.js',
     'scripts/authorizeKoraAction.js',
     'scripts/resumeKoraDecision.js',
@@ -79,6 +80,51 @@ function createKoraFixture() {
     'scripts/validateContextDraftCore.js',
   ].forEach((file) => copy(file, fixture))
   return fixture
+}
+function writeAssemblyPackageFixture() {
+  const fixture = temporaryDirectory('designops-pacote-montagem-')
+  const round = 'montagem-regressao'
+  const roundDirectory = path.join(fixture, '.designops/runs', round)
+  fs.mkdirSync(roundDirectory, { recursive: true })
+  fs.mkdirSync(path.join(fixture, 'docs'), { recursive: true })
+  fs.writeFileSync(path.join(fixture, 'docs/topologia-biblioteca.md'), '---\nstatus: PENDENTE_DE_DECISAO\naprovadoPor: null\naprovadoEm: null\n---\n\n# Topologia\n')
+  const artifact = (name, content) => {
+    const file = path.join(roundDirectory, name)
+    fs.writeFileSync(file, content)
+    return { id: name, caminho: '.designops/runs/' + round + '/' + name, sha256: sha256(file) }
+  }
+  const packageData = {
+    schemaVersion: 1, rodada: round, estado: 'CONCLUIDA_PARA_VALIDACAO',
+    topologia: { arquivo: 'docs/topologia-biblioteca.md', sha256: sha256(path.join(fixture, 'docs/topologia-biblioteca.md')) },
+    areaVerificacao: { nome: '_verificacao-formalizacao', confirmada: true, evidencia: artifact('area-verificacao.json', '{"confirmada":true}\n') },
+    rascunhos: [artifact('rascunho.json', '{"rascunho":true}\n')],
+    previews: [artifact('preview-ctx-a.json', '{"preview":"ctx-a"}\n')],
+    componentesLocais: artifact('componentes-locais.json', '{"componentes":[]}\n'),
+    planoVariaveis: artifact('plano-variaveis-aplicado.json', '{"aplicado":true}\n'),
+    evidenciasMcp: [artifact('evidencias-mcp.json', '{"releitura":true}\n')],
+  }
+  fs.writeFileSync(path.join(roundDirectory, 'pacote-montagem.json'), JSON.stringify(packageData, null, 2))
+  return { fixture, round, roundDirectory, packageData }
+}
+function testAssemblyPackage() {
+  const { fixture, round, roundDirectory, packageData } = writeAssemblyPackageFixture()
+  const validator = path.join(root, 'scripts/validateAssemblyPackage.js')
+  expectFailure(runNode(validator, ['--round', round, '--root', fixture]), 'Pacote bloqueia montagem sem topologia aprovada')
+  const topology = path.join(fixture, 'docs/topologia-biblioteca.md')
+  fs.writeFileSync(topology, '---\nstatus: APROVADO\nalternativa: A\naprovadoPor: DESIGNER\naprovadoEm: 2026-08-05\n---\n\n# Topologia\n')
+  packageData.topologia.sha256 = sha256(topology)
+  fs.writeFileSync(path.join(roundDirectory, 'pacote-montagem.json'), JSON.stringify(packageData, null, 2))
+  expectSuccess(runNode(validator, ['--round', round, '--root', fixture]), 'Pacote de montagem completo libera somente a validacao')
+  fs.writeFileSync(path.join(roundDirectory, 'rascunho.json'), '{"rascunho":"alterado"}\n')
+  expectFailure(runNode(validator, ['--round', round, '--root', fixture]), 'Pacote rejeita hash divergente de rascunho')
+  packageData.rascunhos[0].sha256 = sha256(path.join(roundDirectory, 'rascunho.json'))
+  packageData.previews[0].caminho = '.designops/runs/outra-rodada/preview.json'
+  fs.writeFileSync(path.join(roundDirectory, 'pacote-montagem.json'), JSON.stringify(packageData, null, 2))
+  expectFailure(runNode(validator, ['--round', round, '--root', fixture]), 'Pacote rejeita evidencia de outra rodada')
+  packageData.previews[0].caminho = '.designops/runs/' + round + '/preview-ctx-a.json'
+  packageData.rascunhos = []
+  fs.writeFileSync(path.join(roundDirectory, 'pacote-montagem.json'), JSON.stringify(packageData, null, 2))
+  expectFailure(runNode(validator, ['--round', round, '--root', fixture]), 'Pacote rejeita montagem sem prova minima')
 }
 function testKoraRoundAndAudit() {
   const fixture = createKoraFixture()
@@ -152,6 +198,7 @@ function testKoraRoundAndAudit() {
   expectSuccess(runNode(path.join(completeFixture, 'scripts/startKoraRound.js'), ['--round', completeRound, '--figma-url', 'https://www.figma.com/design/nao-publicar', '--sections', 'ref-modalidade-tela-ctx-a,ref-modalidade-tela-ctx-b,ref-modalidade-tela-ctx-c', '--root', completeFixture]), 'Kora inicia a rodada com tres Sections')
   const completeStateFile = path.join(completeFixture, '.designops/runs', completeRound, 'kora.json')
   const completeState = JSON.parse(fs.readFileSync(completeStateFile, 'utf8'))
+  delete completeState.pacotes
   const now = '2026-08-05T11:00:00.000Z'
   completeState.status = 'AGUARDANDO_APROVACAO_CONTRATO'
   completeState.checkpoints.analise = { status: 'APROVADA', gatePreProposta: true, reconciliada: true }
@@ -192,10 +239,13 @@ function testKoraRoundAndAudit() {
   fs.writeFileSync(completeStateFile, JSON.stringify(completeState, null, 2))
   expectSuccess(runNode(path.join(completeFixture, 'scripts/validateKoraRound.js'), ['--round', completeRound, '--root', completeFixture]), 'Kora apresenta promocao somente com veredito favoravel')
 
+  completeState.status = 'PROMOVENDO'
+  completeState.checkpoints.promocao.status = 'APROVADA'
+  completeState.aprovacoes.promocao = { tipo: 'PROMOCAO', decisao: 'APROVADA', confirmadoPor: 'DESIGNER', ocorreuEm: now }
+  completeState.historico.push({ de: 'AGUARDANDO_APROVACAO_PROMOCAO', para: 'PROMOVENDO', ocorreuEm: now, motivo: null })
   completeState.status = 'CONCLUIDA'
   completeState.checkpoints.promocao.status = 'CONCLUIDA'
-  completeState.aprovacoes.promocao = { tipo: 'PROMOCAO', decisao: 'APROVADA', confirmadoPor: 'DESIGNER', ocorreuEm: now }
-  completeState.historico.push({ de: 'AGUARDANDO_APROVACAO_PROMOCAO', para: 'CONCLUIDA', ocorreuEm: now, motivo: null })
+  completeState.historico.push({ de: 'PROMOVENDO', para: 'CONCLUIDA', ocorreuEm: now, motivo: null })
   fs.writeFileSync(completeStateFile, JSON.stringify(completeState, null, 2))
   expectSuccess(runNode(path.join(completeFixture, 'scripts/validateKoraRound.js'), ['--round', completeRound, '--root', completeFixture]), 'Rodada completa so encerra depois da aprovacao de promocao')
 }
@@ -456,6 +506,21 @@ function writeAnalysisRoundFixture(fixture, round = 'rodada-neutra') {
   return { roundDirectory, manifest, references }
 }
 
+function writeAnalystPackageArtifacts(fixture, round, state) {
+  const directory = path.join(fixture, '.designops', 'runs', round)
+  fs.mkdirSync(path.join(directory, 'proposta'), { recursive: true })
+  fs.writeFileSync(path.join(directory, 'estado-analista.json'), JSON.stringify(state, null, 2))
+  fs.writeFileSync(path.join(directory, 'plano-variaveis.json'), JSON.stringify({
+    schemaVersion: 1, id: 'variaveis-' + round, rodada: round, status: 'PROPOSTO', modalidade: 'pcon', etapa: 'formalizacao',
+    collections: [{ id: 'conteudo-pcon', papel: 'CONTEUDO_MODALIDADE' }], variaveis: [],
+  }, null, 2))
+  fs.writeFileSync(path.join(directory, 'proposta', 'mapa-jornada.md'), '# Mapa temporario\n\nrodada: ' + round + '\n')
+  fs.writeFileSync(path.join(directory, 'proposta', 'contrato-tela.json'), JSON.stringify({ rodada: round, id: 'tela-' + round }, null, 2))
+  fs.writeFileSync(path.join(directory, 'proposta', 'contrato-jornada.json'), JSON.stringify({ rodada: round, id: 'jornada-' + round }, null, 2))
+  fs.writeFileSync(path.join(directory, 'proposta', 'mapa-ids.json'), JSON.stringify({ rodada: round, id: 'ids-' + round }, null, 2))
+  return directory
+}
+
 function testAnalysisRoundGate() {
   const fixture = temporaryDirectory('designops-analysis-round-')
   const round = 'rodada-neutra'
@@ -540,7 +605,7 @@ function testAnalystOperation() {
   const state = JSON.parse(fs.readFileSync(stateFile, 'utf8'))
   assert.strictEqual(state.entrada.sections.length, 2, 'Cartao precisa registrar Sections informadas')
   assert.strictEqual(state.decisoes.length, 0, 'Cartao inicial nao pode criar pergunta desnecessaria')
-  state.status = 'AGUARDANDO_DECISAO_DO_DESIGNER'
+  state.status = 'PRONTO_PARA_REVISAO'
   state.progresso.sections.forEach((section) => { section.status = 'CONCLUIDA' })
   state.achados = [{ tipo: 'FATO', titulo: 'Duas variacoes observadas', descricao: 'As referencias possuem hierarquia semelhante.' }]
   state.confrontos = [
@@ -550,13 +615,57 @@ function testAnalystOperation() {
   state.decisoes = [{ id: 'contexto', pergunta: 'As duas variacoes representam contextos diferentes?', impacto: 'A resposta define a proposta de conteudo.', recomendacao: 'Tratar como contextos diferentes ate sua confirmacao.', status: 'PENDENTE' }]
   state.proposta = { status: 'PRONTA', resumo: 'Pacote pronto para revisao.', entregaveis: ['Mapa temporario', 'Plano de variaveis'] }
   fs.writeFileSync(stateFile, JSON.stringify(state, null, 2))
+  writeAnalysisRoundFixture(fixture, round)
+  writeAnalystPackageArtifacts(fixture, round, state)
+  expectSuccess(runNode(path.join(root, 'scripts/createAnalystPackage.js'), ['--round', round, '--root', fixture]), 'Pacote final do Analista deriva os hashes da rodada')
+  expectSuccess(runNode(path.join(root, 'scripts/validateAnalystPackage.js'), ['--round', round, '--root', fixture]), 'Pacote do Analista comprova proposta pronta')
   const report = runNode(render, [...common, '--write'])
   expectSuccess(report, 'Resumo humano da rodada')
   assert(report.stdout.includes('Só preciso da sua decisão nestes pontos'), 'Resumo precisa apresentar decisao em linguagem humana')
-  assert(report.stdout.includes('O que a base já estabelece') && report.stdout.includes('O que a referência traz para decidir'), 'Resumo precisa cruzar base e referencia para a pessoa operadora')
+  assert(report.stdout.includes('O que foi concluído') && report.stdout.includes('O que encontrei'), 'Resumo precisa ser derivado do pacote final para a pessoa operadora')
   assert(!report.stdout.includes('[CONFIRMAR]') && !report.stdout.includes('schema'), 'Resumo nao pode expor rotulos internos')
   assert(fs.existsSync(path.join(fixture, '.designops', 'runs', round, 'resumo-operador.md')), 'Resumo precisa ser gravado junto da rodada')
   assert(fs.existsSync(path.join(fixture, '.designops', 'runs', round, 'pacote-analista.md')), 'Pacote temporario precisa ser gravado junto da rodada')
+}
+function testAnalystFinalPackage() {
+  const fixture = temporaryDirectory('designops-analyst-package-')
+  const round = 'pacote-analista'
+  writeAnalysisRoundFixture(fixture, round)
+  const state = {
+    schemaVersion: 1, rodada: round, status: 'PRONTO_PARA_REVISAO',
+    entrada: { figmaUrl: 'https://www.figma.com/design/nunca-publicar', sections: ['ref-modalidade-tela-ctx-a', 'ref-modalidade-tela-ctx-b', 'ref-modalidade-tela-ctx-c'], contextoCurto: null },
+    progresso: { sections: ['a', 'b', 'c'].map((suffix) => ({ nome: 'ref-modalidade-tela-ctx-' + suffix, status: 'CONCLUIDA', estrutura: null, interacoes: null })) },
+    achados: [{ tipo: 'FATO', titulo: 'Variacoes', descricao: 'As referências mostram variações de conteúdo por contexto.' }],
+    confrontos: [{ id: 'etapa', topico: 'Formalizacao', observacao: 'Etapa observada.', situacaoBase: 'DOCUMENTADO', fontesBase: ['docs/etapas/formalizacao.md'], conclusao: 'A base já estabelece a etapa de Formalização.' }],
+    decisoes: [], problemas: [], proposta: { status: 'PRONTA', resumo: 'Proposta temporária para Formalização.', entregaveis: ['Mapa temporário', 'Contratos temporários'] },
+  }
+  const directory = writeAnalystPackageArtifacts(fixture, round, state)
+  const create = path.join(root, 'scripts/createAnalystPackage.js')
+  const validate = path.join(root, 'scripts/validateAnalystPackage.js')
+  expectSuccess(runNode(create, ['--round', round, '--root', fixture]), 'Pacote final nasce apenas depois do gate de analise')
+  expectSuccess(runNode(validate, ['--round', round, '--root', fixture]), 'Pacote final com hashes reais e mesma rodada')
+
+  const packageFile = path.join(directory, 'pacote-analista.json')
+  const analystPackage = JSON.parse(fs.readFileSync(packageFile, 'utf8'))
+  analystPackage.artefatos = analystPackage.artefatos.filter((artifact) => artifact.tipo !== 'PLANO_VARIAVEIS')
+  fs.writeFileSync(packageFile, JSON.stringify(analystPackage, null, 2))
+  expectFailure(runNode(validate, ['--round', round, '--root', fixture]), 'Pacote incompleto nao libera proposta')
+
+  expectSuccess(runNode(create, ['--round', round, '--root', fixture]), 'Pacote e recriado para testar integridade')
+  fs.appendFileSync(path.join(directory, 'proposta', 'mapa-jornada.md'), 'alteracao posterior\n')
+  expectFailure(runNode(validate, ['--round', round, '--root', fixture]), 'Hash divergente invalida o pacote')
+
+  fs.writeFileSync(path.join(directory, 'proposta', 'mapa-jornada.md'), '# Mapa temporario\n\nrodada: ' + round + '\n')
+  expectSuccess(runNode(create, ['--round', round, '--root', fixture]), 'Pacote volta a representar a rodada atual')
+  const wrongRound = JSON.parse(fs.readFileSync(packageFile, 'utf8'))
+  wrongRound.rodada = 'outra-rodada'
+  fs.writeFileSync(packageFile, JSON.stringify(wrongRound, null, 2))
+  expectFailure(runNode(validate, ['--round', round, '--root', fixture]), 'Pacote de outra rodada e rejeitado')
+
+  expectSuccess(runNode(create, ['--round', round, '--root', fixture]), 'Pacote e restaurado antes do teste de resumo')
+  state.proposta.resumo = 'Resumo alterado sem atualizar o pacote.'
+  fs.writeFileSync(path.join(directory, 'estado-analista.json'), JSON.stringify(state, null, 2))
+  expectFailure(runNode(validate, ['--round', round, '--root', fixture]), 'Resumo humano desalinhado da proposta e rejeitado')
 }
 function testFigmaApiContracts() {
   const screenSchema = JSON.parse(fs.readFileSync(path.join(root, 'docs/contratos/tela.schema.json'), 'utf8'))
@@ -1431,6 +1540,7 @@ async function main() {
 
     testKoraRoundAndAudit()
     testKoraOperationIncidentRoute()
+    testAssemblyPackage()
 
     let manifest = validManifest()
     delete manifest.fontes.figma.descoberta
@@ -1473,6 +1583,7 @@ async function main() {
 
     testAnalysisRoundGate()
     testAnalystOperation()
+    testAnalystFinalPackage()
     await testJourneyAndLocalComponents()
     await testInteractionCompositionAndReconstruction()
     await testSlotsAndTypographyContracts()

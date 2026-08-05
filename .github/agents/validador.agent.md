@@ -42,6 +42,18 @@ Para uma Section de jornada, prove uma unica collection de conteudo
 da modalidade, com collections estruturais IDS permitidas, um mode
 aplicado na Section e heranca integral nos descendentes.
 
+Antes de devolver o resultado, grave
+`.designops/runs/<rodada>/veredito-validador.json` e execute
+`validateValidatorVerdict.js --round <rodada>`. O recibo liga a rodada
+aos hashes da montagem, contratos, resolucao, evidencias MCP e
+pre-promocao. Ele exige resultado por template e contexto, as provas
+diretas de criacao, conteudo, modes e layout, releituras independentes
+de estrutura e interacoes e revisao visual.
+
 Devolva APTO PARA PROMOCAO, REPROVADO ou NAO VERIFICAVEL. Somente o
-primeiro autoriza promocao pelo Montador. Inclua o checklist humano que
-confirma `_componentes-locais` fora da publicacao da library.
+primeiro autoriza a Kora a pedir aprovacao de promocao. Inclua o
+checklist humano que confirma `_componentes-locais` fora da publicacao
+da library. Depois da promocao autorizada, o Montador grava
+`pacote-promocao.json`; ele so e valido depois de
+`validatePromotionPackage.js` confirmar a aprovacao da Kora, a
+releitura pos-promocao e os nomes publicados sem contexto.

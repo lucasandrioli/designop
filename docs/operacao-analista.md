@@ -57,3 +57,12 @@ Analista o inicia com `startAnalystRun.js`, atualiza durante a coleta e usa
 `renderAnalystStatus.js --write` para gerar `resumo-operador.md` e
 `pacote-analista.md`. O estado humano nao substitui referencias, manifesto,
 contexto, reconciliacao ou contratos; ele apenas os torna acompanhaveis.
+
+Quando a proposta estiver pronta, a rodada tambem guarda
+`pacote-analista.json`. Esse recibo confere, por hash, o recorte, as coletas,
+o contexto, o plano logico de variaveis, o plano de componentes e os
+rascunhos temporarios de mapa e contratos. A resolucao de IDs entra somente
+quando a propria proposta a exigir. O resumo mostrado para voce nessa etapa
+e gerado a partir desse pacote, para que a conversa e a evidencia interna
+descrevam a mesma proposta. O pacote nao libera montagem nem escreve na
+biblioteca: ele apenas permite pedir sua aprovacao de contrato.

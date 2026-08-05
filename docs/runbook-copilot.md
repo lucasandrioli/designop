@@ -117,6 +117,13 @@ parcial apresentada como completa, mapa `*-rascunho.md` criado antes do gate,
 ou proposta sem recibo favoravel da reconciliacao MCP. Esses materiais sao
 rascunhos invalidos, nao entregas para aprovacao.
 
+Com o gate favoravel, o Analista ainda precisa gerar e validar
+`pacote-analista.json` na propria rodada. Esse recibo verifica hashes do
+recorte, coletas, contexto, plano de variaveis, plano de componentes e
+rascunhos de mapa e contratos. Kora so apresenta a proposta quando esse
+pacote e o resumo humano derivado dele estiverem consistentes. O pacote nao
+autoriza montagem ou qualquer escrita no Figma.
+
 Asset proprietario obrigatorio ausente bloqueia a tela correspondente.
 Resultado reprovado: propor placeholder, frame local substituto ou
 montagem parcial dessa tela. Prazo, valor, parcela e outros dados que
@@ -152,110 +159,51 @@ aprove escrita Figma daquele papel.
 
 ## Teste de retomada em chat novo
 
-1. Termine uma rodada de contexto guiado e confirme que catalogo, mapa e
-   manuais foram registrados.
-2. Abra um chat novo, selecione `Analista da Etapa` e escreva apenas
-   "vamos trabalhar <etapa>".
-3. Resultado esperado: o agente encontra os documentos sozinho, resume
-   objetivo, modalidade e contextos conhecidos e pergunta somente qual
-   recorte ou tarefa voce quer agora.
-4. Repita com Montador ou Validador em outro chat novo. Eles precisam
-   localizar proposta, contrato e veredito, quando existirem, antes de
-   pedir qualquer coisa.
-5. Remova ou renomeie temporariamente um manual-base no worktree de teste.
+1. Termine uma rodada pela Kora e abra um novo chat ainda com Kora.
+2. Peça a situação da rodada, sem repetir Figma, Sections ou contexto.
+3. Resultado esperado: Kora recupera o estado, apresenta somente o próximo
+   passo humano e chama internamente o papel que precisa continuar.
+4. Remova ou renomeie temporariamente um manual-base no worktree de teste.
    Resultado esperado: o agente explica a ausencia e indica
    `/consignado-base`; ele nao usa a conversa anterior como regra.
 
-## Cadeia manual
+## Cadeia conduzida pela Kora
 
-### 1. Contexto guiado, quando falta regra ou mapa
+### 1. Análise e proposta
 
-Selecione `Analista da Etapa` e envie `/consignado-contexto` com a
-pagina e os contextos. Ele deve abrir uma conversa natural, percorrer as
-referencias sem pedir descricao de interface e perguntar apenas o que a
-tela nao revela. A entrega e um rascunho curto de mapa e, se necessario,
-proposta de curadoria, separado entre fatos observados e regras ditas pelo
-designer.
+Selecione somente `Kora` e envie Figma, Sections e contexto curto. Ela chama
+o Analista internamente e, se houver lacuna documental real, o Operador.
+Kora só apresenta proposta quando `pacote-analista.json` estiver favorável.
+Esse pacote reúne inventário, coletas, confronto com a base, plano de
+variáveis, componentes, mapa e contratos temporários.
 
-Confirme que nada foi escrito antes da sua aprovacao. Depois da
-aprovacao explicita, confirme que ele alterou somente o mapa da rodada,
-nunca o Figma nem os manuais-base. Encerre essa rodada.
+Confirme que nada foi escrito no Figma e que a conversa mostra apenas o que
+foi concluído, o que encontrou, a proposta e decisões de negócio reais.
 
-### 2. Analista da Etapa
+### 2. Montagem
 
-Selecione `Analista da Etapa` e envie `/consignado-analise` com pagina,
-contextos e casos. A abertura deve parecer uma conversa: reaproveita o
-que ja foi informado, diz o que vai investigar sozinho, pede apenas a
-proxima informacao que falta e antecipa a proposta que voce recebera.
-A entrega unica precisa conter:
-
-- inventario e grafo dos prototipos;
-- matriz de fatos e diferencas sem regra marcadas `[CONFIRMAR]`;
-- nucleo, variaveis, properties, mapa e especializacoes;
-- arvore-alvo por papeis, mapa IDS e geometria proposta.
-
-No historico de ferramentas, confirme que nao houve escrita Figma nem
-edicao de documento oficial. Teste `/consignado-aprendizado` em outra
-rodada com uma tela humana. Ele pode escrever somente em `docs/receitas/`.
-Com referencia de teste, deve pedir evidencia humana e parar.
-
-Antes de continuar, escreva uma aprovacao explicita, por exemplo:
+Depois de revisar a proposta, aprove-a na Kora, por exemplo:
 
 ```text
 APROVO a proposta consolidada da etapa <nome> para os contextos <lista>,
 incluindo arvore-alvo, mapa IDS, geometria, variaveis e excecoes.
 ```
 
-### 3. Montador
+Kora só chama o Montador quando a topologia está `APROVADO`. Enquanto estiver
+pendente, ela apresenta as alternativas de arquitetura e bloqueia a escrita.
+Quando liberada, a montagem ocorre somente em `_verificacao-<etapa>` e entrega
+`pacote-montagem.json` com rascunhos, previews, componentes locais, variáveis
+aplicadas e releituras.
 
-Abra uma nova conversa, selecione `Montador` e envie
-`/consignado-montagem`. Antes da escrita, ele precisa retomar o que esta
-aprovado, conferir sozinho contrato, topologia, colecao e referencias e
-pedir apenas a pendencia que realmente impedir a montagem.
+### 3. Validação e promoção
 
-Ele precisa entao:
+Kora chama o Validador independente após aceitar a montagem. Ele não escreve
+nem promove. O `veredito-validador.json` exige criação, conteúdo, modes,
+layout, revisão visual, releituras independentes e pré-promoção favoráveis.
 
-1. rodar `validateRound.js` com contrato, manifesto e resolucao
-   temporaria, sem escrever se o gate reprovar;
-2. confirmar keys, properties e slots usando `resolverIDS`;
-3. rodar `validateCompositionContract.js` antes de construir cada
-   rascunho;
-4. criar somente a variavel semantica aprovada que uma prova precisar;
-5. executar cada `PROVA_DE_MONTAGEM` em `_prova-<papel>`, removendo o
-   objeto temporario depois de registrar o resultado e limpando a
-   variavel somente se a prova falhar e ela tiver sido criada para isso;
-6. construir a arvore-alvo em `_verificacao-<etapa>` somente se essas
-   provas passarem;
-7. importar instancias IDS reais e usar properties publicas;
-8. criar variaveis no namespace da etapa, nunca `prop/*` ou variaveis
-   de teste;
-9. criar previews sem prototipos, com mode somente no wrapper;
-10. rodar as validacoes, incluindo `validateReconstructionContract`.
-
-Confirme que nao existe clone da tela inteira, instancia remota com filho
-novo, `tpl-*` antecipado ou preview conectado como fluxo.
-
-### 4. Validador e promocao
-
-Abra uma nova conversa, selecione `Validador` e envie
-`/consignado-validacao`. O Validador nao escreve no Figma.
-Ele precisa conferir, para cada rascunho e contexto:
-
-- `validateCreation`, `validateContentContract`, `validateModeBehavior`
-  e `validateLayout`;
-- `validateReconstructionContract`, com achados de arvore, geometria e
-  IDS separados;
-- `validateCompositionContract` e `validateRound`;
-- nova coleta de reacoes e estrutura, comparada com o manifesto do
-  Analista;
-- screenshots da referencia, do rascunho e de cada preview.
-
-O resultado e exatamente `APTO PARA PROMOCAO`, `REPROVADO` ou `NAO
-VERIFICAVEL`. Sem screenshot, nao ha promocao. Com resultado apto, abra
-uma nova conversa com `Montador` para a promocao. Ele roda
-`validatePromotion`, que tambem exige a prova da rodada e do contrato
-de reconstrucao, move para `_templates`, renomeia `tpl-*` e limpa
-previews. Ele nao cria `Fluxos`.
+Com veredito apto, Kora pede sua aprovação de promoção. Só então ela chama o
+Montador para promover. A rodada termina apenas com `pacote-promocao.json`,
+que prova a validação, a releitura pós-promoção e nomes publicados sem contexto.
 
 ## Casos obrigatorios no arquivo descartavel
 

@@ -60,7 +60,7 @@ if (incidentsDirectory && fs.existsSync(incidentsDirectory)) {
     for (const resolutionName of fs.readdirSync(incidentDirectory).filter((name) => /^retomada-[A-Za-z0-9.-]+\.json$/.test(name))) {
       try {
         const resolution = JSON.parse(fs.readFileSync(path.join(incidentDirectory, resolutionName), 'utf8'))
-        if (resolution?.incidente !== entry.name || resolution?.status !== 'RETOMADO' || !/^[a-f0-9]{7,64}$/.test(resolution?.correcaoCommit ?? '') || !['ANALISANDO', 'MONTANDO', 'VALIDANDO'].includes(resolution?.faseRetomada) || /figma\.com|node-id|(?<![T:\d])\b\d{1,8}:\d{1,8}\b(?!:\d)/i.test(JSON.stringify(resolution))) failures.push('retomada de incidente invalida: ' + entry.name + '/' + resolutionName)
+        if (resolution?.incidente !== entry.name || resolution?.status !== 'RETOMADO' || !/^[a-f0-9]{7,64}$/.test(resolution?.correcaoCommit ?? '') || !['ANALISANDO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO'].includes(resolution?.faseRetomada) || /figma\.com|node-id|(?<![T:\d])\b\d{1,8}:\d{1,8}\b(?!:\d)/i.test(JSON.stringify(resolution))) failures.push('retomada de incidente invalida: ' + entry.name + '/' + resolutionName)
       } catch { failures.push('retomada de incidente invalida: ' + entry.name + '/' + resolutionName) }
     }
   }

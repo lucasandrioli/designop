@@ -76,12 +76,17 @@ aprovacao ou promocao antiga por conta propria.
 | Analisar | Analista, e Operador se necessario | referencias, base e proposta comprovadas | responde somente duvida que muda a jornada |
 | Aprovar contrato | Kora | proposta consolidada | aprova explicitamente |
 | Montar | Montador | contrato aprovado antes da escrita | nenhuma, salvo nova decisao real |
-| Validar | Validador | veredito independente | nenhuma durante a auditoria |
-| Promover | Kora e papel autorizado | veredito favoravel e promocao autorizada | aprova explicitamente |
+| Validar | Validador | veredito independente, revisao visual e releituras comprovadas | nenhuma durante a auditoria |
+| Aprovar promoção | Kora | veredito favorável verificável | aprova explicitamente |
+| Promover | Montador | aprovação de promoção, releitura final e pacote de promoção | nenhuma |
 
 Kora nunca inicia a montagem sem aprovacao do contrato. Ela nunca aceita uma
-promocao sem veredito favoravel e aprovacao humana. O Validador nao corrige;
+promocao sem veredito favoravel, aprovacao humana e recibo posterior à escrita. O Validador nao corrige;
 quando reprova, a rodada retorna ao papel responsavel com a causa registrada.
+O veredito so fica pronto quando o recibo da rodada prova criacao, conteudo,
+modes, layout, releituras independentes e revisao visual. A rodada so termina
+quando o recibo posterior comprovar que os ativos publicados foram relidos e
+nao carregam contexto no nome.
 
 ## Recuperacao e limites
 

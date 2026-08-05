@@ -114,6 +114,13 @@ conter IDS, registra a composicao local e as instancias IDS descendentes
 separadamente. Isso prova a estrutura observada, mas nao promove a
 composicao local para reutilizacao.
 
+Depois de validar a analise, o Analista consolida esses rascunhos somente em
+`.designops/runs/<rodada>/proposta/` e gera `pacote-analista.json`. O pacote
+registra hashes das evidencias, plano de variaveis, componentes, mapa e
+contratos, e e a unica entrega que Kora pode reconhecer como pronta para
+revisao. Ele nao representa aprovacao, montagem ou permissao para alterar a
+biblioteca.
+
 Logo depois de gravar o recorte, o Analista executa
 `node scripts/validateAnalysisRound.js --round <rodada> --stage pre-coleta`.
 Somente `passed: true` autoriza os coletores. Depois da reconciliacao MCP e
@@ -210,6 +217,12 @@ O Montador recebe somente contrato consolidado aprovado. Ele confirma
 essa aprovacao na abertura do turno e para quando houver uma lacuna
 bloqueante.
 
+Antes da montagem, a topologia da biblioteca precisa estar registrada como
+`APROVADO` em `docs/topologia-biblioteca.md`. Enquanto ela estiver pendente,
+o Montador faz somente inventario de leitura e apresenta as alternativas para
+decisao humana. Ele nao transforma uma recomendacao em collection, variavel,
+binding ou rascunho.
+
 Escreve em serie: primeiro cria componentes locais que tenham duas
 reutilizacoes previstas e aprovadas; depois cria rascunhos e templates
 com IDS, componentes locais aprovados e `local-layout` declarado. Tudo
@@ -224,6 +237,11 @@ O Montador nao valida nem promove por conta propria. Entrega rascunho,
 previews, contrato e evidencias para o Validador. Antes da publicacao
 da library, deixa o checklist humano de manter `_componentes-locais`
 interno.
+
+A entrega tecnica e `pacote-montagem.json` da rodada, com hashes dos
+rascunhos, previews, componentes locais, plano de variaveis aplicado,
+evidencias MCP e comprovacao da area `_verificacao-<etapa>`. Somente um
+pacote favoravel pode ser entregue ao Validador.
 
 ## Validador
 
@@ -241,6 +259,16 @@ Seu turno termina com `APTO PARA PROMOCAO`, `REPROVADO` ou
 `NAO VERIFICAVEL`. Somente `APTO PARA PROMOCAO` permite que o Montador
 promova o template. A validacao de uma Section nao e pre-requisito para
 promover um template isolado que ainda nao participe de jornada completa.
+
+O resultado nao e apenas uma resposta narrativa. O Validador entrega
+`veredito-validador.json` na pasta da rodada e valida o arquivo antes de
+encerrar. O recibo amarra por hash a montagem, os contratos, a resolucao,
+as evidencias MCP e a pre-promocao. `APTO_PARA_PROMOCAO` exige provas
+favoraveis de criacao, conteudo, modes e layout, revisao visual e
+releituras independentes de estrutura e interacoes, com resultado por
+template e contexto. Depois da aprovacao humana e da escrita autorizada,
+o recibo `pacote-promocao.json` prova a promocao, a releitura final e a
+ausencia de contexto no nome dos ativos publicados.
 
 ## Aprendiz
 

@@ -14,6 +14,11 @@ confirme a aprovacao que esta usando e informe o rascunho que entregara
 ao Validador. Pare sem aprovacao humana explicita do contrato ou com
 item bloqueante em [CONFIRMAR].
 
+Se `docs/topologia-biblioteca.md` estiver com `status` diferente de
+`APROVADO`, nao escreva no Figma. Faça apenas o inventario de leitura da
+biblioteca e apresente as alternativas daquele documento, com recomendacao
+e impacto. A escolha e o registro da topologia pertencem ao designer.
+
 Antes de escrever, execute `validateRound.js` com os contratos logicos,
 o manifesto aprovado, `.designops/runs/<rodada>/resolvido.json` e
 `.designops/runs/<rodada>/componentes-locais.json`. Antes de construir cada
@@ -42,9 +47,14 @@ Modes estruturais do IDS continuam permitidos, mas o mode da collection de
 conteudo permanece somente no wrapper de preview.
 
 Depois da escrita e antes de pedir o veredito, salve os relatorios MCP em
-`.designops/runs/<rodada>/evidencias-mcp.json` e execute
-`validateRound.js --stage pre-promocao --evidence <arquivo>`. Se a
-releitura Figma falhar, registre `NAO_VERIFICAVEL`, sem declarar correcao.
+`.designops/runs/<rodada>/evidencias-mcp.json`. Registre tambem o plano de
+variaveis aplicado, a prova de `_verificacao-<etapa>`, os rascunhos, previews
+e o plano de componentes locais em `pacote-montagem.json`. Rode
+`validateAssemblyPackage.js --round <rodada>` antes de entregar ao Validador;
+o pacote exige topologia aprovada, hashes da rodada atual e ao menos uma prova
+de cada grupo. Execute tambem `validateRound.js --stage pre-promocao
+--evidence <arquivo>`. Se a releitura Figma falhar, registre
+`NAO_VERIFICAVEL`, sem declarar correcao.
 
 Depois de APTO PARA PROMOCAO e validatePromotion aprovado, mova para
 a area de templates, renomeie para <modalidade>/<etapa>/tpl-<tela>,

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs')
 const path = require('path')
+const childProcess = require('child_process')
 const { validateAnalystStateData } = require('./validateAnalystStateCore')
 
 function args(argv) {
@@ -29,6 +30,27 @@ function sectionLine(item, manifest) {
   if (item.status === 'FALHOU') return `- ${item.nome}: leitura não concluída`
   return `- ${item.nome}: aguardando leitura`
 }
+function readReadyPackage(repositoryRoot, round) {
+  const validation = childProcess.spawnSync(process.execPath, [path.join(__dirname, 'validateAnalystPackage.js'), '--round', round, '--root', repositoryRoot], { encoding: 'utf8' })
+  if (validation.status !== 0) return null
+  const file = path.join(repositoryRoot, '.designops', 'runs', round, 'pacote-analista.json')
+  try { return readJson(file) } catch { return null }
+}
+function readyPackageLines(analystPackage) {
+  const human = analystPackage.resumoHumano
+  const lines = ['# Proposta pronta para sua revisão', '', '## O que foi concluído']
+  for (const item of human.concluido) lines.push('- ' + item)
+  lines.push('', '## O que encontrei')
+  for (const item of human.encontrado) lines.push('- ' + item)
+  lines.push('', '## Proposta', human.proposta.resumo)
+  for (const item of human.proposta.entregaveis) lines.push('- ' + item)
+  if (human.decisoes.length) {
+    lines.push('', '## Só preciso da sua decisão nestes pontos')
+    for (const item of human.decisoes) lines.push(`- ${item.pergunta}\n  Impacto: ${item.impacto}\n  Recomendação: ${item.recomendacao}`)
+  }
+  lines.push('', '## Próximo passo', human.proximoPasso)
+  return lines
+}
 const input = args(process.argv.slice(2))
 const repositoryRoot = path.resolve(input.root ?? path.join(__dirname, '..'))
 const directory = input.round ? path.join(repositoryRoot, '.designops', 'runs', input.round) : null
@@ -45,44 +67,51 @@ if (failures.length) {
 }
 const manifestFile = path.join(path.dirname(stateFile), 'analise.json')
 const manifest = fs.existsSync(manifestFile) ? readJson(manifestFile) : null
-const lines = [`# ${statusTitle(state.status)}`, '', '## Referências', ...state.progresso.sections.map((item) => sectionLine(item, manifest))]
-if (state.entrada.contextoCurto) lines.push('', '## Objetivo informado', state.entrada.contextoCurto)
-if (state.achados.length) {
+const readyPackage = state.status === 'PRONTO_PARA_REVISAO' ? readReadyPackage(repositoryRoot, state.rodada) : null
+if (state.status === 'PRONTO_PARA_REVISAO' && !readyPackage) {
+  console.error('Não foi possível apresentar a proposta porque o pacote final ainda não está consistente.')
+  process.exit(1)
+}
+const lines = readyPackage
+  ? readyPackageLines(readyPackage)
+  : [`# ${statusTitle(state.status)}`, '', '## Referências', ...state.progresso.sections.map((item) => sectionLine(item, manifest))]
+if (!readyPackage && state.entrada.contextoCurto) lines.push('', '## Objetivo informado', state.entrada.contextoCurto)
+if (!readyPackage && state.achados.length) {
   lines.push('', '## O que encontrei')
   for (const item of state.achados) lines.push(`- ${item.titulo}: ${item.descricao}`)
 }
 const documented = state.confrontos.filter((item) => item.situacaoBase === 'DOCUMENTADO')
 const pendingComparison = state.confrontos.filter((item) => item.situacaoBase !== 'DOCUMENTADO')
-if (documented.length) {
+if (!readyPackage && documented.length) {
   lines.push('', '## O que a base já estabelece')
   for (const item of documented) lines.push(`- ${item.topico}: ${item.conclusao}`)
 }
-if (pendingComparison.length) {
+if (!readyPackage && pendingComparison.length) {
   lines.push('', '## O que a referência traz para decidir')
   for (const item of pendingComparison) lines.push(`- ${item.topico}: ${item.conclusao}`)
 }
-if (state.proposta.status !== 'NAO_INICIADA') {
+if (!readyPackage && state.proposta.status !== 'NAO_INICIADA') {
   lines.push('', '## Proposta', state.proposta.resumo || 'A proposta está sendo preparada.')
   for (const item of state.proposta.entregaveis) lines.push(`- ${item}`)
 }
 const pending = state.decisoes.filter((item) => item.status === 'PENDENTE')
-if (pending.length) {
+if (!readyPackage && pending.length) {
   lines.push('', '## Só preciso da sua decisão nestes pontos')
   for (const item of pending) lines.push(`- ${item.pergunta}\n  Impacto: ${item.impacto}\n  Recomendação: ${item.recomendacao}`)
 }
 const activeProblems = state.problemas.filter((item) => item.bloqueia)
-if (activeProblems.length) {
+if (!readyPackage && activeProblems.length) {
   lines.push('', '## O que impede a próxima etapa')
   for (const item of activeProblems) lines.push(`- ${item.mensagemHumana}\n  Próximo passo: ${item.proximaAcao}`)
 }
-if (!pending.length && !activeProblems.length) {
+if (!readyPackage && !pending.length && !activeProblems.length) {
   const next = state.status === 'PREPARANDO' ? 'Vou localizar as referências informadas e iniciar a leitura.' : state.status === 'LENDO_REFERENCIAS' ? 'Vou concluir as referências restantes antes de preparar a proposta.' : state.status === 'PRONTO_PARA_REVISAO' ? 'Você pode revisar a proposta. A montagem só começa depois da sua aprovação explícita.' : 'Vou concluir a organização dos achados e preparar a proposta.'
   lines.push('', '## Próximo passo', next)
 }
 const output = lines.join('\n') + '\n'
 if (input.write) {
   const runDirectory = path.dirname(stateFile)
-  const evidence = ['referencias.json', 'analise.json', 'contexto.json', 'componentes-locais.json', 'resolvido.json']
+  const evidence = ['referencias.json', 'analise.json', 'contexto.json', 'plano-variaveis.json', 'componentes-locais.json', 'resolvido.json', 'pacote-analista.json']
     .filter((name) => fs.existsSync(path.join(runDirectory, name)))
     .map((name) => `- ${name}`)
   fs.writeFileSync(path.join(runDirectory, 'resumo-operador.md'), output)

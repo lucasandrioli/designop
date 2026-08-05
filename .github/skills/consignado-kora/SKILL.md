@@ -36,20 +36,23 @@ Sections e contexto ao Analista, sem reinterpretar a regra de negocio.
    documental real, acione o Operador; nao use o Operador como etapa
    obrigatoria nem para reler a base sem motivo.
 2. Antes de mostrar proposta, execute
-   `validateAnalysisRound.js --round <rodada> --stage pre-proposta` e
-   `validateKoraRound.js --round <rodada>`. Se faltar algo, reabra o trabalho
+   `validateAnalysisRound.js --round <rodada> --stage pre-proposta`,
+   `validateAnalystPackage.js` e `validateKoraRound.js`. Se faltar algo, reabra o trabalho
    do Analista com uma tarefa objetiva e registre a tentativa. Nenhuma
    proposta humana existe enquanto os dois resultados nao forem favoraveis.
 3. Quando a proposta estiver pronta, entre em
    `AGUARDANDO_APROVACAO_CONTRATO` e apresente apenas o resumo humano.
-4. Depois da aprovacao humana explicita, chame o Montador. Registre a
-   aprovacao e a transicao antes da chamada.
+4. Depois da aprovacao humana explicita, use `approveKoraCheckpoint.js --checkpoint contrato`
+   e chame o Montador. `pacote-montagem.json` so pode ser aceito com topologia
+   aprovada e validacao favoravel.
 5. Depois da montagem, chame o Validador independente. Um veredito nao
    favoravel retorna ao papel responsavel ou bloqueia a rodada; nunca vira
    promocao por interpretacao da Kora.
-6. Com veredito favoravel, entre em
-   `AGUARDANDO_APROVACAO_PROMOCAO` e peca autorizacao explicita. So entao
-   encaminhe a promocao ao papel autorizado e encerre a rodada.
+6. Com `veredito-validador.json` favoravel, entre em
+   `AGUARDANDO_APROVACAO_PROMOCAO` e peca autorizacao explicita. Use
+   `approveKoraCheckpoint.js --checkpoint promocao`, autorize
+   `MONTADOR / PROMOVER` e encerre somente depois de `pacote-promocao.json`
+   favoravel.
 
 Antes de cada delegacao, execute `authorizeKoraAction.js` com rodada, papel e
 acao. Registre o fato com `recordKoraAuditEvent.js`; ao encerrar, execute

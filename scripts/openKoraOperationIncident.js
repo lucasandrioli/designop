@@ -28,13 +28,13 @@ function safeEvidence(root, round) {
   return names.filter((name) => fs.existsSync(path.join(directory, name))).map((name) => ({ caminho: '.designops/runs/<rodada>/' + name, sha256: sha256(path.join(directory, name)) }))
 }
 function safeResume(phase) {
-  return { ANALISE: 'ANALISANDO', MONTAGEM: 'MONTANDO', VALIDACAO: 'VALIDANDO', ORQUESTRACAO: 'ANALISANDO' }[phase]
+  return { ANALISE: 'ANALISANDO', MONTAGEM: 'MONTANDO', VALIDACAO: 'VALIDANDO', PROMOCAO: 'AGUARDANDO_APROVACAO_PROMOCAO', ORQUESTRACAO: 'ANALISANDO' }[phase]
 }
 function validateIncident(incident) {
   const failures = []
   if (!/^inc-[A-Za-z0-9._-]+$/.test(incident.id)) failures.push('id de incidente invalido')
   if (incident.classificacao !== 'INCIDENTE_DA_OPERACAO' || incident.impacto !== 'BLOQUEIA_RODADA') failures.push('classificacao de incidente invalida')
-  if (!['ANALISE', 'MONTAGEM', 'VALIDACAO', 'ORQUESTRACAO'].includes(incident.fase) || !['ANALISANDO', 'MONTANDO', 'VALIDANDO'].includes(incident.pontoRetomada)) failures.push('fase ou ponto de retomada invalido')
+  if (!['ANALISE', 'MONTAGEM', 'VALIDACAO', 'PROMOCAO', 'ORQUESTRACAO'].includes(incident.fase) || !['ANALISANDO', 'MONTANDO', 'VALIDANDO', 'AGUARDANDO_APROVACAO_PROMOCAO'].includes(incident.pontoRetomada)) failures.push('fase ou ponto de retomada invalido')
   if ([incident.objetivo, incident.esperado, incident.observado].some((value) => !String(value ?? '').trim() || sanitiseAuditText(value) !== value)) failures.push('texto do incidente precisa estar sanitizado')
   if (!Array.isArray(incident.evidencias) || !incident.evidencias.length || incident.evidencias.some((item) => !/^\.designops\/runs\/<rodada>\//.test(item.caminho) || !/^[a-f0-9]{64}$/.test(item.sha256))) failures.push('evidencias do incidente invalidas')
   return failures
@@ -51,7 +51,7 @@ const failures = []
 if (!round || !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(round)) failures.push('round invalida')
 if (!state) failures.push('estado da rodada indisponivel')
 if (!['KORA', 'ANALISTA', 'MONTADOR', 'VALIDADOR', 'OPERADOR', 'REGISTRADOR'].includes(role)) failures.push('role invalido')
-if (!['ANALISE', 'MONTAGEM', 'VALIDACAO', 'ORQUESTRACAO'].includes(phase)) failures.push('phase invalida')
+if (!['ANALISE', 'MONTAGEM', 'VALIDACAO', 'PROMOCAO', 'ORQUESTRACAO'].includes(phase)) failures.push('phase invalida')
 if (!String(input.observed ?? '').trim()) failures.push('observed obrigatorio')
 const diagnosis = state ? classifyFailure({ observed: input.observed, role, state }) : null
 if (diagnosis && diagnosis.classificacao !== 'INCIDENTE_DA_OPERACAO') failures.push('esta falha nao e um incidente da operacao: ' + diagnosis.classificacao)

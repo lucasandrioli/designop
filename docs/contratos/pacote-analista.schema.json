@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pacote final temporario do Analista",
+  "description": "Recibo de proposta pronto para revisao. Vive somente na pasta da rodada e nao autoriza montagem.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "rodada", "status", "artefatos", "resumoHumano"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
+    "status": { "const": "PRONTO_PARA_REVISAO" },
+    "artefatos": {
+      "type": "array",
+      "minItems": 9,
+      "items": { "$ref": "#/$defs/artefato" }
+    },
+    "resumoHumano": {
+      "type": "object",
+      "required": ["concluido", "encontrado", "proposta", "decisoes", "proximoPasso"],
+      "properties": {
+        "concluido": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "encontrado": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "proposta": {
+          "type": "object",
+          "required": ["resumo", "entregaveis"],
+          "properties": {
+            "resumo": { "type": "string", "minLength": 1 },
+            "entregaveis": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+          }
+        },
+        "decisoes": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["pergunta", "impacto", "recomendacao"],
+            "properties": {
+              "pergunta": { "type": "string", "minLength": 1 },
+              "impacto": { "type": "string", "minLength": 1 },
+              "recomendacao": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "proximoPasso": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "artefato": {
+      "type": "object",
+      "required": ["tipo", "caminho", "sha256"],
+      "properties": {
+        "tipo": {
+          "enum": [
+            "REFERENCIAS",
+            "MANIFESTO_ANALISE",
+            "CONTEXTO",
+            "ESTADO_ANALISTA",
+            "PLANO_VARIAVEIS",
+            "PLANO_COMPONENTES_LOCAIS",
+            "RESOLUCAO_IDS",
+            "MAPA_JORNADA",
+            "CONTRATO_TELA",
+            "CONTRATO_JORNADA",
+            "MAPA_IDS"
+          ]
+        },
+        "caminho": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

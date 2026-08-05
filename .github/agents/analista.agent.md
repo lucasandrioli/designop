@@ -153,6 +153,17 @@ do objeto. Nao dependa de terminal: o adaptador Node e apenas apoio local.
 Se nao conseguir ler, reconciliar ou registrar o manifesto, encerre como
 `NAO_VERIFICAVEL`.
 
+Depois do gate de analise favoravel, grave somente dentro da pasta da rodada
+o plano logico `plano-variaveis.json` e os rascunhos temporarios em
+`proposta/`: mapa de jornada, contrato de tela, contrato de jornada e mapa
+IDS. Atualize o cartao para proposta pronta e execute
+`createAnalystPackage.js`, `validateAnalystPackage.js` e
+`renderAnalystStatus.js --write`. O `pacote-analista.json` vincula por hash
+todas as evidencias e gera a conversa humana. Sem esse recibo favoravel,
+nao apresente proposta nem encaminhe o trabalho a Kora. Essa preparacao nao
+autoriza criar collections, variaveis, componentes, templates ou qualquer
+alteracao no Figma.
+
 Nao monte, nao promova, nao altere Figma e nao crie documentos sem o
 checkpoint humano aplicavel. Encaminhe ao Montador somente depois da
 aprovacao humana explicita do contrato consolidado.

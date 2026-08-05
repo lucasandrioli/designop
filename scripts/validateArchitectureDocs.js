@@ -52,6 +52,18 @@ const koraDecisionResume = read('scripts/resumeKoraDecision.js');
 const koraIncidentOpen = read('scripts/openKoraOperationIncident.js');
 const koraIncidentResume = read('scripts/resumeKoraIncident.js');
 const koraIncidentResolution = read('scripts/recordKoraIncidentResolution.js');
+const analystPackageSchema = read('docs/contratos/pacote-analista.schema.json');
+const analystVariablePlanSchema = read('docs/contratos/plano-variaveis-analise.schema.json');
+const analystPackageValidator = read('scripts/validateAnalystPackage.js');
+const libraryTopology = read('docs/topologia-biblioteca.md');
+const assemblyPackageSchema = read('docs/contratos/pacote-montagem.schema.json');
+const assemblyPackageValidator = read('scripts/validateAssemblyPackage.js');
+const validatorVerdictSchema = read('docs/contratos/veredito-validador.schema.json');
+const promotionPackageSchema = read('docs/contratos/pacote-promocao.schema.json');
+const validatorVerdict = read('scripts/validateValidatorVerdict.js');
+const promotionPackage = read('scripts/validatePromotionPackage.js');
+const koraPackageRegister = read('scripts/registerKoraPackage.js');
+const koraCheckpointApproval = read('scripts/approveKoraCheckpoint.js');
 
 [
   'contexto-id',
@@ -98,6 +110,10 @@ requireText('docs/contratos/resolucao.schema.json', resolutionSchema, 'sectionId
 requireText('docs/contratos/componentes-locais.schema.json', localComponentsSchema, 'reutilizacoes');
 requireText('docs/contratos/contexto-rodada.schema.json', contextDraftSchema, 'FATO_OBSERVADO');
 requireText('docs/contratos/contexto-rodada.schema.json', contextDraftSchema, 'APROVADO_PARA_REGISTRO');
+requireText('docs/contratos/pacote-analista.schema.json', analystPackageSchema, 'PRONTO_PARA_REVISAO');
+requireText('docs/contratos/pacote-analista.schema.json', analystPackageSchema, 'CONTRATO_JORNADA');
+requireText('docs/contratos/plano-variaveis-analise.schema.json', analystVariablePlanSchema, 'CONTEUDO_MODALIDADE');
+requireText('scripts/validateAnalystPackage.js', analystPackageValidator, 'gate pre-proposta reprovado');
 requireText('docs/contratos/evidencias-mcp.schema.json', mcpEvidenceSchema, 'limitViolations');
 requireText('docs/contratos/evidencias-mcp.schema.json', mcpEvidenceSchema, 'componentPropertyType');
 requireText('docs/contratos/referencias-rodada.schema.json', referenceScopeSchema, 'EVIDENCIA_APENAS');
@@ -118,9 +134,18 @@ requireText('.github/agents/kora.agent.md', koraAgent, 'Nao abra Figma');
 requireText('.github/agents/kora.agent.md', koraAgent, 'authorizeKoraAction.js');
 requireText('.github/agents/kora.agent.md', koraAgent, 'Nunca encaminhe a saida bruta');
 requireText('docs/operacao-kora.md', koraOperation, 'Kora, audite as rodadas');
+requireText('docs/contratos/veredito-validador.schema.json', validatorVerdictSchema, 'APTO_PARA_PROMOCAO');
+requireText('docs/contratos/veredito-validador.schema.json', validatorVerdictSchema, 'CRIACAO');
+requireText('docs/contratos/veredito-validador.schema.json', validatorVerdictSchema, 'MODES');
+requireText('docs/contratos/pacote-promocao.schema.json', promotionPackageSchema, 'ativosPublicados');
+requireText('scripts/validateValidatorVerdict.js', validatorVerdict, 'validateValidatorVerdictData');
+requireText('scripts/validatePromotionPackage.js', promotionPackage, 'validatePromotionPackageData');
+requireText('scripts/registerKoraPackage.js', koraPackageRegister, 'Pacote verificavel aceito');
+requireText('scripts/approveKoraCheckpoint.js', koraCheckpointApproval, 'Aprovacao humana registrada');
 requireText('docs/operacao-kora.md', koraOperation, 'nunca pede que voce forneca ID');
 requireText('docs/contratos/rodada-kora.schema.json', koraSchema, 'AGUARDANDO_APROVACAO_CONTRATO');
 requireText('docs/contratos/rodada-kora.schema.json', koraSchema, 'recibos');
+requireText('docs/contratos/rodada-kora.schema.json', koraSchema, 'PROMOVENDO');
 requireText('docs/contratos/evento-auditoria-kora.schema.json', koraAuditSchema, 'RODADA_INICIADA');
 requireText('scripts/auditKoraRounds.js', koraAuditReader, 'AUDIT_KORA');
 requireText('scripts/resumeKoraDecision.js', koraDecisionResume, 'Decisao humana registrada');
@@ -134,6 +159,14 @@ requireText('scripts/resumeKoraIncident.js', koraIncidentResume, 'correction-com
 requireText('scripts/recordKoraIncidentResolution.js', koraIncidentResolution, 'RETOMADO');
 requireText('.github/skills/consignado-base/SKILL.md', baseSkill, 'sem Figma');
 requireText('.github/skills/consignado-base/SKILL.md', baseSkill, 'merge manual');
+requireText('docs/topologia-biblioteca.md', libraryTopology, 'status:');
+requireText('docs/topologia-biblioteca.md', libraryTopology, '### A.');
+requireText('docs/topologia-biblioteca.md', libraryTopology, '### B.');
+requireText('docs/topologia-biblioteca.md', libraryTopology, '### C.');
+requireText('.github/skills/consignado-montagem/SKILL.md', assemblySkill, 'validateAssemblyPackage.js');
+requireText('docs/contratos/pacote-montagem.schema.json', assemblyPackageSchema, 'CONCLUIDA_PARA_VALIDACAO');
+requireText('docs/contratos/pacote-montagem.schema.json', assemblyPackageSchema, '_verificacao-');
+requireText('scripts/validateAssemblyPackage.js', assemblyPackageValidator, 'pacote-montagem.json');
 ['consignado-base', 'consignado-contexto', 'consignado-analise', 'consignado-montagem', 'consignado-validacao'].forEach((skill) => {
   const content = {
     'consignado-base': baseSkill,

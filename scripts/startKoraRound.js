@@ -39,6 +39,7 @@ const state = {
   tentativas: [],
   recibos: [],
   artefatos: [],
+  pacotes: { analista: null, montagem: null, veredito: null, promocao: null },
   decisoes: [],
   bloqueios: [],
   motivoInterrupcao: null,

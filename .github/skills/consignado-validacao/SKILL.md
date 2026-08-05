@@ -61,5 +61,25 @@ no template e descendentes.
 Emita APTO PARA PROMOCAO, REPROVADO ou NAO VERIFICAVEL. Nao corrija e
 nao promova.
 
+## Recibo verificavel
+
+Antes de encerrar, grave
+`.designops/runs/<rodada>/veredito-validador.json` e execute
+`validateValidatorVerdict.js --round <rodada>`. O veredito referencia,
+por caminho e hash, a montagem, contrato, resolucao, evidencias MCP e
+o resultado pre-promocao. Para `APTO_PARA_PROMOCAO`, todos os resultados
+por template e contexto devem ser favoraveis e o recibo precisa conter:
+
+- `CRIACAO`, `CONTEUDO`, `MODES`, `LAYOUT` e `PRE_PROMOCAO` favoraveis;
+- releituras independentes de estrutura e interacoes;
+- revisao visual favoravel, registrada por template e contexto.
+
+Depois da aprovacao humana e da promocao executada pelo papel
+autorizado, confira o `pacote-promocao.json` com
+`validatePromotionPackage.js --round <rodada>`. Esse segundo recibo
+exige a aprovacao ja registrada pela Kora, `validatePromotion`
+favoravel, releitura apos a promocao e nomes publicados no formato
+`<modalidade>/<etapa>/tpl-<tela>`, sem contexto.
+
 Inclua sempre o checklist humano de confirmar que `_componentes-locais`
 nao sera publicado como asset da library.

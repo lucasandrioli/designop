@@ -56,6 +56,12 @@ if (state && statusesThatRequireAnalysisGate.has(state.status)) {
   try { analysisGate = JSON.parse(result.stdout) } catch { analysisGate = { passed: false, failures: ['resultado do gate de analise nao estava em JSON valido'] } }
   if (result.status !== 0 || analysisGate.passed !== true) failures.push('gate de analise pre-proposta reprovado para esta rodada')
 }
+let packagesGate = null
+if (state) {
+  const result = childProcess.spawnSync(process.execPath, [path.join(repositoryRoot, 'scripts', 'validateKoraPackages.js'), '--round', round, '--root', repositoryRoot], { cwd: repositoryRoot, encoding: 'utf8' })
+  try { packagesGate = JSON.parse(result.stdout) } catch { packagesGate = { passed: false, failures: ['resultado dos recibos nao estava em JSON valido'] } }
+  if (result.status !== 0 || packagesGate.passed !== true) failures.push('recibos obrigatorios da fase reprovados para esta rodada')
+}
 const passed = failures.length === 0
 console.log(JSON.stringify({
   round: round ?? null,
@@ -64,6 +70,7 @@ console.log(JSON.stringify({
   status: state?.status ?? null,
   failures,
   analysisGate: analysisGate ? { passed: analysisGate.passed === true } : null,
+  packagesGate: packagesGate ? { passed: packagesGate.passed === true } : null,
   operator: { mensagemHumana: operatorMessage(state?.status, passed) },
 }, null, 2))
 process.exit(passed ? 0 : 1)

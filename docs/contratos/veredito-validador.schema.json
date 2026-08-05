@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Veredito independente do Validador",
+  "type": "object",
+  "required": ["schemaVersion", "rodada", "emitidoEm", "resultado", "artefatosVinculados", "resultados", "verificacoes", "releiturasIndependentes", "revisaoVisual", "prePromocao"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
+    "emitidoEm": { "type": "string", "format": "date-time" },
+    "resultado": { "enum": ["APTO_PARA_PROMOCAO", "REPROVADO", "NAO_VERIFICAVEL"] },
+    "artefatosVinculados": { "$ref": "#/$defs/artefatos" },
+    "resultados": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "template", "contextoId", "resultado", "revisaoVisual"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "template": { "type": "string", "minLength": 1 },
+          "contextoId": { "type": "string", "minLength": 1 },
+          "resultado": { "enum": ["FAVORAVEL", "REPROVADO", "NAO_VERIFICAVEL"] },
+          "revisaoVisual": { "enum": ["FAVORAVEL", "REPROVADO", "NAO_VERIFICAVEL"] }
+        }
+      }
+    },
+    "verificacoes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tipo", "resultado", "artefato", "executadaEm"],
+        "properties": {
+          "tipo": { "enum": ["CRIACAO", "CONTEUDO", "MODES", "LAYOUT", "COMPOSICAO", "RECONSTRUCAO", "JORNADA", "CANVAS", "PRE_PROMOCAO"] },
+          "resultado": { "enum": ["FAVORAVEL", "REPROVADO", "NAO_VERIFICAVEL"] },
+          "artefato": { "$ref": "#/$defs/artefato" },
+          "executadaEm": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "releiturasIndependentes": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["tipo", "resultado", "independenteDaMontagem", "artefato", "executadaEm"],
+        "properties": {
+          "tipo": { "enum": ["ESTRUTURA", "INTERACOES"] },
+          "resultado": { "enum": ["FAVORAVEL", "REPROVADO", "NAO_VERIFICAVEL"] },
+          "independenteDaMontagem": { "const": true },
+          "artefato": { "$ref": "#/$defs/artefato" },
+          "executadaEm": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "revisaoVisual": {
+      "type": "object",
+      "required": ["resultado", "artefato", "executadaEm"],
+      "properties": {
+        "resultado": { "enum": ["FAVORAVEL", "REPROVADO", "NAO_VERIFICAVEL"] },
+        "artefato": { "$ref": "#/$defs/artefato" },
+        "executadaEm": { "type": "string", "format": "date-time" }
+      }
+    },
+    "prePromocao": {
+      "type": "object",
+      "required": ["resultado", "artefato", "executadaEm"],
+      "properties": {
+        "resultado": { "enum": ["FAVORAVEL", "REPROVADO", "NAO_VERIFICAVEL"] },
+        "artefato": { "$ref": "#/$defs/artefato" },
+        "executadaEm": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "$defs": {
+    "artefato": {
+      "type": "object",
+      "required": ["caminho", "sha256"],
+      "properties": {
+        "caminho": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "artefatos": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["papel", "caminho", "sha256"],
+        "properties": {
+          "papel": { "enum": ["PACOTE_MONTAGEM", "CONTRATO", "RESOLUCAO", "EVIDENCIAS_MCP", "PRE_PROMOCAO"] },
+          "caminho": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        }
+      }
+    }
+  }
+}

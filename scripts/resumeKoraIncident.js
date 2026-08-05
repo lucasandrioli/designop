@@ -58,6 +58,10 @@ if (resume === 'VALIDANDO') {
   state.aprovacoes.promocao = null
   state.recibos = state.recibos.filter((receipt) => receipt.checkpoint !== 'VALIDACAO')
 }
+if (resume === 'AGUARDANDO_APROVACAO_PROMOCAO') {
+  state.checkpoints.promocao.status = 'AGUARDANDO_APROVACAO'
+  state.aprovacoes.promocao = null
+}
 state.status = resume
 state.motivoInterrupcao = null
 state.incidenteOperacao.status = 'RETOMADO'

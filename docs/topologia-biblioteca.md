@@ -1,50 +1,77 @@
+---
+status: PENDENTE_DE_DECISAO
+aprovadoPor: null
+aprovadoEm: null
+---
+
 # Topologia da biblioteca Figma
 
-## Decisao obrigatoria
+## Decisao pendente
 
-Status atual: `[DECIDIR]`. O Montador nao cria collection, variavel ou
-binding enquanto este documento estiver pendente. O Analista pode
-propor contrato sem escolher topologia.
+Esta e uma decisao de arquitetura da biblioteca, nao uma deducao de uma
+referência. O Montador pode fazer inventario de leitura e preparar uma
+recomendacao, mas nao cria collection, variavel, binding, componente ou
+template enquanto `status` nao for `APROVADO` por uma pessoa designer.
 
-## Convencao fisica
+Aprovacao futura registra aqui a alternativa escolhida, quem aprovou e a data.
+Ela nao reaproveita automaticamente rascunhos, aprovacoes ou evidencias de
+uma rodada anterior.
 
-Cada modalidade possui sua collection de conteudo:
+## Alternativas para revisao
 
-```text
-Conteudo - <Modalidade>
-```
+### A. Conteudo por modalidade, contexto como mode
 
-As variaveis dessa collection usam:
+| Aspecto | Proposta |
+| --- | --- |
+| Collections | Uma collection `Conteudo - <Modalidade>` por modalidade. |
+| Caminho de variavel | `<etapa>/<tela>/<papel>`. |
+| Modes | Um mode por contexto, aplicado uma unica vez no wrapper da Section. |
+| Previews | Um preview por contexto em `_verificacao-<etapa>`, sem prototipo. |
+| IDS | Collections estruturais do IDS coexistem; o conteudo nao substitui IDS. |
 
-```text
-<etapa>/<tela>/<papel>
-```
+**Impacto:** preserva modalidade como estrutura e impede que contexto vire
+nome de variavel. E a alternativa recomendada porque respeita as regras
+canônicas atuais e deixa a comparação entre contextos explícita no preview.
 
-O mode e um contexto. Seu rotulo nao aparece nos caminhos de variavel.
-Collections estruturais do IDS permanecem externas e podem coexistir
-com a collection de conteudo da modalidade.
+### B. Conteudo por etapa, modalidade como mode
 
-## Consumo
+| Aspecto | Proposta |
+| --- | --- |
+| Collections | Uma collection por etapa compartilhada entre modalidades. |
+| Caminho de variavel | `<modalidade>/<tela>/<papel>`. |
+| Modes | Modes combinariam modalidade e contexto. |
+| Previews | Previews agrupados por etapa e mode combinado. |
+| IDS | Collections IDS coexistiriam, mas a selection de modalidade dependeria do mode. |
 
-Quem consome cria uma Section `Jornada <Modalidade>`, aplica uma unica
-collection de conteudo da modalidade e define o mode de contexto apenas
-nela. Templates descendentes nao fixam mode. A escolha da modalidade
-vem dos templates usados e da collection selecionada, nao de um mode.
+**Impacto:** simplifica o numero de collections, mas conflita com a regra de
+que modalidade muda estrutura e nunca e mode. Nao pode ser aprovada sem uma
+mudanca explícita dessa regra canônica.
 
-O contrato de jornada declara explicitamente quais templates devem estar
-presentes ou ausentes em cada contexto. Uma tela que deve estar ausente
-nao pode permanecer na Section escondida por variavel booleana.
+### C. Conteudo global por dominio, com selecao por bindings locais
 
-## Registro da decisao
+| Aspecto | Proposta |
+| --- | --- |
+| Collections | Uma collection global, organizada por dominio visual. |
+| Caminho de variavel | `<dominio>/<etapa>/<tela>/<papel>`. |
+| Modes | Contextos seriam resolvidos por bindings em cada template. |
+| Previews | Previews precisariam declarar bindings e modes em mais de um nível. |
+| IDS | Collections IDS coexistiriam, mas cada template ficaria responsável por resolver o contexto. |
+
+**Impacto:** favorece agrupamento visual, mas quebra a herança unica de mode
+na Section e aumenta o risco de bindings locais divergentes. Nao pode ser
+aprovada enquanto essa regra canônica continuar vigente.
+
+## Registro da aprovacao
+
+Quando houver decisao humana, mantenha somente a alternativa aprovada e
+atualize o bloco inicial, por exemplo:
 
 ```yaml
-status: [DECIDIR|APROVADO]
-arquivo: <nome ou link>
-collections:
-  - nome: Conteudo - <Modalidade>
-    modalidade: <modalidade>
-    caminho: <etapa>/<tela>/<papel>
-idsEstruturais: <collections IDS permitidas>
-aprovadoPor: <nome>
-aprovadoEm: <data>
+status: APROVADO
+alternativa: A
+aprovadoPor: DESIGNER
+aprovadoEm: 2026-08-05
 ```
+
+O `pacote-montagem.json` registra o hash deste documento aprovado. Sem esse
+vínculo, uma entrega de montagem nao pode seguir para o Validador.

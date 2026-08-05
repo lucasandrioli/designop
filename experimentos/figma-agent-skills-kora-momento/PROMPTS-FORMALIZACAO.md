@@ -37,6 +37,8 @@ Selecione somente a tela principal e a tela de mais detalhes desse momento.
 ```text
 /analista
 
+MODO: INVENTARIAR
+
 Agora vamos trabalhar o momento 4790, Autorizacao de debito em conta, dentro
 da etapa de Formalizacao.
 
@@ -70,4 +72,74 @@ Leia somente os frames atualmente selecionados. Inventarie os textos reais, as
 contas, os tres aceites, os estados dos checkboxes e a acao de abrir detalhes.
 Nao invente texto legal, contas, comportamentos ou regras que nao estejam neste
 contexto ou nas telas. Nao altere o canvas.
+```
+
+## Arquitetar a 4790
+
+Mantenha selecionadas somente as duas telas de referencia. Envie:
+
+```text
+/analista
+
+MODO: ARQUITETAR
+Use o inventario da 4790 e o contexto de Formalizacao desta conversa.
+
+Produza o contrato de arquitetura de montagem para as duas telas. Primeiro,
+defina o nucleo comum da 4790. Depois, separe apenas diferencas reais que as
+referencias ou eu tiver declarado. Nao gere PCon/4790, Refin/4790 ou outra
+variacao apenas por convencao de nome.
+
+Para cada tela, declare a arvore de composicao, os componentes e bibliotecas,
+a matriz de tokens e bindings, o plano de variaveis e o que e local-layout ou
+candidato a componente local. Quando uma instancia por modalidade for
+necessaria para montar um template, explicite essa instancia sem transformar o
+momento em uma modalidade. Nao altere o canvas.
+```
+
+## Montar a 4790 aprovada
+
+Use somente depois de aprovar o contrato de arquitetura e definir o alvo de
+montagem. Envie:
+
+```text
+/montador
+
+APROVACAO HUMANA: MONTAGEM APROVADA
+MOMENTO ATIVO: 4790, Autorizacao de debito em conta
+UNIDADE DE MONTAGEM: <tela principal, detalhe ou recorte aprovado>
+MODALIDADE DE EXECUCAO: <preencha somente se o template exigir uma instancia>
+AREA DE DESTINO: <area de verificacao>
+NOME DO RASCUNHO: <nome aprovado>
+
+Use o contrato de arquitetura aprovado nesta conversa. Confirme no preflight
+os componentes, tokens, variaveis e bindings. Se todos existirem e puderem ser
+aplicados como declarados, monte nesta chamada. Se algum item divergir, nao
+altere o canvas e devolva IMPASSE_TECNICO.
+```
+
+## Revisar impasse da 4790
+
+Use somente se o Montador devolver `IMPASSE_TECNICO`. Envie:
+
+```text
+/analista
+
+MODO: REVISAR_IMPASSE
+Reavalie somente o item da 4790 apontado no IMPASSE_TECNICO desta conversa.
+Preserve o restante do contrato, devolva o delta de arquitetura e nao altere o
+canvas.
+```
+
+## Validar a 4790
+
+Selecione a referencia e o rascunho do mesmo recorte. Envie:
+
+```text
+/validador
+
+MOMENTO ATIVO: 4790, Autorizacao de debito em conta
+Use o contrato de arquitetura aprovado e o relatorio de preflight e montagem.
+Compare a referencia e o rascunho, incluindo composicao, componentes, tokens,
+variaveis e bindings. Se houver divergencia, encaminhe-a ao Montador ou ao
+Analista. Nao corrija, nao publique e nao altere o canvas.
 ```

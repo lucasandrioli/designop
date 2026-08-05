@@ -34,7 +34,7 @@ function validateArtifact(artifact, label, options, failures) {
 function validateValidatorVerdictData(data, options = {}) {
   const failures = []
   const round = options.round ?? data?.rodada
-  if (data?.schemaVersion !== 1) failures.push('schemaVersion precisa ser 1')
+  if (![1, 2].includes(data?.schemaVersion)) failures.push('schemaVersion precisa ser 1 ou 2')
   if (!validRound(data?.rodada) || (options.round && data.rodada !== options.round)) failures.push('veredito pertence a outra rodada ou possui rodada invalida')
   if (!validDate(data?.emitidoEm)) failures.push('emitidoEm invalido')
   if (!['APTO_PARA_PROMOCAO', 'REPROVADO', 'NAO_VERIFICAVEL'].includes(data?.resultado)) failures.push('resultado do veredito invalido')
@@ -59,13 +59,13 @@ function validateValidatorVerdictData(data, options = {}) {
     failures.push('resultados por template e contexto sao obrigatorios')
   } else {
     for (const [index, result] of data.resultados.entries()) {
-      if (!result?.id || !result?.template || !result?.contextoId || !['FAVORAVEL', 'REPROVADO', 'NAO_VERIFICAVEL'].includes(result?.resultado) || !['FAVORAVEL', 'REPROVADO', 'NAO_VERIFICAVEL'].includes(result?.revisaoVisual)) {
+      if (!result?.id || !result?.template || !result?.contextoId || (data?.schemaVersion === 2 && (!result?.modalidade || !result?.tela)) || !['FAVORAVEL', 'REPROVADO', 'NAO_VERIFICAVEL'].includes(result?.resultado) || !['FAVORAVEL', 'REPROVADO', 'NAO_VERIFICAVEL'].includes(result?.revisaoVisual)) {
         failures.push(`resultados[${index}] invalido`)
         continue
       }
       if (resultIds.has(result.id)) failures.push(`resultado duplicado: ${result.id}`)
       resultIds.add(result.id)
-      const pair = `${result.template}::${result.contextoId}`
+      const pair = data?.schemaVersion === 2 ? `${result.modalidade}::${result.tela}::${result.template}::${result.contextoId}` : `${result.template}::${result.contextoId}`
       if (resultPairs.has(pair)) failures.push(`template/contexto duplicado: ${pair}`)
       resultPairs.add(pair)
     }

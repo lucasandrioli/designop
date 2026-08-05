@@ -51,7 +51,7 @@ const statusesThatRequireAnalysisGate = new Set([
   'CONCLUIDA',
 ])
 let analysisGate = null
-if (state && statusesThatRequireAnalysisGate.has(state.status)) {
+if (state && state.tipoRodada !== 'COMPOSICAO_ETAPA' && statusesThatRequireAnalysisGate.has(state.status)) {
   const result = childProcess.spawnSync(process.execPath, [path.join(repositoryRoot, 'scripts', 'validateAnalysisRound.js'), '--round', round, '--stage', 'pre-proposta'], { cwd: repositoryRoot, encoding: 'utf8' })
   try { analysisGate = JSON.parse(result.stdout) } catch { analysisGate = { passed: false, failures: ['resultado do gate de analise nao estava em JSON valido'] } }
   if (result.status !== 0 || analysisGate.passed !== true) failures.push('gate de analise pre-proposta reprovado para esta rodada')

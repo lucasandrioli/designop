@@ -44,21 +44,27 @@ if (gate.status !== 0) throw new Error('A analise ainda nao esta comprovada para
 const manifest = readJson(path.join(directory, 'analise.json'))
 const state = readJson(path.join(directory, 'estado-analista.json'))
 if (state.rodada !== round || state.status !== 'PRONTO_PARA_REVISAO' || state?.proposta?.status !== 'PRONTA') throw new Error('O estado do Analista ainda nao declara proposta pronta')
-const artifacts = [
-  artifact(directory, 'REFERENCIAS', 'referencias.json'),
-  artifact(directory, 'MANIFESTO_ANALISE', 'analise.json'),
-  artifact(directory, 'CONTEXTO', 'contexto.json'),
-  artifact(directory, 'ESTADO_ANALISTA', 'estado-analista.json'),
-  artifact(directory, 'PLANO_VARIAVEIS', 'plano-variaveis.json'),
-  artifact(directory, 'PLANO_COMPONENTES_LOCAIS', 'componentes-locais.json'),
-  artifact(directory, 'MAPA_JORNADA', 'proposta/mapa-jornada.md'),
-  artifact(directory, 'CONTRATO_TELA', 'proposta/contrato-tela.json'),
-  artifact(directory, 'CONTRATO_JORNADA', 'proposta/contrato-jornada.json'),
-  artifact(directory, 'MAPA_IDS', 'proposta/mapa-ids.json'),
-]
+const moment = state.schemaVersion === 2
+const artifacts = moment
+  ? [
+      artifact(directory, 'ESCOPO_MOMENTO', 'escopo-momento.json'),
+      artifact(directory, 'REFERENCIAS', 'referencias.json'),
+      artifact(directory, 'MANIFESTO_ANALISE', 'analise.json'),
+      artifact(directory, 'CONTEXTO', 'contexto.json'),
+      artifact(directory, 'ESTADO_ANALISTA', 'estado-analista.json'),
+      artifact(directory, 'MATRIZ_VARIACOES', 'proposta/matriz-variacoes.json'),
+      artifact(directory, 'CONTRATO_MOMENTO', 'proposta/contrato-momento.json'),
+      artifact(directory, 'PLANO_VARIAVEIS', 'plano-variaveis.json'),
+      artifact(directory, 'PLANO_COMPONENTES_LOCAIS', 'componentes-locais.json'),
+      ...fs.readdirSync(path.join(directory, 'proposta', 'contratos-tela')).filter((name) => name.endsWith('.json')).sort().map((name) => artifact(directory, 'CONTRATO_TELA', path.join('proposta', 'contratos-tela', name))),
+      artifact(directory, 'MAPA_IDS', 'proposta/mapa-ids.json'),
+    ]
+  : [
+      artifact(directory, 'REFERENCIAS', 'referencias.json'), artifact(directory, 'MANIFESTO_ANALISE', 'analise.json'), artifact(directory, 'CONTEXTO', 'contexto.json'), artifact(directory, 'ESTADO_ANALISTA', 'estado-analista.json'), artifact(directory, 'PLANO_VARIAVEIS', 'plano-variaveis.json'), artifact(directory, 'PLANO_COMPONENTES_LOCAIS', 'componentes-locais.json'), artifact(directory, 'MAPA_JORNADA', 'proposta/mapa-jornada.md'), artifact(directory, 'CONTRATO_TELA', 'proposta/contrato-tela.json'), artifact(directory, 'CONTRATO_JORNADA', 'proposta/contrato-jornada.json'), artifact(directory, 'MAPA_IDS', 'proposta/mapa-ids.json'),
+    ]
 if (manifest.requerResolucaoIds === true) artifacts.push(artifact(directory, 'RESOLUCAO_IDS', 'resolvido.json'))
 const analystPackage = {
-  schemaVersion: 1,
+  schemaVersion: moment ? 2 : 1,
   id: 'pacote-' + round,
   rodada: round,
   status: 'PRONTO_PARA_REVISAO',

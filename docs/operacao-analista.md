@@ -6,13 +6,22 @@ Em um unico envio:
 
 ```text
 Figma: <URL>
+Etapa: <etapa>
+Momento: <nome humano>
+Telas e anexos: <lista declarada>
+Modalidades: <lista>
 Sections: <nomes exatos, separados por virgula>
 Contexto curto: <uma frase opcional>
 ```
 
-O Analista descobre pagina, IDs, modalidade, etapa, sinais de contexto,
+O Analista descobre pagina, IDs, sinais de contexto,
 estrutura e reacoes. A pessoa operadora nao fornece node IDs, schemas,
 comandos, manuais ou arquivos temporarios.
+
+O momento, as telas e anexos e as modalidades sao recorte humano imutavel.
+O Analista comprova cada superficie, mas nao altera sua hierarquia. Pode
+comparar modalidades no mesmo envio, mantendo proposta, collection de conteudo
+e template separados para cada uma.
 
 Antes de interpretar a referencia, o Analista le a base aplicavel. Para cada
 achado relevante, ele registra o confronto entre a tela e o manual global,
@@ -61,7 +70,7 @@ contexto, reconciliacao ou contratos; ele apenas os torna acompanhaveis.
 Quando a proposta estiver pronta, a rodada tambem guarda
 `pacote-analista.json`. Esse recibo confere, por hash, o recorte, as coletas,
 o contexto, o plano logico de variaveis, o plano de componentes e os
-rascunhos temporarios de mapa e contratos. A resolucao de IDs entra somente
+rascunhos temporarios de variacoes e contratos do momento. A resolucao de IDs entra somente
 quando a propria proposta a exigir. O resumo mostrado para voce nessa etapa
 e gerado a partir desse pacote, para que a conversa e a evidencia interna
 descrevam a mesma proposta. O pacote nao libera montagem nem escreve na

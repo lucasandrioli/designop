@@ -64,6 +64,13 @@ const validatorVerdict = read('scripts/validateValidatorVerdict.js');
 const promotionPackage = read('scripts/validatePromotionPackage.js');
 const koraPackageRegister = read('scripts/registerKoraPackage.js');
 const koraCheckpointApproval = read('scripts/approveKoraCheckpoint.js');
+const momentScopeSchema = read('docs/contratos/escopo-momento.schema.json');
+const momentContractSchema = read('docs/contratos/momento.schema.json');
+const momentScopeValidator = read('scripts/validateMomentScopeCore.js');
+const stageCompositionSchema = read('docs/contratos/composicao-etapa.schema.json');
+const stageCompositionValidator = read('scripts/validateStageCompositionPackage.js');
+const stageCompositionProposalValidator = read('scripts/validateStageCompositionProposal.js');
+const stageCompositionAssemblyValidator = read('scripts/validateStageCompositionAssembly.js');
 
 [
   'contexto-id',
@@ -111,8 +118,16 @@ requireText('docs/contratos/componentes-locais.schema.json', localComponentsSche
 requireText('docs/contratos/contexto-rodada.schema.json', contextDraftSchema, 'FATO_OBSERVADO');
 requireText('docs/contratos/contexto-rodada.schema.json', contextDraftSchema, 'APROVADO_PARA_REGISTRO');
 requireText('docs/contratos/pacote-analista.schema.json', analystPackageSchema, 'PRONTO_PARA_REVISAO');
-requireText('docs/contratos/pacote-analista.schema.json', analystPackageSchema, 'CONTRATO_JORNADA');
-requireText('docs/contratos/plano-variaveis-analise.schema.json', analystVariablePlanSchema, 'CONTEUDO_MODALIDADE');
+requireText('docs/contratos/pacote-analista.schema.json', analystPackageSchema, 'CONTRATO_MOMENTO');
+requireText('docs/contratos/pacote-analista.schema.json', analystPackageSchema, 'MATRIZ_VARIACOES');
+requireText('docs/contratos/plano-variaveis-analise.schema.json', analystVariablePlanSchema, 'diferencasEstruturais');
+requireText('docs/contratos/escopo-momento.schema.json', momentScopeSchema, '"telas"');
+requireText('docs/contratos/momento.schema.json', momentContractSchema, 'AUSENTE_OBSERVADA');
+requireText('scripts/validateMomentScopeCore.js', momentScopeValidator, 'validateMomentScopeData');
+requireText('docs/contratos/composicao-etapa.schema.json', stageCompositionSchema, 'semPromocao');
+requireText('scripts/validateStageCompositionPackage.js', stageCompositionValidator, 'validatePromotionPackage.js');
+requireText('scripts/validateStageCompositionProposal.js', stageCompositionProposalValidator, 'momentos promovidos selecionados');
+requireText('scripts/validateStageCompositionAssembly.js', stageCompositionAssemblyValidator, 'semPromocao');
 requireText('scripts/validateAnalystPackage.js', analystPackageValidator, 'gate pre-proposta reprovado');
 requireText('docs/contratos/evidencias-mcp.schema.json', mcpEvidenceSchema, 'limitViolations');
 requireText('docs/contratos/evidencias-mcp.schema.json', mcpEvidenceSchema, 'componentPropertyType');

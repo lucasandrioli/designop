@@ -20,10 +20,16 @@ skill Figma em vez de improvisar uma tela a partir da imagem.
 
 ## Operacao guiada pela Kora
 
-Selecione `Kora` e envie somente:
+Selecione `Kora` e envie um momento completo:
 
 ```text
 Figma: <URL>
+Etapa: <etapa>
+Momento: <nome humano>
+Telas e anexos:
+- <nome>: principal
+- <nome>: detalhe aberto pela <principal>
+Modalidades: <PCon, Refin, ...>
 Sections: <nomes exatos, separados por virgula>
 Contexto curto: <uma frase opcional>
 ```
@@ -171,7 +177,8 @@ aprove escrita Figma daquele papel.
 
 ### 1. Análise e proposta
 
-Selecione somente `Kora` e envie Figma, Sections e contexto curto. Ela chama
+Selecione somente `Kora` e envie Figma, etapa, momento, telas e anexos,
+modalidades, Sections e contexto curto. Ela chama
 o Analista internamente e, se houver lacuna documental real, o Operador.
 Kora só apresenta proposta quando `pacote-analista.json` estiver favorável.
 Esse pacote reúne inventário, coletas, confronto com a base, plano de

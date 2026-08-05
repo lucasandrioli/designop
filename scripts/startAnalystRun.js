@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs')
+const crypto = require('crypto')
 const path = require('path')
 const { validateAnalystStateData } = require('./validateAnalystStateCore')
 
@@ -21,12 +22,19 @@ const repositoryRoot = path.resolve(input.root ?? path.join(__dirname, '..'))
 const sections = String(input.sections ?? '').split(',').map((item) => item.trim()).filter(Boolean)
 const directory = path.join(repositoryRoot, '.designops', 'runs', round)
 const file = path.join(directory, 'estado-analista.json')
+const scopeFile = path.join(directory, 'escopo-momento.json')
+let scope = null
+try { scope = JSON.parse(fs.readFileSync(scopeFile, 'utf8')) } catch {}
+const activeSections = scope ? scope.sections : sections
 const state = {
-  schemaVersion: 1,
+  schemaVersion: scope ? 2 : 1,
   rodada: round,
   status: 'PREPARANDO',
-  entrada: { figmaUrl: input['figma-url'] ?? '', sections, contextoCurto: input.contexto?.trim() || null },
-  progresso: { sections: sections.map((nome) => ({ nome, status: 'PENDENTE', estrutura: null, interacoes: null })) },
+  entrada: scope
+    ? { figmaUrl: input['figma-url'] ?? '', sections: scope.sections, contextoCurto: scope.contextoCurto, etapa: scope.etapa, momento: scope.momento, modalidades: scope.modalidades, telas: scope.telas }
+    : { figmaUrl: input['figma-url'] ?? '', sections, contextoCurto: input.contexto?.trim() || null },
+  ...(scope ? { escopoMomento: { caminho: `.designops/runs/${round}/escopo-momento.json`, sha256: crypto.createHash('sha256').update(fs.readFileSync(scopeFile)).digest('hex') } } : {}),
+  progresso: { sections: activeSections.map((nome) => ({ nome, status: 'PENDENTE', estrutura: null, interacoes: null })) },
   achados: [],
   confrontos: [],
   decisoes: [],

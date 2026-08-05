@@ -4,7 +4,7 @@
   "type": "object",
   "required": ["schemaVersion", "rodada", "emitidoEm", "aprovacaoKora", "veredito", "validacaoPromocao", "ativosPublicados", "releiturasPosPromocao"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "rodada": { "type": "string", "minLength": 1 },
     "emitidoEm": { "type": "string", "format": "date-time" },
     "aprovacaoKora": { "$ref": "#/$defs/artefato" },
@@ -24,8 +24,10 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["template", "nome", "tipo", "resultado"],
+        "required": ["modalidade", "tela", "template", "nome", "tipo", "resultado"],
         "properties": {
+          "modalidade": { "type": "string", "minLength": 1 },
+          "tela": { "type": "string", "minLength": 1 },
           "template": { "type": "string", "minLength": 1 },
           "nome": { "type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+/tpl-[a-z0-9-]+$" },
           "tipo": { "enum": ["COMPONENT", "COMPONENT_SET"] },

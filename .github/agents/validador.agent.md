@@ -57,3 +57,9 @@ da library. Depois da promocao autorizada, o Montador grava
 `pacote-promocao.json`; ele so e valido depois de
 `validatePromotionPackage.js` confirmar a aprovacao da Kora, a
 releitura pos-promocao e os nomes publicados sem contexto.
+
+Em rodada de momento, o resultado precisa identificar modalidade, tela e
+contexto. Confira que toda tela declarada no escopo foi documentada e que cada
+variacao estrutural foi especializada ou devolvida para decisao, nunca escondida
+como variavel. Em composicao de etapa, valide apenas o prototipo de verificacao
+e suas conexoes; ele nao e candidato a promocao.

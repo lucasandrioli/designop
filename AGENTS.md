@@ -235,6 +235,19 @@ internas e nao publicadas. Referencia crua nao e componente.
 - Relatorios: resumo de negocio primeiro, detalhe tecnico depois.
 - Incerteza vira `[VERIFICAR COM DESIGNER]` ou `[CONFIRMAR]`.
 
+## Rodadas por momento e composicao
+
+- A unidade de entrega pode ser um **momento da etapa**: a pessoa operadora
+  declara suas telas principal, detalhe e auxiliares. O Analista respeita esse
+  recorte, documenta cada superficie e nao as funde por conveniencia tecnica.
+- Uma entrada pode comparar modalidades, mas template, collection de conteudo,
+  contrato de tela, variaveis, montagem e promocao continuam separados por
+  modalidade.
+- Depois de momentos promovidos, uma rodada `COMPOSICAO_ETAPA` pode ser aberta
+  somente com os recibos de promocao integros dos momentos selecionados da
+  mesma modalidade. Ela conecta templates em `_verificacao-<etapa>`. O resultado e
+  prototipo de verificacao: nunca componente, variavel ou novo ativo publicado.
+
 ## Mapa do repositorio
 
 | Onde | O que e |

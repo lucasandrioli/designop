@@ -30,6 +30,20 @@ if (file && fs.existsSync(file)) {
   catch (error) { failures.push('pacote de montagem invalido: ' + error.message) }
 }
 if (data) failures.push(...validateAssemblyPackageData(data, { round, repositoryRoot }))
+if (data?.schemaVersion === 2) {
+  function readJson(relative, label) {
+    try { return JSON.parse(fs.readFileSync(path.resolve(repositoryRoot, relative), 'utf8')) } catch { failures.push(label + ' invalido ou ausente'); return null }
+  }
+  const state = readJson(`.designops/runs/${round}/kora.json`, 'estado Kora')
+  const scope = readJson(data?.escopoMomento?.caminho, 'escopo de momento')
+  const contract = readJson(data?.contratoMomento?.caminho, 'contrato de momento')
+  if (state?.schemaVersion !== 2 || state?.tipoRodada !== 'MOMENTO') failures.push('montagem por momento exige rodada Kora v2')
+  const expected = new Set((contract?.cobertura ?? []).filter((item) => item.status === 'PRESENTE').map((item) => `${item.modalidade}::${item.tela}`))
+  const actual = new Set((data?.alvos ?? []).map((item) => `${item.modalidade}::${item.tela}`))
+  for (const key of expected) if (!actual.has(key)) failures.push('montagem sem alvo presente do momento: ' + key)
+  for (const key of actual) if (!expected.has(key)) failures.push('montagem com alvo fora da cobertura do momento: ' + key)
+  if (scope && contract && (scope.etapa !== contract.etapa || scope.momento !== contract.momento)) failures.push('contrato de montagem diverge do escopo de momento')
+}
 const passed = failures.length === 0
 console.log(JSON.stringify({ round: round ?? null, packageFile: file ? path.relative(repositoryRoot, file) : null, passed, failures }, null, 2))
 process.exit(passed ? 0 : 1)

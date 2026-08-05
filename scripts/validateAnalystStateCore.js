@@ -3,10 +3,11 @@ function validateAnalystStateData(state) {
   const failures = []
   const required = ['schemaVersion', 'rodada', 'status', 'entrada', 'progresso', 'achados', 'confrontos', 'decisoes', 'problemas', 'proposta']
   for (const field of required) if (!(field in (state ?? {}))) failures.push('campo ausente: ' + field)
-  if (state?.schemaVersion !== 1) failures.push('schemaVersion precisa ser 1')
+  if (![1, 2].includes(state?.schemaVersion)) failures.push('schemaVersion precisa ser 1 ou 2')
   if (!state?.rodada) failures.push('rodada ausente')
   if (!['PREPARANDO', 'LENDO_REFERENCIAS', 'ORGANIZANDO_ACHADOS', 'AGUARDANDO_DECISAO_DO_DESIGNER', 'PRONTO_PARA_REVISAO', 'BLOQUEADO_TECNICAMENTE'].includes(state?.status)) failures.push('status invalido')
   if (!state?.entrada?.figmaUrl || !Array.isArray(state?.entrada?.sections) || state.entrada.sections.length === 0) failures.push('entrada sem Figma ou Sections')
+  if (state?.schemaVersion === 2 && (!state?.entrada?.etapa || !state?.entrada?.momento || !Array.isArray(state?.entrada?.modalidades) || !Array.isArray(state?.entrada?.telas) || !state?.escopoMomento?.caminho || !/^[a-f0-9]{64}$/.test(state?.escopoMomento?.sha256 ?? ''))) failures.push('estado do Analista sem escopo de momento')
   const sections = new Set()
   for (const [index, name] of (state?.entrada?.sections ?? []).entries()) {
     if (!String(name ?? '').trim()) failures.push('entrada.sections[' + index + '] vazia')

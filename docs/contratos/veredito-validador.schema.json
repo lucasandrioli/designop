@@ -4,7 +4,7 @@
   "type": "object",
   "required": ["schemaVersion", "rodada", "emitidoEm", "resultado", "artefatosVinculados", "resultados", "verificacoes", "releiturasIndependentes", "revisaoVisual", "prePromocao"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "rodada": { "type": "string", "minLength": 1 },
     "emitidoEm": { "type": "string", "format": "date-time" },
     "resultado": { "enum": ["APTO_PARA_PROMOCAO", "REPROVADO", "NAO_VERIFICAVEL"] },
@@ -14,9 +14,11 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "template", "contextoId", "resultado", "revisaoVisual"],
+        "required": ["id", "modalidade", "tela", "template", "contextoId", "resultado", "revisaoVisual"],
         "properties": {
           "id": { "type": "string", "minLength": 1 },
+          "modalidade": { "type": "string", "minLength": 1 },
+          "tela": { "type": "string", "minLength": 1 },
           "template": { "type": "string", "minLength": 1 },
           "contextoId": { "type": "string", "minLength": 1 },
           "resultado": { "enum": ["FAVORAVEL", "REPROVADO", "NAO_VERIFICAVEL"] },

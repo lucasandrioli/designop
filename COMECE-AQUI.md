@@ -23,9 +23,9 @@ IDs, contratos de rodada ou mapas preenchidos.
 4. Para uma rodada, crie uma worktree nova a partir do master. Ela recebe
    os manuais aprovados, mas nao recebe artefatos, mapas, referencias,
    IDs ou evidencias de rodadas anteriores.
-5. Abra Kora e informe Figma, Sections e contexto curto. Ela prepara ou
-   retoma a rodada, executa a analise e mostra uma proposta somente quando a
-   evidencia estiver completa.
+5. Abra Kora e informe Figma, etapa, momento, telas e anexos, modalidades,
+   Sections e contexto curto. Ela preserva esse recorte, compara as variacoes
+   e mostra uma proposta somente quando a evidencia estiver completa.
 6. O designer aprova o contrato consolidado. Sem essa aprovacao, Kora nao
    chama o Montador.
 7. Kora conduz montagem e validacao. O Validador continua independente e
@@ -35,6 +35,9 @@ IDs, contratos de rodada ou mapas preenchidos.
 9. Se houver incidente da operacao, Kora interrompe a rodada e prepara o
    encaminhamento para manutencao. Depois da correcao integrada, ela retoma
    somente a fase afetada e repete as verificacoes, sem restaurar aprovacoes.
+10. Quando os momentos de uma etapa ja estiverem promovidos, Kora pode montar
+    um prototipo de verificacao com as conexoes da etapa em `_verificacao-`.
+    Esse prototipo nao cria outro ativo oficial da biblioteca.
 
 ## Documentos da base e da worktree
 

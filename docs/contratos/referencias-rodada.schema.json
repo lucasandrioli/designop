@@ -2,11 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Recorte temporario de referencias Figma",
   "type": "object",
-  "required": ["schemaVersion", "id", "rodada", "figma", "ativosForaDoRecorte", "ativosExistentes"],
+  "required": ["schemaVersion", "id", "rodada", "escopoMomento", "figma", "ativosForaDoRecorte", "ativosExistentes"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "id": { "type": "string", "minLength": 1 },
     "rodada": { "type": "string", "minLength": 1 },
+    "escopoMomento": { "type": "object", "required": ["caminho", "sha256"], "properties": { "caminho": { "type": "string" }, "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" } } },
     "figma": {
       "type": "object",
       "required": ["pageId", "pageName", "secoes"],
@@ -18,11 +19,13 @@
           "minItems": 1,
           "items": {
             "type": "object",
-            "required": ["nome", "sectionId", "contextoId"],
+            "required": ["nome", "sectionId", "contextoId", "modalidade", "superficies"],
             "properties": {
               "nome": { "type": "string", "pattern": "^ref-" },
               "sectionId": { "type": "string", "minLength": 1 },
-              "contextoId": { "type": "string", "pattern": "^ctx-[a-z0-9-]+$" }
+              "contextoId": { "type": "string", "pattern": "^ctx-[a-z0-9-]+$" },
+              "modalidade": { "type": "string", "minLength": 1 },
+              "superficies": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true }
             }
           }
         }

@@ -34,7 +34,7 @@ if (failures.length) {
   process.stdout.write(JSON.stringify({ passed: false, failures }, null, 2) + '\n')
   process.exit(1)
 }
-const occurredEm = new Date().toISOString()
+const ocorreuEm = new Date().toISOString()
 state.aprovacoes[checkpoint] = { tipo: expected.type, decisao: 'APROVADA', confirmadoPor: 'DESIGNER', ocorreuEm }
 if (checkpoint === 'contrato') {
   state.checkpoints.contrato.status = 'APROVADO'

@@ -3,35 +3,28 @@
   "title": "Plano temporario de variaveis da analise",
   "description": "Proposta logica, sem criar collections, modes, bindings ou variaveis no Figma.",
   "type": "object",
-  "required": ["schemaVersion", "id", "rodada", "status", "modalidade", "etapa", "collections", "variaveis"],
+  "required": ["schemaVersion", "id", "rodada", "status", "etapa", "momento", "modalidades", "diferencasEstruturais", "conexoes"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "id": { "type": "string", "minLength": 1 },
     "rodada": { "type": "string", "minLength": 1 },
     "status": { "const": "PROPOSTO" },
-    "modalidade": { "type": "string", "minLength": 1 },
     "etapa": { "type": "string", "minLength": 1 },
-    "collections": {
+    "momento": { "type": "string", "minLength": 1 },
+    "modalidades": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "papel"],
+        "required": ["id", "collectionConteudo", "variaveis"],
         "properties": {
           "id": { "type": "string", "minLength": 1 },
-          "papel": { "enum": ["CONTEUDO_MODALIDADE", "ESTRUTURAL_IDS"] }
+          "collectionConteudo": { "type": "string", "minLength": 1 },
+          "variaveis": { "type": "array", "items": { "type": "object", "required": ["tela", "papel", "caminho", "tipo"], "properties": { "tela": { "type": "string" }, "papel": { "type": "string" }, "caminho": { "type": "string" }, "tipo": { "const": "CONTEUDO" }, "mecanismo": { "enum": ["VARIAVEL", "PROPERTY", "VARIANT", "ESPECIALIZACAO"] } } } }
         }
       }
     },
-    "variaveis": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["papel", "caminho"],
-        "properties": {
-          "papel": { "type": "string", "minLength": 1 },
-          "caminho": { "type": "string", "minLength": 1 }
-        }
-      }
-    }
+    "diferencasEstruturais": { "type": "array", "items": { "type": "object" } },
+    "conexoes": { "type": "array", "items": { "type": "object" } }
   }
 }

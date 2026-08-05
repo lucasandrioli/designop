@@ -47,7 +47,7 @@ const isDirectWrite = names.some((name) => /^(write|edit|create|delete|apply)/.t
 const isTerminal = names.some((name) => /^(bash|terminal|runterminalcommand|execute)$/.test(name))
 const commands = calls.filter((call) => /^(bash|terminal|runterminalcommand|execute)$/i.test(call.name)).map((call) => String(call.input?.command ?? ''))
 const allowedScripts = new Set([
-  'findKoraRound.js', 'startKoraRound.js', 'authorizeKoraAction.js', 'validateKoraRound.js', 'validateAnalysisRound.js',
+  'findKoraRound.js', 'startKoraRound.js', 'validateStageCompositionProposal.js', 'validateStageCompositionAssembly.js', 'validateStageCompositionPackage.js', 'authorizeKoraAction.js', 'validateKoraRound.js', 'validateAnalysisRound.js',
   'validateAnalystPackage.js', 'validateKoraPackages.js', 'approveKoraCheckpoint.js', 'registerKoraPackage.js',
   'diagnoseKoraFailure.js', 'openKoraOperationIncident.js', 'interruptKoraForIncident.js', 'resumeKoraDecision.js',
   'resumeKoraIncident.js', 'recordKoraAuditEvent.js', 'generateKoraAuditReport.js', 'validateKoraAuditTrail.js', 'auditKoraRounds.js',

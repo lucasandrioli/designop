@@ -82,6 +82,11 @@ function createKoraFixture() {
     'scripts/validateReferenceScopeCore.js',
     'scripts/validateAnalysisManifestCore.js',
     'scripts/validateContextDraftCore.js',
+    'scripts/validateMomentScopeCore.js',
+    'scripts/validateVariablePlanCore.js',
+    'scripts/validateMomentProposalCore.js',
+    'scripts/validatePromotionPackageCore.js',
+    'scripts/validateValidatorVerdictCore.js',
   ].forEach((file) => copy(file, fixture))
   return fixture
 }
@@ -133,7 +138,7 @@ function testAssemblyPackage() {
 function testKoraRoundAndAudit() {
   const fixture = createKoraFixture()
   const round = 'kora-regressao'
-  expectSuccess(runNode(path.join(fixture, 'scripts/startKoraRound.js'), ['--round', round, '--figma-url', 'https://www.figma.com/design/nao-publicar', '--sections', 'ref-a,ref-b', '--root', fixture]), 'Kora inicia com Figma e Sections sem exigir IDs')
+  expectSuccess(runNode(path.join(fixture, 'scripts/startKoraRound.js'), ['--round', round, '--figma-url', 'https://www.figma.com/design/nao-publicar', '--etapa', 'formalizacao', '--momento', 'autorizar-debitos', '--modalidades', 'pcon,refin', '--telas', '[{"id":"principal","nome":"Central","papel":"PRINCIPAL","abertaPor":null},{"id":"detalhes","nome":"Detalhes","papel":"DETALHE","abertaPor":"principal"}]', '--sections', 'ref-a,ref-b', '--root', fixture]), 'Kora inicia um momento sem exigir IDs')
   expectSuccess(runNode(path.join(fixture, 'scripts/validateKoraRound.js'), ['--round', round, '--root', fixture]), 'Estado inicial Kora valido')
   expectSuccess(runNode(path.join(fixture, 'scripts/authorizeKoraAction.js'), ['--round', round, '--role', 'ANALISTA', '--action', 'ANALISAR', '--root', fixture]), 'Kora libera somente a analise no inicio')
   expectFailure(runNode(path.join(fixture, 'scripts/authorizeKoraAction.js'), ['--round', round, '--role', 'MONTADOR', '--action', 'MONTAR', '--root', fixture]), 'Kora bloqueia montagem antes da aprovacao')
@@ -1544,6 +1549,7 @@ async function main() {
 
     testKoraRoundAndAudit()
     expectSuccess(runNode(path.join(root, 'scripts/testKoraSessionGuard.js')), 'Kora bloqueia a rodada quando a inicializacao ou delegacao foge do fluxo')
+    expectSuccess(runNode(path.join(root, 'scripts/testKoraMoment.js')), 'Kora preserva momentos, telas anexas e modalidades separadas')
     testKoraOperationIncidentRoute()
     testAssemblyPackage()
 

@@ -10,7 +10,7 @@ const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kora-session-guard-'))
 const source = path.resolve(__dirname, '..')
 fs.mkdirSync(path.join(root, 'scripts'), { recursive: true })
 fs.mkdirSync(path.join(root, '.designops', 'audit'), { recursive: true })
-for (const name of ['initializeKoraSession.js', 'findKoraRound.js', 'enforceKoraToolPolicy.js', 'authorizeKoraAction.js', 'koraRoundState.js', 'validateKoraStateCore.js', 'validateKoraPackages.js']) {
+for (const name of ['initializeKoraSession.js', 'findKoraRound.js', 'enforceKoraToolPolicy.js', 'authorizeKoraAction.js', 'koraRoundState.js', 'validateKoraStateCore.js', 'validateMomentScopeCore.js', 'validateKoraPackages.js', 'validatePromotionPackageCore.js', 'validateValidatorVerdictCore.js']) {
   fs.copyFileSync(path.join(source, 'scripts', name), path.join(root, 'scripts', name))
 }
 function run(script, input, args = []) {
@@ -25,7 +25,7 @@ assert.equal(decision(deniedBeforeStart), 'deny', 'Kora bloqueia delegacao sem r
 const initialized = run('initializeKoraSession.js', {
   cwd: root,
   sessionId,
-  prompt: 'Figma: https://www.figma.com/design/arquivo-teste/Teste\nSections:\n- ref-pcon-formalizacao-ctx-01\n- ref-pcon-formalizacao-ctx-02\nContexto curto: comparacao',
+  prompt: 'Figma: https://www.figma.com/design/arquivo-teste/Teste\nEtapa: formalizacao\nMomento: autorizar-debitos\nTelas e anexos:\n- Central: principal\n- Detalhes: detalhe aberto pela Central\nModalidades: PCon, Refin\nSections:\n- ref-pcon-formalizacao-ctx-01\n- ref-pcon-formalizacao-ctx-02\nContexto curto: comparacao',
 })
 assert.equal(initialized.status, 0, initialized.stderr)
 const found = run('findKoraRound.js')

@@ -16,17 +16,23 @@ humanas.
 
 ## Como iniciar
 
-A pessoa operadora envia uma vez:
+A pessoa operadora envia uma vez, por momento:
 
 ```text
 Figma: <URL>
+Etapa: <etapa>
+Momento: <nome humano>
+Telas e anexos: <principal, detalhe e auxiliares>
+Modalidades: <lista>
 Sections: <nomes exatos>
 Contexto curto: <opcional>
 ```
 
 Nao precisa descobrir pagina, node ID, contexto-id, manual, schema, comando
-ou agente correto. Kora cria o acompanhamento da rodada, pede ao Analista que
-descubra o recorte e mostra somente o que ja pode ser entendido ou decidido.
+ou agente correto. Kora fixa o recorte declarado, pede ao Analista que
+descubra a evidencia e mostra somente o que ja pode ser entendido ou decidido.
+Ela pode comparar modalidades no mesmo envio, mas nunca mistura seus templates,
+conteudo ou variaveis.
 
 ## Conversa com a pessoa operadora
 
@@ -118,3 +124,13 @@ ela diz isso claramente; nunca completa a historia por memoria ou conversa.
 Os hooks do VS Code, quando disponiveis, reforcam esse registro. Se eles nao
 estiverem disponiveis, a rodada continua com registro interno e o relato
 informa que a auditoria ficou limitada.
+
+## Composicao da etapa
+
+Depois de promocao comprovada dos momentos selecionados de uma modalidade,
+Kora confere e fixa os recibos dessas promocoes antes de abrir uma rodada
+`COMPOSICAO_ETAPA`. O Analista prepara o contrato
+de composicao, o Montador conecta os templates em `_verificacao-<etapa>` e o
+Validador verifica caminhos, retornos e visual. A composicao e apenas um
+prototipo verificavel: nao cria novo template, componente, variavel ou
+promocao.

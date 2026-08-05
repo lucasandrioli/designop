@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Contrato temporario de um momento da etapa",
+  "type": "object",
+  "required": ["schemaVersion", "id", "rodada", "etapa", "momento", "modalidades", "telas", "cobertura", "conexoes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
+    "etapa": { "type": "string", "minLength": 1 },
+    "momento": { "type": "string", "minLength": 1 },
+    "modalidades": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+    "telas": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "nome", "papel"], "properties": { "id": { "type": "string" }, "nome": { "type": "string" }, "papel": { "enum": ["PRINCIPAL", "DETALHE", "AUXILIAR"] } } } },
+    "cobertura": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["modalidade", "tela", "contextoId", "status", "evidencia"], "properties": { "modalidade": { "type": "string" }, "tela": { "type": "string" }, "contextoId": { "type": "string" }, "status": { "enum": ["PRESENTE", "AUSENTE_OBSERVADA", "NAO_VERIFICAVEL"] }, "evidencia": { "type": "string" } } } },
+    "conexoes": { "type": "array", "items": { "type": "object", "required": ["modalidade", "origem", "destino", "status", "evidencia"], "properties": { "modalidade": { "type": "string" }, "origem": { "type": "string" }, "destino": { "type": "string" }, "status": { "enum": ["OBSERVADA", "AUSENTE_OBSERVADA", "NAO_VERIFICAVEL"] }, "evidencia": { "type": "string" } } } }
+  }
+}

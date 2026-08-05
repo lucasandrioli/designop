@@ -2,10 +2,11 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Rascunho temporario de contexto de rodada",
   "type": "object",
-  "required": ["schemaVersion", "id", "status", "modalidade", "etapa", "contextos", "afirmacoes"],
+  "required": ["schemaVersion", "id", "rodada", "status", "modalidade", "etapa", "contextos", "afirmacoes"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "id": { "type": "string", "minLength": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
     "status": { "enum": ["RASCUNHO", "AGUARDANDO_DESIGNER", "PRONTO_PARA_APROVACAO", "APROVADO_PARA_REGISTRO"] },
     "modalidade": { "type": "string", "minLength": 1 },
     "etapa": { "type": "string", "minLength": 1 },

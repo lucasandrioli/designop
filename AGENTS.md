@@ -153,6 +153,12 @@ internas e nao publicadas. Referencia crua nao e componente.
   `ref-*` por `get_metadata` no arquivo atual. Node IDs de memoria, chat,
   manifesto ou rodada anterior nao podem ser reutilizados. Section exata
   ausente bloqueia a coleta; nunca substitui-la por uma parecida.
+- Depois de gravar `referencias.json`, o Analista executa
+  `validateAnalysisRound.js --round <rodada> --stage pre-coleta`. Antes de
+  criar mapa, contrato ou pedir aprovacao, executa o mesmo gate em
+  `pre-proposta`. Sem `passed: true`, o material e rascunho invalido e a
+  rodada termina em `ANALISE_INCOMPLETA`, `PRECISA_CONTEXTO` ou
+  `NAO_VERIFICAVEL`, com lacuna bloqueante.
 - `figma-get_figma_skill` serve somente para recursos oficiais do servidor
   Figma. Skills do projeto em `.github/skills/` sao lidas localmente; o
   Analista nunca consulta `skill://index.json` nem tenta carregar skill
@@ -188,6 +194,10 @@ internas e nao publicadas. Referencia crua nao e componente.
 - Nenhuma tela e entregue sem validacao completa.
 - Skill orienta a sequencia; contratos e validadores decidem se uma
   proposta, montagem ou promocao pode seguir.
+- Na conversa com a pessoa operadora, o Analista mostra somente progresso,
+  achados, proposta e decisoes em linguagem humana. Schema, paginacao,
+  `[CONFIRMAR]`, recibos MCP e nomes de gates ficam nos artefatos da rodada;
+  essa simplificacao de conversa nao remove nenhuma evidencia ou checkpoint.
 
 ## Comunicacao
 

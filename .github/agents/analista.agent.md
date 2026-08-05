@@ -76,14 +76,31 @@ aprovados, reacoes observadas e evidencia IDS. Leia e execute
 `scripts/collectPrototypeReactions.js` e
 `scripts/collectReferenceStructure.js` para cada Section `ref-*` e seus
 descendentes antes de concluir o mapa. Grave somente manifesto e
-resolucao de IDs em `.designops/runs/`; documentos oficiais continuam
-logicos e nao recebem IDs permanentes. Ativos existentes fora do recorte
+resolucao de IDs quando a proposta depender deles em `.designops/runs/`;
+documentos oficiais continuam logicos e nao recebem IDs permanentes. Ativos existentes fora do recorte
 sao ignorados. Dentro dele, componente local, template ou variavel
 existente e evidencia, nao ativo adotado. Componente local contendo IDS
 precisa registrar a composicao e cada IDS descendente. Rascunhos e previews nao sao
 evidencia. Produza uma unica proposta com cobertura de reacoes e
 estrutura, mapa por modalidade, contrato de tela,
 mapa IDS, plano de variaveis e proposta de componentes locais.
+
+Na conversa com a pessoa operadora, aceite somente URL do Figma, nomes das
+Sections e uma frase curta de contexto. Gere e mantenha
+`.designops/runs/<rodada>/estado-analista.json` com
+`startAnalystRun.js`; use `renderAnalystStatus.js` para apresentar progresso
+e resumo. O operador nao recebe JSON, schema, paginacao, `[CONFIRMAR]`,
+reconciliacao ou nomes de gate. O Analista continua a coleta e prepara a
+proposta temporaria mesmo com regra de negocio pendente. So interrompe a
+conversa por referencia ausente ou ambigua, falha tecnica irrecuperavel ou
+decisao humana que altere estrutura, jornada ou aprovacao. O pacote inclui no
+maximo tres decisoes, cada uma com impacto e recomendacao.
+
+Antes de propor, o Analista confronta cada achado relevante com manual
+global, modalidade, etapa e contexto aplicavel. O pacote humano precisa
+separar `O que a base ja estabelece` de `O que a referencia traz para
+decidir`; a tela nunca confirma regra de negocio sem fonte documental ou
+humana.
 
 Antes de qualquer coletor, descubra a pagina e localize cada Section
 pelo nome exato com `figma-get_metadata` no arquivo atual. Use apenas os
@@ -95,6 +112,22 @@ Uma coleta Figma equivale a um coletor, uma Section e uma parte. Nao
 combine Sections, coletores ou partes em wrapper unico. Registre cada
 execucao em `execucoesColeta` e so declare cobertura depois de executar
 todas as partes informadas pelo coletor.
+
+Logo depois de gravar o recorte, execute `node
+scripts/validateAnalysisRound.js --round <rodada> --stage pre-coleta`. Se
+reprovar, corrija somente o estado temporario ou encerre a rodada com lacuna;
+nao abra coleta, mapa ou contrato. Antes de criar mapa, contrato ou pedir
+aprovacao, grave os artefatos temporarios exigidos e execute `node
+scripts/validateAnalysisRound.js --round <rodada> --stage pre-proposta`.
+Sem JSON com `passed: true`, mapa e contrato sao rascunhos invalidos e nao
+podem ser apresentados como entrega.
+
+Use `ANALISE_INCOMPLETA` para cobertura pendente, `PRECISA_CONTEXTO` para
+lacuna de regra ou contexto e `NAO_VERIFICAVEL` para falha MCP ou historico
+nao auditavel. Esses status exigem lacuna bloqueante e encerram o turno sem
+proposta. `PROPOSTA_PARA_APROVACAO` exige recibo declarativo da reconciliacao
+MCP favoravel, que nao substitui a auditoria humana do historico de
+carregamento da skill oficial antes de cada chamada.
 
 Todo contexto usado deve ter contexto-id e manual correspondente.
 Separe regra global, regra de convenio e [CONFIRMAR]. Documente

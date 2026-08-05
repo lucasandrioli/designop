@@ -74,9 +74,16 @@ function writeValidBaselineFixture(fixture) {
 function validManifest() {
   return {
     schemaVersion: 3,
-    id: 'rodada-neutra',
+    id: 'manifesto-neutro',
+    rodada: 'rodada-neutra',
     etapa: 'etapa-exemplo',
     status: 'PROPOSTA_PARA_APROVACAO',
+    reconciliacaoMcp: {
+      roundId: 'rodada-neutra',
+      status: 'APROVADA',
+      readAt: '2026-08-04T10:00:00.000Z',
+      report: { passed: true },
+    },
     fontes: {
       figma: {
         pagina: '1:1',
@@ -152,6 +159,7 @@ function validContextDraft() {
   return {
     schemaVersion: 1,
     id: 'contexto-neutro',
+    rodada: 'rodada-neutra',
     status: 'AGUARDANDO_DESIGNER',
     modalidade: 'modalidade-exemplo',
     etapa: 'etapa-exemplo',
@@ -183,13 +191,170 @@ function validContextDraft() {
     aprovacaoHumana: null,
   }
 }
-function validateManifest(manifest) {
+function validateManifest(manifest, referenceScope = validReferenceScope()) {
   const fixture = temporaryDirectory('designops-manifest-')
   const file = path.join(fixture, 'analise.json')
   const scopeFile = path.join(fixture, 'referencias.json')
   fs.writeFileSync(file, JSON.stringify(manifest, null, 2))
-  fs.writeFileSync(scopeFile, JSON.stringify(validReferenceScope(), null, 2))
+  fs.writeFileSync(scopeFile, JSON.stringify(referenceScope, null, 2))
   return runNode(path.join(root, 'scripts/validateAnalysisManifest.js'), [file, scopeFile])
+}
+
+function addSectionsToAnalysisFixture(references, manifest) {
+  for (const suffix of ['b', 'c']) {
+    const sectionId = suffix === 'b' ? '1:5' : '1:8'
+    const frameId = suffix === 'b' ? '1:6' : '1:9'
+    const sectionName = `ref-modalidade-tela-ctx-${suffix}`
+    const contextId = `ctx-${suffix}`
+    references.figma.secoes.push({ nome: sectionName, sectionId, contextoId: contextId })
+    manifest.fontes.figma.secoesReferencia.push({ nome: sectionName, nodeId: sectionId, contextoId: contextId })
+    manifest.inventario.push({
+      ...manifest.inventario[0],
+      contextoId: contextId,
+      frame: { nome: sectionName, nodeId: frameId },
+      evidencia: { screenshot: frameId, designContext: frameId },
+    })
+    manifest.execucoesColeta.push(
+      { coletor: 'scripts/collectPrototypeReactions.js', secao: sectionName, nodeId: sectionId, parte: 1 },
+      { coletor: 'scripts/collectReferenceStructure.js', secao: sectionName, nodeId: sectionId, parte: 1 },
+    )
+    manifest.coberturaReacoes.push({ ...manifest.coberturaReacoes[0], secao: sectionName, nodeId: sectionId })
+    manifest.coberturaEstrutura.push({ ...manifest.coberturaEstrutura[0], secao: sectionName, nodeId: sectionId })
+  }
+}
+
+function writeAnalysisRoundFixture(fixture, round = 'rodada-neutra') {
+  const roundDirectory = path.join(fixture, '.designops', 'runs', round)
+  fs.mkdirSync(roundDirectory, { recursive: true })
+  const references = validReferenceScope()
+  references.rodada = round
+  const manifest = validManifest()
+  manifest.rodada = round
+  manifest.reconciliacaoMcp.roundId = round
+  addSectionsToAnalysisFixture(references, manifest)
+  const context = validContextDraft()
+  context.rodada = round
+  const components = {
+    schemaVersion: 1,
+    id: 'componentes-neutros',
+    rodada: round,
+    contextosConhecidos: [
+      { id: 'ctx-a', rotulo: 'Contexto A' },
+      { id: 'ctx-b', rotulo: 'Contexto B' },
+      { id: 'ctx-c', rotulo: 'Contexto C' },
+    ],
+    componentes: [],
+  }
+  const resolved = { schemaVersion: 1, rodada: round, telas: [], jornadas: [] }
+  fs.writeFileSync(path.join(roundDirectory, 'referencias.json'), JSON.stringify(references))
+  fs.writeFileSync(path.join(roundDirectory, 'analise.json'), JSON.stringify(manifest))
+  fs.writeFileSync(path.join(roundDirectory, 'contexto.json'), JSON.stringify(context))
+  fs.writeFileSync(path.join(roundDirectory, 'componentes-locais.json'), JSON.stringify(components))
+  fs.writeFileSync(path.join(roundDirectory, 'resolvido.json'), JSON.stringify(resolved))
+  return { roundDirectory, manifest, references }
+}
+
+function testAnalysisRoundGate() {
+  const fixture = temporaryDirectory('designops-analysis-round-')
+  const round = 'rodada-neutra'
+  const { roundDirectory, manifest, references } = writeAnalysisRoundFixture(fixture, round)
+  const script = path.join(root, 'scripts', 'validateAnalysisRound.js')
+  const args = ['--round', round, '--root', fixture]
+  expectSuccess(runNode(script, [...args, '--stage', 'pre-coleta']), 'Gate pre-coleta com recorte canonico')
+  expectSuccess(runNode(script, [...args, '--stage', 'pre-proposta']), 'Gate pre-proposta com tres Sections e cobertura completa')
+
+  fs.writeFileSync(path.join(fixture, '.designops', 'runs', 'referencias.json'), '{}')
+  expectFailure(runNode(script, [...args, '--stage', 'pre-coleta']), 'Gate reprova artefato na raiz de runs')
+  fs.rmSync(path.join(fixture, '.designops', 'runs', 'referencias.json'))
+
+  fs.writeFileSync(path.join(roundDirectory, 'referencias.json'), '{}')
+  expectFailure(runNode(script, [...args, '--stage', 'pre-coleta']), 'Gate reprova recorte sem schema vigente')
+  fs.writeFileSync(path.join(roundDirectory, 'referencias.json'), JSON.stringify(references))
+
+  const baseline = JSON.parse(JSON.stringify(manifest))
+  const proposalWithoutReconciliation = JSON.parse(JSON.stringify(baseline))
+  delete proposalWithoutReconciliation.reconciliacaoMcp
+  expectFailure(validateManifest(proposalWithoutReconciliation, references), 'Proposta exige recibo favoravel da reconciliacao MCP')
+  for (const status of ['PRECISA_CONTEXTO', 'NAO_VERIFICAVEL']) {
+    const incomplete = JSON.parse(JSON.stringify(baseline))
+    incomplete.status = status
+    incomplete.lacunas = [{ id: `${status.toLowerCase()}-bloqueante`, bloqueante: true, motivo: 'Rodada sem condicao de propor.' }]
+    expectSuccess(validateManifest(incomplete, references), `Manifesto aceita ${status} com lacuna bloqueante`)
+  }
+  const missingSection = manifest.fontes.figma.secoesReferencia[2]
+  manifest.coberturaReacoes = manifest.coberturaReacoes.filter((coverage) => coverage.nodeId !== missingSection.nodeId)
+  manifest.coberturaEstrutura = manifest.coberturaEstrutura.filter((coverage) => coverage.nodeId !== missingSection.nodeId)
+  manifest.execucoesColeta = manifest.execucoesColeta.filter((execution) => execution.nodeId !== missingSection.nodeId)
+  fs.writeFileSync(path.join(roundDirectory, 'analise.json'), JSON.stringify(manifest))
+  expectFailure(runNode(script, [...args, '--stage', 'pre-proposta']), 'Gate reprova Section sem ambos os coletores')
+  Object.assign(manifest, JSON.parse(JSON.stringify(baseline)))
+
+  manifest.coberturaEstrutura[0] = {
+    ...manifest.coberturaEstrutura[0], totalPartes: 2, totalItens: 3, pageSize: 2,
+    itensPorParte: [2, 1], partesLidas: [1], status: 'PARCIAL',
+  }
+  manifest.status = 'ANALISE_INCOMPLETA'
+  manifest.lacunas = [{ id: 'coleta-pendente', bloqueante: true, motivo: 'Parte estrutural pendente.' }]
+  fs.writeFileSync(path.join(roundDirectory, 'analise.json'), JSON.stringify(manifest))
+  expectSuccess(validateManifest(manifest, references), 'Manifesto incompleto com cobertura parcial e lacuna')
+  expectFailure(runNode(script, [...args, '--stage', 'pre-proposta']), 'Gate bloqueia proposta com cobertura parcial')
+
+  manifest.status = 'PROPOSTA_PARA_APROVACAO'
+  manifest.lacunas = []
+  fs.writeFileSync(path.join(roundDirectory, 'analise.json'), JSON.stringify(manifest))
+  expectFailure(runNode(script, [...args, '--stage', 'pre-proposta']), 'Gate bloqueia parte estrutural nao lida')
+
+  Object.assign(manifest, JSON.parse(JSON.stringify(baseline)))
+  fs.writeFileSync(path.join(roundDirectory, 'analise.json'), JSON.stringify(manifest))
+  fs.rmSync(path.join(roundDirectory, 'contexto.json'))
+  expectFailure(runNode(script, [...args, '--stage', 'pre-proposta']), 'Gate exige contexto da rodada')
+  fs.writeFileSync(path.join(roundDirectory, 'contexto.json'), JSON.stringify({ ...validContextDraft(), rodada: round }))
+  fs.mkdirSync(path.join(fixture, 'docs', 'mapas'), { recursive: true })
+  fs.writeFileSync(path.join(fixture, 'docs', 'mapas', 'pcon-formalizacao-rascunho.md'), '# Rascunho\n\nrodada: ' + round + '\n')
+  expectFailure(runNode(script, [...args, '--stage', 'pre-proposta']), 'Gate bloqueia mapa rascunho anterior a validacao')
+
+  fs.rmSync(path.join(fixture, 'docs', 'mapas', 'pcon-formalizacao-rascunho.md'))
+  fs.rmSync(path.join(roundDirectory, 'resolvido.json'))
+  expectSuccess(runNode(script, [...args, '--stage', 'pre-proposta']), 'Gate nao exige resolucao sem contrato dependente de IDs')
+  manifest.requerResolucaoIds = true
+  fs.writeFileSync(path.join(roundDirectory, 'analise.json'), JSON.stringify(manifest))
+  expectFailure(runNode(script, [...args, '--stage', 'pre-proposta']), 'Gate exige resolucao quando a proposta depende de IDs')
+
+  const gateOutput = JSON.parse(runNode(script, [...args, '--stage', 'pre-proposta']).stdout)
+  assert.strictEqual(gateOutput.operator.status, 'PRECISA_DE_ACAO_INTERNA', 'Gate precisa devolver estado humano para o operador')
+  assert(gateOutput.operator.problemas.every((problem) => problem.mensagemHumana && problem.proximaAcao), 'Gate precisa traduzir falhas para proxima acao humana')
+}
+
+function testAnalystOperation() {
+  const fixture = temporaryDirectory('designops-analyst-operation-')
+  const round = 'analise-operador'
+  const start = path.join(root, 'scripts', 'startAnalystRun.js')
+  const render = path.join(root, 'scripts', 'renderAnalystStatus.js')
+  const validate = path.join(root, 'scripts', 'validateAnalystOperation.js')
+  const common = ['--root', fixture, '--round', round]
+  expectSuccess(runNode(start, [...common, '--figma-url', 'https://www.figma.com/design/abc/teste', '--sections', 'ref-pcon-formalizacao-ctx-a,ref-pcon-formalizacao-ctx-b', '--contexto', 'PCon, Formalizacao; duas variacoes observadas.']), 'Iniciador cria rodada a partir da entrada minima')
+  const stateFile = path.join(fixture, '.designops', 'runs', round, 'estado-analista.json')
+  expectSuccess(runNode(validate, [stateFile]), 'Estado inicial do Analista valido')
+  const state = JSON.parse(fs.readFileSync(stateFile, 'utf8'))
+  assert.strictEqual(state.entrada.sections.length, 2, 'Cartao precisa registrar Sections informadas')
+  assert.strictEqual(state.decisoes.length, 0, 'Cartao inicial nao pode criar pergunta desnecessaria')
+  state.status = 'AGUARDANDO_DECISAO_DO_DESIGNER'
+  state.progresso.sections.forEach((section) => { section.status = 'CONCLUIDA' })
+  state.achados = [{ tipo: 'FATO', titulo: 'Duas variacoes observadas', descricao: 'As referencias possuem hierarquia semelhante.' }]
+  state.confrontos = [
+    { id: 'etapa', topico: 'Formalizacao', observacao: 'A referencia mostra a etapa final da jornada.', situacaoBase: 'DOCUMENTADO', fontesBase: ['docs/etapas/formalizacao.md'], conclusao: 'A base ja define Formalizacao como etapa canonica.' },
+    { id: 'retorno', topico: 'Retorno ao app', observacao: 'A tela indica uma saida externa.', situacaoBase: 'SEM_BASE', fontesBase: [], conclusao: 'A regra de retorno precisa da sua decisao antes da montagem.' },
+  ]
+  state.decisoes = [{ id: 'contexto', pergunta: 'As duas variacoes representam contextos diferentes?', impacto: 'A resposta define a proposta de conteudo.', recomendacao: 'Tratar como contextos diferentes ate sua confirmacao.', status: 'PENDENTE' }]
+  state.proposta = { status: 'PRONTA', resumo: 'Pacote pronto para revisao.', entregaveis: ['Mapa temporario', 'Plano de variaveis'] }
+  fs.writeFileSync(stateFile, JSON.stringify(state, null, 2))
+  const report = runNode(render, [...common, '--write'])
+  expectSuccess(report, 'Resumo humano da rodada')
+  assert(report.stdout.includes('Só preciso da sua decisão nestes pontos'), 'Resumo precisa apresentar decisao em linguagem humana')
+  assert(report.stdout.includes('O que a base já estabelece') && report.stdout.includes('O que a referência traz para decidir'), 'Resumo precisa cruzar base e referencia para a pessoa operadora')
+  assert(!report.stdout.includes('[CONFIRMAR]') && !report.stdout.includes('schema'), 'Resumo nao pode expor rotulos internos')
+  assert(fs.existsSync(path.join(fixture, '.designops', 'runs', round, 'resumo-operador.md')), 'Resumo precisa ser gravado junto da rodada')
+  assert(fs.existsSync(path.join(fixture, '.designops', 'runs', round, 'pacote-analista.md')), 'Pacote temporario precisa ser gravado junto da rodada')
 }
 function testFigmaApiContracts() {
   const screenSchema = JSON.parse(fs.readFileSync(path.join(root, 'docs/contratos/tela.schema.json'), 'utf8'))
@@ -238,6 +403,8 @@ function testFigmaApiContracts() {
   assert(analysisSkill.includes('propriedadesVisuaisComValorSemBindingObservado'), 'Analista precisa preservar o nome do sinal estrutural retornado pelo coletor')
   assert(analysisSkill.includes('nunca o renomeie para\n`camposVisuaisSemBindingObservado`'), 'Analista precisa bloquear explicitamente o nome antigo do sinal estrutural')
   assert(analysisSkill.includes('validateAnalysisManifestCore.js'), 'Analista precisa validar o manifesto sem terminal')
+  assert(analysisSkill.includes('validateAnalysisRound.js --round <rodada> --stage pre-coleta'), 'Analista precisa executar gate antes da coleta')
+  assert(analysisSkill.includes('validateAnalysisRound.js --round <rodada> --stage pre-proposta'), 'Analista precisa executar gate antes da proposta')
   assert(analysisSkill.includes('reconcileAnalysisManifestFigma.js'), 'Analista precisa reconciliar o manifesto com Figma atual')
   assert(analysisSkill.includes('return await reconcileAnalysisManifestFigma(manifest, referenceScope);'), 'Analista precisa receber a chamada literal da reconciliacao MCP com recorte')
   assert(analysisSkill.includes('nunca chame\n`skill://index.json`'), 'Analista nao pode procurar skills locais no MCP do Figma')
@@ -253,6 +420,7 @@ function testFigmaApiContracts() {
   assert(analystAgent.includes('Em analise completa, carregue'), 'Agente Analista precisa preservar as skills da analise completa')
   assert(analystAgent.includes('Em contexto guiado que inclui leitura de\nreferencias Figma'), 'Agente Analista precisa carregar o conjunto correto em contexto guiado com Figma')
   assert(analystAgent.includes('referencias.json'), 'Agente Analista precisa declarar recorte de referencias')
+  assert(analystAgent.includes('validateAnalysisRound.js'), 'Agente Analista precisa declarar gate operacional')
   assert(analystAgent.includes('`FATO OBSERVADO`, `REGRA\nDOCUMENTADA`, `REGRA CONFIRMADA` ou `[CONFIRMAR]`'), 'Contexto guiado precisa separar fato de regra por origem')
 
   const contextSkill = fs.readFileSync(path.join(root, '.github/skills/consignado-contexto/SKILL.md'), 'utf8')
@@ -952,7 +1120,7 @@ function testValidateRound() {
   fs.writeFileSync(screenFile, JSON.stringify(screen))
   fs.writeFileSync(journeyFile, JSON.stringify(journey))
   fs.writeFileSync(resolvedFile, JSON.stringify(resolved))
-  fs.writeFileSync(componentsFile, JSON.stringify({ schemaVersion: 1, id: 'componentes-a', contextosConhecidos: [{ id: 'ctx-a', rotulo: 'Contexto A' }], componentes: [] }))
+  fs.writeFileSync(componentsFile, JSON.stringify({ schemaVersion: 1, id: 'componentes-a', rodada: 'rodada-a', contextosConhecidos: [{ id: 'ctx-a', rotulo: 'Contexto A' }], componentes: [] }))
   const roundArgs = ['--screens', screens, '--journey', journeyFile, '--resolved', resolvedFile, '--components', componentsFile]
   expectSuccess(runNode(path.join(root, 'scripts/validateRound.js'), roundArgs), 'Round valido')
   const manifestFile = path.join(fixture, 'analise.json')
@@ -1093,6 +1261,8 @@ async function main() {
     expectFailure(validateManifest(manifest), 'Manifesto com distribuicao de leitura invalida')
     expectSuccess(validateManifest(validManifest()), 'Manifesto completo')
 
+    testAnalysisRoundGate()
+    testAnalystOperation()
     await testJourneyAndLocalComponents()
     await testInteractionCompositionAndReconstruction()
     await testSlotsAndTypographyContracts()

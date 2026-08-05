@@ -2,12 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Manifesto temporario de analise de etapa",
   "type": "object",
-  "required": ["schemaVersion", "id", "etapa", "status", "fontes", "inventario", "execucoesColeta", "coberturaReacoes", "coberturaEstrutura", "reacoes", "diferencas", "lacunas", "evidenciasEstruturais"],
+  "required": ["schemaVersion", "id", "rodada", "etapa", "status", "fontes", "inventario", "execucoesColeta", "coberturaReacoes", "coberturaEstrutura", "reacoes", "diferencas", "lacunas", "evidenciasEstruturais"],
   "properties": {
     "schemaVersion": { "const": 3 },
     "id": { "type": "string", "minLength": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
     "etapa": { "type": "string", "minLength": 1 },
-    "status": { "enum": ["PRECISA_CONTEXTO", "ANALISE_INCOMPLETA", "PROPOSTA_PARA_APROVACAO"] },
+    "status": { "enum": ["PRECISA_CONTEXTO", "ANALISE_INCOMPLETA", "NAO_VERIFICAVEL", "PROPOSTA_PARA_APROVACAO"] },
     "fontes": {
       "type": "object",
       "required": ["figma", "documentos"],
@@ -93,6 +94,24 @@
         }
       }
     },
+    "reconciliacaoMcp": {
+      "description": "Recibo declarativo da ultima reconciliacao de leitura no MCP. Nao substitui o historico auditavel do turno.",
+      "type": ["object", "null"],
+      "properties": {
+        "roundId": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["APROVADA", "REPROVADA", "NAO_VERIFICAVEL"] },
+        "readAt": { "type": "string", "minLength": 1 },
+        "report": {
+          "type": "object",
+          "required": ["passed"],
+          "properties": { "passed": { "type": "boolean" } }
+        }
+      }
+    },
+    "requerResolucaoIds": {
+      "description": "Verdadeiro somente quando a proposta temporaria declarou contratos que precisam associar IDs logicos a nodes Figma.",
+      "type": "boolean"
+    },
     "execucoesColeta": {
       "description": "Registro unitario de cada coleta feita no Figma. Uma execucao nao combina coletores, Sections ou partes.",
       "type": "array",
@@ -124,7 +143,7 @@
           "itensPorParte": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 1 },
           "partesLidas": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 1 },
           "coletor": { "const": "scripts/collectPrototypeReactions.js" },
-          "status": { "enum": ["COBERTA", "FALHOU"] }
+          "status": { "enum": ["COBERTA", "PARCIAL", "FALHOU"] }
         }
       }
     },
@@ -143,7 +162,7 @@
           "itensPorParte": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 1 },
           "partesLidas": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 1 },
           "coletor": { "const": "scripts/collectReferenceStructure.js" },
-          "status": { "enum": ["COBERTA", "FALHOU"] }
+          "status": { "enum": ["COBERTA", "PARCIAL", "FALHOU"] }
         }
       }
     },

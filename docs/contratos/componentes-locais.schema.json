@@ -2,10 +2,11 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Plano aprovado de componentes locais",
   "type": "object",
-  "required": ["schemaVersion", "id", "contextosConhecidos", "componentes"],
+  "required": ["schemaVersion", "id", "rodada", "contextosConhecidos", "componentes"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "id": { "type": "string", "minLength": 1 },
+    "rodada": { "type": "string", "minLength": 1 },
     "contextosConhecidos": {
       "type": "array",
       "items": {

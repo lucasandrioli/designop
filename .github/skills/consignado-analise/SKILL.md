@@ -31,14 +31,47 @@ Em analise completa, leia tambem `consignado-contexto` e
 Esse modo produz proposta, contrato e manifesto; coleta tecnica isolada
 somente devolve fatos tecnicos e a cobertura solicitada.
 
-Leia AGENTS.md, `docs/contrato-papeis.md`, modelo de contextos, manual
-global, manual da modalidade, catalogo da etapa, manual de cada contexto
-usado e o mapa, se ele ja existir na worktree. Na primeira resposta, diga
-o que vai investigar, peca somente a lacuna bloqueante e informe a
-proposta que entregara antes de qualquer escrita. Regra documentada na
-base nao e perguntada novamente. Manual-base ausente, regra ausente ou
-divergente vira `[CONFIRMAR]`; encaminhe alteracao de manual para
-`/consignado-base` e pare se a lacuna for bloqueante.
+Leia AGENTS.md, `docs/contrato-papeis.md`, `docs/operacao-analista.md`,
+modelo de contextos, manual global, manual da modalidade, catalogo da etapa,
+manual de cada contexto usado e o mapa, se ele ja existir na worktree.
+Regra documentada na base nao e perguntada novamente. Regra ausente ou
+divergente vira `[CONFIRMAR]` somente nos artefatos internos; encaminhe
+alteracao de manual para `/consignado-base` quando aplicavel.
+
+Antes de consolidar qualquer proposta, cruze cada achado relevante com a
+base aplicavel: manual global, modalidade, etapa e contexto quando existir.
+Registre no estado da rodada um confronto com observacao Figma, fontes da
+base, situacao e conclusao. No resumo humano, separe `O que a base ja
+estabelece` de `O que a referencia traz para decidir`. Nunca use a tela para
+confirmar, contradizer ou inventar uma regra de negocio.
+
+## Conversa guiada com a pessoa operadora
+
+Aceite como entrada somente `Figma`, `Sections` e `Contexto curto`. Gere o
+identificador interno da rodada, execute `startAnalystRun.js` e informe em
+linguagem humana que recebeu o material. Nao peca node IDs, schemas,
+comandos, nomes de arquivo, manuais ou contexto-id. Descubra esses dados
+sozinho a partir do Figma e da base.
+
+Na primeira resposta, confirme o material recebido, diga que vai localizar
+as Sections e antecipe que entregara uma proposta temporaria para revisao.
+So faca pergunta se a referencia informada nao puder ser localizada.
+
+Durante o trabalho, atualize `estado-analista.json` e mostre apenas
+progresso breve por Section. Nao exponha `[CONFIRMAR]`, paginacao,
+reconciliacao, schema, nome de gate ou JSON na conversa. Quando faltar regra
+de negocio, continue a coleta, registre a lacuna internamente e prepare a
+melhor proposta possivel. Pergunte somente quando a Section nao existir ou
+for ambigua, a ferramenta nao puder concluir a leitura apos recuperacao
+limitada, ou uma resposta humana mudar a estrutura, a jornada ou a
+aprovacao.
+
+Ao terminar, grave `pacote-analista.md` como proposta temporaria da rodada e
+gere `resumo-operador.md` com `renderAnalystStatus.js --write`. O resumo deve
+ter: o que encontrou, proposta, no maximo tres decisoes com impacto e
+recomendacao, e proximo passo. O resultado do gate e evidencia interna; nao
+cole o JSON na resposta. Nunca crie Figma, componente, template, variavel ou
+documento oficial nessa fase.
 
 Antes da coleta, crie `.designops/runs/<id>/referencias.json` conforme
 `docs/contratos/referencias-rodada.schema.json`. Ele declara a pagina e as
@@ -63,6 +96,18 @@ podem receber `EVIDENCIA_APENAS` ou `CONFIRMAR` nesta fase. Um componente
 local que contenha IDS deve ser `COMPONENTE_LOCAL_COM_IDS`, listar as
 instancias IDS descendentes com `nodeId` e `componentKey`, e cada IDS
 interno tambem deve receber seu proprio registro `INSTANCIA_IDS`.
+
+Logo depois de gravar o recorte, execute:
+
+```sh
+node scripts/validateAnalysisRound.js --round <rodada> --stage pre-coleta
+```
+
+O JSON precisa ter `passed: true` antes de abrir qualquer coletor. Se
+reprovar, corrija somente o estado temporario ou encerre com lacuna
+bloqueante. Nunca grave `referencias.json`, `analise.json`, `contexto.json`,
+`resolvido.json` ou `componentes-locais.json` diretamente em
+`.designops/runs/`: todos pertencem a `.designops/runs/<rodada>/`.
 
 Antes de executar qualquer coletor, descubra novamente a pagina no
 arquivo atual com `figma-get_metadata` sem `nodeId`, e depois leia com
@@ -131,16 +176,17 @@ registre tambem o plano temporario com aprovacao, duas reutilizacoes
 previstas e contextos conhecidos. Classifique cada diferenca como
 regra de negocio, defeito estrutural, variavel, property, variant,
 local-layout ou componente local. O contrato usa IDs logicos; grave em
-`.designops/runs/<id>/resolvido.json` somente a resolucao temporaria
-desses IDs para os node IDs reais.
+`.designops/runs/<id>/resolvido.json` somente quando a proposta declarar
+que precisa associar esses IDs a nodes Figma reais.
 
 Componente local exige duas reutilizacoes previstas no contrato. Toda
 proposta separa fato, regra global, regra de convenio e [CONFIRMAR].
 Grave `referencias.json`, o manifesto temporario em
 `.designops/runs/<id>/analise.json`,
-a resolucao temporaria em `.designops/runs/<id>/resolvido.json` e o plano
-em `.designops/runs/<id>/componentes-locais.json`. Sem componente local,
-o plano continua obrigatorio com a lista vazia.
+o plano em `.designops/runs/<id>/componentes-locais.json` e, quando houver
+contrato dependente de IDs, a resolucao temporaria em
+`.designops/runs/<id>/resolvido.json`. Sem componente local, o plano continua
+obrigatorio com a lista vazia.
 
 Depois da ultima escrita de `analise.json`, leia o arquivo que acabou de
 escrever e valide-o sem terminal. Leia as versoes atuais de
@@ -162,5 +208,30 @@ So declare o manifesto validado quando a reconciliacao retornar
 `passed: true`. Ela confirma alinhamento com o Figma atual, mas nao
 substitui o registro unitario das coletas no historico do turno.
 Quando a chamada MCP ou a leitura do manifesto falhar, registre
-`NAO_VERIFICAVEL` e a lacuna correspondente. O comando Node e opcional
-para desenvolvimento local e nunca e pre-requisito operacional.
+`NAO_VERIFICAVEL` e a lacuna correspondente. O adaptador Node dos cores e
+opcional para desenvolvimento local; o gate de rodada abaixo e um
+pre-requisito operacional.
+
+Antes de criar mapa, contrato ou pedir aprovacao, grave `contexto.json`,
+`componentes-locais.json` mesmo com lista vazia, o recibo de reconciliacao no
+manifesto e `resolvido.json` somente quando a proposta depender de IDs.
+Execute:
+
+```sh
+node scripts/validateAnalysisRound.js --round <rodada> --stage pre-proposta
+```
+
+O JSON precisa ter `passed: true`. `ANALISE_INCOMPLETA`,
+`PRECISA_CONTEXTO` e `NAO_VERIFICAVEL` exigem lacuna bloqueante e resposta
+final sem proposta. Use `PROPOSTA_PARA_APROVACAO` somente quando a coleta
+estiver completa e o recibo da reconciliacao MCP da mesma rodada tiver
+`status: "APROVADA"` e `report.passed: true`. Esse recibo e evidencia
+declarativa, nao substitui a auditoria do historico MCP.
+
+## Formato da resposta final
+
+Devolva somente o resumo humano gerado para a rodada: o que foi concluido,
+o que encontrou, proposta temporaria, decisoes pendentes e proximo passo.
+Sem evidencia interna favoravel, explique o que o Analista ainda precisa
+resolver; nunca entregue JSON, nomes de gate ou rotulos internos. Sem
+`passed: true` no gate interno final, o proximo papel nunca e Montador.

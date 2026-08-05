@@ -6,10 +6,11 @@
  */
 function validateAnalysisManifestData(manifest, referenceScope = null) {
   const failures = [];
-  const required = ['schemaVersion', 'id', 'etapa', 'status', 'fontes', 'inventario', 'execucoesColeta', 'coberturaReacoes', 'coberturaEstrutura', 'reacoes', 'diferencas', 'lacunas', 'evidenciasEstruturais'];
+  const required = ['schemaVersion', 'id', 'rodada', 'etapa', 'status', 'fontes', 'inventario', 'execucoesColeta', 'coberturaReacoes', 'coberturaEstrutura', 'reacoes', 'diferencas', 'lacunas', 'evidenciasEstruturais'];
   for (const field of required) if (!(field in (manifest ?? {}))) failures.push('campo ausente: ' + field);
   if (manifest?.schemaVersion !== 3) failures.push('schemaVersion precisa ser 3');
-  if (!['PRECISA_CONTEXTO', 'ANALISE_INCOMPLETA', 'PROPOSTA_PARA_APROVACAO'].includes(manifest?.status)) failures.push('status invalido');
+  if (!manifest?.rodada) failures.push('rodada ausente');
+  if (!['PRECISA_CONTEXTO', 'ANALISE_INCOMPLETA', 'NAO_VERIFICAVEL', 'PROPOSTA_PARA_APROVACAO'].includes(manifest?.status)) failures.push('status invalido');
   if (!manifest?.fontes?.figma?.pagina) failures.push('fonte Figma ausente');
   if (manifest?.fontes?.figma?.descoberta?.metodo !== 'figma-get_metadata' || !manifest?.fontes?.figma?.descoberta?.paginaNodeId) {
     failures.push('descoberta atual das referencias via figma-get_metadata ausente');
@@ -19,7 +20,7 @@ function validateAnalysisManifestData(manifest, referenceScope = null) {
 
   const referenceSections = manifest?.fontes?.figma?.secoesReferencia ?? [];
   const referenceByNodeId = new Map();
-  const validatePagination = (coverage, label, index) => {
+  const validatePagination = (coverage, label, index, requireAllParts) => {
     if (!Number.isInteger(coverage?.totalPartes) || coverage.totalPartes < 1) {
       failures.push(`${label}[${index}] sem totalPartes valido`);
       return;
@@ -41,7 +42,11 @@ function validateAnalysisManifestData(manifest, referenceScope = null) {
     }
     const parts = [...new Set(coverage.partesLidas)];
     const expected = Array.from({ length: coverage.totalPartes }, (_, part) => part + 1);
-    if (parts.length !== coverage.partesLidas.length || parts.length !== expected.length || parts.some((part, position) => part !== expected[position])) {
+    const partsInvalid = parts.length !== coverage.partesLidas.length
+      || parts.some((part, position) => part !== coverage.partesLidas[position])
+      || parts.some((part, position) => position > 0 && part <= parts[position - 1])
+      || parts.some((part) => !expected.includes(part));
+    if (partsInvalid || (requireAllParts && (parts.length !== expected.length || parts.some((part, position) => part !== expected[position])))) {
       failures.push(`${label}[${index}] nao comprova leitura de todas as partes`);
     }
   };
@@ -118,8 +123,9 @@ function validateAnalysisManifestData(manifest, referenceScope = null) {
       continue;
     }
     if (coverage.coletor !== 'scripts/collectPrototypeReactions.js') failures.push('coberturaReacoes[' + index + '] precisa usar scripts/collectPrototypeReactions.js');
-    if (!['COBERTA', 'FALHOU'].includes(coverage.status)) failures.push('coberturaReacoes[' + index + '] possui status invalido');
-    validatePagination(coverage, 'coberturaReacoes', index);
+    if (!['COBERTA', 'PARCIAL', 'FALHOU'].includes(coverage.status)) failures.push('coberturaReacoes[' + index + '] possui status invalido');
+    const requiresAllParts = manifest?.status === 'PROPOSTA_PARA_APROVACAO' || coverage.status === 'COBERTA';
+    validatePagination(coverage, 'coberturaReacoes', index, requiresAllParts);
     const referencedSection = referenceByNodeId.get(coverage.nodeId);
     if (!referencedSection) failures.push('coberturaReacoes[' + index + '] aponta para Section que nao e referencia');
     else if (referencedSection.nome !== coverage.secao) failures.push('coberturaReacoes[' + index + '] nao corresponde ao nome da Section de referencia');
@@ -135,8 +141,9 @@ function validateAnalysisManifestData(manifest, referenceScope = null) {
       continue;
     }
     if (coverage.coletor !== 'scripts/collectReferenceStructure.js') failures.push('coberturaEstrutura[' + index + '] precisa usar scripts/collectReferenceStructure.js');
-    if (!['COBERTA', 'FALHOU'].includes(coverage.status)) failures.push('coberturaEstrutura[' + index + '] possui status invalido');
-    validatePagination(coverage, 'coberturaEstrutura', index);
+    if (!['COBERTA', 'PARCIAL', 'FALHOU'].includes(coverage.status)) failures.push('coberturaEstrutura[' + index + '] possui status invalido');
+    const requiresAllParts = manifest?.status === 'PROPOSTA_PARA_APROVACAO' || coverage.status === 'COBERTA';
+    validatePagination(coverage, 'coberturaEstrutura', index, requiresAllParts);
     const referencedSection = referenceByNodeId.get(coverage.nodeId);
     if (!referencedSection) failures.push('coberturaEstrutura[' + index + '] aponta para Section que nao e referencia');
     else if (referencedSection.nome !== coverage.secao) failures.push('coberturaEstrutura[' + index + '] nao corresponde ao nome da Section de referencia');
@@ -146,11 +153,11 @@ function validateAnalysisManifestData(manifest, referenceScope = null) {
 
   for (const section of referenceSections) {
     const coverage = coverageByNodeId.get(section.nodeId);
-    if (!coverage) failures.push('secao de referencia sem cobertura de reacoes: ' + section.nodeId);
-    else if (coverage.status !== 'COBERTA') failures.push('varredura de reacoes falhou para a secao: ' + section.nodeId);
+    if (!coverage && manifest?.status === 'PROPOSTA_PARA_APROVACAO') failures.push('secao de referencia sem cobertura de reacoes: ' + section.nodeId);
+    else if (coverage && coverage.status !== 'COBERTA' && manifest?.status === 'PROPOSTA_PARA_APROVACAO') failures.push('varredura de reacoes falhou para a secao: ' + section.nodeId);
     const structure = structureByNodeId.get(section.nodeId);
-    if (!structure) failures.push('secao de referencia sem cobertura estrutural: ' + section.nodeId);
-    else if (structure.status !== 'COBERTA') failures.push('varredura estrutural falhou para a secao: ' + section.nodeId);
+    if (!structure && manifest?.status === 'PROPOSTA_PARA_APROVACAO') failures.push('secao de referencia sem cobertura estrutural: ' + section.nodeId);
+    else if (structure && structure.status !== 'COBERTA' && manifest?.status === 'PROPOSTA_PARA_APROVACAO') failures.push('varredura estrutural falhou para a secao: ' + section.nodeId);
   }
 
   const allowedCollectors = new Set(['scripts/collectPrototypeReactions.js', 'scripts/collectReferenceStructure.js']);
@@ -176,7 +183,9 @@ function validateAnalysisManifestData(manifest, referenceScope = null) {
     observedExecutions.add(executionKey);
     if (!expectedExecutions.has(executionKey)) failures.push('execucoesColeta[' + index + '] nao corresponde a uma parte esperada da cobertura');
   }
-  for (const executionKey of expectedExecutions) if (!observedExecutions.has(executionKey)) failures.push('coleta unitaria ausente para ' + executionKey);
+  if (manifest?.status === 'PROPOSTA_PARA_APROVACAO') {
+    for (const executionKey of expectedExecutions) if (!observedExecutions.has(executionKey)) failures.push('coleta unitaria ausente para ' + executionKey);
+  }
 
   for (const [index, verification] of (manifest?.verificacoesTecnicas ?? []).entries()) {
     if (!verification?.regraId || !Array.isArray(verification?.aplicacao?.secoesReferencia) || verification.aplicacao.secoesReferencia.length === 0) {
@@ -218,6 +227,12 @@ function validateAnalysisManifestData(manifest, referenceScope = null) {
     if ((manifest.coberturaEstrutura ?? []).length === 0) failures.push('proposta possui cobertura estrutural vazia');
     if ((manifest.reacoes ?? []).length === 0) failures.push('proposta possui reacoes vazias; registre tambem ausencia observada quando aplicavel');
     if ((manifest.lacunas ?? []).some((gap) => gap.bloqueante)) failures.push('proposta possui lacuna bloqueante');
+    const reconciliation = manifest?.reconciliacaoMcp;
+    if (!reconciliation || reconciliation.roundId !== manifest.rodada || reconciliation.status !== 'APROVADA' || reconciliation.report?.passed !== true || !reconciliation.readAt) {
+      failures.push('proposta sem reconciliacao MCP favoravel da rodada atual');
+    }
+  } else if (['PRECISA_CONTEXTO', 'ANALISE_INCOMPLETA', 'NAO_VERIFICAVEL'].includes(manifest?.status) && !(manifest.lacunas ?? []).some((gap) => gap.bloqueante)) {
+    failures.push('status nao conclusivo exige lacuna bloqueante');
   }
   return failures;
 }

@@ -64,7 +64,11 @@ abrindo pelo mapa de entregaveis: cada tela declarada deve ser um
 `TEMPLATE_ALVO`, com nome logico, rascunho previsto e template futuro. Em
 seguida, detalhe arvore de composicao, componentes e bibliotecas, matriz de
 tokens e bindings, plano de variaveis, decisoes de composicao interna, nucleo
-comum, diferencas por modalidade e preflight exigido. Nao altere o canvas.
+comum, diferencas por modalidade e preflight exigido. A referencia pode nao ter
+bindings, variaveis ou componentes: trate isso como divida tecnica e projete o
+alvo de biblioteca, nao uma copia. Todo template alvo deve ser COMPONENT ou
+COMPONENT_SET; todo texto visivel e propriedade tokenizavel precisa de binding
+ou de um recurso criado pelo contrato. Nao altere o canvas.
 ```
 
 Revise o contrato. A montagem so pode comecar depois de aprovacao humana
@@ -86,7 +90,9 @@ AREA DE DESTINO: <nome da Section ou area de verificacao>
 Faca o preflight tecnico de todos os componentes, variantes, tokens, variaveis
 e bindings, alem da lista e dos nomes dos TEMPLATE_ALVO. Se todos forem
 confirmados, crie um rascunho para cada template nesta mesma chamada. Se houver
-divergencia, nao altere o canvas e devolva IMPASSE_TECNICO.
+divergencia, nao altere o canvas e devolva IMPASSE_TECNICO. Crie bindings,
+variaveis, tokens, estilos, componentes e variantes quando o contrato declarar
+`CRIAR`; a ausencia desses itens na referencia nao autoriza omiti-los.
 ```
 
 ## 4. Revisar um impasse tecnico
@@ -119,8 +125,10 @@ MOMENTO ATIVO: <nome>
 
 Os frames selecionados incluem as referencias e o rascunho a verificar. Releia
 o Figma, compare composicao, componentes, tokens, variaveis e bindings com o
-contrato. Classifique qualquer divergencia para o Montador ou para o Analista.
-Nao corrija, nao publique e nao altere o canvas.
+contrato tecnico, e nao apenas com as deficiencias da referencia. Verifique que
+os templates sao componentes, que os textos estao bindados e que as propriedades
+tokenizaveis nao ficaram em valor bruto. Classifique qualquer divergencia para
+o Montador ou para o Analista. Nao corrija, nao publique e nao altere o canvas.
 ```
 
 Somente depois de `APTO PARA DECISAO DE PUBLICACAO` a pessoa decide como

@@ -26,15 +26,20 @@ Se faltar uma pre-condicao, informe somente o campo ausente e nao altere nada.
 Antes de qualquer escrita, confira no arquivo e nas bibliotecas conectadas cada
 item do contrato:
 
-1. componente, biblioteca, variante e propriedade;
-2. token, estilo, variavel, collection, modo e propriedade de destino;
+1. componente, biblioteca, variante, propriedade e acao `REUTILIZAR` ou
+   `CRIAR`;
+2. token, estilo, variavel, collection, modo, propriedade de destino e acao
+   `REUTILIZAR` ou `CRIAR`;
 3. possibilidade real de aplicar o binding sem editar uma instancia opaca;
 4. lista, quantidade, nome logico e nome de rascunho de cada `TEMPLATE_ALVO`;
 5. area de destino;
 6. evidencia das duas reutilizacoes planejadas para cada componente local.
 
-Eleve `CANDIDATO` para `CONFIRMADO_TECNICAMENTE` somente quando o item existir
-e puder ser aplicado como declarado.
+Para itens `REUTILIZAR`, eleve `CANDIDATO` para `CONFIRMADO_TECNICAMENTE`
+somente quando o item existir e puder ser aplicado como declarado. Para itens
+`CRIAR`, confirme que o contrato define nome, destino, collection ou escopo e
+que a criacao e tecnicamente possivel no arquivo alvo. A falta de binding na
+referencia nunca e um impasse por si so.
 
 Se qualquer item falhar, nao crie nem altere o canvas. Responda com:
 
@@ -59,8 +64,19 @@ Depois de preflight integralmente favoravel:
   nome de frame, template ou componente.
 - Recompose cada template alvo a partir do contrato; nunca copie ou mova a
   referencia.
-- Use somente componentes, variantes, estilos, tokens e bindings confirmados.
-- Aplique variavel apenas no caminho, collection, modo e papel aprovados.
+- Converta cada rascunho de `TEMPLATE_ALVO` em `COMPONENT` ou `COMPONENT_SET`.
+  Crie variantes e propriedades para os estados previstos no contrato.
+- Reutilize ou crie componentes, variantes, estilos, tokens e bindings conforme
+  a acao declarada no contrato. Nunca copie valor bruto da referencia por falta
+  de binding.
+- Crie e aplique variaveis no caminho, collection, modo e papel aprovados.
+  Todo texto visivel deve ficar ligado a uma variavel.
+- Aplique tokens ou estilos semanticos em propriedades tokenizaveis: cor,
+  tipografia, espacamento, padding, gap, tamanho, raio, borda, opacidade e
+  elevacao quando aplicaveis. Valor bruto e montagem incompleta: devolva
+  `IMPASSE_TECNICO` se nao conseguir reutilizar ou criar o recurso necessario.
+- Use auto layout, redimensionamento e restricoes coerentes com a arquitetura
+  do template. Nunca insira filho diretamente em instancia de biblioteca.
 - Trate `LOCAL_LAYOUT_INTERNO` como estrutura dentro do template, nao como
   componente ou entregavel separado. Crie componente local apenas quando o
   contrato trouxer duas reutilizacoes planejadas aprovadas.
@@ -81,9 +97,13 @@ Depois da montagem, responda no chat:
 
 ## Preflight confirmado
 
+## Forma tecnica e estados dos templates
+
 ## Componentes e variantes aplicados
 
 ## Matriz de bindings aplicados
+
+## Cobertura de tokens e estilos aplicados
 
 ## Variaveis, collections e modos aplicados
 

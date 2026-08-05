@@ -105,7 +105,11 @@ Para cada tela, declare a arvore de composicao, os componentes e bibliotecas,
 a matriz de tokens e bindings, o plano de variaveis e o que e local-layout ou
 candidato a componente local. Quando uma instancia por modalidade for
 necessaria para montar um template, explicite essa instancia sem transformar o
-momento em uma modalidade. Nao altere o canvas.
+momento em uma modalidade. As referencias podem nao ter binding algum: isso e
+divida tecnica, nao modelo para copia. Projete os dois templates como COMPONENT
+ou COMPONENT_SET, com textos vinculados a variaveis e espacamentos, cores,
+tipografia, raios e demais propriedades tokenizaveis ligados a tokens ou estilos
+semanticos. Nao altere o canvas.
 ```
 
 ## Montar a 4790 aprovada
@@ -124,7 +128,10 @@ AREA DE DESTINO: <area de verificacao>
 Use o contrato de arquitetura aprovado nesta conversa. Confirme no preflight
 os componentes, tokens, variaveis, bindings e os dois TEMPLATE_ALVO. Se todos
 existirem e puderem ser aplicados como declarados, crie os dois rascunhos nesta
-chamada. Se algum item divergir, nao altere o canvas e devolva IMPASSE_TECNICO.
+chamada como componentes e aplique os bindings, tokens, estilos e variantes do
+contrato. Crie os itens tecnicos que o contrato marcar como `CRIAR`; nao copie
+as ausencias tecnicas das referencias. Se algum item divergir, nao altere o
+canvas e devolva IMPASSE_TECNICO.
 ```
 
 ## Revisar impasse da 4790
@@ -150,6 +157,8 @@ Selecione as duas referencias e os dois rascunhos da 4790. Envie:
 MOMENTO ATIVO: 4790, Autorizacao de debito em conta
 Use o contrato de arquitetura aprovado e o relatorio de preflight e montagem.
 Compare a referencia e o rascunho, incluindo composicao, componentes, tokens,
-variaveis e bindings. Se houver divergencia, encaminhe-a ao Montador ou ao
-Analista. Nao corrija, nao publique e nao altere o canvas.
+variaveis e bindings. Verifique que existem dois templates em COMPONENT ou
+COMPONENT_SET, que os textos estao vinculados e que propriedades tokenizaveis
+nao ficaram em valor bruto. Se houver divergencia, encaminhe-a ao Montador ou
+ao Analista. Nao corrija, nao publique e nao altere o canvas.
 ```

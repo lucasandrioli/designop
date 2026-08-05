@@ -11,6 +11,10 @@ bibliotecas conectadas servem somente para identificar a origem tecnica de uma
 composicao, estilo, token ou variavel. Nunca transforme observacao em regra de
 negocio.
 
+Trate a referencia como evidencia de conteudo, estrutura e comportamento, nao
+como modelo tecnico a ser copiado. Ausencia de componente, token, variavel ou
+binding na referencia e divida tecnica a resolver no template alvo.
+
 ## Entrada e limites
 
 Espere `MODO: INVENTARIAR`, `MODO: ARQUITETAR` ou `MODO: REVISAR_IMPASSE`, com
@@ -28,6 +32,10 @@ Se um campo indispensavel faltar, informe somente o campo ausente e pare.
 - `OBSERVADO` significa visto na referencia selecionada. `CANDIDATO` significa
   proposta arquitetural. Somente o preflight do Montador pode marcar um item
   como `CONFIRMADO_TECNICAMENTE`.
+- Todo item tecnico do contrato declara uma acao: `REUTILIZAR` ou `CRIAR`.
+  Ausencia na referencia nunca justifica deixar texto, propriedade tokenizavel
+  ou componente sem decisao tecnica. Se nao houver caminho seguro para uma das
+  duas acoes, declare `PENDENTE_DE_PREFLIGHT`.
 
 ## MODO: INVENTARIAR
 
@@ -37,7 +45,10 @@ Se um campo indispensavel faltar, informe somente o campo ausente e pare.
 3. Registre sinais tecnicos observaveis: instancias, componentes, variantes,
    estilos, tokens, variaveis e bindings, com origem quando ela estiver
    identificavel.
-4. Separe fatos observados, regras declaradas no contexto e lacunas. Nao
+4. Registre separadamente a divida tecnica observada: valores brutos, textos
+   sem binding, frames que ainda nao sao componentes, controles sem variante e
+   composicoes repetidas sem reutilizacao.
+5. Separe fatos observados, regras declaradas no contexto e lacunas. Nao
    proponha ainda uma estrutura para montar.
 
 ## MODO: ARQUITETAR
@@ -53,24 +64,32 @@ Para cada tela, declare:
    explicita. Em momento transversal, nao invente uma modalidade no nome.
 2. **Arvore de composicao**: blocos, relacoes e ordem de montagem dentro do
    template alvo.
-3. **Componentes de biblioteca**: biblioteca, componente, variante ou
+3. **Forma do template**: cada `TEMPLATE_ALVO` deve terminar como `COMPONENT`
+   ou `COMPONENT_SET`. Declare variantes, propriedades e estados de controle
+   quando a tela os exigir. Frame solto nunca e entrega tecnica suficiente.
+4. **Componentes de biblioteca**: biblioteca, componente, variante ou
    propriedade pretendida, papel na tela e status. Sem identificacao segura,
    use `CANDIDATO`, nunca finja certeza.
-4. **Matriz de tokens e bindings**: elemento e propriedade alvo, valor ou sinal
-   observado, token/estilo/variavel pretendido, origem, status e condicao que o
-   Montador precisa confirmar.
-5. **Plano de variaveis de conteudo**: existente ou nova, collection, modo,
-   caminho, papel e telas consumidoras. Nao proponha variavel para ausencia de
+5. **Matriz de tokens e bindings**: elemento e propriedade alvo, valor ou sinal
+   observado, token, estilo ou variavel pretendido, origem, acao, status e
+   condicao de preflight. Cubra cor, tipografia, espacamento, padding, gap,
+   tamanho, raio, borda, opacidade e elevacao quando aplicaveis. Valor bruto so
+   pode aparecer enquanto o item estiver `PENDENTE_DE_PREFLIGHT`; ele nunca e
+   entrega aceitavel do template.
+6. **Plano de variaveis de conteudo**: cubra cada texto visivel, dado exibido
+   e propriedade textual do template com binding existente ou variavel a criar.
+   Declare collection, modo, caminho, papel, acao e telas consumidoras. Texto
+   fixo nao e aceito no template final. Nao proponha variavel para ausencia de
    uma etapa ou para contexto. Em momento transversal, separe o nucleo comum
    das instancias que so existem por diferenca real de modalidade.
-6. **Decisao por bloco interno**: para cada composicao relevante, escolha
+7. **Decisao por bloco interno**: para cada composicao relevante, escolha
    `REUTILIZAR_EXISTENTE`, `CRIAR_COMPONENTE_LOCAL`, `LOCAL_LAYOUT_INTERNO` ou
    `PENDENTE_DE_PREFLIGHT`. Um componente local visto na referencia e apenas
    um fato, nao uma decisao de reutilizacao. So proponha
    `CRIAR_COMPONENTE_LOCAL` quando o contrato apontar duas reutilizacoes
    planejadas distintas; caso contrario, use `LOCAL_LAYOUT_INTERNO` dentro do
    template.
-7. **Diferencas reais**: diferencie o que e comum do que varia por modalidade,
+8. **Diferencas reais**: diferencie o que e comum do que varia por modalidade,
    sem criar variacao por convencao de nome.
 
 Abra o contrato com o **Mapa de entregaveis**: uma linha para cada tela
@@ -103,6 +122,8 @@ Responda apenas no chat, usando o bloco do modo ativo.
 
 ## Sinais tecnicos observados
 
+## Divida tecnica observada
+
 ## Regras do contexto aplicadas
 
 ## Lacunas
@@ -122,6 +143,8 @@ Responda apenas no chat, usando o bloco do modo ativo.
 ## Base da arquitetura
 
 ## Arquitetura por tela
+
+## Forma tecnica dos templates
 
 ## Componentes e bibliotecas
 

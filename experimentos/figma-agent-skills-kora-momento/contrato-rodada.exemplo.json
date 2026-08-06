@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "status": "AGUARDANDO_APROVACAO_HUMANA",
+  "gate": "G_APROVACAO_TEMPLATE",
+  "etapa": "<etapa>",
+  "momento": {
+    "id": "<momento-id>",
+    "nome": "<nome humano>"
+  },
+  "tela": {
+    "templateAlvo": "<uma unica tela>",
+    "versaoAnterior": null,
+    "versaoProposta": "<rascunho na area experimental>"
+  },
+  "fase": "TEMPLATE_PRIMEIRO",
+  "preservacoes": {
+    "visuais": ["<hierarquia, geometria, estado ou aparencia a preservar>"],
+    "funcionais": ["<controle, acao ou comportamento observado a preservar>"]
+  },
+  "recibosBuscaLibrary": [
+    {
+      "termo": "<papel ou recurso pesquisado>",
+      "origem": "<library>",
+      "resultado": "<encontrado, indisponivel ou incompativel>",
+      "evidencia": "<referencia de leitura>"
+    }
+  ],
+  "decisoes": [
+    {
+      "item": "<recurso ou bloco>",
+      "acao": "REUTILIZAR",
+      "justificativa": "<compatibilidade ou motivo para criar>",
+      "preflight": "PENDENTE"
+    }
+  ],
+  "migracaoInstancias": [
+    {
+      "origemObservada": "INSTANCIA|COMPONENTE_LOCAL|DESTACADO|ESTRUTURA_SOLTA",
+      "instanciaCanonicaAtual": "<id ou referencia, se houver>",
+      "variante": {},
+      "propriedades": {},
+      "textos": {},
+      "visibilidades": {},
+      "swaps": {},
+      "dimensoes": {},
+      "overridesPermitidos": []
+    }
+  ],
+  "bindingsEEstilos": [
+    {
+      "propriedade": "<propriedade alvo>",
+      "recurso": "<token, estilo ou variavel existente>",
+      "acao": "REUTILIZAR",
+      "valorSoltoExcepcional": false,
+      "justificativa": null
+    }
+  ],
+  "candidatasComponentizacao": [
+    {
+      "bloco": "<nome>",
+      "faseElegivel": "EXTRACAO_SELETIVA",
+      "evidencia": "<dois usos ou manutencao/variacao independente>",
+      "aprovada": false
+    }
+  ],
+  "evidencias": {
+    "fidelidadeVisual": [],
+    "saudeTecnica": []
+  },
+  "impasses": [],
+  "veredictos": {
+    "fidelidadeVisual": "PENDENTE",
+    "saudeTecnica": "PENDENTE"
+  }
+}

@@ -1,150 +1,136 @@
-# Roteiro de prompts por momento
+# Roteiro de prompts da Kora por etapa, momento e tela
 
-Use uma skill por mensagem. O contexto de negocio entra nos prompts, nunca nas
-skills. Uma rodada corresponde a um momento completo: inventario, arquitetura,
-montagem, validacao e decisao humana.
+Uma rodada trata uma unica tela selecionada. Etapa e momento sao parametros.
+A referencia orienta fidelidade visual e funcional, nunca a arquitetura tecnica.
+Use uma skill por mensagem e mantenha o contrato leve da rodada na conversa ou
+no artefato experimental correspondente.
 
-## 0. Abrir a etapa, somente na primeira rodada do chat
+## 0. Abrir a etapa
 
-Envie sem selecionar telas e sem chamar skill:
+Envie uma vez por conversa, sem selecionar tela:
 
 ```text
-Vamos trabalhar na etapa abaixo. Absorva este contexto para esta conversa.
-Nao analise telas, nao procure referencias, nao crie nada e nao faca perguntas.
+Absorva somente este contexto da etapa. Nao analise, busque ou altere o Figma.
 
 ETAPA: <nome>
-OBJETIVO DA ETAPA: <o que a etapa resolve para a pessoa>
-MODALIDADES EM QUE EXISTE: <lista>
-CONTEXTOS APLICAVEIS: <lista>
-REGRAS APROVADAS DA ETAPA:
-<cole aqui o panorama de negocio e as regras dos manuais aplicaveis>
+REGRAS APROVADAS: <fonte ou resumo>
 
-Esta conversa sera conduzida por momentos. Em cada momento, eu selecionarei
-somente as telas de referencia daquele recorte.
-
-Responda somente: "Contexto da etapa absorvido. Aguardo o primeiro momento."
+Responda somente: "Contexto da etapa absorvido. Aguardo a tela da rodada."
 ```
 
-Guarde a resposta no chat como `CARTAO DE CONTEXTO DA ETAPA`.
+## 1. Inventariar uma tela
 
-## 1. Abrir e inventariar um momento
-
-Selecione somente os frames de referencia do momento. Envie:
+Selecione somente a referencia da tela. Envie:
 
 ```text
 /analista
 
 MODO: INVENTARIAR
-Use o CARTAO DE CONTEXTO DA ETAPA desta conversa.
+ETAPA: <nome>
+MOMENTO: <identificador e nome humano>
+TELA/TEMPLATE_ALVO: <nome da unica tela selecionada>
+FASE: TEMPLATE_PRIMEIRO
 
-MOMENTO: <nome humano>
-SIGNIFICADO DO MOMENTO: <o que acontece para a pessoa>
-MODALIDADES OU RECORTE: <lista>
-TELAS DECLARADAS:
-- <nome>: PRINCIPAL
-- <nome>: DETALHE, aberta por <principal>
-- <nome>: AUXILIAR, aberta por <principal ou detalhe>
-
-Os frames atualmente selecionados sao a unica evidencia visual deste momento.
-Voce pode consultar a biblioteca conectada somente para identificar a origem
-tecnica de elementos desses frames. Nao altere o canvas.
+Use o contexto da etapa desta conversa. A referencia selecionada e a evidencia
+visual e funcional. Registre preservacoes, origem das instancias ou estruturas,
+e recibos de busca nas libraries. Nao altere o canvas.
 ```
 
-## 2. Arquitetar o contrato, sem escrever
+## 2. Arquitetar o mapa tecnico
 
-Mantenha selecionadas somente as referencias do mesmo momento. Envie:
+Mantenha somente a mesma referencia selecionada. Envie:
 
 ```text
 /analista
 
 MODO: ARQUITETAR
-Use o inventario e o CARTAO DE CONTEXTO DA ETAPA desta conversa.
-Trabalhe somente o momento ativo. Entregue o contrato de arquitetura completo,
-abrindo pelo mapa de entregaveis: cada tela declarada deve ser um
-`TEMPLATE_ALVO`, com nome logico, rascunho previsto e template futuro. Em
-seguida, detalhe arvore de composicao, componentes e bibliotecas, matriz de
-tokens e bindings, plano de variaveis, decisoes de composicao interna, nucleo
-comum, diferencas por modalidade e preflight exigido. A referencia pode nao ter
-bindings, variaveis ou componentes: trate isso como divida tecnica e projete o
-alvo de biblioteca, nao uma copia. Todo template alvo deve ser COMPONENT ou
-COMPONENT_SET; todo texto visivel e propriedade tokenizavel precisa de binding
-ou de um recurso criado pelo contrato. Antes de marcar `CRIAR`, procure o
-equivalente nas bibliotecas instaladas, incluindo propriedades de binding,
-tokens, estilos, variaveis, collections e modos. Nao altere o canvas.
+ETAPA: <nome>
+MOMENTO: <identificador e nome humano>
+TELA/TEMPLATE_ALVO: <nome>
+FASE: TEMPLATE_PRIMEIRO
+
+Use o inventario desta conversa. Projete um TEMPLATE_ALVO inteiro e fiel,
+reutilizando a library quando compativel. Nao componentize toda a tela e nao
+proponha componentes locais de library nesta fase. Declare bindings, estilos,
+tokens existentes, valores soltos excepcionais, overrides permitidos e impasses.
+Nao altere o canvas.
 ```
 
-Revise o contrato. A montagem so pode comecar depois de aprovacao humana
-explicita.
+## 3. Entregar e aprovar o contrato
 
-## 3. Aprovar, conferir e montar
+```text
+/analista
 
-Declare a area de verificacao em que o rascunho pode ser criado. Envie:
+MODO: ENTREGAR_CONTRATO
+Use o inventario e o mapa tecnico da mesma tela. Persista o contrato leve da
+rodada com status, gate, preservacoes, recibos, decisoes e impasses. Aguarde
+aprovacao humana para montar o TEMPLATE_PRIMEIRO. Nao altere o canvas.
+```
+
+Revise o contrato. A montagem somente pode comecar depois de aprovacao humana
+explicita para esse template.
+
+## 4. Montar o template inteiro
 
 ```text
 /montador
 
-APROVACAO HUMANA: MONTAGEM APROVADA
-Use o contrato de arquitetura aprovado nesta conversa.
-MOMENTO ATIVO: <nome>
-MODALIDADE DE EXECUCAO: <preencha se o asset for de uma modalidade>
-AREA DE DESTINO: <nome da Section ou area de verificacao>
+APROVACAO HUMANA: TEMPLATE_PRIMEIRO APROVADO
+ETAPA: <nome>
+MOMENTO: <identificador e nome humano>
+TELA/TEMPLATE_ALVO: <nome>
+FASE: TEMPLATE_PRIMEIRO
+AREA DE DESTINO: <area experimental de verificacao>
 
-Faca o preflight tecnico de todos os componentes, variantes, tokens, variaveis
-e bindings, alem da lista e dos nomes dos TEMPLATE_ALVO. Se todos forem
-confirmados, crie um rascunho para cada template nesta mesma chamada. Se houver
-divergencia, nao altere o canvas e devolva IMPASSE_TECNICO. Crie bindings,
-variaveis, tokens, estilos, componentes e variantes quando o contrato declarar
-`CRIAR`; antes, procure todas as bibliotecas instaladas e reutilize o que ja
-existir, inclusive as propriedades de binding. A ausencia desses itens na
-referencia nao autoriza omiti-los.
+Use o contrato aprovado. Repita o preflight e os recibos de busca. Monte uma
+nova versao completa da tela. Use a instancia canonica e somente overrides
+permitidos; se nao reproduzir a referencia, devolva IMPASSE_TECNICO. Nao
+publique, nao altere referencia ou library oficial.
 ```
 
-## 4. Revisar um impasse tecnico
+## 5. Validar o template primeiro
 
-Use somente quando o Montador devolver `IMPASSE_TECNICO`. Mantenha selecionadas
-as referencias e, se necessario, o item tecnico declarado no contrato. Envie:
+Selecione simultaneamente e somente duas telas: a referencia e a nova versao
+criada pelo Montador. Envie:
+
+```text
+/validador
+
+ETAPA: <nome>
+MOMENTO: <identificador e nome humano>
+TELA/TEMPLATE_ALVO: <nome>
+FASE: TEMPLATE_PRIMEIRO
+
+Primeiro identifique referencia e nova versao. Compare Fidelidade Visual entre
+elas; verifique Saude Tecnica somente na nova versao, com evidencia de bindings,
+estilos, valores soltos, instancias e excecoes. Se a selecao nao tiver
+exatamente essas duas telas identificaveis, pare e peca correcao. Nao altere ou
+publique nada.
+```
+
+Se ambos forem `APTO`, a pessoa decide encerrar ou aprovar explicitamente a
+extracao seletiva de candidatas. Sem essa aprovacao, nenhuma componentizacao
+adicional pode comecar.
+
+## 6. Extracao seletiva, somente quando aprovada
+
+Repita os passos 2 a 5 com `FASE: EXTRACAO_SELETIVA`, incluindo a evidencia de
+reutilizacao comprovada ou manutencao/variacao independente para cada
+candidata. O Montador recompõe nova versao e preserva a anterior; o Validador
+verifica as duas. A pessoa aprova a adocao depois dos dois veredictos aptos.
+
+## 7. Revisar impasse
 
 ```text
 /analista
 
 MODO: REVISAR_IMPASSE
-Use o contrato aprovado e o IMPASSE_TECNICO desta conversa.
-Reavalie somente o item afetado. Preserve o restante do contrato e devolva um
-delta claro para nova aprovacao ou uma decisao humana indispensavel. Nao altere
-o canvas.
+ETAPA: <nome>
+MOMENTO: <identificador e nome humano>
+TELA/TEMPLATE_ALVO: <nome>
+FASE: <fase ativa>
+
+Use somente o IMPASSE_TECNICO desta rodada. Preserve o restante, entregue o
+delta e retorne a ENTREGAR_CONTRATO se houver mudanca que exija nova aprovacao.
+Nao altere o canvas.
 ```
-
-Se o delta mudar a arquitetura, aprove-o explicitamente e retorne ao passo 3.
-
-## 5. Validar o rascunho
-
-Selecione os frames de referencia e o rascunho daquele mesmo momento. Envie:
-
-```text
-/validador
-
-Use o contrato de arquitetura aprovado e o relatorio de preflight e montagem
-desta conversa.
-MOMENTO ATIVO: <nome>
-
-Os frames selecionados incluem as referencias e o rascunho a verificar. Releia
-o Figma, compare composicao, componentes, tokens, variaveis e bindings com o
-contrato tecnico, e nao apenas com as deficiencias da referencia. Verifique que
-os templates sao componentes, que os textos estao bindados e que as propriedades
-tokenizaveis nao ficaram em valor bruto. Classifique qualquer divergencia para
-o Montador ou para o Analista. Nao corrija, nao publique e nao altere o canvas.
-```
-
-Somente depois de `APTO PARA DECISAO DE PUBLICACAO` a pessoa decide como
-publicar o rascunho conforme a governanca da biblioteca.
-
-## 6. Abrir o proximo momento no mesmo chat
-
-Troque a selecao pelos frames do novo momento e repita o prompt **1**. O
-contexto da etapa permanece no chat; nao leve fatos visuais do momento anterior
-para o novo recorte.
-
-## Novo chat
-
-Se abrir uma conversa nova, repita primeiro o prompt **0**. Em seguida, abra
-o momento desejado pelo prompt **1**.

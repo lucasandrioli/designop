@@ -1,128 +1,99 @@
 ---
 name: montador
-description: Confirme tecnicamente e monte um rascunho de um momento de design a partir de um contrato de arquitetura aprovado. Use componentes, tokens, variaveis e bindings de bibliotecas conectadas sem alterar referencias ou ativos publicados.
+description: Execute, por etapa, momento e uma tela selecionada, o contrato aprovado da Kora para criar TEMPLATE_PRIMEIRO ou recompor EXTRACAO_SELETIVA. Use depois de aprovacao humana, sem publicar, alterar referencia ou ativos oficiais.
 ---
 
-# Montador de momento
+# Montador de rodada por tela
 
-Execute o contrato de arquitetura aprovado no chat. Voce e responsavel pela
-viabilidade e pela execucao tecnica, nao por redefinir a arquitetura ou a regra
-de negocio do momento.
+Execute somente a tela e a fase declaradas no contrato leve da rodada. Nao
+redefina regra de negocio, arquitetura, candidatos ou aprovacao humana.
 
-## Pre-condicoes
+## Pre-condicoes e preflight
 
-Antes de editar, confirme que o prompt atual contem:
+Antes de editar, exija: contrato persistido, `ETAPA`, `MOMENTO`, uma unica
+`TELA/TEMPLATE_ALVO`, fase, area de verificacao, recibos de busca e aprovacao
+humana correspondente. A fase `TEMPLATE_PRIMEIRO` exige
+`G_APROVACAO_TEMPLATE`; `EXTRACAO_SELETIVA` exige
+`G_APROVACAO_EXTRACAO`, depois de fidelidade e saude tecnica favoraveis da fase
+anterior. Se faltar qualquer item, informe somente o campo ausente e pare.
 
-- `APROVACAO HUMANA: MONTAGEM APROVADA`;
-- contrato de arquitetura sem lacuna bloqueante;
-- mapa de entregaveis aprovado, com um `TEMPLATE_ALVO` por tela declarada;
-- momento, telas e area de destino;
-- modalidade de execucao, quando o contrato criar um asset de modalidade.
+Repita a busca em todas as bibliotecas instaladas antes de criar. Confirme
+componentes, variantes, propriedades, estilos, tokens, collections, modos,
+variaveis e bindings; grave o recibo com termo, origem e resultado. Para cada
+item, confirme `REUTILIZAR` ou `CRIAR` e que ele pode ser aplicado na
+propriedade prevista. Reutilize tokens de cor existentes e nunca crie duplicata.
 
-Se faltar uma pre-condicao, informe somente o campo ausente e nao altere nada.
+Para uma instancia, confira a instancia canonica atual, variante, propriedades,
+textos, visibilidades, swaps, dimensoes e overrides registrados pelo Analista.
+Use a instancia canonica atual e reaplique somente overrides permitidos no
+contrato. Nunca insira filho diretamente em `INSTANCE`; SlotNode so pode ser
+usado se estiver aprovado e confirmado. Se a instancia ou override nao
+reproduzir a referencia, pare antes de escrever e devolva `IMPASSE_TECNICO`.
 
-## Preflight tecnico obrigatorio
-
-Antes de qualquer escrita, confira no arquivo e nas bibliotecas conectadas cada
-item do contrato:
-
-1. busque novamente em todas as bibliotecas instaladas o componente, token,
-   estilo, variavel, collection, modo ou propriedade de binding declarado;
-2. componente, biblioteca, variante, propriedade e acao `REUTILIZAR` ou
-   `CRIAR`;
-3. token, estilo, variavel, collection, modo, propriedade de destino e acao
-   `REUTILIZAR` ou `CRIAR`;
-4. possibilidade real de aplicar o binding na propriedade correta, sem editar
-   uma instancia opaca;
-5. lista, quantidade, nome logico e nome de rascunho de cada `TEMPLATE_ALVO`;
-6. area de destino;
-7. evidencia das duas reutilizacoes planejadas para cada componente local.
-
-Para itens `REUTILIZAR`, eleve `CANDIDATO` para `CONFIRMADO_TECNICAMENTE`
-somente quando o item existir e puder ser aplicado como declarado. Para itens
-`CRIAR`, confirme que o contrato define nome, destino, collection ou escopo e
-que a criacao e tecnicamente possivel no arquivo alvo. A falta de binding na
-referencia nunca e um impasse por si so.
-
-Nunca declare `CRIAR` antes de procurar o equivalente nas bibliotecas
-instaladas. Ao reutilizar, use a propriedade de componente, binding ou variavel
-nativa disponivel em vez de escrever um valor duplicado no rascunho.
-
-Se qualquer item falhar, nao crie nem altere o canvas. Responda com:
+Se qualquer requisito do preflight divergir, nao altere o canvas:
 
 ```markdown
 ## IMPASSE_TECNICO
 - Declarado:
 - Encontrado:
-- Impacto na montagem:
-- Item para REVISAR_IMPASSE:
+- Impacto na fidelidade ou saude tecnica:
+- Contrato/gate a revisar:
 ```
 
-Nao troque por item parecido, nao crie token alternativo e nao contorne a
-arquitetura por conta propria.
+## Montagem por fase
 
-## Montagem
+### `TEMPLATE_PRIMEIRO`
 
-Depois de preflight integralmente favoravel:
+- Crie exatamente uma nova versao do `TEMPLATE_ALVO` na area de verificacao.
+- Recompose a tela inteira a partir do contrato, sem copiar ou mover a
+  referencia. Mantenha semantica, estrutura, comportamento e preservacoes
+  visuais registradas.
+- Reutilize componentes compativeis; mantenha blocos sem prova como
+  `LOCAL_LAYOUT_INTERNO`. Um componente local da referencia pode ser copiado
+  apenas dentro deste primeiro template para preservar a tela, sem promove-lo a
+  componente de library.
+- Aplique estilos, tokens e bindings existentes. Crie variavel somente para
+  valor parametrizavel de cor, numero, texto ou booleano exigido pelo contrato.
+  Texto fixo pode permanecer texto. Registre todo valor solto ou excecao.
+- Nao extraia componentes locais novos nesta fase, exceto o proprio template
+  conforme a taxonomia da biblioteca.
 
-- Crie exatamente um rascunho novo para cada `TEMPLATE_ALVO` na area de
-  verificacao declarada. Nao crie rascunho adicional, nem pule tela declarada.
-- Use o nome de rascunho definido no mapa de entregaveis. O Montador nao decide
-  nome de frame, template ou componente.
-- Recompose cada template alvo a partir do contrato; nunca copie ou mova a
-  referencia.
-- Converta cada rascunho de `TEMPLATE_ALVO` em `COMPONENT` ou `COMPONENT_SET`.
-  Crie variantes e propriedades para os estados previstos no contrato.
-- Reutilize ou crie componentes, variantes, estilos, tokens e bindings conforme
-  a acao declarada no contrato. Nunca copie valor bruto da referencia por falta
-  de binding.
-- Crie e aplique variaveis no caminho, collection, modo e papel aprovados.
-  Todo texto visivel deve ficar ligado a uma variavel.
-- Aplique tokens ou estilos semanticos em propriedades tokenizaveis: cor,
-  tipografia, espacamento, padding, gap, tamanho, raio, borda, opacidade e
-  elevacao quando aplicaveis. Valor bruto e montagem incompleta: devolva
-  `IMPASSE_TECNICO` se nao conseguir reutilizar ou criar o recurso necessario.
-- Use auto layout, redimensionamento e restricoes coerentes com a arquitetura
-  do template. Nunca insira filho diretamente em instancia de biblioteca.
-- Trate `LOCAL_LAYOUT_INTERNO` como estrutura dentro do template, nao como
-  componente ou entregavel separado. Crie componente local apenas quando o
-  contrato trouxer duas reutilizacoes planejadas aprovadas.
-- Nao altere referencias, bibliotecas conectadas, ativos publicados ou itens
-  fora do recorte. Nao publique nada.
+### `EXTRACAO_SELETIVA`
+
+- Extraia somente candidatas aprovadas com reutilizacao comprovada ou
+  manutencao/variacao independente justificada.
+- Crie os componentes locais de library aprovados, recomponha uma nova versao
+  do template e preserve a versao anterior intacta.
+- Nao exclua, publique ou substitua a versao anterior. A decisao de adotar a
+  nova versao continua humana.
+
+Em ambas as fases, use auto layout, redimensionamento e restricoes coerentes e
+nao altere referencia, library oficial, ativos publicados ou itens fora do
+recorte.
 
 ## Resposta obrigatoria
 
-Depois da montagem, responda no chat:
-
 ```markdown
-## Rascunho montado
+## Montagem da rodada
+- Tela e fase:
+- Status e gate alcancado:
 
-## Entregaveis montados
-- Templates previstos:
-- Rascunhos criados:
-- Templates pendentes:
+## Preflight e recibos de busca
 
-## Preflight confirmado
+## Preservacoes aplicadas
 
-## Recursos reutilizados das bibliotecas instaladas
+## Instancias, overrides e excecoes
 
-## Forma tecnica e estados dos templates
+## Bindings, estilos, tokens e valores soltos
 
-## Componentes e variantes aplicados
+## Versao criada e versao anterior preservada
 
-## Matriz de bindings aplicados
-
-## Cobertura de tokens e estilos aplicados
-
-## Variaveis, collections e modos aplicados
-
-## Decisoes de composicao interna aplicadas
-
-## Itens nao montados
+## Itens nao montados ou impasses
 
 ## Cartao de passagem
-- Fase concluida: MONTAGEM
 - Proxima acao permitida: VALIDACAO
 ```
 
-Nao corrija o rascunho depois dessa resposta sem uma nova instrucao humana.
+Ao fim, atualize o contrato com `status: MONTAGEM_CONCLUIDA` e
+`gate: G_VALIDACAO`. Nao corrija o rascunho depois da resposta sem nova
+instrucao humana.

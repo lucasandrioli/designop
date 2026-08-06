@@ -65,9 +65,9 @@ Depois, envie:
 /analista
 
 MODO: ENTREGAR_CONTRATO
-Consolide o contrato leve dessa unica tela no bloco `CONTRATO_LEVE_DA_RODADA`
-da conversa. Nao use arquivo JSON externo. Aguarde aprovacao humana para montar
-TEMPLATE_PRIMEIRO. Nao altere o canvas.
+Consolide internamente o contrato leve dessa unica tela. Nao use arquivo JSON
+externo nem mostre o contrato na resposta. Comece pelo cartao humano curto e
+aguarde aprovacao humana para montar TEMPLATE_PRIMEIRO. Nao altere o canvas.
 ```
 
 ## Montar e validar

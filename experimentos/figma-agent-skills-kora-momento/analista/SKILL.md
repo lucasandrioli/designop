@@ -13,18 +13,19 @@ O contexto de negocio recebido no chat e a unica fonte de regra de negocio.
 ## Entrada, limites e contrato leve
 
 Exija `ETAPA`, `MOMENTO`, uma unica `TELA/TEMPLATE_ALVO`, `FASE` e o modo. Se
-faltar um desses campos, informe somente o campo ausente e pare. Aceite os
-modos existentes nesta sequencia obrigatoria:
+faltar algum, responda pelo cartao em termos simples com a unica informacao que
+a pessoa precisa completar e pare. Aceite os modos existentes nesta sequencia
+obrigatoria:
 
 1. `MODO: INVENTARIAR`: analisar a referencia selecionada;
 2. `MODO: ARQUITETAR`: montar o mapa tecnico da mesma tela;
 3. `MODO: ENTREGAR_CONTRATO`: persistir o contrato e aguardar aprovacao;
 4. `MODO: REVISAR_IMPASSE`: alterar somente o item bloqueado.
 
-Nao pule modo, gate ou aprovacao. Produza e mantenha o contrato leve no proprio
-chat, nunca em arquivo externo. Em cada resposta de modo, releia o ultimo bloco
-`CONTRATO_LEVE_DA_RODADA` desta conversa e devolva uma copia atualizada. Ele e
-o recibo entre skills, nao uma reproducao dos scripts da Kora:
+Nao pule modo, gate ou aprovacao. Produza e mantenha o contrato leve no contexto
+interno da conversa, nunca em arquivo externo. Em cada modo, releia e atualize
+esse estado sem reproduzi-lo na resposta para a pessoa. Ele e o recibo entre
+skills, nao uma reproducao dos scripts da Kora:
 
 ```json
 {
@@ -43,6 +44,32 @@ o recibo entre skills, nao uma reproducao dos scripts da Kora:
 Registre nos arrays somente evidencias da rodada: decisao `REUTILIZAR`, `CRIAR`
 ou `IMPASSE`; recibo de busca; e, para instancia, variante, propriedades,
 textos, visibilidades, swaps, dimensoes e overrides permitidos.
+
+## Comunicacao com a pessoa operadora
+
+Toda resposta visivel deve comecar por este cartao curto, em linguagem humana:
+
+```markdown
+## Cartao da rodada
+- Tela: <o que foi entendido ou a tela tratada>
+- Agora: <o que sera feito ou o que foi feito>
+- Resultado: <fato relevante em linguagem simples>
+- Proxima acao da pessoa: <uma acao concreta ou "Nenhuma agora">
+```
+
+Nao mostre JSON, schema, nomes de campos, IDs, checklist bruto, recibos ou
+explicacao tecnica por padrao. Mantenha isso somente no estado interno. Mostre
+detalhe tecnico apenas se a pessoa pedir. Em `IMPASSE_TECNICO`, acrescente apos
+o cartao somente:
+
+```markdown
+## O que precisa de decisao
+- Recurso que faltou:
+- Impacto:
+- Decisao necessaria:
+```
+
+Use termos simples e uma unica decisao. Nao despeje o contrato interno.
 
 - Leia somente a tela selecionada e seus descendentes.
 - Nunca crie, copie, mova, edite, renomeie, exclua, publique ou converta itens
@@ -124,8 +151,8 @@ impasse bloqueante.
 
 ## MODO: ENTREGAR_CONTRATO
 
-Consolide o inventario e o mapa no bloco inline do contrato leve. Ele deve estar
-completo para a tela, marcar `status: AGUARDANDO_APROVACAO_HUMANA` e
+Consolide o inventario e o mapa no estado interno do contrato leve. Ele deve
+estar completo para a tela, marcar `status: AGUARDANDO_APROVACAO_HUMANA` e
 `gate: G_APROVACAO_TEMPLATE` na fase `TEMPLATE_PRIMEIRO`, ou
 `G_APROVACAO_EXTRACAO` na fase `EXTRACAO_SELETIVA`. Nao autorize montagem ou
 componentizacao. Mostre a pessoa apenas a proposta e a decisao requerida.
@@ -139,29 +166,18 @@ nova aprovacao humana.
 
 ## Resposta obrigatoria
 
-Responda somente no chat com linguagem operacional:
+Responda somente com o `Cartao da rodada`. Diga somente o necessario para a
+pessoa entender o recorte, a acao em curso ou concluida, o resultado e sua
+proxima acao. Mantenha achados, busca, proposta e contrato no estado interno.
+Se faltar entrada, o cartao explica em termos simples o que a pessoa precisa
+informar, sem citar campo, schema ou gate.
 
 ```markdown
-## Progresso da rodada
-- Tela selecionada:
-- Fase:
-- Status e gate:
-
-## Achados e preservacoes
-
-## Busca da library e decisoes tecnicas
-
-## Proposta ou impasse
-
-## Decisao humana necessaria
-
-## Cartao de passagem
-- Proxima acao permitida:
-
-## CONTRATO_LEVE_DA_RODADA
-```json
-<copia atualizada do contrato leve>
-```
+## Cartao da rodada
+- Tela:
+- Agora:
+- Resultado:
+- Proxima acao da pessoa:
 ```
 
 Em `INVENTARIAR`, a proxima acao e `ARQUITETAR`; em `ARQUITETAR`,

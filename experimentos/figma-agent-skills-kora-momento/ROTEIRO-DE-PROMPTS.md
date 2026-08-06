@@ -3,7 +3,10 @@
 Uma rodada trata uma unica tela selecionada. Etapa e momento sao parametros.
 A referencia orienta fidelidade visual e funcional, nunca a arquitetura tecnica.
 Use uma skill por mensagem e mantenha o bloco `CONTRATO_LEVE_DA_RODADA` na
-conversa. Nao anexe, crie nem consulte arquivo JSON externo.
+conversa. Nao anexe, crie nem consulte arquivo JSON externo. O bloco e interno:
+em toda resposta, a skill mostra somente um cartao curto com tela, acao atual,
+resultado e proxima acao da pessoa. Nao deve exibir JSON ou checklist tecnico,
+salvo explicacao simples de um impasse.
 
 ## 0. Abrir a etapa
 
@@ -62,10 +65,9 @@ Nao altere o canvas.
 /analista
 
 MODO: ENTREGAR_CONTRATO
-Use o inventario e o mapa tecnico da mesma tela. Produza no chat o bloco
-`CONTRATO_LEVE_DA_RODADA` com status, gate, preservacoes, recibos, decisoes e
-impasses. Aguarde aprovacao humana para montar o TEMPLATE_PRIMEIRO. Nao altere
-o canvas.
+Use o inventario e o mapa tecnico da mesma tela. Mantenha internamente o bloco
+`CONTRATO_LEVE_DA_RODADA`; nao o mostre na resposta. Aguarde aprovacao humana
+para montar o TEMPLATE_PRIMEIRO. Nao altere o canvas.
 ```
 
 Revise o contrato. A montagem somente pode comecar depois de aprovacao humana

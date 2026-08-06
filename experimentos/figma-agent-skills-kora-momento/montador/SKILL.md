@@ -26,8 +26,26 @@ crie arquivo externo. Para este papel, o bloco minimo precisa conter:
 }
 ```
 
-Depois do preflight ou montagem, devolva o mesmo bloco atualizado no chat,
-incluindo recibos, instancias/overrides, excecoes e o novo `status`/`gate`.
+Depois do preflight ou montagem, atualize esse estado interno com recibos,
+instancias/overrides, excecoes e o novo `status`/`gate`. Nunca despeje o bloco,
+JSON, nomes de campos ou checklist para a pessoa operadora.
+
+## Comunicacao com a pessoa operadora
+
+Toda resposta visivel deve comecar por este cartao curto:
+
+```markdown
+## Cartao da rodada
+- Tela: <o que foi entendido ou a tela tratada>
+- Agora: <o que sera feito ou o que foi feito>
+- Resultado: <fato relevante em linguagem simples>
+- Proxima acao da pessoa: <uma acao concreta ou "Nenhuma agora">
+```
+
+Nao mostre detalhes tecnicos por padrao, incluindo JSON, schema, IDs, nomes de
+campos, recibos ou checklist. Mostre-os somente se a pessoa pedir. Em
+`IMPASSE_TECNICO`, acrescente apos o cartao apenas recurso faltante, impacto e
+uma unica decisao necessaria, em linguagem simples.
 
 ## Pre-condicoes e preflight
 
@@ -36,7 +54,8 @@ Antes de editar, exija: bloco de contrato leve na conversa, `ETAPA`, `MOMENTO`, 
 humana correspondente. A fase `TEMPLATE_PRIMEIRO` exige
 `G_APROVACAO_TEMPLATE`; `EXTRACAO_SELETIVA` exige
 `G_APROVACAO_EXTRACAO`, depois de fidelidade e saude tecnica favoraveis da fase
-anterior. Se faltar qualquer item, informe somente o campo ausente e pare.
+anterior. Se faltar qualquer item, responda pelo cartao em termos simples com a
+unica informacao que a pessoa precisa completar e pare.
 
 Repita a busca em todas as bibliotecas instaladas antes de criar. Confirme
 componentes, variantes, propriedades, estilos, tokens, collections, modos,
@@ -53,12 +72,13 @@ reproduzir a referencia, pare antes de escrever e devolva `IMPASSE_TECNICO`.
 
 Se qualquer requisito do preflight divergir, nao altere o canvas:
 
+Use o cartao de comunicacao e, apos ele, somente:
+
 ```markdown
-## IMPASSE_TECNICO
-- Declarado:
-- Encontrado:
-- Impacto na fidelidade ou saude tecnica:
-- Contrato/gate a revisar:
+## O que precisa de decisao
+- Recurso que faltou:
+- Impacto:
+- Decisao necessaria:
 ```
 
 ## Montagem por fase
@@ -94,32 +114,10 @@ recorte.
 
 ## Resposta obrigatoria
 
-```markdown
-## Montagem da rodada
-- Tela e fase:
-- Status e gate alcancado:
+Responda somente com o `Cartao da rodada`. Diga se a nova versao foi montada ou
+se ha um impasse, e indique a proxima acao humana. Mantenha preflight,
+instancias, bindings, estilos, valores soltos e contrato no estado interno.
 
-## Preflight e recibos de busca
-
-## Preservacoes aplicadas
-
-## Instancias, overrides e excecoes
-
-## Bindings, estilos, tokens e valores soltos
-
-## Versao criada e versao anterior preservada
-
-## Itens nao montados ou impasses
-
-## Cartao de passagem
-- Proxima acao permitida: VALIDACAO
-
-## CONTRATO_LEVE_DA_RODADA
-```json
-<copia atualizada do contrato leve>
-```
-```
-
-Ao fim, atualize o contrato com `status: MONTAGEM_CONCLUIDA` e
+Ao fim, atualize o contrato interno com `status: MONTAGEM_CONCLUIDA` e
 `gate: G_VALIDACAO`. Nao corrija o rascunho depois da resposta sem nova
 instrucao humana.

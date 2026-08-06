@@ -2,8 +2,8 @@
 
 Uma rodada trata uma unica tela selecionada. Etapa e momento sao parametros.
 A referencia orienta fidelidade visual e funcional, nunca a arquitetura tecnica.
-Use uma skill por mensagem e mantenha o contrato leve da rodada na conversa ou
-no artefato experimental correspondente.
+Use uma skill por mensagem e mantenha o bloco `CONTRATO_LEVE_DA_RODADA` na
+conversa. Nao anexe, crie nem consulte arquivo JSON externo.
 
 ## 0. Abrir a etapa
 
@@ -62,9 +62,10 @@ Nao altere o canvas.
 /analista
 
 MODO: ENTREGAR_CONTRATO
-Use o inventario e o mapa tecnico da mesma tela. Persista o contrato leve da
-rodada com status, gate, preservacoes, recibos, decisoes e impasses. Aguarde
-aprovacao humana para montar o TEMPLATE_PRIMEIRO. Nao altere o canvas.
+Use o inventario e o mapa tecnico da mesma tela. Produza no chat o bloco
+`CONTRATO_LEVE_DA_RODADA` com status, gate, preservacoes, recibos, decisoes e
+impasses. Aguarde aprovacao humana para montar o TEMPLATE_PRIMEIRO. Nao altere
+o canvas.
 ```
 
 Revise o contrato. A montagem somente pode comecar depois de aprovacao humana
@@ -82,7 +83,8 @@ TELA/TEMPLATE_ALVO: <nome>
 FASE: TEMPLATE_PRIMEIRO
 AREA DE DESTINO: <area experimental de verificacao>
 
-Use o contrato aprovado. Repita o preflight e os recibos de busca. Monte uma
+Use o ultimo `CONTRATO_LEVE_DA_RODADA` desta conversa. Repita o preflight e os
+recibos de busca. Monte uma
 nova versao completa da tela. Use a instancia canonica e somente overrides
 permitidos; se nao reproduzir a referencia, devolva IMPASSE_TECNICO. Nao
 publique, nao altere referencia ou library oficial.
@@ -101,7 +103,7 @@ MOMENTO: <identificador e nome humano>
 TELA/TEMPLATE_ALVO: <nome>
 FASE: TEMPLATE_PRIMEIRO
 
-Primeiro identifique referencia e nova versao. Compare Fidelidade Visual entre
+Use o ultimo `CONTRATO_LEVE_DA_RODADA` desta conversa. Primeiro identifique referencia e nova versao. Compare Fidelidade Visual entre
 elas; verifique Saude Tecnica somente na nova versao, com evidencia de bindings,
 estilos, valores soltos, instancias e excecoes. Se a selecao nao tiver
 exatamente essas duas telas identificaveis, pare e peca correcao. Nao altere ou

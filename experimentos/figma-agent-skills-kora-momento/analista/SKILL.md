@@ -21,13 +21,28 @@ modos existentes nesta sequencia obrigatoria:
 3. `MODO: ENTREGAR_CONTRATO`: persistir o contrato e aguardar aprovacao;
 4. `MODO: REVISAR_IMPASSE`: alterar somente o item bloqueado.
 
-Nao pule modo, gate ou aprovacao. Use
-`../contrato-rodada.exemplo.json` como forma de persistencia leve. Mantenha no
-contrato: `status`, `gate`, etapa, momento, tela/template, fase,
-preservacoes visuais e funcionais, recibos da busca em library, decisoes
-`REUTILIZAR`/`CRIAR`/`IMPASSE`, candidatas a componentizacao, evidencias de
-fidelidade e saude tecnica e impasses. Ele e um recibo entre skills, nao uma
-reproducao dos scripts da Kora.
+Nao pule modo, gate ou aprovacao. Produza e mantenha o contrato leve no proprio
+chat, nunca em arquivo externo. Em cada resposta de modo, releia o ultimo bloco
+`CONTRATO_LEVE_DA_RODADA` desta conversa e devolva uma copia atualizada. Ele e
+o recibo entre skills, nao uma reproducao dos scripts da Kora:
+
+```json
+{
+  "status": "<status>", "gate": "<gate>",
+  "etapa": "<etapa>", "momento": "<momento>",
+  "telaTemplate": "<uma tela>", "fase": "TEMPLATE_PRIMEIRO|EXTRACAO_SELETIVA",
+  "preservacoes": { "visuais": [], "funcionais": [] },
+  "recibosBuscaLibrary": [], "decisoes": [], "migracaoInstancias": [],
+  "bindingsEEstilos": [], "candidatasComponentizacao": [],
+  "evidencias": { "fidelidadeVisual": [], "saudeTecnica": [] },
+  "impasses": [],
+  "veredictos": { "fidelidadeVisual": "PENDENTE", "saudeTecnica": "PENDENTE" }
+}
+```
+
+Registre nos arrays somente evidencias da rodada: decisao `REUTILIZAR`, `CRIAR`
+ou `IMPASSE`; recibo de busca; e, para instancia, variante, propriedades,
+textos, visibilidades, swaps, dimensoes e overrides permitidos.
 
 - Leia somente a tela selecionada e seus descendentes.
 - Nunca crie, copie, mova, edite, renomeie, exclua, publique ou converta itens
@@ -109,8 +124,8 @@ impasse bloqueante.
 
 ## MODO: ENTREGAR_CONTRATO
 
-Consolide o inventario e o mapa no JSON leve. Ele deve estar completo para a
-tela, marcar `status: AGUARDANDO_APROVACAO_HUMANA` e
+Consolide o inventario e o mapa no bloco inline do contrato leve. Ele deve estar
+completo para a tela, marcar `status: AGUARDANDO_APROVACAO_HUMANA` e
 `gate: G_APROVACAO_TEMPLATE` na fase `TEMPLATE_PRIMEIRO`, ou
 `G_APROVACAO_EXTRACAO` na fase `EXTRACAO_SELETIVA`. Nao autorize montagem ou
 componentizacao. Mostre a pessoa apenas a proposta e a decisao requerida.
@@ -142,6 +157,11 @@ Responda somente no chat com linguagem operacional:
 
 ## Cartao de passagem
 - Proxima acao permitida:
+
+## CONTRATO_LEVE_DA_RODADA
+```json
+<copia atualizada do contrato leve>
+```
 ```
 
 Em `INVENTARIAR`, a proxima acao e `ARQUITETAR`; em `ARQUITETAR`,

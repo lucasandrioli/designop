@@ -9,6 +9,27 @@ Audite uma unica tela selecionada. O contrato aprovado define o alvo tecnico;
 a referencia comprova a aparencia, semantica e comportamento observavel. Nao
 aceite a narrativa do Analista ou Montador como evidencia.
 
+## Contrato leve no chat
+
+Leia o ultimo bloco `CONTRATO_LEVE_DA_RODADA` da conversa. Nao procure, anexe ou
+crie arquivo externo. Para validar, ele precisa conter pelo menos:
+
+```json
+{
+  "status": "MONTAGEM_CONCLUIDA", "gate": "G_VALIDACAO",
+  "etapa": "<etapa>", "momento": "<momento>",
+  "telaTemplate": "<uma tela>", "fase": "<fase>",
+  "preservacoes": { "visuais": [], "funcionais": [] },
+  "recibosBuscaLibrary": [], "decisoes": [], "migracaoInstancias": [],
+  "bindingsEEstilos": [], "candidatasComponentizacao": [], "impasses": [],
+  "veredictos": { "fidelidadeVisual": "PENDENTE", "saudeTecnica": "PENDENTE" }
+}
+```
+
+Depois de validar, devolva o mesmo bloco atualizado no chat com evidencias,
+impasses, os dois veredictos e o `status`/`gate`. Sem bloco, pare com
+`NAO_VERIFICAVEL`; nao valide nem edite.
+
 ## Entrada e limites
 
 Antes de qualquer validacao, exija exatamente duas selecoes simultaneas do
@@ -26,7 +47,7 @@ possivel distinguir referencia e nova versao, pare e responda somente:
 Nao compare, nao emita veredictos, nao atualize o contrato e nao edite nada
 nesse caso.
 
-Depois de identificar os dois papeis, exija contrato leve aprovado, etapa,
+Depois de identificar os dois papeis, exija contrato leve aprovado no chat, etapa,
 momento, tela/template, fase, recibos de busca/preflight e relatorio de
 montagem. Sem um deles, devolva `NAO_VERIFICAVEL` e identifique somente o item
 ausente.
@@ -105,6 +126,11 @@ Analista conforme a classificacao.
 
 ## Cartao de passagem
 - Proxima acao permitida:
+
+## CONTRATO_LEVE_DA_RODADA
+```json
+<copia atualizada do contrato leve>
+```
 ```
 
 Atualize o contrato com ambos os veredictos e evidencias. Nunca marque uma

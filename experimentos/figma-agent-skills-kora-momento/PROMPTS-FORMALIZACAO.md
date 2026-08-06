@@ -65,8 +65,9 @@ Depois, envie:
 /analista
 
 MODO: ENTREGAR_CONTRATO
-Consolide o contrato leve dessa unica tela e aguarde aprovacao humana para
-montar TEMPLATE_PRIMEIRO. Nao altere o canvas.
+Consolide o contrato leve dessa unica tela no bloco `CONTRATO_LEVE_DA_RODADA`
+da conversa. Nao use arquivo JSON externo. Aguarde aprovacao humana para montar
+TEMPLATE_PRIMEIRO. Nao altere o canvas.
 ```
 
 ## Montar e validar
@@ -83,7 +84,7 @@ TELA/TEMPLATE_ALVO: Autorizacao de debito em conta
 FASE: TEMPLATE_PRIMEIRO
 AREA DE DESTINO: <area experimental de verificacao>
 
-Repita o preflight. Monte uma nova versao completa sem publicar, alterar a
+Use o ultimo `CONTRATO_LEVE_DA_RODADA` desta conversa. Repita o preflight. Monte uma nova versao completa sem publicar, alterar a
 referencia ou a library oficial. Se uma instancia canonica com overrides
 permitidos nao reproduzir a referencia, devolva IMPASSE_TECNICO.
 ```
@@ -99,7 +100,7 @@ MOMENTO: 4790, Autorizacao de debito em conta
 TELA/TEMPLATE_ALVO: Autorizacao de debito em conta
 FASE: TEMPLATE_PRIMEIRO
 
-Identifique os dois papeis. Compare Fidelidade Visual entre referencia e nova
+Use o ultimo `CONTRATO_LEVE_DA_RODADA` desta conversa. Identifique os dois papeis. Compare Fidelidade Visual entre referencia e nova
 versao; verifique Saude Tecnica somente na nova versao, com evidencia de
 bindings, estilos, valores soltos, instancias e excecoes. Se houver uma selecao,
 mais de duas ou papeis ambiguos, pare e peca correcao. Nao corrija nem publique.

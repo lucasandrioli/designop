@@ -8,9 +8,30 @@ description: Execute, por etapa, momento e uma tela selecionada, o contrato apro
 Execute somente a tela e a fase declaradas no contrato leve da rodada. Nao
 redefina regra de negocio, arquitetura, candidatos ou aprovacao humana.
 
+## Contrato leve no chat
+
+Leia o ultimo bloco `CONTRATO_LEVE_DA_RODADA` da conversa. Nao procure, anexe ou
+crie arquivo externo. Para este papel, o bloco minimo precisa conter:
+
+```json
+{
+  "status": "<status>", "gate": "<gate>",
+  "etapa": "<etapa>", "momento": "<momento>",
+  "telaTemplate": "<uma tela>", "fase": "<fase>",
+  "preservacoes": { "visuais": [], "funcionais": [] },
+  "recibosBuscaLibrary": [], "decisoes": [], "migracaoInstancias": [],
+  "bindingsEEstilos": [], "candidatasComponentizacao": [],
+  "evidencias": { "fidelidadeVisual": [], "saudeTecnica": [] },
+  "impasses": [], "veredictos": {}
+}
+```
+
+Depois do preflight ou montagem, devolva o mesmo bloco atualizado no chat,
+incluindo recibos, instancias/overrides, excecoes e o novo `status`/`gate`.
+
 ## Pre-condicoes e preflight
 
-Antes de editar, exija: contrato persistido, `ETAPA`, `MOMENTO`, uma unica
+Antes de editar, exija: bloco de contrato leve na conversa, `ETAPA`, `MOMENTO`, uma unica
 `TELA/TEMPLATE_ALVO`, fase, area de verificacao, recibos de busca e aprovacao
 humana correspondente. A fase `TEMPLATE_PRIMEIRO` exige
 `G_APROVACAO_TEMPLATE`; `EXTRACAO_SELETIVA` exige
@@ -92,6 +113,11 @@ recorte.
 
 ## Cartao de passagem
 - Proxima acao permitida: VALIDACAO
+
+## CONTRATO_LEVE_DA_RODADA
+```json
+<copia atualizada do contrato leve>
+```
 ```
 
 Ao fim, atualize o contrato com `status: MONTAGEM_CONCLUIDA` e
